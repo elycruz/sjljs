@@ -1,0 +1,36 @@
+{
+  "name": "sjljs",
+  "version": "0.0.0",
+  "description": "Simple Javascript Library",
+  "main": "sjl.min.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "gulp": "~3.6.1",
+    "gulp-concat": "~2.2.0",
+    "gulp-header": "~1.0.2",
+    "gulp-mocha": "~0.4.1",
+    "gulp-uglify": "~0.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha tests/test-suite.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/elycruz/sjljs.git"
+  },
+  "keywords": [
+    "oop-javascript",
+    "base",
+    "extendable",
+    "iterator"
+  ],
+  "author": "Ely De La Cruz <elycruz@elycruz.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elycruz/sjljs/issues"
+  },
+  "homepage": "https://github.com/elycruz/sjljs"
+}
