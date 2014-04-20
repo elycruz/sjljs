@@ -94,6 +94,11 @@
         return result; // Return the array.
     }
 
+    /**
+     *
+     * @param proto
+     * @returns {*}
+     */
     function inherit(proto) {
 //        console.log(proto);
         if (proto == null) throw TypeError('`inherit` function expects param1 to be a non-null value.'); // p must be a non-null object
@@ -107,6 +112,14 @@
         return new func();
     }
 
+    /**
+     * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods
+     * @param superclass {Function}
+     * @param constructor {Function}
+     * @param methods {Object} - optional
+     * @param statics {Object} - optional
+     * @returns {*}
+     */
     function defineSubClass(superclass, // Constructor of the superclass
                             constructor, // The constructor for the new subclass
                             methods, // Instance methods: copied to prototype
@@ -126,10 +139,22 @@
         return constructor;
     }
 
+    /**
+     * The `Extendable` constructor
+     * @constructor
+     */
     function Extendable() {}
 
+    // Get a handle to Extendable's prototype
     var proto = Extendable.prototype;
 
+    /**
+     * Creates a subclass off of `constructor`
+     * @param constructor {Function}
+     * @param methods {Object} - optional
+     * @param statics {Object} - optional
+     * @returns {*}
+     */
     proto.extend = function (constructor, methods, statics) {
         return defineSubClass(this, constructor, methods, statics);
     };
@@ -146,9 +171,7 @@
 
     proto.union = union;
 
-    if (context) {
-        context.sjl.Extendable = Extendable;
-    }
+    context.sjl.Extendable = Extendable;
 
 })(typeof window === 'undefined' ? global : window);
 

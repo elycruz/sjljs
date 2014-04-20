@@ -3,23 +3,9 @@
  */
 (function (context) {
 
-    var Set = context.Extendable.extend(
+    context.sjl.Set = context.sjl.Extendable.extend(
         function Set (vals) {
-
-        },
-        {
-
-        },
-        {
 
         });
 
-    if (context) {
-        context.Set = Set;
-    }
-    else {
-        return Set;
-    }
-
-
-})(typeof sjl === 'undefined' ? (typeof window === 'undefined' ? global : window) : sjl);
+})(typeof window === 'undefined' ? global : window);
