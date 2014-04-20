@@ -3,7 +3,7 @@
  */
 (function (context) {
 
-    var Iterator = context.sjl.Extendable.extend(
+    context.sjl.Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {
             this.collection = values || [];
             this.pointer = pointer || 0;
@@ -42,13 +42,9 @@
             },
 
             getCollection: function () {
-                return classOfIs(this.collection, 'Array') ? this.collection : [];
+                return context.sjl.classOfIs(this.collection, 'Array') ? this.collection : [];
             }
 
         });
-
-    if (context) {
-        context.sjl.Iterator = Iterator;
-    }
 
 })(typeof window === 'undefined' ? global : window);

@@ -1,4 +1,4 @@
-/**! sjl.min.js Sun Apr 20 2014 10:52:00 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.min.js Sun Apr 20 2014 11:12:23 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 4/19/2014.
  */
 
@@ -206,8 +206,6 @@
         };
     }
 
-    return context;
-
 })(typeof window === 'undefined' ? global : window);
 
 /**
@@ -393,7 +391,7 @@
  */
 (function (context) {
 
-    var Iterator = context.sjl.Extendable.extend(
+    context.sjl.Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {
             this.collection = values || [];
             this.pointer = pointer || 0;
@@ -432,13 +430,9 @@
             },
 
             getCollection: function () {
-                return classOfIs(this.collection, 'Array') ? this.collection : [];
+                return context.sjl.classOfIs(this.collection, 'Array') ? this.collection : [];
             }
 
         });
-
-    if (context) {
-        context.sjl.Iterator = Iterator;
-    }
 
 })(typeof window === 'undefined' ? global : window);

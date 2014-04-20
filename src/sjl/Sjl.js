@@ -206,6 +206,4 @@
         };
     }
 
-    return context;
-
 })(typeof window === 'undefined' ? global : window);
