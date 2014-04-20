@@ -7,22 +7,29 @@ var gulp = require('gulp'),
 
     header = require('gulp-header'),
 
+    mocha = require('gulp-mocha'),
+
     uglify = require('gulp-uglify');
 
+gulp.task('test', function () {
+    gulp.src('tests/test-suite-sjl-extendable.js')
+        .pipe(mocha());
+});
 
 gulp.task('concat', function () {
     gulp.src([
-        'src/sjl/sjl.js',
+        'src/sjl/Sjl.js',
         'src/sjl/Extendable.js',
         'src/sjl/Iterator.js'
     ])
-        .pipe(concat('./sjl.js'))
+        .pipe(concat('./Sjl.js'))
+        .pipe(header('/**! sjl.min.js <%= (new Date()) %> **/'))
         .pipe(gulp.dest('./'));
 });
 
 gulp.task('uglify', function () {
     gulp.src([
-        'src/sjl/sjl.js',
+        'src/sjl/Sjl.js',
         'src/sjl/Extendable.js',
         'src/sjl/Iterator.js'
     ])
@@ -33,7 +40,7 @@ gulp.task('uglify', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('./src/**/*', ['uglify']);
+    gulp.watch('./src/**/*', ['concat', 'uglify']);
 });
 
 // Default task

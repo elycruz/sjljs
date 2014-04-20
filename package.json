@@ -6,16 +6,18 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {
+  "devDependencies": {
     "gulp": "~3.6.1",
     "gulp-concat": "~2.2.0",
     "gulp-header": "~1.0.2",
     "gulp-mocha": "~0.4.1",
-    "gulp-uglify": "~0.2.1"
+    "gulp-uglify": "~0.2.1",
+    "chai": "^1.9.1",
+    "checkjs": "^0.2.0"
   },
-  "devDependencies": {},
+  "dependencies": {},
   "scripts": {
-    "test": "mocha tests/test-suite.js"
+    "test": "mocha tests/test-suite-sjl-extendable.js"
   },
   "repository": {
     "type": "git",

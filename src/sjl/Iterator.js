@@ -3,7 +3,7 @@
  */
 (function (context) {
 
-    var Iterator = Extendable.extend(
+    var Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {
             this.collection = values || [];
             this.pointer = pointer || 0;
@@ -48,10 +48,7 @@
         });
 
     if (context) {
-        context.Iterator = Iterator;
-    }
-    else {
-        return Iterator;
+        context.sjl.Iterator = Iterator;
     }
 
-})(sjl);
+})(typeof window === 'undefined' ? global : window);

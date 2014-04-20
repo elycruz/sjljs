@@ -3,7 +3,7 @@
  */
 (function (context) {
 
-    var Set = Extendable.extend(
+    var Set = context.Extendable.extend(
         function Set (vals) {
 
         },
@@ -22,4 +22,4 @@
     }
 
 
-})(typeof window === 'undefined' ? global : window);
+})(typeof sjl === 'undefined' ? (typeof window === 'undefined' ? global : window) : sjl);
