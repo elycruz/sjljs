@@ -206,4 +206,71 @@
         };
     }
 
+    if (typeof context.sjl.lcaseFirst !== 'function') {
+        /**
+         * Lower cases first character of a string.
+         * @param {String} str
+         * @returns {String}
+         */
+        context.lcaseFirst = function (str) {
+            var retVal = str = str ? str + "" : "";
+            if (str.length > 0) {
+                var rslt = str.match(/[a-z]/i);
+                retVal = rslt.length > 0 ? rslt[0].toLowerCase() + str.substr(1) : str;
+            }
+            return retVal;
+        };
+    }
+
+    if (typeof context.sjl.ucaseFirst !== 'function') {
+        /**
+         * Upper cases first character of a string.
+         * @param {String} str
+         * @returns {String}
+         */
+        context.ucaseFirst = function (str) {
+            str = str + "";
+            s0 = str.match(/^[a-z]/i);
+            if (!s0 instanceof Array) {
+                return null;
+            }
+            return s0[0].toUpperCase() + str.substr(1);
+        };
+    }
+
+    if (typeof context.sjl.camelCase) {
+
+        /**
+         * Make a string code friendly. Camel cases a dirty string into
+         * a valid javascript variable/constructor name;  Uses `replaceStrRegex`
+         * to replace unwanted characters with a '-' and then splits and merges
+         * the parts with the proper casing, pass in `true` for lcaseFirst
+         * to lower case the first character.
+         * @param {String} str
+         * @param {Boolean} lowerFirst default `false`
+         * @param {Regex} replaceStrRegex default /[^a-z0-9\-_] * /i (without spaces before and after '*')
+         * @returns {String}
+         */
+        context.camelCase = function (str, lowerFirst, replaceStrRegex) {
+            lowerFirst = lowerFirst || false;
+            replaceStrRegex = replaceStrRegex || /[^a-z0-9\-_]*/i;
+            var newStr = "";
+            str = str + "";
+            str = str.replace(replaceStrRegex, '-');
+            for (_str in str.split('-')) {
+                if (/^[a-z]/i.test(_str)) {
+                    newStr += context.sjl.ucaseFirst(_str);
+                }
+                else {
+                    newStr += _str;
+                }
+            }
+            ;
+            if (lowerFirst) {
+                newStr = context.sjl.lcaseFirst(newStr);
+            }
+            return newStr;
+        };
+    }
+
 })(typeof window === 'undefined' ? global : window);
