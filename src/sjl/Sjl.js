@@ -212,7 +212,7 @@
          * @param {String} str
          * @returns {String}
          */
-        context.lcaseFirst = function (str) {
+        context.sjl.lcaseFirst = function (str) {
             var retVal = str = str ? str + "" : "";
             if (str.length > 0) {
                 var rslt = str.match(/[a-z]/i);
@@ -228,7 +228,7 @@
          * @param {String} str
          * @returns {String}
          */
-        context.ucaseFirst = function (str) {
+        context.sjl.ucaseFirst = function (str) {
             str = str + "";
             s0 = str.match(/^[a-z]/i);
             if (!s0 instanceof Array) {
@@ -248,12 +248,12 @@
          * to lower case the first character.
          * @param {String} str
          * @param {Boolean} lowerFirst default `false`
-         * @param {Regex} replaceStrRegex default /[^a-z0-9\-_] * /i (without spaces before and after '*')
+         * @param {Regex} replaceStrRegex default /[^a-z0-9] * /i (without spaces before and after '*')
          * @returns {String}
          */
-        context.camelCase = function (str, lowerFirst, replaceStrRegex) {
+        context.sjl.camelCase = function (str, lowerFirst, replaceStrRegex) {
             lowerFirst = lowerFirst || false;
-            replaceStrRegex = replaceStrRegex || /[^a-z0-9\-_]*/i;
+            replaceStrRegex = replaceStrRegex || /[^a-z0-9]*/i;
             var newStr = "";
             str = str + "";
             str = str.replace(replaceStrRegex, '-');

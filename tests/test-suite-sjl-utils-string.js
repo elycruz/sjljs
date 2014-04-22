@@ -31,24 +31,35 @@ describe ('Sjl String', function () {
 
     describe('#`lcaseFirst`', function () {
         it('should convert first character of a string to lower case', function () {
-
+            var map = funcToCaseAndResultMap.lcaseFirst;
+            Object.keys(map).forEach(function (key) {
+                expect(sjl.lcaseFirst(key)).to.equal(map[key]);
+            });
         });
     });
 
     describe('#`ucaseFirst`', function () {
         it('should convert first character of a string to upper case', function () {
-
+            var map = funcToCaseAndResultMap.ucaseFirst;
+            Object.keys(map).forEach(function (key) {
+                expect(sjl.ucaseFirst(key)).to.equal(map[key]);
+            });
         });
     });
 
     describe('#`camelCase`', function () {
-        it('should convert a string to camel case with a lower case first character', function () {
-
+        it('should convert a string to camel case', function () {
+            var map = funcToCaseAndResultMap.camelCase;
+            Object.keys(map).forEach(function (key) {
+                if (key.toLowerCase().indexOf('class') !== -1) {
+                    expect(sjl.camelCase(key, true)).to.equal(map[key]);
+                }
+                else {
+                    expect(sjl.camelCase(key)).to.equal(map[key]);
+                }
+            });
         });
 
-        it('should convert a string to camel case with an upper case first character', function () {
-
-        });
     });
 
 });
