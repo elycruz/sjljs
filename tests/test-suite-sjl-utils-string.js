@@ -30,36 +30,36 @@ describe ('Sjl String', function () {
     };
 
     describe('#`lcaseFirst`', function () {
-        it('should convert first character of a string to lower case', function () {
-            var map = funcToCaseAndResultMap.lcaseFirst;
-            Object.keys(map).forEach(function (key) {
+        var map = funcToCaseAndResultMap.lcaseFirst;
+        Object.keys(map).forEach(function (key) {
+            it('should convert "' + key + '" ~~ to ~~ "' + map[key] + '"', function () {
                 expect(sjl.lcaseFirst(key)).to.equal(map[key]);
             });
         });
     });
 
     describe('#`ucaseFirst`', function () {
-        it('should convert first character of a string to upper case', function () {
-            var map = funcToCaseAndResultMap.ucaseFirst;
-            Object.keys(map).forEach(function (key) {
+        var map = funcToCaseAndResultMap.ucaseFirst;
+        Object.keys(map).forEach(function (key) {
+            it('should convert "' + key + '" ~~ to ~~ "' + map[key] + '"', function () {
                 expect(sjl.ucaseFirst(key)).to.equal(map[key]);
             });
         });
     });
 
     describe('#`camelCase`', function () {
-        it('should convert a string to camel case', function () {
-            var map = funcToCaseAndResultMap.camelCase;
-            Object.keys(map).forEach(function (key) {
+        var map = funcToCaseAndResultMap.camelCase;
+        Object.keys(map).forEach(function (key) {
+            it('should convert "' + key + '" ~~ to ~~ "' + map[key] + '"', function () {
                 if (key.toLowerCase().indexOf('class') !== -1) {
                     expect(sjl.camelCase(key, true)).to.equal(map[key]);
                 }
                 else {
+                    console.log(sjl.camelCase(key, true));
                     expect(sjl.camelCase(key)).to.equal(map[key]);
                 }
             });
         });
-
     });
 
 });

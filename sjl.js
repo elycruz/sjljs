@@ -1,4 +1,4 @@
-/**! sjl.min.js Mon Apr 21 2014 22:17:06 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.min.js Tue Apr 22 2014 00:05:59 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 4/19/2014.
  */
 
@@ -12,7 +12,9 @@
 
     context.sjl = context.sjl || {};
 
-    var slice = Array.prototype.slice;
+    var slice = Array.prototype.slice,
+        notLCaseFirst = typeof context.sjl.lcaseFirst !== 'function',
+        notUCaseFirst = typeof context.sjl.ucaseFirst !== 'function';
 
     if (typeof context.sjl.argsToArray !== 'function') {
         context.sjl.argsToArray = function (args) {
@@ -81,7 +83,7 @@
          * @returns {boolean}
          */
         context.sjl.classOfIs = function (obj, humanString) {
-            return classOf(obj) === humanString;
+            return context.sjl.classOf(obj) === humanString;
         };
     }
 
@@ -112,12 +114,12 @@
             var retVal;
 
             // If value is an array or a string
-            if (classOfIs(value, 'Array') || classOfIs(value, 'String')) {
+            if (context.sjl.classOfIs(value, 'Array') || context.sjl.classOfIs(value, 'String')) {
                 retVal = value.length === 0;
             }
 
             // If value is a number and is not 0
-            else if (classOfIs(value, 'Number') && value !== 0) {
+            else if (context.sjl.classOfIs(value, 'Number') && value !== 0) {
                 retVal = false;
             }
 
@@ -138,7 +140,7 @@
         context.sjl.empty = function () {
             var retVal, check,
                 i, item,
-                args = argsToArray(arguments);
+                args = context.sjl.argsToArray(arguments);
 
             // If multiple arguments
             if (args.length > 1) {
@@ -188,12 +190,12 @@
         context.sjl.namespace = function (ns_string, objToSearch, valueToSet) {
             var parts = ns_string.split('.'),
                 parent = objToSearch,
-                shouldSetValue = classOfIs(valueToSet, 'Undefined')
+                shouldSetValue = context.sjl.classOfIs(valueToSet, 'Undefined')
                     ? false : true,
                 i;
 
             for (i = 0; i < parts.length; i += 1) {
-                if (classOfIs(parent[parts[i]], 'Undefined') && !shouldSetValue) {
+                if (context.sjl.classOfIs(parent[parts[i]], 'Undefined') && !shouldSetValue) {
                     parent[parts[i]] = {};
                 }
                 else if (i === parts.length - 1 && shouldSetValue) {
@@ -206,35 +208,71 @@
         };
     }
 
-    if (typeof context.sjl.lcaseFirst !== 'function') {
+    if (notLCaseFirst || notUCaseFirst) {
+        /**
+         * Used when composing a function that needs to operate on the first character found and needs to
+         * return the original string with the modified character within it.
+         * @see sjl.lcaseFirst or sjl.ucaseFirst (search within this file)
+         * @param str {String} - string to search for first alpha char on
+         * @param func {String} - function to run on first alpha char found; i.e., found[func]()
+         * @param thisFuncsName {String} - the function name that is using this function (in order
+         *      to present a prettier error message on `TypeError`)
+         * @throws {TypeError} - If str is not of type "String"
+         * @returns {String} - composed string
+         */
+        function changeCaseOfFirstChar (str, func, thisFuncsName) {
+            var search, char, right, left;
+
+            // If typeof `str` is not of type "String" then bail
+            if (!context.sjl.classOfIs(str, 'String')) {
+                throw new TypeError(thisFuncsName + ' expects parameter 1 ' +
+                    'to be of type "String".  ' +
+                    'Value received: "' + context.sjl.classOf(str) + '".');
+            }
+
+            // Search for first alpha char
+            search = str.search(/[a-z]/i);
+
+            // If alpha char
+            if (search > -1) {
+
+                // Make it lower case
+                char = str[search][func]();
+
+                // Get string from `char`'s index
+                right = str.substr(search + 1, str.length - 1);
+
+                // Get string upto `char`'s index
+                left = search !== 0 ? str.substr(0, search) : '';
+
+                // Concatenate original string with lower case char in it
+                str = left + char + right;
+            }
+
+            return str;
+        }
+    }
+
+    if (notLCaseFirst) {
         /**
          * Lower cases first character of a string.
          * @param {String} str
+         * @throws {TypeError}
          * @returns {String}
          */
         context.sjl.lcaseFirst = function (str) {
-            var retVal = str = str ? str + "" : "";
-            if (str.length > 0) {
-                var rslt = str.match(/[a-z]/i);
-                retVal = rslt.length > 0 ? rslt[0].toLowerCase() + str.substr(1) : str;
-            }
-            return retVal;
-        };
+            return changeCaseOfFirstChar (str, 'toLowerCase', 'lcaseFirst');
+        }
     }
 
-    if (typeof context.sjl.ucaseFirst !== 'function') {
+    if (notUCaseFirst) {
         /**
          * Upper cases first character of a string.
          * @param {String} str
          * @returns {String}
          */
         context.sjl.ucaseFirst = function (str) {
-            str = str + "";
-            s0 = str.match(/^[a-z]/i);
-            if (!s0 instanceof Array) {
-                return null;
-            }
-            return s0[0].toUpperCase() + str.substr(1);
+            return changeCaseOfFirstChar (str, 'toUpperCase', 'ucaseFirst');
         };
     }
 
@@ -251,24 +289,32 @@
          * @param {Regex} replaceStrRegex default /[^a-z0-9] * /i (without spaces before and after '*')
          * @returns {String}
          */
-        context.sjl.camelCase = function (str, lowerFirst, replaceStrRegex) {
-            lowerFirst = lowerFirst || false;
-            replaceStrRegex = replaceStrRegex || /[^a-z0-9]*/i;
-            var newStr = "";
-            str = str + "";
-            str = str.replace(replaceStrRegex, '-');
-            for (_str in str.split('-')) {
-                if (/^[a-z]/i.test(_str)) {
-                    newStr += context.sjl.ucaseFirst(_str);
-                }
-                else {
-                    newStr += _str;
+        context.sjl.camelCase = function (str, upperFirst, replaceStrRegex) {
+            upperFirst = upperFirst || false;
+            replaceStrRegex = replaceStrRegex || /[^a-z\d]/i;
+            var newStr = "", i,
+
+            // Get clean string
+            parts = str.split(replaceStrRegex);
+
+            // Upper Case First char for parts
+            for (i in parts) {
+
+                // If alpha chars
+                if (/[a-z\d]/.test(parts[i])) {
+
+                    // ucase first char and append to new string,
+                    // if part is a digit just gets returned by `ucaseFirst`
+                    newStr += context.sjl.ucaseFirst(parts[i]);
                 }
             }
-            ;
-            if (lowerFirst) {
+
+            // If should not be upper case first
+            if (!upperFirst) {
+                // Then lower case first
                 newStr = context.sjl.lcaseFirst(newStr);
             }
+
             return newStr;
         };
     }

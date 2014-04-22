@@ -2,7 +2,6 @@
     expect = chai.expect;
 
     require('./../sjl.js');
-    require('checkjs');
 
 //---------------------------------------------------------------------------
 // Beginning of test suite

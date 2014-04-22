@@ -17,7 +17,7 @@
   },
   "dependencies": {},
   "scripts": {
-    "test": "mocha tests/test-suite-sjl-extendable.js"
+    "test": "mocha tests"
   },
   "repository": {
     "type": "git",
