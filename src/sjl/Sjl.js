@@ -70,7 +70,8 @@
          */
         context.sjl.classOf = function (val) {
             return typeof val === 'undefined' ? 'Undefined' :
-                Object.prototype.toString.call(val).split(/\[object\s/)[1].split(']')[0];
+                (val === null ? 'Null' :
+                Object.prototype.toString.call(val).split(/\[object\s/)[1].split(']')[0]);
         };
     }
 
