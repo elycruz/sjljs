@@ -299,7 +299,7 @@
             parts = str.split(replaceStrRegex);
 
             // Upper Case First char for parts
-            for (i in parts) {
+            for (i = 0; i < parts.length; i += 1) {
 
                 // If alpha chars
                 if (/[a-z\d]/.test(parts[i])) {

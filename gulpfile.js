@@ -23,7 +23,7 @@ gulp.task('concat', function () {
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./Sjl.js'))
-        .pipe(header('/**! sjl.min.js <%= (new Date()) %> **/'))
+        .pipe(header('/**! sjl.js <%= (new Date()) %> **/'))
         .pipe(gulp.dest('./'));
 });
 

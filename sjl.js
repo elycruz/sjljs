@@ -1,4 +1,4 @@
-/**! sjl.min.js Tue Apr 22 2014 14:28:58 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Tue Apr 22 2014 22:15:37 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 4/19/2014.
  */
 
@@ -299,7 +299,7 @@
             parts = str.split(replaceStrRegex);
 
             // Upper Case First char for parts
-            for (i in parts) {
+            for (i = 0; i < parts.length; i += 1) {
 
                 // If alpha chars
                 if (/[a-z\d]/.test(parts[i])) {
