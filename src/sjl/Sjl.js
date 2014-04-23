@@ -71,7 +71,10 @@
         context.sjl.classOf = function (val) {
             return typeof val === 'undefined' ? 'Undefined' :
                 (val === null ? 'Null' :
-                    (((Object.prototype.toString.call(val)).split(/\[object\s/))[1].split(']'))[0]);
+                    (function () {
+                        var retVal = Object.prototype.toString.call(val);
+                        return retVal.substring(8, retVal.length - 1);
+                    }()));
         };
     }
 
