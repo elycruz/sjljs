@@ -1,4 +1,4 @@
-/**! sjl.min.js Tue Apr 22 2014 14:16:14 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.min.js Tue Apr 22 2014 14:28:58 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 4/19/2014.
  */
 
@@ -71,7 +71,7 @@
         context.sjl.classOf = function (val) {
             return typeof val === 'undefined' ? 'Undefined' :
                 (val === null ? 'Null' :
-                Object.prototype.toString.call(val).split(/\[object\s/)[1].split(']')[0]);
+                    (((Object.prototype.toString.call(val)).split(/\[object\s/))[1].split(']'))[0]);
         };
     }
 

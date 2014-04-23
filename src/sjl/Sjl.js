@@ -71,7 +71,7 @@
         context.sjl.classOf = function (val) {
             return typeof val === 'undefined' ? 'Undefined' :
                 (val === null ? 'Null' :
-                Object.prototype.toString.call(val).split(/\[object\s/)[1].split(']')[0]);
+                    (((Object.prototype.toString.call(val)).split(/\[object\s/))[1].split(']'))[0]);
         };
     }
 
@@ -141,7 +141,7 @@
         context.sjl.empty = function () {
             var retVal, check,
                 i, item,
-                args = argsToArray(arguments);
+                args = context.sjl.argsToArray(arguments);
 
             // If multiple arguments
             if (args.length > 1) {
