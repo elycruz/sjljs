@@ -39,9 +39,28 @@ gulp.task('uglify', function () {
         .pipe(gulp.dest('./'));
 });
 
+gulp.task('utilities-only', function () {
+    gulp.src([
+        'src/sjl/Sjl.js'
+    ])
+        .pipe(concat('./sjl-utilities-only.js'))
+        .pipe(header('/**! sjl-utilities-only.js <%= (new Date()) %> **/'))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('utilities-only-min', function () {
+    gulp.src([
+        'src/sjl/Sjl.js'
+    ])
+        .pipe(concat('./sjl-utilities-only.min.js'))
+        .pipe(uglify())
+        .pipe(header('/**! sjl-utilities-only.min.js <%= (new Date()) %> **/'))
+        .pipe(gulp.dest('./'));
+});
+
 gulp.task('watch', function () {
-    gulp.watch('./src/**/*', ['concat', 'uglify']);
+    gulp.watch('./src/**/*', ['concat', 'uglify', 'utilities-only', 'utilities-only-min']);
 });
 
 // Default task
-gulp.task('default', ['concat', 'uglify', 'watch']);
+gulp.task('default', ['concat', 'uglify', 'utilities-only', 'utilities-only-min', 'watch']);
