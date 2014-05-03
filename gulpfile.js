@@ -1,18 +1,15 @@
 /**
  * Created by edelacruz on 4/14/14.
  */
-var gulp = require('gulp'),
-
-    concat = require('gulp-concat'),
-
-    header = require('gulp-header'),
-
-    mocha = require('gulp-mocha'),
-
-    uglify = require('gulp-uglify');
+var gulp        = require('gulp'),
+    concat      = require('gulp-concat'),
+    header      = require('gulp-header'),
+    mocha       = require('gulp-mocha'),
+    uglify      = require('gulp-uglify'),
+    browserify  = require('gulp-browserify');
 
 gulp.task('test', function () {
-    gulp.src('tests/test-suite-sjl-extendable.js')
+    gulp.src('tests/for-server/**/*.js')
         .pipe(mocha());
 });
 
@@ -24,6 +21,18 @@ gulp.task('concat', function () {
     ])
         .pipe(concat('./Sjl.js'))
         .pipe(header('/**! sjl.js <%= (new Date()) %> **/'))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('make-browser-test-suite', function () {
+    gulp.src(['tests/for-server/**/*.js'])
+        .pipe(concat('tests/for-browser/test-suite.js'))
+//        .pipe(browserify({
+//            exclude: [
+//                'chai',
+//                './../../sjl.js'
+//            ]
+//        }))
         .pipe(gulp.dest('./'));
 });
 
@@ -59,8 +68,20 @@ gulp.task('utilities-only-min', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('./src/**/*', ['concat', 'uglify', 'utilities-only', 'utilities-only-min']);
+    gulp.watch('./src/**/*', [
+        'concat',
+        'uglify',
+        'utilities-only',
+        'utilities-only-min'
+    ]);
 });
 
 // Default task
-gulp.task('default', ['concat', 'uglify', 'utilities-only', 'utilities-only-min', 'watch']);
+gulp.task('default', [
+    'concat',
+    'uglify',
+    'utilities-only',
+    'utilities-only-min',
+    'make-browser-test-suite',
+    'watch'
+]);

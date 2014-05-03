@@ -13,11 +13,12 @@
     "gulp-mocha": "~0.4.1",
     "gulp-uglify": "~0.2.1",
     "chai": "^1.9.1",
-    "checkjs": "^0.2.0"
+    "checkjs": "^0.2.0",
+    "gulp-browserify": "^0.5.0"
   },
   "dependencies": {},
   "scripts": {
-    "test": "mocha tests"
+    "test": "mocha tests/for-server"
   },
   "repository": {
     "type": "git",

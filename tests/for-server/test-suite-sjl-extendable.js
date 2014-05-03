@@ -1,12 +1,16 @@
-/**
- * Created by Ely on 4/19/2014.
- */
-var chai = require('chai'),
-    expect = chai.expect;
+(function () {
 
-    require('./../sjl.js');
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+}
+
+var expect = chai.expect;
 
 describe('Sjl Extendable', function () {
+
+    "use strict";
 
     it ('should create an extendable class', function () {
         var extendable = new sjl.Extendable();
@@ -37,5 +41,7 @@ describe('Sjl Extendable', function () {
         expect(newIterator instanceof NewIterator).to.equal(true);
         expect(newNewIterator instanceof NewNewIterator).to.equal(true);
     });
+
+});
 
 });

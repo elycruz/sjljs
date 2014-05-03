@@ -1,19 +1,16 @@
-    var chai = require('chai'),
-    expect = chai.expect;
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+}
 
-    require('./../sjl.js');
+var expect = chai.expect;
 
-//---------------------------------------------------------------------------
-// Beginning of test suite
-//---------------------------------------------------------------------------
 describe('Sjl#`namespace`', function () {
 
     "use strict";
 
-//---------------------------------------------------------------------------
-// Prepare data for tests
-//---------------------------------------------------------------------------
-// Sample obj
+    // Sample obj
     var sampleObj = {},
         sampleObjWithMaps = {},
         values = [
@@ -23,7 +20,7 @@ describe('Sjl#`namespace`', function () {
         ],
         evaluatedValues = [];
 
-// Adorn sampleObj
+    // Adorn sampleObj
     values.forEach(function (val, i) {
         var evaluated = eval('(' + val + ')');
         sampleObj['value' + i] = evaluated;

@@ -1,12 +1,14 @@
-/**
- * Created by Ely on 4/21/2014.
- */
-var chai = require('chai'),
-    expect = chai.expect;
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+}
 
-require('./../sjl.js');
+var expect = chai.expect;
 
 describe ('Sjl String', function () {
+
+    "use strict";
 
     var funcToCaseAndResultMap = {
             lcaseFirst: {

@@ -1,11 +1,11 @@
-    var chai = require('chai'),
-    expect = chai.expect;
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+}
 
-    require('./../sjl.js');
+var expect = chai.expect;
 
-//---------------------------------------------------------------------------
-// Beginning of test suite
-//---------------------------------------------------------------------------
 describe('Sjl Utils', function () {
 
     "use strict";
