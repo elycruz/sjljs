@@ -1,4 +1,4 @@
-/**! sjl.js Mon Apr 28 2014 00:32:01 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Sat May 24 2014 16:53:56 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 4/19/2014.
  */
 
@@ -330,23 +330,13 @@
  * Code copy pasted from "Javascript the definitive guide"
  */
 (function (context) {
-
-    /**
-     * Make functions/constructors extendable
-     * @param constructor {function}
-     * @param methods {object} - optional
-     * @param statics {mixed|object|null|undefined} - optional
-     * @todo refactor this.  Figure out a way not to extend `Function`
-     * @returns {*}
-     */
-    Function.prototype.extend = function (constructor, methods, statics) {
-        return defineSubClass(this, constructor, methods, statics);
-    };
-
     /*
      * Copy the enumerable properties of p to o, and return o.
      * If o and p have a property by the same name, o's property is overwritten.
      * This function does not handle getters and setters or copy attributes.
+     * @param o {mixed} - *object to extend
+     * @param p {mixed} - *object to extend from
+     * @returns {*} - returns o
      */
     function extend(o, p) {
         for (prop in p) { // For all props in p.
@@ -359,6 +349,9 @@
      * Copy the enumerable properties of p to o, and return o.
      * If o and p have a property by the same name, o's property is left alone.
      * This function does not handle getters and setters or copy attributes.
+     * @param o {mixed} - *object to merge to
+     * @param p {mixed} - *object to merge from
+     * @returns {*} - returns o
      */
     function merge(o, p) {
         for (prop in p) { // For all props in p.
@@ -427,7 +420,6 @@
      * @returns {*}
      */
     function inherit(proto) {
-//        console.log(proto);
         if (proto == null) throw TypeError('`inherit` function expects param1 to be a non-null value.'); // p must be a non-null object
         if (Object.create) // If Object.create() is defined...
             return Object.create(proto); // then just use it.
@@ -467,6 +459,18 @@
     }
 
     /**
+     * Make functions/constructors extendable
+     * @param constructor {function}
+     * @param methods {object} - optional
+     * @param statics {mixed|object|null|undefined} - optional
+     * @todo refactor this.  Figure out a way not to extend `Function`
+     * @returns {*}
+     */
+    Function.prototype.extend = function (constructor, methods, statics) {
+        return defineSubClass(this, constructor, methods, statics);
+    };
+
+    /**
      * The `Extendable` constructor
      * @constructor
      */
@@ -486,17 +490,60 @@
         return defineSubClass(this, constructor, methods, statics);
     };
 
-    proto.intersect = intersection;
+    /**
+     * @todo Turn this into a deep intersect function
+     * @returns {Extendable}
+     */
+    proto.intersect = function () {
+        var self = this;
+        sjl.argsToArray(arguments).forEach(function(arg) {
+            intersection(self, arg);
+        });
+        return self;
+    };;
 
-    proto.keys = keys;
+    proto.keys = function () {
+        return keys(this);
+    };
 
-    proto.merge = merge;
+    proto.merge = function () {
+        var self = this;
+        sjl.argsToArray(arguments).forEach(function(arg) {
+            merge(self, arg);
+        });
+        return self;
+    };
 
-    proto.restrict = restrict;
+    proto.restrict = function () {
+        var self = this;
+        sjl.argsToArray(arguments).forEach(function(arg) {
+            restrict(self, arg);
+        });
+        return self;
+    };
 
-    proto.subtract = subtract;
+    /**
+     * @returns {Extendable}
+     */
+    proto.subtract = function () {
+        var self = this;
+        sjl.argsToArray(arguments).forEach(function(arg) {
+            subtract(self, arg);
+        });
+        return self;
+    };
 
-    proto.union = union;
+    /**
+     * @todo Turn this into a deep union function
+     * @returns {Extendable}
+     */
+    proto.union = function () {
+        var self = this;
+        sjl.argsToArray(arguments).forEach(function(arg) {
+            union(self, arg);
+        });
+        return self;
+    };
 
     context.sjl.Extendable = Extendable;
 

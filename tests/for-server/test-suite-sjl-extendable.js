@@ -1,5 +1,3 @@
-(function () {
-
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
@@ -42,6 +40,31 @@ describe('Sjl Extendable', function () {
         expect(newNewIterator instanceof NewNewIterator).to.equal(true);
     });
 
-});
+    it ('it should have a working `merge` function', function () {
+
+        // `Hello World` constructor
+        var HelloWorld = sjl.Extendable.extend(function HelloWorld(){
+                this.ola = 'hello'
+            }, {
+                sayHello: function () {
+                    console.log(this.ola);
+                    return this.ola;
+                }}),
+
+            // `Hello World` instance
+            helloWorld = new HelloWorld();
+
+        // Test `Hello World` instance
+        // --------------------------------------------------
+        // Test `ola` variable
+        expect(helloWorld.sayHello()).to.equal('hello');
+
+        // Change `ola` variable
+        helloWorld.merge({ola: 'holandayz'})
+
+        // Retest `ola` variable after merge
+        expect(helloWorld.sayHello()).to.equal('holandayz');
+
+    });
 
 });

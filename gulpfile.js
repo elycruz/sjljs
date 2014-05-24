@@ -5,8 +5,8 @@ var gulp        = require('gulp'),
     concat      = require('gulp-concat'),
     header      = require('gulp-header'),
     mocha       = require('gulp-mocha'),
-    uglify      = require('gulp-uglify'),
-    browserify  = require('gulp-browserify');
+    uglify      = require('gulp-uglify');
+//    browserify  = require('gulp-browserify')
 
 gulp.task('test', function () {
     gulp.src('tests/for-server/**/*.js')
@@ -68,7 +68,7 @@ gulp.task('utilities-only-min', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch('./src/**/*', [
+    gulp.watch(['./tests/**/*', './src/**/*'], [
         'concat',
         'uglify',
         'utilities-only',
