@@ -6,39 +6,32 @@ var gulp        = require('gulp'),
     header      = require('gulp-header'),
     mocha       = require('gulp-mocha'),
     uglify      = require('gulp-uglify');
-//    browserify  = require('gulp-browserify')
 
-gulp.task('test', function () {
+gulp.task('tests', function () {
     gulp.src('tests/for-server/**/*.js')
         .pipe(mocha());
 });
 
 gulp.task('concat', function () {
     gulp.src([
-        'src/sjl/Sjl.js',
+        'src/sjl/sjl-util-functions.js',
+        'src/sjl/sjl-set-functions.js',
+        'src/sjl/sjl-shims-and-augments.js',
+        'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Iterator.js'
     ])
-        .pipe(concat('./Sjl.js'))
+        .pipe(concat('./sjl.js'))
         .pipe(header('/**! sjl.js <%= (new Date()) %> **/'))
-        .pipe(gulp.dest('./'));
-});
-
-gulp.task('make-browser-test-suite', function () {
-    gulp.src(['tests/for-server/**/*.js'])
-        .pipe(concat('tests/for-browser/test-suite.js'))
-//        .pipe(browserify({
-//            exclude: [
-//                'chai',
-//                './../../sjl.js'
-//            ]
-//        }))
         .pipe(gulp.dest('./'));
 });
 
 gulp.task('uglify', function () {
     gulp.src([
-        'src/sjl/Sjl.js',
+        'src/sjl/sjl-util-functions.js',
+        'src/sjl/sjl-set-functions.js',
+        'src/sjl/sjl-shims-and-augments.js',
+        'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Iterator.js'
     ])
@@ -48,9 +41,28 @@ gulp.task('uglify', function () {
         .pipe(gulp.dest('./'));
 });
 
+gulp.task('set-functions-only', function () {
+    gulp.src([
+        'src/sjl/sjl-set-functions.js'
+    ])
+        .pipe(concat('./sjl-set-functions-only.js'))
+        .pipe(header('/**! sjl-set-functions-only.js <%= (new Date()) %> **/'))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('set-functions-only-min', function () {
+    gulp.src([
+        'src/sjl/sjl-set-functions.js'
+    ])
+        .pipe(concat('./sjl-set-functions-only.min.js'))
+        .pipe(uglify())
+        .pipe(header('/**! sjl-set-functions-only.min.js <%= (new Date()) %> **/'))
+        .pipe(gulp.dest('./'));
+});
+
 gulp.task('utilities-only', function () {
     gulp.src([
-        'src/sjl/Sjl.js'
+        'src/sjl/sjl-util-functions.js'
     ])
         .pipe(concat('./sjl-utilities-only.js'))
         .pipe(header('/**! sjl-utilities-only.js <%= (new Date()) %> **/'))
@@ -59,11 +71,17 @@ gulp.task('utilities-only', function () {
 
 gulp.task('utilities-only-min', function () {
     gulp.src([
-        'src/sjl/Sjl.js'
+        'src/sjl/sjl-util-functions.js'
     ])
         .pipe(concat('./sjl-utilities-only.min.js'))
         .pipe(uglify())
         .pipe(header('/**! sjl-utilities-only.min.js <%= (new Date()) %> **/'))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('make-browser-test-suite', function () {
+    gulp.src(['tests/for-server/**/*.js'])
+        .pipe(concat('tests/for-browser/test-suite.js'))
         .pipe(gulp.dest('./'));
 });
 
@@ -80,6 +98,8 @@ gulp.task('watch', function () {
 gulp.task('default', [
     'concat',
     'uglify',
+    'set-functions-only',
+    'set-functions-only-min',
     'utilities-only',
     'utilities-only-min',
     'make-browser-test-suite',

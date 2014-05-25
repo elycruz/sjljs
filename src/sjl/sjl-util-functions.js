@@ -1,12 +1,9 @@
 /**
- * Created by Ely on 4/19/2014.
- */
-
-/**
- * Defines argsToArray, classOfIs, classOf, empty, isset, and namespace, on the passed in context.
+ * Created by Ely on 5/24/2014.
+ * Defines argsToArray, classOfIs, classOf, empty,
+ *  isset, keys, and namespace, on the passed in context.
  * @param {Object} context
  * @returns void
- * @todo make all functions ecmascript < 5 compatible
  */
 (function (context) {
 
@@ -299,7 +296,7 @@
             var newStr = "", i,
 
             // Get clean string
-            parts = str.split(replaceStrRegex);
+                parts = str.split(replaceStrRegex);
 
             // Upper Case First char for parts
             for (i = 0; i < parts.length; i += 1) {
