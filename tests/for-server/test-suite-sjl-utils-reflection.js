@@ -4,7 +4,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('Sjl Reflection', function () {
 

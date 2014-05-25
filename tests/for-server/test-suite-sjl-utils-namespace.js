@@ -4,7 +4,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('Sjl#`namespace`', function () {
 
@@ -14,7 +17,7 @@ describe('Sjl#`namespace`', function () {
     var sampleObj = {},
         sampleObjWithMaps = {},
         values = [
-            'function () {console.log("some function");}',
+            'function () {}',
             'null', 'false', 'true', '0', '-1', '1', '{}',
             '[]', '{all: {your: {base: {are: {belong: {to: {us: {}}}}}}}}'
         ],

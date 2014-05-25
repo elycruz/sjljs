@@ -1,4 +1,4 @@
-/**! sjl.js Sun May 25 2014 12:02:23 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Sun May 25 2014 12:17:20 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.

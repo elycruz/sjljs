@@ -1,6 +1,6 @@
 {
   "name": "sjljs",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Simple Javascript Library",
   "main": "sjl.min.js",
   "directories": {
@@ -30,7 +30,7 @@
     "iterator"
   ],
   "author": "Ely De La Cruz <elycruz@elycruz.com>",
-  "license": "ISC",
+  "license": "GPL v2-3 & MIT",
   "bugs": {
     "url": "https://github.com/elycruz/sjljs/issues"
   },

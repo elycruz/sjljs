@@ -4,7 +4,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe ('Sjl String', function () {
 
@@ -57,7 +60,6 @@ describe ('Sjl String', function () {
                     expect(sjl.camelCase(key, true)).to.equal(map[key]);
                 }
                 else {
-                    console.log(sjl.camelCase(key, true));
                     expect(sjl.camelCase(key)).to.equal(map[key]);
                 }
             });

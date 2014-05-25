@@ -4,7 +4,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('Sjl Extendable', function () {
 
@@ -51,7 +54,6 @@ describe('Sjl Extendable', function () {
                 this.ola = 'hello'
             }, {
                 sayHello: function () {
-                    console.log(this.ola);
                     return this.ola;
                 }}),
 
@@ -73,7 +75,7 @@ describe('Sjl Extendable', function () {
     // Classes from string name
     it ('should be able to create a subclass from a string name', function () {
         var HelloWorld = sjl.Extendable.extend('HelloWorld',
-            {sayHello: function () {console.log(this.ola);}});
+            {sayHello: function () {}});
         expect(sjl.classOfIs(HelloWorld, 'Function')).to.equal(true);
     });
 

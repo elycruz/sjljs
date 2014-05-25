@@ -4,7 +4,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('Sjl Extendable', function () {
 
@@ -51,7 +54,6 @@ describe('Sjl Extendable', function () {
                 this.ola = 'hello'
             }, {
                 sayHello: function () {
-                    console.log(this.ola);
                     return this.ola;
                 }}),
 
@@ -73,7 +75,7 @@ describe('Sjl Extendable', function () {
     // Classes from string name
     it ('should be able to create a subclass from a string name', function () {
         var HelloWorld = sjl.Extendable.extend('HelloWorld',
-            {sayHello: function () {console.log(this.ola);}});
+            {sayHello: function () {}});
         expect(sjl.classOfIs(HelloWorld, 'Function')).to.equal(true);
     });
 
@@ -116,7 +118,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('Sjl#`namespace`', function () {
 
@@ -126,7 +131,7 @@ describe('Sjl#`namespace`', function () {
     var sampleObj = {},
         sampleObjWithMaps = {},
         values = [
-            'function () {console.log("some function");}',
+            'function () {}',
             'null', 'false', 'true', '0', '-1', '1', '{}',
             '[]', '{all: {your: {base: {are: {belong: {to: {us: {}}}}}}}}'
         ],
@@ -207,7 +212,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('Sjl Reflection', function () {
 
@@ -279,7 +287,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe ('Sjl String', function () {
 
@@ -332,7 +343,6 @@ describe ('Sjl String', function () {
                     expect(sjl.camelCase(key, true)).to.equal(map[key]);
                 }
                 else {
-                    console.log(sjl.camelCase(key, true));
                     expect(sjl.camelCase(key)).to.equal(map[key]);
                 }
             });
@@ -346,7 +356,10 @@ if (typeof window === 'undefined') {
     require('./../../sjl.js');
 }
 
-var expect = chai.expect;
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('Sjl Utils', function () {
 
