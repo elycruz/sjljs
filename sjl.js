@@ -1,4 +1,4 @@
-/**! sjl.js Sat May 24 2014 20:26:56 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Sun May 25 2014 12:02:23 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -443,7 +443,7 @@
 
     if (typeof context.sjl.copyOfProto === 'undefined') {
         /**
-         *
+         * Creates a copy of a prototype to use for inheritance.
          * @param proto
          * @returns {*}
          */
@@ -461,6 +461,54 @@
     }
 
     if (typeof context.sjl.defineSubClass === 'undefined') {
+
+        /**
+         * Helper function which creates a constructor using `val` as a string
+         * or just returns the constructor if `val` is a constructor.
+         * @param val
+         * @returns {*}
+         * @throws {Error} - If can't resolve constructor from `val`
+         */
+        function resolveConstructor (val) {
+            // Check if is string and hold original string
+            // Check if is string and hold original string
+            var isString = sjl.classOfIs(val, 'String'),
+                originalString = val,
+                _val = val;
+
+            // If constructor is a string, create it from string
+            if (isString) {
+
+                // Make sure constructor has uppercased first letter
+                _val = sjl.camelCase(_val, true);
+
+                try {
+                    // Evaluate string as constructor
+                    eval('_val = function ' + _val + '(){}');
+                }
+                catch (e) {
+                    // Else throw error
+                    throw new Error('An error occurred while trying to define a ' +
+                        'sub class using: "' + originalString + '" as a sub class in `sjl.defineSubClass`.  ' +
+                        'In unminified source: "./src/sjl/sjl-oop-util-functions.js"')
+                }
+            }
+
+            // If not a constructor and is original string
+            if (!sjl.classOfIs(_val, 'Function') && isString) {
+                throw new Error ('Could not create constructor from string: "' + originalString + '".');
+            }
+
+            // If not a constructor and not a string
+            else if (!sjl.classOfIs(_val, 'Function') && !isString) {
+                throw new Error ('`sjl.defineSubClass` requires constructor ' +
+                    'or string to create a subclass of "' +
+                    '.  In unminified source "./src/sjl/sjl-oop-util-functions.js"');
+            }
+
+            return _val;
+        }
+
         /**
          * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods
          * @param superclass {Function}
@@ -474,19 +522,24 @@
                                                methods, // Instance methods: copied to prototype
                                                statics) // Class properties: copied to constructor
         {
-            // Set up the prototype object of the subclass
-            constructor.prototype = context.sjl.copyOfProto(superclass.prototype);
+            var _constructor = resolveConstructor(constructor);
 
-            constructor.prototype.constructor = constructor;
+            // Set up the prototype object of the subclass
+            _constructor.prototype = context.sjl.copyOfProto(superclass.prototype);
+
+            // Define constructor's constructor
+            _constructor.prototype.constructor = constructor;
 
             // Copy the methods and statics as we would for a regular class
-            if (methods) context.sjl.extend(constructor.prototype, methods);
+            if (methods) context.sjl.extend(_constructor.prototype, methods);
 
-            if (statics) context.sjl.extend(constructor, statics);
+            // If static functions set them
+            if (statics) context.sjl.extend(_constructor, statics);
 
             // Return the class
-            return constructor;
-        }
+            return _constructor;
+        };
+
     }
 
 })(typeof window === 'undefined' ? global : window);

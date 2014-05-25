@@ -89,8 +89,11 @@ gulp.task('watch', function () {
     gulp.watch(['./tests/**/*', './src/**/*'], [
         'concat',
         'uglify',
+        'set-functions-only',
+        'set-functions-only-min',
         'utilities-only',
-        'utilities-only-min'
+        'utilities-only-min',
+        'make-browser-test-suite'
     ]);
 });
 
