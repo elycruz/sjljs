@@ -17,19 +17,23 @@ describe('Sjl Set Functions', function () {
 
     "use strict";
 
-    var funcNames = ['extend', 'intersection', 'merge',
-        'restrict', 'subtract', 'union'];
+    describe ('It should have It\'s set functions set', function () {
+        var funcNames = ['extend', 'intersection', 'merge',
+            'restrict', 'subtract', 'union'];
 
-    // Check that the set functions are defined
-    funcNames.forEach(function (funcName) {
-        it('should have `' + funcName + '` function.', function () {
-            expect((sjl.hasOwnProperty(funcName)
-                && typeof sjl[funcName] === 'function')).to.equal(true);
+        // Check that the set functions are defined
+        funcNames.forEach(function (funcName) {
+            it('should have `' + funcName + '` function.', function () {
+                expect((sjl.hasOwnProperty(funcName)
+                    && typeof sjl[funcName] === 'function')).to.equal(true);
+            });
         });
     });
 
-    describe('#`union`', function () {
-        it('should be able to unite two hash maps', function () {
+    // #`union` uses #`extend` so these tests pretty much take care of both
+    describe ('#`union` and #`extend` tests', function () {
+
+        it ('should be able to unite two hash maps without the `deep` option', function () {
             var unitee1 = {
                     func: function func() {
                     },
@@ -66,8 +70,10 @@ describe('Sjl Set Functions', function () {
             });
 
             // If rslt length is the same as the expected length we have a naive success (more extensive tests follow..)
-            expect(rslt.length).to.equal(6);
+            expect(rslt.length).to.equal(Object.keys(expectedKeyTypeMap).length);
+        });
 
+        it ('should be able to unite to hash maps with the `deep` option set to `true`', function () {
             var unitee3 = {
                     all: {
                         name: 'all',
@@ -103,10 +109,11 @@ describe('Sjl Set Functions', function () {
                     'all', 'your', 'base', 'are', 'belong', 'to', 'us'
                 ],
                 expectedRsltLength,
-                lastRslt;
+                lastRslt,
+                // Get result of union
+                rslt = sjl.union(unitee3, unitee4, true);
 
-            rslt = sjl.union(unitee3, unitee4, true);
-
+            // Get expected length of `allYourBaseKeys` matches
             expectedRsltLength = (allYourBaseKeys.filter(function (key) {
 
                 // Get first rslt[key] value
@@ -115,19 +122,34 @@ describe('Sjl Set Functions', function () {
                     return sjl.isset(lastRslt);
                 }
 
-                return (function () {
-                    var retVal = sjl.isset(lastRslt[key]);
-                    lastRslt = lastRslt[key];
-                    return retVal;
-                })();
+                var retVal = sjl.isset(lastRslt[key]);
+                lastRslt = lastRslt[key];
+                return retVal;
 
             })).length;
 
+            // Match the lengths of united keys to result-of-union object
             expect(expectedRsltLength).to.equal(allYourBaseKeys.length);
 
-            console.log(rslt);
-
         });
+
+    });
+
+    describe ('#`merge` tests', function () {
+        it ('should be able to `merge` two objects together with out overwritting the original object\'s ' +
+            'properties (should just merge missing properties into object 1)');
+    });
+
+    describe ('#`intersection` tests', function () {
+        it ('should return an object with the shared properties of object 1 and object 2.');
+    });
+
+    describe ('#`subtract` tests', function () {
+        it ('should return a new object with the properties that are not shared by the objects passed in');
+    });
+
+    describe ('#`restrict` tests', function () {
+        it ('should remove the properties from object 1 that are not present in object 2');
     });
 
 });

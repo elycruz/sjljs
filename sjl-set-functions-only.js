@@ -1,4 +1,4 @@
-/**! sjl-set-functions-only.js Thu Jun 19 2014 00:42:55 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl-set-functions-only.js Thu Jun 19 2014 01:32:01 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Code copy pasted from "Javascript the definitive guide"
  */
