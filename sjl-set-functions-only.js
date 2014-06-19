@@ -1,4 +1,4 @@
-/**! sjl-set-functions-only.js Sun May 25 2014 12:17:20 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl-set-functions-only.js Thu Jun 19 2014 00:42:55 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Code copy pasted from "Javascript the definitive guide"
  */
@@ -15,9 +15,22 @@
          * @param p {mixed} - *object to extend from
          * @returns {*} - returns o
          */
-        context.sjl.extend = function (o, p) {
+        context.sjl.extend = function (o, p, deep) {
             for (prop in p) { // For all props in p.
-                o[prop] = p[prop]; // Add the property to o.
+                if (deep) {
+                    if (!context.sjl.empty(o[prop])
+                        && !context.sjl.empty(o[prop])
+                        && context.sjl.classOfIs(o[prop], 'Object')
+                        && context.sjl.classOfIs(p[prop], 'Object')) {
+                        context.sjl.extend(o[prop], p[prop], deep);
+                    }
+                    else {
+                        o[prop] = p[prop]; // Add the property to o.
+                    }
+                }
+                else {
+                    o[prop] = p[prop]; // Add the property to o.
+                }
             }
             return o;
         };
@@ -73,8 +86,8 @@
          * Return a new object that holds the properties of both o and p.
          * If o and p have properties by the same name, the values from p are used.
          */
-        context.sjl.union = function (o, p) {
-            return context.sjl.extend(context.sjl.extend({}, o), p);
+        context.sjl.union = function (o, p, deep) {
+            return context.sjl.extend(context.sjl.extend({}, o), p, deep);
         };
     }
 

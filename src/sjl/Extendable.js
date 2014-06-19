@@ -33,7 +33,7 @@
             intersection(self, arg);
         });
         return self;
-    };;
+    };
 
     proto.keys = function () {
         return context.sjl.keys(this);
