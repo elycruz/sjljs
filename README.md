@@ -21,7 +21,6 @@ or empty object is true for one or one of many values.
 - `sjl.namespace` - For getting and setting values on hash objects (allows deep searching by namespace 
 string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
 
-
 ### Shims:
 - `Function.prototype.extend` - Defines this method on `Function.prototype` only if it is not already
 defined; Proxy for `sjl.defineSubClass`.
