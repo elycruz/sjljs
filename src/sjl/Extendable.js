@@ -23,37 +23,6 @@
         return context.sjl.defineSubClass(this, constructor, methods, statics);
     };
 
-    /**
-     * Extends Extendable's prototype with prototype of passed in object
-     * and also applies passed in object to Extendable.
-     * ** Note ** Should only be called on instances not directly on Extendable.
-     * @return {context.sjl.Extendable}
-     */
-    proto.mixin = function () {
-        var args = context.sjl.argsToArray(arguments),
-            arg, self = this;
-        for (arg in args) {
-            arg = args[arg];
-            arg.apply(self);
-            context.sjl.extend(self.prototype, arg.prototype);
-        }
-        return self;
-    };
-
     context.sjl.Extendable = Extendable;
 
 })(typeof window === 'undefined' ? global : window);
-
-//
-///*
-// * Return an array that holds the names of the enumerable own properties of o.
-// */
-//function keys(o) {
-//    if (typeof o !== "object") throw TypeError('`keys` function expects param1 to be an object.'); // Object argument required
-//    var result = []; // The array we will return
-//    for (var prop in o) { // For all enumerable properties
-//        if (o.hasOwnProperty(prop)) // If it is an own property
-//            result.push(prop); // add it to the array.
-//    }
-//    return result; // Return the array.
-//}

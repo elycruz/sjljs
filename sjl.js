@@ -1,4 +1,4 @@
-/**! sjl.js Sat Jun 21 2014 14:20:51 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Sat Jun 21 2014 14:58:01 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -655,40 +655,10 @@
         return context.sjl.defineSubClass(this, constructor, methods, statics);
     };
 
-    /**
-     * Extends Extendable's prototype with prototype of passed in object
-     * and also applies passed in object to Extendable.
-     * ** Note ** Should only be called on instances not directly on Extendable.
-     * @return {context.sjl.Extendable}
-     */
-    proto.mixin = function () {
-        var args = context.sjl.argsToArray(arguments),
-            arg, self = this;
-        for (arg in args) {
-            arg = args[arg];
-            arg.apply(self);
-            context.sjl.extend(self.prototype, arg.prototype);
-        }
-        return self;
-    };
-
     context.sjl.Extendable = Extendable;
 
 })(typeof window === 'undefined' ? global : window);
 
-//
-///*
-// * Return an array that holds the names of the enumerable own properties of o.
-// */
-//function keys(o) {
-//    if (typeof o !== "object") throw TypeError('`keys` function expects param1 to be an object.'); // Object argument required
-//    var result = []; // The array we will return
-//    for (var prop in o) { // For all enumerable properties
-//        if (o.hasOwnProperty(prop)) // If it is an own property
-//            result.push(prop); // add it to the array.
-//    }
-//    return result; // Return the array.
-//}
 /**
  * Created by Ely on 6/21/2014.
  */
