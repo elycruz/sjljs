@@ -23,6 +23,12 @@
         return context.sjl.defineSubClass(this, constructor, methods, statics);
     };
 
+    /**
+     * Extends Extendable's prototype with prototype of passed in object
+     * and also applies passed in object to Extendable.
+     * ** Note ** Should only be called on instances not directly on Extendable.
+     * @return {context.sjl.Extendable}
+     */
     proto.mixin = function () {
         var args = context.sjl.argsToArray(arguments),
             arg, self = this;
@@ -31,7 +37,7 @@
             arg.apply(self);
             context.sjl.extend(self.prototype, arg.prototype);
         }
-        context.sjl.extend(this.prototype, obj.prototype);
+        return self;
     };
 
     context.sjl.Extendable = Extendable;
