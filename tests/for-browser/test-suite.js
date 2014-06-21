@@ -118,31 +118,16 @@ describe('Sjl Set Functions', function () {
 
         it ('should be able to unite two hash maps without the `deep` option', function () {
             var unitee1 = {
-                    func: function func() {
-                    },
-                    nil: null,
-                    num: 123,
-                    bln: false,
-                    obj: {a: 'A', b: 'B'},
-                    str: "unitee1"
+                    func: function func() { }, nil: null, num: 123, bln: false,
+                    obj: {a: 'A', b: 'B'}, str: "unitee1"
                 },
-
                 unitee2 = {
-                    func: function otherFunc() {
-                    },
-                    num: 456,
-                    bln: true,
-                    obj: {c: 'C', d: 'D'},
-                    str: "unitee2"
+                    func: function otherFunc() { }, num: 456, bln: true,
+                    obj: {c: 'C', d: 'D'}, str: "unitee2"
                 },
-
-                expectedKeyTypeMap = {
-                    'func': 'Function',
-                    'nil': 'Null',
-                    'num': 'Number',
+                expectedKeyTypeMap = { 'func': 'Function', 'nil': 'Null', 'num': 'Number',
                     'bln': 'Boolean',
-                    'obj': 'Object',
-                    'str': 'String'
+                    'obj': 'Object', 'str': 'String'
                 },
 
                 rslt = sjl.union(unitee1, unitee2);
@@ -158,35 +143,12 @@ describe('Sjl Set Functions', function () {
 
         it ('should be able to unite to hash maps with the `deep` option set to `true`', function () {
             var unitee3 = {
-                    all: {
-                        name: 'all',
-                        your: {
-                            name: 'your',
-                            base: {
-                                name: 'base'
-                            }
-                        }
-                    }
+                    all: { name: 'all', your: { name: 'your',
+                        base: { name: 'base' } } }
                 },
-                unitee4 = {
-                    all: {
-                        your: {
-                            base: {
-                                are: {
-                                    name: 'are',
-                                    belong: {
-                                        name: 'belong',
-                                        to: {
-                                            name: 'to',
-                                            us: {
-                                                name: 'us'
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                unitee4 = { all: { your: { base: {
+                    are: { name: 'are', belong: { name: 'belong',
+                        to: { name: 'to', us: { name: 'us' } } } } } } }
                 },
                 allYourBaseKeys = [
                     'all', 'your', 'base', 'are', 'belong', 'to', 'us'
