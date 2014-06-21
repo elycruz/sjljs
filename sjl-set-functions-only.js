@@ -1,4 +1,4 @@
-/**! sjl-set-functions-only.js Sat Jun 21 2014 12:44:07 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl-set-functions-only.js Sat Jun 21 2014 13:54:49 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * **Cartesian functions copied from "Javascript the definitive guide"
  */

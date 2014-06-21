@@ -23,59 +23,15 @@
         return context.sjl.defineSubClass(this, constructor, methods, statics);
     };
 
-    /**
-     * @todo Turn this into a deep intersect function
-     * @returns {Extendable}
-     */
-    proto.intersect = function () {
-        var self = this;
-        context.sjl.argsToArray(arguments).forEach(function(arg) {
-            intersection(self, arg);
-        });
-        return self;
-    };
-
-    proto.keys = function () {
-        return context.sjl.keys(this);
-    };
-
-    proto.merge = function () {
-        var self = this;
-        context.sjl.argsToArray(arguments).forEach(function(arg) {
-            context.sjl.merge(self, arg);
-        });
-        return self;
-    };
-
-    proto.restrict = function () {
-        var self = this;
-        context.sjl.argsToArray(arguments).forEach(function(arg) {
-            context.sjl.restrict(self, arg);
-        });
-        return self;
-    };
-
-    /**
-     * @returns {Extendable}
-     */
-    proto.subtract = function () {
-        var self = this;
-        context.sjl.argsToArray(arguments).forEach(function(arg) {
-            context.sjl.subtract(self, arg);
-        });
-        return self;
-    };
-
-    /**
-     * @todo Turn this into a deep union function
-     * @returns {Extendable}
-     */
-    proto.union = function () {
-        var self = this;
-        context.sjl.argsToArray(arguments).forEach(function(arg) {
-            context.sjl.union(self, arg);
-        });
-        return self;
+    proto.mixin = function () {
+        var args = context.sjl.argsToArray(arguments),
+            arg, self = this;
+        for (arg in args) {
+            arg = args[arg];
+            arg.apply(self);
+            context.sjl.extend(self.prototype, arg.prototype);
+        }
+        context.sjl.extend(this.prototype, obj.prototype);
     };
 
     context.sjl.Extendable = Extendable;
