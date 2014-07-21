@@ -10,6 +10,7 @@
         /**
          * Gets or sets a collection of attributes.
          * @param attrs {mixed|Array|Object} - Attributes to set or get from object
+         * @todo add an `attr` function to this class
          * @returns {context.sjl.Attributable}
          */
         attrs: function (attrs) {

@@ -20,6 +20,7 @@ gulp.task('concat', function () {
         'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Attributable.js',
+        'src/sjl/Optionable.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.js'))
@@ -35,6 +36,7 @@ gulp.task('uglify', function () {
         'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Attributable.js',
+        'src/sjl/Optionable.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.min.js'))

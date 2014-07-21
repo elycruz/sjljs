@@ -1,6 +1,7 @@
 /**
  * Created by Ely on 5/24/2014.
- * **Cartesian functions copied from "Javascript the definitive guide"
+ * ** Cartesian functions copied from "Javascript the definitive guide"
+ * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
  */
 (function (context) {
 
@@ -16,6 +17,7 @@
          * @param obj {Object} the hash to search within
          * @param args {Array} optional the array to pass to value if it is a function
          * @param raw {Boolean} optional whether to return value even if it is a function
+         * @todo allow this function to use getter function for key if it exists
          * @returns {*}
          */
         context.sjl.getValueFromObj = function (key, obj, args, raw) {
@@ -68,7 +70,7 @@
     }
 
     if (typeof context.sjl.extend === 'undefined') {
-        /*
+        /**
          * Copy the enumerable properties of p to o, and return o.
          * If o and p have a property by the same name, o's property is overwritten.
          * This function does not handle getters and setters or copy attributes but
@@ -110,7 +112,7 @@
     }
 
     if (typeof context.sjl.merge === 'undefined') {
-        /*
+        /**
          * Copy the enumerable properties of p to o, and return o.
          * If o and p have a property by the same name, o's property is left alone.
          * This function does not handle getters and setters or copy attributes.
@@ -128,7 +130,7 @@
     }
 
     if (typeof context.sjl.subtract === 'undefined') {
-        /*
+        /**
          * For each property of p, delete the property with the same name from o.
          * Return o.
          */
@@ -142,7 +144,7 @@
     }
 
     if (typeof context.sjl.restrict === 'undefined') {
-        /*
+        /**
          * Remove properties from o if there is not a property with the same name in p.
          * Return o.
          */
@@ -155,7 +157,7 @@
     }
 
     if (typeof context.sjl.union === 'undefined') {
-        /*
+        /**
          * Return a new object that holds the properties of both o and p.
          * If o and p have properties by the same name, the values from p are used.
          */
@@ -165,7 +167,7 @@
     }
 
     if (typeof context.sjl.intersection === 'undefined') {
-        /*
+        /**
          * Return a new object that holds only the properties of o that also appear
          * in p. This is something like the intersection of o and p, but the values of
          * the properties in p are discarded
