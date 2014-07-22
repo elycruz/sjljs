@@ -1,4 +1,4 @@
-/**! sjl.js Mon Jul 21 2014 16:43:19 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Mon Jul 21 2014 18:46:24 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -630,6 +630,13 @@
 
     }
 
+    if (typeof context.sjl.throwNotOfTypeError === 'undefined') {
+        context.sjl.throwNotOfTypeError = function (value, paramName, funcName, expectedType) {
+            throw Error(funcName + ' expects ' + paramName +
+                ' to be of type "' + expectedType + '".  Value received: ' + value);
+        };
+    }
+
 })(typeof window === 'undefined' ? global : window);
 
 /**
@@ -790,15 +797,15 @@
             },
             {
                 getMessagesMaxLength: function () {
-                    var self = this;
-                    return context.sjl.classOfIs(self.maxMessagesLength, 'Number')
-                        ? self.maxMessagesLength : -1;
+                    var self = this,
+                        maxMessageLen = self.getOption('maxMessagesLength');
+                    return context.sjl.classOfIs(maxMessageLen, 'Number') ? maxMessageLen: -1;
                 },
 
                 getMessages: function () {
-                    var self = this;
-                    return context.sjl.classOfIs(self.messages, 'Array')
-                        ? self.messages : [];
+                    var self = this,
+                        messages = self.getOption('messages');
+                    return context.sjl.classOfIs(messages, 'Array') ? messages : [];
                 },
 
                 isValid: function (value) {
@@ -807,9 +814,9 @@
                 },
 
                 isValueObscured: function () {
-                    var self = this;
-                    return context.sjl.classOfIs(self.valueObscured, 'Boolean')
-                        ? self.valueObscured : false;
+                    var self = this,
+                        valObscured = self.getOption('valueObscured');
+                    return context.sjl.classOfIs(valObscured, 'Boolean') ? valObscured : false;
                 },
 
                 setValue: function (value) {
@@ -820,6 +827,30 @@
 
                 getValue: function () {
                     return this.getOption('value');
+                },
+
+                addErrorByKey: function (key) {
+                    var self = this,
+                        messageTemplate = self.getOption('messageTemplates'),
+                        messages = self.getOption('messages');
+
+                    // If key is string
+                    if (context.sjl.classOfIs(key, 'String') &&
+                        context.sjl.isset(messageTemplate[key])) {
+                        if (typeof messageTemplate[key] === 'function') {
+                            messages.push(messageTemplate[key].apply(self));
+                        }
+                        else if (context.sjl.classOfIs(messageTemplate[key], 'String')) {
+                            messages.push(messageTemplate[key]);
+                        }
+                    }
+                    else if (context.sjl.classOfIs(key, 'function')) {
+                        messages.push(key.apply(self));
+                    }
+                    else {
+                        messages.push(key);
+                    }
+                    return self;
                 }
 
             });
@@ -866,12 +897,25 @@
         isValid: function (value) {
             var self = this,
                 retVal = false;
-            value = value || self.getValue();
+
+            value = context.sjl.isset(value) ? value : self.getValue();
+
+            if (!context.sjl.classOfIs(value, 'Number')) {
+                self.addErrorByKey('INVALID_TYPE');
+                return retVal;
+            }
+
             if (self.getInclusive()) {
                 retVal = value >= this.getMin() && value <= this.getMax();
+                if (!retVal) {
+                    self.addErrorByKey('NOT_IN_RANGE_INCLUSVE');
+                }
             }
             else {
                 retVal = value > this.getMin() && value < this.getMax();
+                if (!retVal) {
+                    self.addErrorByKey('NOT_IN_RANGE_EXCLUSIVE');
+                }
             }
             return retVal;
         },

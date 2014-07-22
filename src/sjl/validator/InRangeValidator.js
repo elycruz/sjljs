@@ -38,12 +38,25 @@
         isValid: function (value) {
             var self = this,
                 retVal = false;
-            value = value || self.getValue();
+
+            value = context.sjl.isset(value) ? value : self.getValue();
+
+            if (!context.sjl.classOfIs(value, 'Number')) {
+                self.addErrorByKey('INVALID_TYPE');
+                return retVal;
+            }
+
             if (self.getInclusive()) {
                 retVal = value >= this.getMin() && value <= this.getMax();
+                if (!retVal) {
+                    self.addErrorByKey('NOT_IN_RANGE_INCLUSVE');
+                }
             }
             else {
                 retVal = value > this.getMin() && value < this.getMax();
+                if (!retVal) {
+                    self.addErrorByKey('NOT_IN_RANGE_EXCLUSIVE');
+                }
             }
             return retVal;
         },

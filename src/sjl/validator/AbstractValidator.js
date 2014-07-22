@@ -26,15 +26,15 @@
             },
             {
                 getMessagesMaxLength: function () {
-                    var self = this;
-                    return context.sjl.classOfIs(self.maxMessagesLength, 'Number')
-                        ? self.maxMessagesLength : -1;
+                    var self = this,
+                        maxMessageLen = self.getOption('maxMessagesLength');
+                    return context.sjl.classOfIs(maxMessageLen, 'Number') ? maxMessageLen: -1;
                 },
 
                 getMessages: function () {
-                    var self = this;
-                    return context.sjl.classOfIs(self.messages, 'Array')
-                        ? self.messages : [];
+                    var self = this,
+                        messages = self.getOption('messages');
+                    return context.sjl.classOfIs(messages, 'Array') ? messages : [];
                 },
 
                 isValid: function (value) {
@@ -43,9 +43,9 @@
                 },
 
                 isValueObscured: function () {
-                    var self = this;
-                    return context.sjl.classOfIs(self.valueObscured, 'Boolean')
-                        ? self.valueObscured : false;
+                    var self = this,
+                        valObscured = self.getOption('valueObscured');
+                    return context.sjl.classOfIs(valObscured, 'Boolean') ? valObscured : false;
                 },
 
                 setValue: function (value) {
@@ -56,6 +56,30 @@
 
                 getValue: function () {
                     return this.getOption('value');
+                },
+
+                addErrorByKey: function (key) {
+                    var self = this,
+                        messageTemplate = self.getOption('messageTemplates'),
+                        messages = self.getOption('messages');
+
+                    // If key is string
+                    if (context.sjl.classOfIs(key, 'String') &&
+                        context.sjl.isset(messageTemplate[key])) {
+                        if (typeof messageTemplate[key] === 'function') {
+                            messages.push(messageTemplate[key].apply(self));
+                        }
+                        else if (context.sjl.classOfIs(messageTemplate[key], 'String')) {
+                            messages.push(messageTemplate[key]);
+                        }
+                    }
+                    else if (context.sjl.classOfIs(key, 'function')) {
+                        messages.push(key.apply(self));
+                    }
+                    else {
+                        messages.push(key);
+                    }
+                    return self;
                 }
 
             });
