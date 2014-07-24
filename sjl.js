@@ -1,4 +1,4 @@
-/**! sjl.js Thu Jul 24 2014 15:11:03 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Thu Jul 24 2014 17:39:27 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -808,6 +808,11 @@
                     return context.sjl.classOfIs(messages, 'Array') ? messages : [];
                 },
 
+                setMessages: function (messages) {
+                    this.options.messages = context.sjl.classOfIs(messages, 'Array') ? messages : [];
+                    return this;
+                },
+
                 clearMessages: function () {
                     this.options.messages = [];
                 },
@@ -829,8 +834,12 @@
                     return this;
                 },
 
-                getValue: function () {
-                    return this.getOption('value');
+                getValue: function (value) {
+                    var self = this;
+                    return !context.sjl.classOfIs(value, 'Undefined') ? (function () {
+                        self.setValue(value);
+                        return value;
+                    })() : this.getOption('value');
                 },
 
                 addErrorByKey: function (key) {
@@ -861,6 +870,157 @@
 
 })(typeof window === 'undefined' ? global : window);
 
+/**
+ * Created by Ely on 7/21/2014.
+ */
+(function (context) {
+
+    context.sjl = context.sjl || {};
+
+    context.sjl.ValidatorChain = context.sjl.AbstractValidator.extend(
+        function ValidatorChain(options) {
+
+            // Call AbstractValidator's constructor on this with some default options
+            context.sjl.AbstractValidator.call(this, {
+                breakChainOnFailure: false
+            });
+
+            // Set options passed, if any
+            this.setOptions(options);
+
+        }, {
+            isValid: function (value) {
+                var self = this,
+                    retVal = true,
+                    validators,
+                    validator;
+
+                // Set value internally and return it or get it
+                value = self.getValue(value);
+
+                // If an incorrectly implemented validator is found in chain
+                // throws an error.
+                self.verifyValidatorsInChain();
+
+                // Get validators
+                validators = self.getValidators();
+
+                // If we've made it this far validators are good proceed
+                for (validator in validators) {
+                    validator = validators[validator];
+                    if (validator.isValid(value)) {
+                        continue;
+                    }
+
+                    // Else invalid validator found
+                    retVal = false;
+                    self.appendMessages(validator.getMessages());
+                    if (self.getOption('breakChainOnFailure')) {
+                        break;
+                    }
+                }
+
+                return retVal;
+            },
+
+            addValidator: function (validator) {
+                var self = this;
+                if (self.verifyHasValidatorInterface(validator)) {
+                    self.getValidators().push(validator);
+                }
+                else {
+                    throw new Error('addValidator of ValidatorChain only ' +
+                        'accepts validators that have the validator ' +
+                        'interface ([\'isValid\', \'getMessages\'])');
+                }
+                return self;
+            },
+
+            addValidators: function (validators) {
+                for (var validator in validators) {
+                    this.addValidator(validators[validator]);
+                }
+            },
+
+            addByName: function (value) {
+                // @todo flesh this method out
+            },
+
+            prependByName: function (value) {
+                // @todo flesh this method out
+            },
+
+            mergeValidatorChain: function (validatorChain) {
+                // @todo flesh this method out
+            },
+
+            appendMessages: function (messages) {
+                var self = this;
+                self.setMessages(self.getMessages().concat(messages));
+                return self;
+            },
+
+            getValidators: function () {
+                var self = this;
+                if (!context.sjl.isset(self.options.validators)) {
+                    self.options.validators = [];
+                }
+                return self.options.validators;
+            },
+
+            setValidators: function (validators) {
+                if (context.sjl.classOfIs(validators, 'Array')) {
+                    this.addValidators(validators);
+                }
+                else {
+                    throw new Error('`setValidators` of `ValidatorChain` expects ' +
+                        '`param1` to be of type "Array".');
+                }
+                return this;
+            },
+
+            verifyHasValidatorInterface: function (validator) {
+                var _interface = ['isValid', 'getMessages'],
+                    retVal = true;
+                for (value in _interface) {
+                    value = _interface[value];
+                    if (!context.sjl.isset(validator[value]) ||
+                        typeof validator[value] !== 'function') {
+                        retVal = false;
+                        break;
+                    }
+                }
+                return retVal;
+            },
+
+            verifyValidatorsInChain: function (validatorChain) {
+
+                var self = this,
+                    validators,
+                    validator;
+
+                // Get validtor chain
+                validatorChain = validatorChain || self;
+
+                // Get validators
+                validators = validatorChain.getValidators();
+
+                for (validator in validators) {
+                    validator = validators[validator];
+                    if (!self.verifyHasValidatorInterface(validator)) {
+                        throw new Error("A validator with out the validator interface" +
+                            "was found in ValidatorChain.  Please check the validators you are passing " +
+                            "in and make sure that they have the validator interface (['isValid', 'getMessages']).")
+                        break;
+                    }
+                }
+
+                return self;
+            }
+
+        });
+
+})(typeof window === 'undefined' ? global : window);
 /**
  * Created by Ely on 7/21/2014.
  * Initial idea copied from the Zend Framework 2's Between Validator
@@ -991,12 +1151,13 @@
                 var self = this,
                     retVal = false;
 
-                // Set and get or get value
-                value = context.sjl.isset(value) ? (function () {
-                    self.setValue(value);
-                    return value;
-                })() : self.getValue();
+                // Clear any existing messages
+                self.clearMessages();
 
+                // Set and get or get value (gets the set value if value is undefined
+                value = self.getValue(value);
+
+                // Run the test
                 retVal = self.getPattern().test(value);
 
                 // Clear messages before checking validity
@@ -1004,6 +1165,7 @@
                     self.clearMessages();
                 }
 
+                // If test failed
                 if (retVal === false) {
                     self.addErrorByKey('DOES_NOT_MATCH_PATTERN');
                 }

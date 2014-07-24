@@ -28,12 +28,13 @@
                 var self = this,
                     retVal = false;
 
-                // Set and get or get value
-                value = context.sjl.isset(value) ? (function () {
-                    self.setValue(value);
-                    return value;
-                })() : self.getValue();
+                // Clear any existing messages
+                self.clearMessages();
 
+                // Set and get or get value (gets the set value if value is undefined
+                value = self.getValue(value);
+
+                // Run the test
                 retVal = self.getPattern().test(value);
 
                 // Clear messages before checking validity
@@ -41,6 +42,7 @@
                     self.clearMessages();
                 }
 
+                // If test failed
                 if (retVal === false) {
                     self.addErrorByKey('DOES_NOT_MATCH_PATTERN');
                 }

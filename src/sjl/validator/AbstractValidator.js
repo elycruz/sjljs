@@ -37,6 +37,11 @@
                     return context.sjl.classOfIs(messages, 'Array') ? messages : [];
                 },
 
+                setMessages: function (messages) {
+                    this.options.messages = context.sjl.classOfIs(messages, 'Array') ? messages : [];
+                    return this;
+                },
+
                 clearMessages: function () {
                     this.options.messages = [];
                 },
@@ -58,8 +63,12 @@
                     return this;
                 },
 
-                getValue: function () {
-                    return this.getOption('value');
+                getValue: function (value) {
+                    var self = this;
+                    return !context.sjl.classOfIs(value, 'Undefined') ? (function () {
+                        self.setValue(value);
+                        return value;
+                    })() : this.getOption('value');
                 },
 
                 addErrorByKey: function (key) {
