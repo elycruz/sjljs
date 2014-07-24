@@ -23,6 +23,7 @@ gulp.task('concat', function () {
         'src/sjl/Optionable.js',
         'src/sjl/validator/AbstractValidator.js',
         'src/sjl/validator/InRangeValidator.js',
+        'src/sjl/validator/RegexValidator.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.js'))
@@ -41,6 +42,7 @@ gulp.task('uglify', function () {
         'src/sjl/Optionable.js',
         'src/sjl/validator/AbstractValidator.js',
         'src/sjl/validator/InRangeValidator.js',
+        'src/sjl/validator/RegexValidator.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.min.js'))

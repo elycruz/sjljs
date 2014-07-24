@@ -24,7 +24,9 @@
             allowCommas: false,
             allowDecimal: false,
             allowSigned: false,
-            allowBinary: false
+            allowBinary: false,
+            allowHex: false,
+            allowOctal: false
         });
 
         // Set options passed, if any

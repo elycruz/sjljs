@@ -37,6 +37,10 @@
                     return context.sjl.classOfIs(messages, 'Array') ? messages : [];
                 },
 
+                clearMessages: function () {
+                    this.options.messages = [];
+                },
+
                 isValid: function (value) {
                     throw Error("Can not instantiate `AbstractValidator` directly, all class named with " +
                         "a prefixed \"Abstract\" should not be instantiated.");
