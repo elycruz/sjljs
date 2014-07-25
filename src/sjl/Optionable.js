@@ -7,7 +7,9 @@
 
     context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
             this.options = new context.sjl.Attributable();
-            this.setOptions(options);
+            if (context.sjl.classOfIs(options, 'Object')) {
+                this.setOptions(options);
+            }
         },
         {
             setOption: function (key, value) {

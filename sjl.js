@@ -1,4 +1,4 @@
-/**! sjl.js Thu Jul 24 2014 18:31:38 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Fri Jul 25 2014 14:36:45 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -739,7 +739,9 @@
 
     context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
             this.options = new context.sjl.Attributable();
-            this.setOptions(options);
+            if (context.sjl.classOfIs(options, 'Object')) {
+                this.setOptions(options);
+            }
         },
         {
             setOption: function (key, value) {
@@ -1186,6 +1188,396 @@
                     'to be of type "RegExp".  Type and value recieved: type: "' +
                     context.sjl.classOf(pattern) + '"; value: "' + pattern + '"');
             }
+
+        });
+
+})(typeof window === 'undefined' ? global : window);
+
+/**
+ * Created by Ely on 7/24/2014.
+ */
+/**
+ * Created by Ely on 7/21/2014.
+ */
+(function (context) {
+
+    context.sjl = context.sjl || {};
+    context.sjl.inputfilter = context.sjl.inputfilter || {};
+
+    context.sjl.inputfilter.Input = context.sjl.Optionable.extend(
+        function Input(options) {
+            var name = null;
+
+            if (context.sjl.classOfIs(options, 'String')) {
+                name = options;
+            }
+
+            // Set defaults as options on this class
+            context.sjl.Optionable.call(this, {
+                allowEmpty: true,
+                continueIfEmpty: false,
+                breakOnFailure: false,
+                fallbackValue: null,
+                filterChain: null,
+                name: name,
+                required: true,
+                validatorChain: null,
+                value: null
+            });
+
+            // Only functions on objects;  Will
+            // ignore options if it is a string
+            this.setOptions(options);
+
+        }, {
+
+            /**
+             * This is a crude implementation
+             * @todo review if we really want to have fallback value
+             *      functionality for javascript
+             * @returns {boolean}
+             */
+            isValid: function () {
+
+                var self = this,
+                    validatorChain,
+                    value,
+                    retVal = false;
+
+                if (!self.getContinueIfEmpty()) {
+                    // inject non empty validator
+                }
+
+                validatorChain = self.getValidatorChain();
+                value = self.getValue();
+                retVal = validatorChain.isValid(value);
+
+                // Fallback value
+                if (retVal === false && self.hasFallbackValue()) {
+                    self.setValue(self.getFallbackValue());
+                    retVal = true;
+                }
+
+                return retVal;
+            },
+
+            getInputFilter: function () {
+                return this.options.inputFilter;
+            },
+
+            setInputFilter: function (value) {
+                this.options.inputFilter = value;
+            },
+
+            getFilterChain: function () {
+                return this.options.filterChain;
+            },
+
+            setFilterChain: function (value) {
+                this.options.filterChain = value;
+            },
+
+            getValidatorChain: function () {
+                return this.getOption('validatorChain');
+            },
+
+            setValidatorChain: function (value) {
+                this.options.validatorChain = value;
+            },
+
+            getName: function () {
+                return this.getOption('name');
+            },
+
+            setName: function (value) {
+                this.options.name = value;
+            },
+
+            getRawValue: function () {
+                return this.options.rawValue;
+            },
+
+            setRawValue: function (value) {
+                this.options.rawValue = value;
+            },
+
+            getValue: function (value) {
+                return this.getOption('value');
+            },
+
+            setValue: function (value) {
+                this.options.value =
+                    this.options.rawValue = value;
+            },
+
+            getFallbackValue: function () {
+                return this.options.fallbackValue;
+            },
+
+            setFallbackValue: function (value) {
+                this.options.fallbackValue = value;
+            },
+
+            hasFallbackValue: function () {
+                return !context.sjl.classOfIs(this.getFallbackValue(), 'Undefined');
+            },
+
+            getRequired: function () {
+                return this.options.required;
+            },
+
+            setRequired: function (value) {
+                this.options.required = value;
+            },
+
+            getAllowEmpty: function () {
+                return this.options.allowEmpty;
+            },
+
+            setAllowEmpty: function (value) {
+                this.options.allowEmpty = value;
+            },
+
+            getBreakOnFailure: function () {
+                return this.options.breakOnFailure;
+            },
+
+            setBreakOnFailure: function (value) {
+                this.options.breakOnFailure = value;
+            },
+
+            getContinueIfEmpty: function () {
+                return this.options.breakOnFailure;
+            },
+
+            setContinueIfEmpty: function (value) {
+                this.options.continueIfEmpty = value;
+            }
+
+        });
+
+})(typeof window === 'undefined' ? global : window);
+
+/**
+ * Created by Ely on 7/24/2014.
+ */
+(function (context) {
+
+    context.sjl = context.sjl || {};
+    context.sjl.inputfilter = context.sjl.inputfilter || {};
+
+    context.sjl.inputfilter.InputFilter = context.sjl.Optionable.extend(
+        function InputFilter(options) {
+
+            // Set defaults as options on this class
+            context.sjl.Optionable.call(this, {
+                data: [],
+                inputs: {},
+                invalidInputs: [],
+                validInputs: [],
+                validationGroup: null
+            });
+
+            this.setOptions(options);
+
+        }, {
+
+            add: function (value) {
+                this.options.inputs[value.name] = value;
+                return this;
+            },
+
+            get: function (value) {
+                return this.options.inputs[value];
+            },
+
+            has: function (value) {
+                return this.options.inputs.hasOwnProperty(value);
+            },
+
+            isValid: function () {
+                var self = this,
+                    inputs = self.getInputs(),
+                    data = self.getRawValues();
+
+                // If no data bail and throw an error
+                if (context.sjl.empty(data)) {
+                    throw new Error("InputFilter->isValid could\'nt " +
+                        "find any data for validation.");
+                }
+
+                return self.validateInputs(inputs, data);
+            },
+
+            validateInput: function (input, dataMap) {
+                var dataExists = context.sjl.isset(dataMap[name]),
+                    data = dataExists ? dataMap[name] : null,
+                    required = input.getRequired(),
+                    allowEmpty = input.getAllowEmpty(),
+                    continueIfEmpty = input.getContinueIfEmpty(),
+                    retVal = false;
+
+                // If data doesn't exists and input is not required
+                if (!dataExists && !required) {
+                    retVal = true;
+                }
+
+                // If data doesn't exist, input is required, and input allows empty value,
+                // then input is valid only if continueIfEmpty is false;
+                else if (!dataExists && required && allowEmpty && !continueIfEmpty) {
+                    retVal = true;
+                }
+
+                // If data exists, is empty, and not required
+                else if (dataExists && context.sjl.empty(data) && !required) {
+                    retVal = true;
+                }
+
+                // If data exists, is empty, is required, and allows empty,
+                // then input is valid if continue if empty is false
+                else if (dataExists && context.sjl.empty(data) && required
+                    && allowEmpty && !continueIfEmpty) {
+                    retVal = true;
+                }
+
+                else if (!input.isValid()) {
+                    retVal = false;
+                }
+
+                return retVal;
+            },
+
+            validateInputs: function (inputs, data) {
+                var self = this,
+                    validInputs = {},
+                    invalidInputs = {},
+                    retVal = true,
+
+                    // Input vars
+                    input, name;
+
+                // Get inputs
+                inputs = inputs || self.getInputs();
+
+                // Get data
+                data = data || self.getRawValues();
+
+                // Validate inputs
+                for (input in inputs) {
+                    name = input;
+                    input = inputs[input];
+
+                    // @todo Check that input has the required interface(?)
+                    if (self.validateInput(input, data)) {
+                        validInputs[name] = input;
+                        retVal = true;
+                    }
+                    else {
+                        invalidInputs[name] = input;
+                        retVal = false;
+                    }
+                }
+
+                return retVal;
+            },
+
+            setInputs: function (inputs) {
+                var self = this;
+                self.options.inputs =
+                    !context.sjl.classOfIs(inputs, 'Array') ? [] : inputs;
+                return self;
+            },
+
+            getInputs: function () {
+                var self = this;
+                if (!context.sjl.classOfIs(self.options.inputs, 'Array')) {
+                    self.options.inputs = [];
+                }
+                return self.options.inputs;
+            },
+
+            remove: function (value) {
+                var self = this,
+                    inputs = self.options.inputs;
+                if (inputs.hasOwnProperty(value)) {
+                    inputs[value] = null;
+                    delete self.options.inputs[value];
+                }
+                return self;
+            },
+
+            setData: function (data) {
+                var self = this;
+                self.options.data = data;
+                return self;
+            },
+
+            getData: function () {
+                return this.options.data;
+            },
+
+            setValidationGroup: function () {
+            },
+
+            setValidationGroup: function () {
+            },
+
+            getInvalidInputs: function () {
+                if (!context.sjl.classOfIs(this.options.invalidInputs, 'Object')) {
+                    this.options.invalidInputs = {};
+                }
+                return this.options.invalidInputs;
+            },
+
+            getValidInputs: function () {
+                if (!context.sjl.classOfIs(this.options.validInputs, 'Object')) {
+                    this.options.validInputs = {};
+                }
+                return this.options.validInputs;
+            },
+
+            getRawValues: function () {
+                var self = this,
+                    rawValues = {},
+                    input,
+                    invalidInputs = self.getInvalidInputs();
+
+                for (input in invalidInputs) {
+                    input = invalidInputs[input];
+                    rawValues[input.getName()] = input.getRawValue();
+                }
+                return rawValues;
+            },
+
+            getValues: function () {
+                var self = this,
+                    values = {},
+                    input,
+                    invalidInputs = self.getInvalidInputs();
+
+                for (input in invalidInputs) {
+                    input = invalidInputs[input];
+                    values[input.getName()] = input.getValue();
+                }
+                return values;
+            },
+
+            getMessages: function () {
+                var self = this,
+                    messages = {},
+                    input,
+                    invalidInputs = self.getInvalidInputs();
+
+                for (input in invalidInputs) {
+                    input = invalidInputs[input];
+                    messages[input.getName()] = input.getMessages();
+                }
+                return messages;
+            }
+
+        }, {
+
+            VALIDATE_ALL: 0
 
         });
 

@@ -7,9 +7,15 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
+    context.sjl.inputfilter = context.sjl.inputfilter || {};
 
-    context.sjl['input-filter'].Input = context.sjl.Optionable.extend(
+    context.sjl.inputfilter.Input = context.sjl.Optionable.extend(
         function Input(options) {
+            var name = null;
+
+            if (context.sjl.classOfIs(options, 'String')) {
+                name = options;
+            }
 
             // Set defaults as options on this class
             context.sjl.Optionable.call(this, {
@@ -18,12 +24,14 @@
                 breakOnFailure: false,
                 fallbackValue: null,
                 filterChain: null,
-                name: null,
+                name: name,
                 required: true,
                 validatorChain: null,
                 value: null
             });
 
+            // Only functions on objects;  Will
+            // ignore options if it is a string
             this.setOptions(options);
 
         }, {
