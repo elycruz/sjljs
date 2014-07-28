@@ -10,7 +10,7 @@
 
             // Call AbstractValidator's constructor on this with some default options
             context.sjl.validator.AbstractValidator.call(this, {
-                breakChainOnFailure: true
+                breakChainOnFailure: false
             });
 
             // Set options passed, if any

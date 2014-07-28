@@ -19,7 +19,7 @@
 
             // Set defaults as options on this class
             context.sjl.Optionable.call(this, {
-                allowEmpty: true,
+                allowEmpty: false,
                 continueIfEmpty: false,
                 breakOnFailure: false,
                 fallbackValue: null,
@@ -27,7 +27,8 @@
                 name: name,
                 required: true,
                 validatorChain: null,
-                value: null
+                value: null,
+                messages: []
             });
 
             // Only functions on objects;  Will
@@ -49,10 +50,14 @@
                     value,
                     retVal = false;
 
+                // Clear messages
+                self.clearMessages();
+
                 if (!self.getContinueIfEmpty()) {
                     // inject non empty validator
                 }
 
+                // Get the validator chain, value and validate
                 validatorChain = self.getValidatorChain();
                 value = self.getValue();
                 retVal = validatorChain.isValid(value);
@@ -62,6 +67,9 @@
                     self.setValue(self.getFallbackValue());
                     retVal = true;
                 }
+
+                // Set messages internally
+                self.setMessages();
 
                 return retVal;
             },
@@ -85,7 +93,9 @@
             getValidatorChain: function () {
                 var self = this;
                 if (!context.sjl.isset(self.options.validatorChain)) {
-                    self.options.validatorChain = new context.sjl.validator.ValidatorChain();
+                    self.options.validatorChain = new context.sjl.validator.ValidatorChain({
+                        breakOnFailure: self.getBreakOnFailure()
+                    });
                 }
                 return self.options.validatorChain;
             },
@@ -102,7 +112,7 @@
             },
 
             getName: function () {
-                return this.getOption('name');
+                return this.options.name;
             },
 
             setName: function (value) {
@@ -118,7 +128,7 @@
             },
 
             getValue: function (value) {
-                return this.getOption('value');
+                return this.options.value;
             },
 
             setValue: function (value) {
@@ -135,7 +145,8 @@
             },
 
             hasFallbackValue: function () {
-                return !context.sjl.classOfIs(this.getFallbackValue(), 'Undefined');
+                return !context.sjl.classOfIs(this.getFallbackValue(), 'Undefined') &&
+                    !context.sjl.classOfIs(this.getFallbackValue(), 'Null');
             },
 
             getRequired: function () {
@@ -168,6 +179,29 @@
 
             setContinueIfEmpty: function (value) {
                 this.options.continueIfEmpty = value;
+            },
+
+            clearMessages: function () {
+                this.options.messages = [];
+            },
+
+            setMessages: function (messages) {
+                var self = this;
+                if (context.sjl.classOfIs(messages, 'Array')) {
+                    self.options.messages = messages;
+                }
+                else {
+                    self.options.messages = self.getValidatorChain().getMessages();
+                }
+                return self;
+            },
+
+            getMessages: function () {
+                var self = this;
+                if (!context.sjl.isset(self.options.messages)) {
+                    self.options.messages = [];
+                }
+                return self.options.messages;
             }
         });
 
