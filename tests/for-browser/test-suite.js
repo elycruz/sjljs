@@ -195,10 +195,11 @@ describe('Sjl InputFilter', function () {
                         new sjl.validator.RegexValidator({pattern: /^\d{1,20}$/})
                     ]
                 },
+                // @todo fix the required attribute within the `Input` class as it is overriding populated values and forcing validation to be skipped
                 'alias': {
-                    required: false,
+                    required: true,
                     validators: [
-                        new sjl.validator.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
+                        new sjl.validator.RegexValidator({pattern: /^[a-z\-_\d]{1,3}$/i})
                     ]
                 }
             }
@@ -218,6 +219,7 @@ describe('Sjl InputFilter', function () {
         it ('should validate to false on invalid values and should have error messages for each input datum', function () {
             // Set data
             inputFilter.setData({id: '99abc', alias: 'hello -world'});
+            expect(inputFilter.isValid()).to.equal(false);
             expect(Object.keys(inputFilter.getMessages()).length).to.equal(2);
             console.log(inputFilter.getMessages());
         });
