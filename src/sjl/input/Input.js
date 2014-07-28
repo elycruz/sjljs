@@ -83,11 +83,22 @@
             },
 
             getValidatorChain: function () {
-                return this.getOption('validatorChain');
+                var self = this;
+                if (!context.sjl.isset(self.options.validatorChain)) {
+                    self.options.validatorChain = new context.sjl.validator.ValidatorChain();
+                }
+                return self.options.validatorChain;
             },
 
             setValidatorChain: function (value) {
-                this.options.validatorChain = value;
+                if (context.sjl.classOfIs(value, 'Object')
+                    && context.sjl.isset(value.validators)) {
+                    this.getValidatorChain().setOption('validators', value.validators);
+                }
+                else {
+                    this.options.validatorChain = value;
+                }
+                return this;
             },
 
             getName: function () {
@@ -158,7 +169,6 @@
             setContinueIfEmpty: function (value) {
                 this.options.continueIfEmpty = value;
             }
-
         });
 
 })(typeof window === 'undefined' ? global : window);

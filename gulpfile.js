@@ -102,7 +102,7 @@ gulp.task('make-browser-test-suite', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['./tests/**/*', './src/**/*'], [
+    gulp.watch(['./tests/for-server/*', './src/**/*'], [
         'concat',
         'uglify',
         'set-functions-only',

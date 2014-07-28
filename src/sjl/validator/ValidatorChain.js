@@ -10,7 +10,7 @@
 
             // Call AbstractValidator's constructor on this with some default options
             context.sjl.validator.AbstractValidator.call(this, {
-                breakChainOnFailure: false
+                breakChainOnFailure: true
             });
 
             // Set options passed, if any
@@ -29,6 +29,9 @@
                 // If an incorrectly implemented validator is found in chain
                 // throws an error.
                 self.verifyValidatorsInChain();
+
+                // Clear any existing messages
+                self.clearMessages();
 
                 // Get validators
                 validators = self.getValidators();

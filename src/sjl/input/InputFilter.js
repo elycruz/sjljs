@@ -22,17 +22,18 @@
 
         }, {
 
+            // @todo beef up add, get, and has methods (do param type checking before using param)
             add: function (value) {
-                this.options.inputs[value.name] = value;
+                this.getInputs()[value.getName()] = value;
                 return this;
             },
 
             get: function (value) {
-                return this.options.inputs[value];
+                return this.getInputs()[value];
             },
 
             has: function (value) {
-                return this.options.inputs.hasOwnProperty(value);
+                return this.getInputs().hasOwnProperty(value);
             },
 
             isValid: function () {
@@ -122,16 +123,27 @@
             },
 
             setInputs: function (inputs) {
-                var self = this;
-                self.options.inputs =
-                    !context.sjl.classOfIs(inputs, 'Array') ? [] : inputs;
+                var self = this,
+                    input;
+
+                // Set default inputs value if inputs is not of type "Object"
+                if (!context.sjl.classOfIs(inputs, 'Object')) {
+                    self.options.inputs = inputs = { };
+                }
+
+                // Populate inputs
+                for (input in inputs) {
+                    input = new context.sjl.input.Input(inputs[input]);
+                    self.options.inputs[input.getName()] = input;
+                }
+
                 return self;
             },
 
             getInputs: function () {
                 var self = this;
-                if (!context.sjl.classOfIs(self.options.inputs, 'Array')) {
-                    self.options.inputs = [];
+                if (!context.sjl.classOfIs(self.options.inputs, 'Object')) {
+                    self.options.inputs = {};
                 }
                 return self.options.inputs;
             },
@@ -216,6 +228,14 @@
             }
 
         }, {
+
+            factory: function (inputSpec) {
+                if (!context.sjl.classOfIs(inputSpec, 'Object')
+                    || !context.sjl.isset(inputSepc.inputs)) {
+                    throw new Error("InputFilter class expects param 1 to be of type \"Object\".");
+                }
+                return new context.sjl.input.InputFilter(inputSpec);
+            },
 
             VALIDATE_ALL: 0
 

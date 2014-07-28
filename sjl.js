@@ -1,4 +1,4 @@
-/**! sjl.js Mon Jul 28 2014 12:35:29 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Mon Jul 28 2014 15:25:39 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -885,7 +885,7 @@
 
             // Call AbstractValidator's constructor on this with some default options
             context.sjl.validator.AbstractValidator.call(this, {
-                breakChainOnFailure: false
+                breakChainOnFailure: true
             });
 
             // Set options passed, if any
@@ -904,6 +904,9 @@
                 // If an incorrectly implemented validator is found in chain
                 // throws an error.
                 self.verifyValidatorsInChain();
+
+                // Clear any existing messages
+                self.clearMessages();
 
                 // Get validators
                 validators = self.getValidators();
@@ -1280,11 +1283,22 @@
             },
 
             getValidatorChain: function () {
-                return this.getOption('validatorChain');
+                var self = this;
+                if (!context.sjl.isset(self.options.validatorChain)) {
+                    self.options.validatorChain = new context.sjl.validator.ValidatorChain();
+                }
+                return self.options.validatorChain;
             },
 
             setValidatorChain: function (value) {
-                this.options.validatorChain = value;
+                if (context.sjl.classOfIs(value, 'Object')
+                    && context.sjl.isset(value.validators)) {
+                    this.getValidatorChain().setOption('validators', value.validators);
+                }
+                else {
+                    this.options.validatorChain = value;
+                }
+                return this;
             },
 
             getName: function () {
@@ -1355,7 +1369,6 @@
             setContinueIfEmpty: function (value) {
                 this.options.continueIfEmpty = value;
             }
-
         });
 
 })(typeof window === 'undefined' ? global : window);
@@ -1384,17 +1397,18 @@
 
         }, {
 
+            // @todo beef up add, get, and has methods (do param type checking before using param)
             add: function (value) {
-                this.options.inputs[value.name] = value;
+                this.getInputs()[value.getName()] = value;
                 return this;
             },
 
             get: function (value) {
-                return this.options.inputs[value];
+                return this.getInputs()[value];
             },
 
             has: function (value) {
-                return this.options.inputs.hasOwnProperty(value);
+                return this.getInputs().hasOwnProperty(value);
             },
 
             isValid: function () {
@@ -1484,16 +1498,27 @@
             },
 
             setInputs: function (inputs) {
-                var self = this;
-                self.options.inputs =
-                    !context.sjl.classOfIs(inputs, 'Array') ? [] : inputs;
+                var self = this,
+                    input;
+
+                // Set default inputs value if inputs is not of type "Object"
+                if (!context.sjl.classOfIs(inputs, 'Object')) {
+                    self.options.inputs = inputs = { };
+                }
+
+                // Populate inputs
+                for (input in inputs) {
+                    input = new context.sjl.input.Input(inputs[input]);
+                    self.options.inputs[input.getName()] = input;
+                }
+
                 return self;
             },
 
             getInputs: function () {
                 var self = this;
-                if (!context.sjl.classOfIs(self.options.inputs, 'Array')) {
-                    self.options.inputs = [];
+                if (!context.sjl.classOfIs(self.options.inputs, 'Object')) {
+                    self.options.inputs = {};
                 }
                 return self.options.inputs;
             },
@@ -1578,6 +1603,14 @@
             }
 
         }, {
+
+            factory: function (inputSpec) {
+                if (!context.sjl.classOfIs(inputSpec, 'Object')
+                    || !context.sjl.isset(inputSepc.inputs)) {
+                    throw new Error("InputFilter class expects param 1 to be of type \"Object\".");
+                }
+                return new context.sjl.input.InputFilter(inputSpec);
+            },
 
             VALIDATE_ALL: 0
 
