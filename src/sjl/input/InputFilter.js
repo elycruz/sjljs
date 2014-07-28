@@ -4,9 +4,9 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
-    context.sjl.inputfilter = context.sjl.inputfilter || {};
+    context.sjl.input = context.sjl.input || {};
 
-    context.sjl.inputfilter.InputFilter = context.sjl.Optionable.extend(
+    context.sjl.input.InputFilter = context.sjl.Optionable.extend(
         function InputFilter(options) {
 
             // Set defaults as options on this class

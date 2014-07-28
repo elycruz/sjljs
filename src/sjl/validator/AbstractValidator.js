@@ -5,8 +5,9 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
+    context.sjl.validator = context.sjl.isset(context.sjl.validator) ? context.sjl.validator : {};
 
-    context.sjl.AbstractValidator =
+    context.sjl.validator.AbstractValidator =
 
         context.sjl.Optionable.extend(function AbstractValidator(options) {
                 var self = this;

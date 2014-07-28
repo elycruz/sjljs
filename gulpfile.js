@@ -25,8 +25,8 @@ gulp.task('concat', function () {
         'src/sjl/validator/ValidatorChain.js',
         'src/sjl/validator/InRangeValidator.js',
         'src/sjl/validator/RegexValidator.js',
-        'src/sjl/inputfilter/Input.js',
-        'src/sjl/inputfilter/InputFilter.js',
+        'src/sjl/input/Input.js',
+        'src/sjl/input/InputFilter.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.js'))
@@ -47,8 +47,8 @@ gulp.task('uglify', function () {
         'src/sjl/validator/ValidatorChain.js',
         'src/sjl/validator/InRangeValidator.js',
         'src/sjl/validator/RegexValidator.js',
-        'src/sjl/inputfilter/Input.js',
-        'src/sjl/inputfilter/InputFilter.js',
+        'src/sjl/input/Input.js',
+        'src/sjl/input/InputFilter.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.min.js'))

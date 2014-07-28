@@ -7,9 +7,9 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
-    context.sjl.inputfilter = context.sjl.inputfilter || {};
+    context.sjl.input = context.sjl.input || {};
 
-    context.sjl.inputfilter.Input = context.sjl.Optionable.extend(
+    context.sjl.input.Input = context.sjl.Optionable.extend(
         function Input(options) {
             var name = null;
 

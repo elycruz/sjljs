@@ -1,4 +1,4 @@
-/**! sjl.js Fri Jul 25 2014 14:36:45 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Mon Jul 28 2014 12:35:29 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -778,8 +778,9 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
+    context.sjl.validator = context.sjl.isset(context.sjl.validator) ? context.sjl.validator : {};
 
-    context.sjl.AbstractValidator =
+    context.sjl.validator.AbstractValidator =
 
         context.sjl.Optionable.extend(function AbstractValidator(options) {
                 var self = this;
@@ -879,11 +880,11 @@
 
     context.sjl = context.sjl || {};
 
-    context.sjl.ValidatorChain = context.sjl.AbstractValidator.extend(
+    context.sjl.validator.ValidatorChain = context.sjl.validator.AbstractValidator.extend(
         function ValidatorChain(options) {
 
             // Call AbstractValidator's constructor on this with some default options
-            context.sjl.AbstractValidator.call(this, {
+            context.sjl.validator.AbstractValidator.call(this, {
                 breakChainOnFailure: false
             });
 
@@ -1023,6 +1024,7 @@
         });
 
 })(typeof window === 'undefined' ? global : window);
+
 /**
  * Created by Ely on 7/21/2014.
  * Initial idea copied from the Zend Framework 2's Between Validator
@@ -1036,10 +1038,10 @@
 
     context.sjl = context.sjl || {};
 
-    context.sjl.InRangeValidator = context.sjl.AbstractValidator.extend(function InRangeValidator (options) {
+    context.sjl.validator.InRangeValidator = context.sjl.validator.AbstractValidator.extend(function InRangeValidator (options) {
 
         // Set defaults and extend with abstract validator
-        context.sjl.AbstractValidator.call(this, {
+        context.sjl.validator.AbstractValidator.call(this, {
             min: 0,
             messageTemplates: {
                 NOT_IN_RANGE_EXCLUSIVE: function () {
@@ -1130,11 +1132,11 @@
 
     context.sjl = context.sjl || {};
 
-    context.sjl.RegexValidator = context.sjl.AbstractValidator.extend(
+    context.sjl.validator.RegexValidator = context.sjl.validator.AbstractValidator.extend(
         function RegexValidator(options) {
 
             // Set defaults and extend with abstract validator
-            context.sjl.AbstractValidator.call(this, {
+            context.sjl.validator.AbstractValidator.call(this, {
                 pattern: /./,
                 messageTemplates: {
                     DOES_NOT_MATCH_PATTERN: function () {
@@ -1202,9 +1204,9 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
-    context.sjl.inputfilter = context.sjl.inputfilter || {};
+    context.sjl.input = context.sjl.input || {};
 
-    context.sjl.inputfilter.Input = context.sjl.Optionable.extend(
+    context.sjl.input.Input = context.sjl.Optionable.extend(
         function Input(options) {
             var name = null;
 
@@ -1364,9 +1366,9 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
-    context.sjl.inputfilter = context.sjl.inputfilter || {};
+    context.sjl.input = context.sjl.input || {};
 
-    context.sjl.inputfilter.InputFilter = context.sjl.Optionable.extend(
+    context.sjl.input.InputFilter = context.sjl.Optionable.extend(
         function InputFilter(options) {
 
             // Set defaults as options on this class
