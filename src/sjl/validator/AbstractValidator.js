@@ -22,8 +22,17 @@
                     value: null
                 });
 
+                // Merge custome templates in if they are set
+                if (context.sjl.isset(options.customMessageTemplates)) {
+                    customTemplates = options.customMessageTemplates;
+                    options.customeMessageTemplates = null;
+                    delete options.customeMessageTemplates;
+                    self.setCustomMessageTemplates(customTemplates);
+                }
+
                 // Set passed in options if (any)
                 self.setOptions(options);
+
             },
             {
                 getMessagesMaxLength: function () {
@@ -93,6 +102,29 @@
                     else {
                         messages.push(key);
                     }
+                    return self;
+                },
+
+                getMessageTemplates: function () {
+                    return this.options.messageTemplates;
+                },
+
+                setMessageTemplates: function (templates) {
+                    if (!sjl.classOfIs(templates, 'Object')) {
+                        throw new Error('`AddToBagModel.setMessageTemplates` ' +
+                            'expects parameter 1 to be of type "Object".');
+                    }
+                    this.options.messagesTemplates = templates;
+                    return this;
+                },
+
+                updateMessageTemplates: function (templates) {
+                    var self = this;
+                    if (!sjl.classOfIs(templates, 'Object')) {
+                        throw new Error('`AddToBagModel.updateMessageTemplates` ' +
+                            'expects parameter 1 to be of type "Object".');
+                    }
+                    self.options.messageTemplates = sjl.extend(self.getMessageTemplates(), templates);
                     return self;
                 }
 
