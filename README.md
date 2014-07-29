@@ -21,6 +21,16 @@ or empty object is true for one or one of many values.
 - `sjl.namespace` - For getting and setting values on hash objects (allows deep searching by namespace 
 string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
 
+### Validators and associated classes:
+- `sjl.AbstractValidator` - An abstract validator from where to build validators (includes methods and an interface for building validators).
+- `sjl.RegexValidator` - A validator which you can pass a pattern to and then validate any value with.
+- `sjl.InRangeValidator` - @todo refactor this so that it can also take care o validating integers/numbers
+- `sjl.ValidatorChain` - A place to add multiple validators for one value.
+
+### Input and InputFilter
+- `sjl.Input`
+- `sjl.InputFilter`
+
 ### Shims:
 - `Function.prototype.extend` - Defines this method on `Function.prototype` only if it is not already
 defined; Proxy for `sjl.defineSubClass`.
