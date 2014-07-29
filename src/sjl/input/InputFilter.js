@@ -44,10 +44,12 @@
                     inputs = self.getInputs(),
                     data = self.getData();
 
-                // Populate inputs with data
-                self.setDataOnInputs();
                 self.clearInvalidInputs();
                 self.clearValidInputs();
+
+                // Populate inputs with data
+                self.setDataOnInputs();
+
 
                 // If no data bail and throw an error
                 if (context.sjl.empty(data)) {
@@ -59,12 +61,13 @@
             },
 
             validateInput: function (input, dataMap) {
-                var dataExists = context.sjl.isset(dataMap[name]),
+                var name = input.getName(),
+                    dataExists = context.sjl.isset(dataMap[name]),
                     data = dataExists ? dataMap[name] : null,
                     required = input.getRequired(),
                     allowEmpty = input.getAllowEmpty(),
                     continueIfEmpty = input.getContinueIfEmpty(),
-                    retVal = false;
+                    retVal = true;
 
                 // If data doesn't exists and input is not required
                 if (!dataExists && !required) {
@@ -274,7 +277,8 @@
                 data = data || self.getData();
 
                 for (key in data) {
-                    if (!context.sjl.isset(inputs[key])) {
+                    if (!context.sjl.isset(inputs[key])
+                         || !context.sjl.isset(data[key])) {
                         continue;
                     }
                     inputs[key].setValue(data[key]);

@@ -186,20 +186,19 @@ describe('Sjl InputFilter', function () {
         expect (typeof sjl.input.InputFilter.factory).to.equal('function');
     });
 
-    describe ('Should create an autopopulated instance via it\'s static method "factory"', function () {
+    describe ('Should create an auto-populated instance via it\'s static method "factory"', function () {
         var inputFilter = sjl.input.InputFilter.factory({
             inputs: {
-                'id': {
-                    required: true,
+                id: {
                     validators: [
                         new sjl.validator.RegexValidator({pattern: /^\d{1,20}$/})
                     ]
                 },
-                // @todo fix the required attribute within the `Input` class as it is overriding populated values and forcing validation to be skipped
-                'alias': {
-                    required: true,
+                // @todo fix the required attribute within the `InputFilter` class as it is overriding populated
+                // values and forcing validation to be skipped
+                alias: {
                     validators: [
-                        new sjl.validator.RegexValidator({pattern: /^[a-z\-_\d]{1,3}$/i})
+                        new sjl.validator.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
                     ]
                 }
             }
@@ -211,9 +210,9 @@ describe('Sjl InputFilter', function () {
 
         it ('should validate to true on valid values', function () {
             // Set data
-            inputFilter.setData({id: 999, alias: 'hello-world'});
+            inputFilter.setData({id: '999', alias: 'hello-world'});
+            expect(inputFilter.isValid()).to.equal(true);
             expect(Object.keys(inputFilter.getMessages()).length).to.equal(0);
-            console.log(inputFilter.getMessages());
         });
 
         it ('should validate to false on invalid values and should have error messages for each input datum', function () {
@@ -221,15 +220,11 @@ describe('Sjl InputFilter', function () {
             inputFilter.setData({id: '99abc', alias: 'hello -world'});
             expect(inputFilter.isValid()).to.equal(false);
             expect(Object.keys(inputFilter.getMessages()).length).to.equal(2);
-            console.log(inputFilter.getMessages());
         });
 
     });
 
 });
-
-
-
 
 /**
  * Created by Ely on 5/24/2014.

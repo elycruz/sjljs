@@ -1,4 +1,4 @@
-/**! sjl.js Mon Jul 28 2014 18:16:23 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Mon Jul 28 2014 22:36:25 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -1243,11 +1243,10 @@
              *      functionality for javascript
              * @returns {boolean}
              */
-            isValid: function () {
+            isValid: function (value) {
 
                 var self = this,
                     validatorChain,
-                    value,
                     retVal = false;
 
                 // Clear messages
@@ -1259,7 +1258,7 @@
 
                 // Get the validator chain, value and validate
                 validatorChain = self.getValidatorChain();
-                value = self.getValue();
+                value = value || self.getValue();
                 retVal = validatorChain.isValid(value);
 
                 // Fallback value
@@ -1453,10 +1452,12 @@
                     inputs = self.getInputs(),
                     data = self.getData();
 
-                // Populate inputs with data
-                self.setDataOnInputs();
                 self.clearInvalidInputs();
                 self.clearValidInputs();
+
+                // Populate inputs with data
+                self.setDataOnInputs();
+
 
                 // If no data bail and throw an error
                 if (context.sjl.empty(data)) {
@@ -1468,12 +1469,13 @@
             },
 
             validateInput: function (input, dataMap) {
-                var dataExists = context.sjl.isset(dataMap[name]),
+                var name = input.getName(),
+                    dataExists = context.sjl.isset(dataMap[name]),
                     data = dataExists ? dataMap[name] : null,
                     required = input.getRequired(),
                     allowEmpty = input.getAllowEmpty(),
                     continueIfEmpty = input.getContinueIfEmpty(),
-                    retVal = false;
+                    retVal = true;
 
                 // If data doesn't exists and input is not required
                 if (!dataExists && !required) {
@@ -1683,7 +1685,8 @@
                 data = data || self.getData();
 
                 for (key in data) {
-                    if (!context.sjl.isset(inputs[key])) {
+                    if (!context.sjl.isset(inputs[key])
+                         || !context.sjl.isset(data[key])) {
                         continue;
                     }
                     inputs[key].setValue(data[key]);

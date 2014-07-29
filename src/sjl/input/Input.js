@@ -43,11 +43,10 @@
              *      functionality for javascript
              * @returns {boolean}
              */
-            isValid: function () {
+            isValid: function (value) {
 
                 var self = this,
                     validatorChain,
-                    value,
                     retVal = false;
 
                 // Clear messages
@@ -59,7 +58,7 @@
 
                 // Get the validator chain, value and validate
                 validatorChain = self.getValidatorChain();
-                value = self.getValue();
+                value = value || self.getValue();
                 retVal = validatorChain.isValid(value);
 
                 // Fallback value
