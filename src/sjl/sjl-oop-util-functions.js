@@ -104,4 +104,11 @@
 
     }
 
+    if (typeof context.sjl.throwNotOfTypeError === 'undefined') {
+        context.sjl.throwNotOfTypeError = function (value, paramName, funcName, expectedType) {
+            throw Error(funcName + ' expects ' + paramName +
+                ' to be of type "' + expectedType + '".  Value received: ' + value);
+        };
+    }
+
 })(typeof window === 'undefined' ? global : window);

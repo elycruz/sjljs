@@ -20,6 +20,13 @@ gulp.task('concat', function () {
         'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Attributable.js',
+        'src/sjl/Optionable.js',
+        'src/sjl/validator/AbstractValidator.js',
+        'src/sjl/validator/ValidatorChain.js',
+        'src/sjl/validator/InRangeValidator.js',
+        'src/sjl/validator/RegexValidator.js',
+        'src/sjl/input/Input.js',
+        'src/sjl/input/InputFilter.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.js'))
@@ -35,6 +42,13 @@ gulp.task('uglify', function () {
         'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Attributable.js',
+        'src/sjl/Optionable.js',
+        'src/sjl/validator/AbstractValidator.js',
+        'src/sjl/validator/ValidatorChain.js',
+        'src/sjl/validator/InRangeValidator.js',
+        'src/sjl/validator/RegexValidator.js',
+        'src/sjl/input/Input.js',
+        'src/sjl/input/InputFilter.js',
         'src/sjl/Iterator.js'
     ])
         .pipe(concat('./sjl.min.js'))
@@ -88,7 +102,7 @@ gulp.task('make-browser-test-suite', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['./tests/**/*', './src/**/*'], [
+    gulp.watch(['./tests/for-server/*', './src/**/*'], [
         'concat',
         'uglify',
         'set-functions-only',

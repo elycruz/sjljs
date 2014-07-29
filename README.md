@@ -28,7 +28,7 @@ defined; Proxy for `sjl.defineSubClass`.
 ### Tests:
 - Tests for all components listed under "Utilities" above.
 
-### WIPs:
+## WIPs:
 
 #### OOP helpers:
 - `sjl.copyOfProto`
