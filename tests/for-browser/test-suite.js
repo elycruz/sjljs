@@ -97,7 +97,7 @@ describe('Sjl Input', function () {
     "use strict";
 
     describe('Should have the appropriate interface', function () {
-        var input = new sjl.input.Input(),
+        var input = new sjl.Input(),
             propNames = [
                 'allowEmpty',
                 'breakOnFailure',
@@ -162,7 +162,7 @@ describe('Sjl InputFilter', function () {
     "use strict";
 
     describe ('Should have the appropriate interface', function () {
-        var inputFilter = new sjl.input.InputFilter();
+        var inputFilter = new sjl.InputFilter();
         var methods = [
             'add', 'get','has',
             'remove', 'setData', 'getData',
@@ -183,22 +183,22 @@ describe('Sjl InputFilter', function () {
     });
 
     it ('Should have a static method "factory"', function () {
-        expect (typeof sjl.input.InputFilter.factory).to.equal('function');
+        expect (typeof sjl.InputFilter.factory).to.equal('function');
     });
 
     describe ('Should create an auto-populated instance via it\'s static method "factory"', function () {
-        var inputFilter = sjl.input.InputFilter.factory({
+        var inputFilter = sjl.InputFilter.factory({
             inputs: {
                 id: {
                     validators: [
-                        new sjl.validator.RegexValidator({pattern: /^\d{1,20}$/})
+                        new sjl.RegexValidator({pattern: /^\d{1,20}$/})
                     ]
                 },
                 // @todo fix the required attribute within the `InputFilter` class as it is overriding populated
                 // values and forcing validation to be skipped
                 alias: {
                     validators: [
-                        new sjl.validator.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
+                        new sjl.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
                     ]
                 }
             }
@@ -704,7 +704,7 @@ describe('Sjl Validator NS', function () {
 
     "use strict";
 
-    describe('#`sjl.validator.RegexValidator`', function () {
+    describe('#`sjl.RegexValidator`', function () {
 
         function regexTest(keyValMap, validator, expected) {
             var key, value, regex;
@@ -728,7 +728,7 @@ describe('Sjl Validator NS', function () {
                 '/^[a-z]+$/': '0123a12bc', // Alphabetical
                 '^(:?\\+|\\-)?\\d+$': '-10sd0e+99' // Signed Number
             },
-            validator = new sjl.validator.RegexValidator();
+            validator = new sjl.RegexValidator();
 
         // Run tests
         regexTest(truthyMap, validator, true);
@@ -736,7 +736,7 @@ describe('Sjl Validator NS', function () {
 
     });
 
-    describe('#`sjl.validator.InRangeValidator`', function () {
+    describe('#`sjl.InRangeValidator`', function () {
 
         function inRangeTest(keyValMap, validator, expected) {
             var key, config, min, max, value;
@@ -753,7 +753,7 @@ describe('Sjl Validator NS', function () {
             }
         }
 
-        var validator = new sjl.validator.InRangeValidator(),
+        var validator = new sjl.InRangeValidator(),
             truthyMap = {
                 config1: {
                     min: 0,
@@ -793,16 +793,16 @@ describe('Sjl Validator NS', function () {
         inRangeTest(falsyMap, validator, false);
     });
 
-    describe('#`sjl.validator.ValidatorChain`', function () {
-        var chain = new sjl.validator.ValidatorChain({
+    describe('#`sjl.ValidatorChain`', function () {
+        var chain = new sjl.ValidatorChain({
             validators: [
-                new sjl.validator.InRangeValidator({min: 0, max: 100}),
-                new sjl.validator.RegexValidator({pattern: /^\d+$/})
+                new sjl.InRangeValidator({min: 0, max: 100}),
+                new sjl.RegexValidator({pattern: /^\d+$/})
             ]
         });
 
         it ('should have the appropriate interface', function () {
-            var chain = new sjl.validator.ValidatorChain(),
+            var chain = new sjl.ValidatorChain(),
                 methods = ['isValid', 'addValidator', 'addValidators', 'getMessages'],
                 method;
             for (method in methods) {
@@ -816,30 +816,30 @@ describe('Sjl Validator NS', function () {
         // @todo explode this definition. It should be a separated into a definition per method test (defined this way it is due to shortness of time;  e.g., addValidator, addValidators, and constructor
         it('should be able to add validators (one or many, also via constructor ' +
             'and via `addValidator` and `addValidators`).', function () {
-            var chain1 = new sjl.validator.ValidatorChain({
-                    validators: [new sjl.validator.InRangeValidator()]
+            var chain1 = new sjl.ValidatorChain({
+                    validators: [new sjl.InRangeValidator()]
                 }),
-                chain2 = new sjl.validator.ValidatorChain({
+                chain2 = new sjl.ValidatorChain({
                     validators: [
-                        new sjl.validator.InRangeValidator({min: 0, max: 100}),
-                        new sjl.validator.RegexValidator({pattern: /^\d+$/})
+                        new sjl.InRangeValidator({min: 0, max: 100}),
+                        new sjl.RegexValidator({pattern: /^\d+$/})
                     ]
                 }),
-                chain3 = new sjl.validator.ValidatorChain(),
-                chain4 = new sjl.validator.ValidatorChain();
+                chain3 = new sjl.ValidatorChain(),
+                chain4 = new sjl.ValidatorChain();
 
             // Add multiple validators
             chain3.addValidators([
-                new sjl.validator.InRangeValidator({min: 0, max: 100}),
-                new sjl.validator.RegexValidator({pattern: /^\d+$/})
+                new sjl.InRangeValidator({min: 0, max: 100}),
+                new sjl.RegexValidator({pattern: /^\d+$/})
             ]);
-            chain3.addValidator(new sjl.validator.InRangeValidator());
+            chain3.addValidator(new sjl.InRangeValidator());
 
             // Add validators one by one
-            chain4.addValidator(new sjl.validator.InRangeValidator());
-            chain4.addValidator(new sjl.validator.InRangeValidator());
-            chain4.addValidator(new sjl.validator.InRangeValidator());
-            chain4.addValidator(new sjl.validator.InRangeValidator());
+            chain4.addValidator(new sjl.InRangeValidator());
+            chain4.addValidator(new sjl.InRangeValidator());
+            chain4.addValidator(new sjl.InRangeValidator());
+            chain4.addValidator(new sjl.InRangeValidator());
 
             // Validate
             expect(chain1.getValidators().length).to.equal(1);

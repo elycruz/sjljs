@@ -20,7 +20,7 @@ describe('Sjl InputFilter', function () {
     "use strict";
 
     describe ('Should have the appropriate interface', function () {
-        var inputFilter = new sjl.input.InputFilter();
+        var inputFilter = new sjl.InputFilter();
         var methods = [
             'add', 'get','has',
             'remove', 'setData', 'getData',
@@ -41,22 +41,22 @@ describe('Sjl InputFilter', function () {
     });
 
     it ('Should have a static method "factory"', function () {
-        expect (typeof sjl.input.InputFilter.factory).to.equal('function');
+        expect (typeof sjl.InputFilter.factory).to.equal('function');
     });
 
     describe ('Should create an auto-populated instance via it\'s static method "factory"', function () {
-        var inputFilter = sjl.input.InputFilter.factory({
+        var inputFilter = sjl.InputFilter.factory({
             inputs: {
                 id: {
                     validators: [
-                        new sjl.validator.RegexValidator({pattern: /^\d{1,20}$/})
+                        new sjl.RegexValidator({pattern: /^\d{1,20}$/})
                     ]
                 },
                 // @todo fix the required attribute within the `InputFilter` class as it is overriding populated
                 // values and forcing validation to be skipped
                 alias: {
                     validators: [
-                        new sjl.validator.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
+                        new sjl.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
                     ]
                 }
             }

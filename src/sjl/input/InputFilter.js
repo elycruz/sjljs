@@ -4,8 +4,8 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
-    context.sjl.input = context.sjl.input || {};
-    context.sjl.input.InputFilter = context.sjl.Optionable.extend(
+
+    context.sjl.InputFilter = context.sjl.Optionable.extend(
 
         function InputFilter(options) {
 
@@ -24,7 +24,7 @@
 
             // @todo beef up add, get, and has methods (do param type checking before using param)
             add: function (value) {
-                if (value instanceof context.sjl.input.Input) {
+                if (value instanceof context.sjl.Input) {
                     this.getInputs()[value.getName()] = value;
                 }
 
@@ -170,7 +170,7 @@
                     }
 
                     // Create input
-                    input = new context.sjl.input.Input(inputs[input]);
+                    input = new context.sjl.Input(inputs[input]);
 
                     // Set input's validators
                     input.getValidatorChain().addValidators(validators);
@@ -304,7 +304,7 @@
                     || !context.sjl.isset(inputSpec.inputs)) {
                     throw new Error("InputFilter class expects param 1 to be of type \"Object\".");
                 }
-                var inputFilter = new context.sjl.input.InputFilter();
+                var inputFilter = new context.sjl.InputFilter();
                 inputFilter.setInputs(inputSpec.inputs);
                 return inputFilter;
             },

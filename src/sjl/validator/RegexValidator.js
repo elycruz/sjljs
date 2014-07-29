@@ -5,11 +5,11 @@
 
     context.sjl = context.sjl || {};
 
-    context.sjl.validator.RegexValidator = context.sjl.validator.AbstractValidator.extend(
+    context.sjl.RegexValidator = context.sjl.AbstractValidator.extend(
         function RegexValidator(options) {
 
             // Set defaults and extend with abstract validator
-            context.sjl.validator.AbstractValidator.call(this, {
+            context.sjl.AbstractValidator.call(this, {
                 pattern: /./,
                 messageTemplates: {
                     DOES_NOT_MATCH_PATTERN: function () {

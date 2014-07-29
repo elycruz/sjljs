@@ -5,11 +5,11 @@
 
     context.sjl = context.sjl || {};
 
-    context.sjl.validator.ValidatorChain = context.sjl.validator.AbstractValidator.extend(
+    context.sjl.ValidatorChain = context.sjl.AbstractValidator.extend(
         function ValidatorChain(options) {
 
             // Call AbstractValidator's constructor on this with some default options
-            context.sjl.validator.AbstractValidator.call(this, {
+            context.sjl.AbstractValidator.call(this, {
                 breakChainOnFailure: false
             });
 

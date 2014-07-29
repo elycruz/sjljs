@@ -9,10 +9,10 @@
 
     context.sjl = context.sjl || {};
 
-    context.sjl.validator.InRangeValidator = context.sjl.validator.AbstractValidator.extend(function InRangeValidator (options) {
+    context.sjl.InRangeValidator = context.sjl.AbstractValidator.extend(function InRangeValidator (options) {
 
         // Set defaults and extend with abstract validator
-        context.sjl.validator.AbstractValidator.call(this, {
+        context.sjl.AbstractValidator.call(this, {
             messageTemplates: {
                 NOT_NUMERIC: function () {
                     return 'The input value is not exclusively numeric.';

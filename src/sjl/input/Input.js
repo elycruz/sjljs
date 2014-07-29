@@ -7,9 +7,8 @@
 (function (context) {
 
     context.sjl = context.sjl || {};
-    context.sjl.input = context.sjl.input || {};
 
-    context.sjl.input.Input = context.sjl.Optionable.extend(
+    context.sjl.Input = context.sjl.Optionable.extend(
         function Input(options) {
             var name = null;
 
@@ -92,7 +91,7 @@
             getValidatorChain: function () {
                 var self = this;
                 if (!context.sjl.isset(self.options.validatorChain)) {
-                    self.options.validatorChain = new context.sjl.validator.ValidatorChain({
+                    self.options.validatorChain = new context.sjl.ValidatorChain({
                         breakOnFailure: self.getBreakOnFailure()
                     });
                 }
