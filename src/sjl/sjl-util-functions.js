@@ -235,10 +235,10 @@
             search = str.search(/[a-z]/i);
 
             // If alpha char
-            if (typeof search === 'Number' && search > -1) {
+            if (context.sjl.classOfIs(search, 'Number') && search > -1) {
 
                 // Make it lower case
-                char = str[search][func]();
+                char = str.substr(search, 1)[func]();
 
                 // Get string from `char`'s index
                 right = str.substr(search + 1, str.length - 1);
