@@ -235,7 +235,7 @@
             search = str.search(/[a-z]/i);
 
             // If alpha char
-            if (search > -1) {
+            if (context.sjl.classOfIs(search, 'Number') && search > -1) {
 
                 // Make it lower case
                 char = str[search][func]();

@@ -1,4 +1,4 @@
-/**! sjl-utilities-only.js Tue Jul 29 2014 11:29:37 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl-utilities-only.js Sun Aug 17 2014 22:38:04 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -235,7 +235,7 @@
             search = str.search(/[a-z]/i);
 
             // If alpha char
-            if (search > -1) {
+            if (context.sjl.classOfIs(search, 'Number') && search > -1) {
 
                 // Make it lower case
                 char = str[search][func]();
