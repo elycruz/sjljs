@@ -11,7 +11,9 @@
 
     var slice = Array.prototype.slice,
         notLCaseFirst = typeof context.sjl.lcaseFirst !== 'function',
-        notUCaseFirst = typeof context.sjl.ucaseFirst !== 'function';
+        notUCaseFirst = typeof context.sjl.ucaseFirst !== 'function',
+        noExtractBoolFromArrayStart = typeof context.sjl.extractBoolFromArrayStart !== 'function',
+        noExtractBoolFromArrayEnd = typeof context.sjl.extractBoolFromArrayEnd !== 'function';
 
     if (typeof context.sjl.argsToArray !== 'function') {
         context.sjl.argsToArray = function (args) {
@@ -317,6 +319,50 @@
             }
 
             return newStr;
+        };
+    }
+
+    if (noExtractBoolFromArrayStart || noExtractBoolFromArrayEnd) {
+        /**
+         * Extracts a boolean from the beginning or ending of an array depending on startOrEndBln.
+         * @todo ** Note ** Closure within this function is temporary and should be removed.
+         * @param array {Array}
+         * @param startOrEnd {Boolean}
+         * @returns {Boolean}
+         */
+        function extractBoolFromArray(array, startOrEndBln) {
+            var expectedBool = startOrEndBln ? array[0] : array[array.length - 1],
+                retVal = false;
+            if (context.sjl.classOfIs(expectedBool, 'Boolean')) {
+                retVal = startOrEndBln ? array.shift() : array.pop();
+            }
+            else if (context.sjl.classOfIs(expectedBool, 'Undefined')) {
+                startOrEndBln ? array.shift() : array.pop();
+                retVal = false;
+            }
+            return retVal;
+        }
+    }
+
+    if (noExtractBoolFromArrayStart) {
+        /**
+         * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
+         * @param array {Array}
+         * @returns {Boolean}
+         */
+        context.sjl.extractBoolFromArrayStart = function (array) {
+            return extractBoolFromArray(array, true);
+        };
+    }
+
+    if (noExtractBoolFromArrayEnd) {
+        /**
+         * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
+         * @param array {Array}
+         * @returns {Boolean}
+         */
+        context.sjl.extractBoolFromArrayEnd = function (array) {
+            return extractBoolFromArray(array, false);
         };
     }
 

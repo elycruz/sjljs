@@ -7,59 +7,6 @@
 
     context.sjl = context.sjl || {};
 
-    if (typeof context.sjl.extractBoolFromArrayStart !== 'function'
-        && typeof  context.sjl.extractBoolFromArrayEnd !== 'function') {
-
-        /**
-         * Extracts a boolean from the beginning or ending of an array depending on startOrEndBln.
-         * @todo ** Note ** Closure within this function is temporary and should be removed.
-         * @param array {Array}
-         * @param startOrEnd {Boolean}
-         * @returns {Boolean}
-         */
-        function extractBoolFromArray (array, startOrEndBln) {
-            var expectedBool = startOrEndBln ? array[0] : array[array.length - 1],
-                retVal = false;
-            if (context.sjl.classOfIs(expectedBool, 'Boolean')) {
-                retVal =  startOrEndBln ? array.shift() : array.pop();
-            }
-            else if (context.sjl.classOfIs(expectedBool, 'Undefined')) {
-                startOrEndBln ? array.shift() : array.pop();
-                retVal = false;
-            }
-            return retVal;
-        }
-
-        /**
-         * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
-         * @param array {Array}
-         * @returns {Boolean}
-         */
-        context.sjl.extractBoolFromArrayStart = function (array) {
-            return extractBoolFromArray(array, true);
-        };
-
-        /**
-         * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
-         * @param array {Array}
-         * @returns {Boolean}
-         */
-        context.sjl.extractBoolFromArrayEnd = function (array) {
-            return extractBoolFromArray(array, false);
-        };
-    }
-
-    if (typeof context.sjl.clone !== 'function') {
-        /**
-         * Returns copy of object.
-         * @param obj
-         * @returns {*}
-         */
-        context.sjl.clone = function (obj) {
-            return  context.sjl.extend({}, obj);
-        };
-    }
-
     if (typeof context.sjl.getValueFromObj !== 'function') {
         /**
          * Searches obj for key and returns it's value.  If value is a function
@@ -183,6 +130,17 @@
             }
 
             return arg0;
+        };
+    }
+
+    if (typeof context.sjl.clone !== 'function') {
+        /**
+         * Returns copy of object.
+         * @param obj
+         * @returns {*}
+         */
+        context.sjl.clone = function (obj) {
+            return  context.sjl.extend({}, obj);
         };
     }
 
