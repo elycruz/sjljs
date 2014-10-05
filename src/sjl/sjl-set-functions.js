@@ -7,6 +7,53 @@
 
     context.sjl = context.sjl || {};
 
+    if (typeof context.sjl.extractBoolFromArrayStart !== 'function'
+        && typeof  context.sjl.extractBoolFromArrayEnd !== 'function') {
+
+        /**
+         * Extracts a boolean from the beginning or ending of an array depending on startOrEndBln.
+         * @todo ** Note ** Closure within this function is temporary and should be removed.
+         * @param array {Array}
+         * @param startOrEnd {Boolean}
+         * @returns {Boolean}
+         */
+        function extractBoolFromArray (array, startOrEndBln) {
+            var expectedBool = startOrEndBln ? array[0] : array[array.length];
+            return context.sjl.classOfIs(expectedBool, 'Boolean') ?
+                (startOrEndBln ? array.shift() : array.pop()) :
+                (context.sjl.classOfIs(expectedBool, 'Undefined') ? (function () { array.pop(); return false; }()) : false);
+        }
+
+        /**
+         * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
+         * @param array {Array}
+         * @returns {Boolean}
+         */
+        context.sjl.extractBoolFromArrayStart = function (array) {
+            return extractBoolFromArray(array, true);
+        };
+
+        /**
+         * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
+         * @param array {Array}
+         * @returns {Boolean}
+         */
+        context.sjl.extractBoolFromArrayEnd = function (array) {
+            return extractBoolFromArray(array, false);
+        };
+    }
+
+    if (typeof context.sjl.clone !== 'function') {
+        /**
+         * Returns copy of object.
+         * @param obj
+         * @returns {*}
+         */
+        context.sjl.clone = function (obj) {
+            return  context.sjl.extend({}, obj);
+        };
+    }
+
     if (typeof context.sjl.getValueFromObj !== 'function') {
         /**
          * Searches obj for key and returns it's value.  If value is a function
@@ -75,39 +122,59 @@
          * If o and p have a property by the same name, o's property is overwritten.
          * This function does not handle getters and setters or copy attributes but
          * does search for setter methods in the format "setPropertyName" and uses them
-         * if they are available for property `useSetterOrNSStringTraversal` is set to true.
+         * if they are available for property `useLegacyGettersAndSetters` is set to true.
          * @param o {mixed} - *object to extend
          * @param p {mixed} - *object to extend from
          * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
-         * @param useSetterOrNSStringTraversal {Boolean} - Whether or not to use sjl.setValueOnObj for setting values
+         * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use sjl.setValueOnObj for setting values (only works if not using the `deep` the feature or `deep` is `false`)
          * @returns {*} - returns o
          */
-        context.sjl.extend = function (o, p, deep, useSetterOrNSStringTraversal) {
-            for (prop in p) { // For all props in p.
+        function extend (o, p, deep, useLegacyGettersAndSetters) {
+            for (var prop in p) { // For all props in p.
                 if (deep) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])
                         && context.sjl.classOfIs(o[prop], 'Object')
                         && context.sjl.classOfIs(p[prop], 'Object')) {
-                        context.sjl.extend(o[prop], p[prop], deep);
-                    }
-                    else if (useSetterOrNSStringTraversal) {
-                        context.sjl.setValueOnObj(prop,
-                            context.sjl.getValueFromObj(prop, p), o); // Add the property to o.
+                        context.sjl.extend(deep, o[prop], p[prop]);
                     }
                     else {
-                        o[prop] = p[prop]
+                        o[prop] = p[prop];
                     }
                 }
-                else if (useSetterOrNSStringTraversal) {
+                else if (useLegacyGettersAndSetters) {
                     context.sjl.setValueOnObj(prop,
                         context.sjl.getValueFromObj(prop, p), o); // Add the property to o.
                 }
                 else {
-                    o[prop] = p[prop]
+                    o[prop] = p[prop];
                 }
             }
             return o;
+        }
+
+        context.sjl.extend = function () {
+            // Return if no arguments
+            if (arguments.length === 0) {
+                return;
+            }
+
+            var args = context.sjl.argsToArray(arguments),
+                deep = context.sjl.extractBoolFromArrayStart(args),
+                useLegacyGettersAndSetters = context.sjl.extractBoolFromArrayEnd(args),
+                arg0 = args.shift();
+
+            // Extend object `0` with other objects
+            for (arg in args) {
+                arg = args[arg];
+
+                // Extend `arg0` if `arg` is an object
+                if (sjl.classOfIs(arg, 'Object')) {
+                    extend(arg0, arg, deep, useLegacyGettersAndSetters);
+                }
+            }
+
+            return arg0;
         };
     }
 
@@ -161,8 +228,8 @@
          * Return a new object that holds the properties of both o and p.
          * If o and p have properties by the same name, the values from p are used.
          */
-        context.sjl.union = function (o, p, deep, allowNsStringAndOrConjoinedGettersAndSetters) {
-            return context.sjl.extend(context.sjl.extend({}, o), p, deep);
+        context.sjl.union = function (o, p, deep, useLegacyGettersAndSetters) {
+            return context.sjl.extend(deep, context.sjl.clone(o), p, useLegacyGettersAndSetters);
         };
     }
 
@@ -173,7 +240,7 @@
          * the properties in p are discarded
          */
         context.sjl.intersection = function (o, p) {
-            return context.sjl.restrict(context.sjl.extend({}, o), p);
+            return context.sjl.restrict(context.sjl.clone(o), p);
         };
     }
 
