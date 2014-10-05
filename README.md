@@ -10,21 +10,19 @@ only meant as a supplement to them.
 
 ### Utilities:
 - `sjl.argsToArray` - Converts arguments to an array.
-- `sjl.empty` - Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, 
-or empty object is true for one or one of many values.
-- `sjl.isset` - Checks to see that a value(s) is not `null` or `undefined` for one or one of many values.
+- `sjl.camelCase` - Camel Cases a string.
 - `sjl.classOf` - Gives you a String representation of the class of value;  e.g., `classOf("hello") === 'String'`.
 - `sjl.classOfIs` - Checks that whether a value is of class type;  e.g., `clasOfIs(0, 'Number') === true`.
-- `sjl.ucaseFirst` - Uppercases the first character of a string.
+- `sjl.empty` - Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, or empty object is true for one or one of many values.
+- `sjl.isset` - Checks to see that a value(s) is not `null` or `undefined` for one or one of many values.
 - `sjl.lcaseFirst` - Lowercases the first character of a string.
-- `sjl.camelCase` - Camel Cases a string.
-- `sjl.namespace` - For getting and setting values on hash objects (allows deep searching by namespace 
-string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
+- `sjl.namespace` - For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
+- `sjl.ucaseFirst` - Uppercases the first character of a string.
 
 ### Validators and associated classes:
 - `sjl.AbstractValidator` - An abstract validator from where to build validators (includes methods and an interface for building validators).
-- `sjl.RegexValidator` - A validator which you can pass a pattern to and then validate any value with.
 - `sjl.InRangeValidator` - @todo refactor this so that it can also take care o validating integers/numbers
+- `sjl.RegexValidator` - A validator which you can pass a pattern to and then validate any value with.
 - `sjl.ValidatorChain` - A place to add multiple validators for one value.
 
 ### Input and InputFilter
@@ -46,11 +44,11 @@ defined; Proxy for `sjl.defineSubClass`.
 
 #### Cartesian helpers:
 - `sjl.extend`
-- `sjl.merge`
-- `sjl.subtract`
-- `sjl.restrict`
-- `sjl.union`
 - `sjl.intersection`
+- `sjl.merge`
+- `sjl.restrict`
+- `sjl.subtract`
+- `sjl.union`
 
 #### Composition helpers:
 - `sjl.getValueFromObj` - Allows getting value by namespace string (ex: `'some.object.deep'`) 
@@ -68,6 +66,7 @@ iterator's from other languages (mainly the php `Iterator`) closely.
 
 ### Requirements:
 - Javascript versions ecmascript 3+
+
 ### Supported browsers:
 - ie8+, and all other browsers
 
