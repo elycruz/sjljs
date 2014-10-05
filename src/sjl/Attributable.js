@@ -21,7 +21,7 @@
                     retVal = self._getAttribs(attrs);
                     break;
                 case 'Object':
-                    context.sjl.extend(self, attrs, true, true);
+                    context.sjl.extend(true, self, attrs, true);
                     break;
                 default:
                     retVal = self._getAttribs(attrs);
