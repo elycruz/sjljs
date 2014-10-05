@@ -1,4 +1,4 @@
-/**! sjl.js Sat Oct 04 2014 21:51:11 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Sat Oct 04 2014 22:16:39 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -342,10 +342,16 @@
          * @returns {Boolean}
          */
         function extractBoolFromArray (array, startOrEndBln) {
-            var expectedBool = startOrEndBln ? array[0] : array[array.length];
-            return context.sjl.classOfIs(expectedBool, 'Boolean') ?
-                (startOrEndBln ? array.shift() : array.pop()) :
-                (context.sjl.classOfIs(expectedBool, 'Undefined') ? (function () { array.pop(); return false; }()) : false);
+            var expectedBool = startOrEndBln ? array[0] : array[array.length - 1],
+                retVal = false;
+            if (context.sjl.classOfIs(expectedBool, 'Boolean')) {
+                retVal =  startOrEndBln ? array.shift() : array.pop();
+            }
+            else if (context.sjl.classOfIs(expectedBool, 'Undefined')) {
+                startOrEndBln ? array.shift() : array.pop();
+                retVal = false;
+            }
+            return retVal;
         }
 
         /**
@@ -454,6 +460,8 @@
          * @returns {*} - returns o
          */
         function extend (o, p, deep, useLegacyGettersAndSetters) {
+            deep = deep || false;
+            useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
             for (var prop in p) { // For all props in p.
                 if (deep) {
                     if (!context.sjl.empty(o[prop])
@@ -758,7 +766,7 @@
                     retVal = self._getAttribs(attrs);
                     break;
                 case 'Object':
-                    context.sjl.extend(self, attrs, true, true);
+                    context.sjl.extend(true, self, attrs, true);
                     break;
                 default:
                     retVal = self._getAttribs(attrs);
@@ -964,7 +972,7 @@
                         throw new Error('`AddToBagModel.updateMessageTemplates` ' +
                             'expects parameter 1 to be of type "Object".');
                     }
-                    self.options.messageTemplates = sjl.extend(self.getMessageTemplates(), templates);
+                    self.options.messageTemplates = sjl.extend(true, self.getMessageTemplates(), templates);
                     return self;
                 }
 

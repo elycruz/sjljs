@@ -124,7 +124,7 @@
                         throw new Error('`AddToBagModel.updateMessageTemplates` ' +
                             'expects parameter 1 to be of type "Object".');
                     }
-                    self.options.messageTemplates = sjl.extend(self.getMessageTemplates(), templates);
+                    self.options.messageTemplates = sjl.extend(true, self.getMessageTemplates(), templates);
                     return self;
                 }
 
