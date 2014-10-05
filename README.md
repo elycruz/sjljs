@@ -14,10 +14,28 @@ only meant as a supplement to them.
 - `sjl.classOf` - Gives you a String representation of the class of value;  e.g., `classOf("hello") === 'String'`.
 - `sjl.classOfIs` - Checks that whether a value is of class type;  e.g., `clasOfIs(0, 'Number') === true`.
 - `sjl.empty` - Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, or empty object is true for one or one of many values.
+- `sjl.extractBoolFromArrayEnd` - Extracts a boolean from the end of an array.  If no boolean is found there returns a boolean of value `false`.
+- `sjl.extractBoolFromArrayStart` - Extracts a boolean from the beginning of an array.  If no boolean is found at the beginning of the array returns a boolean of value `false`.
 - `sjl.isset` - Checks to see that a value(s) is not `null` or `undefined` for one or one of many values.
 - `sjl.lcaseFirst` - Lowercases the first character of a string.
 - `sjl.namespace` - For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
 - `sjl.ucaseFirst` - Uppercases the first character of a string.
+
+### Set functions (operations on objects):
+- `getValueFromObj` - 
+- `setValueOnObj` - 
+- `extend` - 
+- `clone` - 
+- `merge` - 
+- `subtract` - 
+- `restrict` - 
+- `union` - 
+- `intersection` - 
+
+### OOP Util functions:
+- `copyOfProto` - 
+- `defineSubClass` - 
+- `throwNotOfTypeError` - 
 
 ### Validators and associated classes:
 - `sjl.AbstractValidator` - An abstract validator from where to build validators (includes methods and an interface for building validators).
