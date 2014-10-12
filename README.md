@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/elycruz/sjljs.png)](https://travis-ci.org/elycruz/sjljs) [![NPM version](https://badge.fury.io/js/elycruz/sjljs.png)](http://badge.fury.io/js/elycruz/sjljs)
+
 sjljs
 =====
 
