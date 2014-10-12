@@ -98,4 +98,4 @@ iterator's from other languages (mainly the php `Iterator`) closely.
 - [ ] - Write tests for `sjl.extend`'s new features
 
 ## License:
-GPL v2-3 & MIT
+[GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html) & [MIT](http://opensource.org/licenses/MIT)
