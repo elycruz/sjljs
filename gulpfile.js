@@ -57,6 +57,33 @@ gulp.task('uglify', function () {
         .pipe(gulp.dest('./'));
 });
 
+gulp.task('minimal', function () {
+    gulp.src([
+        'src/sjl/sjl-util-functions.js',
+        'src/sjl/sjl-set-functions.js',
+        'src/sjl/sjl-shims-and-augments.js',
+        'src/sjl/sjl-oop-util-functions.js',
+        'src/sjl/Extendable.js',
+        'src/sjl/Attributable.js',
+        'src/sjl/Optionable.js'
+    ])
+        .pipe(concat('./sjl-minimal.js'))
+        .pipe(header('/**! \n' +
+            ' * sjl-minimal.js <%= (new Date()) %>\n' +
+            ' **/\n'))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('minimal-min', ['minimal'], function () {
+    gulp.src([
+        'sjl-minimal.js'
+    ])
+        .pipe(concat('./sjl-minimal.min.js'))
+        .pipe(uglify())
+        .pipe(header('/**! sjl-minimal.min.js <%= (new Date()) %> **/'))
+        .pipe(gulp.dest('./'));
+});
+
 gulp.task('set-functions-only', function () {
     gulp.src([
         'src/sjl/sjl-set-functions.js'
@@ -117,6 +144,8 @@ gulp.task('watch', function () {
 gulp.task('default', [
     'concat',
     'uglify',
+    'minimal',
+    'minimal-min',
     'set-functions-only',
     'set-functions-only-min',
     'utilities-only',
