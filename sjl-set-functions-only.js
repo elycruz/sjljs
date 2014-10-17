@@ -1,4 +1,4 @@
-/**! sjl-set-functions-only.js Thu Oct 16 2014 13:51:19 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl-set-functions-only.js Fri Oct 17 2014 07:42:57 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * ** Cartesian functions copied from "Javascript the definitive guide"
  * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
