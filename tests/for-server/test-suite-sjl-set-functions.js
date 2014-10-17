@@ -18,8 +18,7 @@ describe('Sjl Set Functions', function () {
     "use strict";
 
     describe ('It should have It\'s set functions set', function () {
-        var funcNames = ['extend', 'intersection', 'merge',
-            'restrict', 'subtract', 'union'];
+        var funcNames = ['extend']; // 'intersection', 'merge', 'restrict', 'subtract', 'union'];
 
         // Check that the set functions are defined
         funcNames.forEach(function (funcName) {
@@ -30,8 +29,8 @@ describe('Sjl Set Functions', function () {
         });
     });
 
-    // #`union` uses #`extend` so these tests pretty much take care of both
-    describe ('#`union` and #`extend` tests', function () {
+    // #`extend` uses #`extend` so these tests pretty much take care of both
+    describe ('#`extend` and #`extend` tests', function () {
 
         it ('should be able to unite two hash maps without the `deep` option', function () {
             var unitee1 = {
@@ -47,7 +46,7 @@ describe('Sjl Set Functions', function () {
                     'obj': 'Object', 'str': 'String'
                 },
 
-                rslt = sjl.union(unitee1, unitee2);
+                rslt = sjl.extend(unitee1, unitee2);
 
             // Check that all keys in result return the expected types
             rslt = Object.keys(rslt).filter(function (key) {
@@ -72,8 +71,8 @@ describe('Sjl Set Functions', function () {
                 ],
                 expectedRsltLength,
                 lastRslt,
-                // Get result of union
-                rslt = sjl.union(unitee3, unitee4, true);
+                // Get result of extend
+                rslt = sjl.extend(unitee3, unitee4, true);
 
             // Get expected length of `allYourBaseKeys` matches
             expectedRsltLength = (allYourBaseKeys.filter(function (key) {
@@ -90,28 +89,28 @@ describe('Sjl Set Functions', function () {
 
             })).length;
 
-            // Match the lengths of united keys to result-of-union object
+            // Match the lengths of united keys to result-of-extend object
             expect(expectedRsltLength).to.equal(allYourBaseKeys.length);
 
         });
 
     });
 
-    describe ('#`merge` tests', function () {
-        it ('should be able to `merge` two objects together with out overwritting the original object\'s ' +
-            'properties (should just merge missing properties into object 1)');
-    });
-
-    describe ('#`intersection` tests', function () {
-        it ('should return an object with the shared properties of object 1 and object 2.');
-    });
-
-    describe ('#`subtract` tests', function () {
-        it ('should return a new object with the properties that are not shared by the objects passed in');
-    });
-
-    describe ('#`restrict` tests', function () {
-        it ('should remove the properties from object 1 that are not present in object 2');
-    });
+//    describe ('#`merge` tests', function () {
+//        it ('should be able to `merge` two objects together with out overwritting the original object\'s ' +
+//            'properties (should just merge missing properties into object 1)');
+//    });
+//
+//    describe ('#`intersection` tests', function () {
+//        it ('should return an object with the shared properties of object 1 and object 2.');
+//    });
+//
+//    describe ('#`subtract` tests', function () {
+//        it ('should return a new object with the properties that are not shared by the objects passed in');
+//    });
+//
+//    describe ('#`restrict` tests', function () {
+//        it ('should remove the properties from object 1 that are not present in object 2');
+//    });
 
 });
