@@ -1,4 +1,4 @@
-/**! sjl.js Mon Oct 20 2014 11:03:03 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Mon Oct 20 2014 11:06:13 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -698,7 +698,7 @@
             var _constructor = resolveConstructor(constructor);
 
             // Set up the prototype object of the subclass
-            _constructor.prototype = context.sjl.copyOfProto(superclass.prototype);
+            _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
 
             // Define constructor's constructor
             _constructor.prototype.constructor = constructor;

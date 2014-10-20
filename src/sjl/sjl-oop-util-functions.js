@@ -87,7 +87,7 @@
             var _constructor = resolveConstructor(constructor);
 
             // Set up the prototype object of the subclass
-            _constructor.prototype = context.sjl.copyOfProto(superclass.prototype);
+            _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
 
             // Define constructor's constructor
             _constructor.prototype.constructor = constructor;

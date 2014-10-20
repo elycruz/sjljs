@@ -56,6 +56,8 @@ defined; Proxy for `sjl.defineSubClass`.
 
 ### Tests:
 - Tests for all components listed under "Utilities" above.
+- Tests to run on server.
+- Tests to run in browser (requires running `bower install` in root directory).
 
 ## WIPs:
 
