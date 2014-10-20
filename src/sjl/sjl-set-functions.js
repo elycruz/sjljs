@@ -85,6 +85,12 @@
         function extend (o, p, deep, useLegacyGettersAndSetters) {
             deep = deep || false;
             useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
+
+            // If `o` or `p` are not set bail
+            if (!sjl.isset(o) || !sjl.isset(p)) {
+                return o;
+            }
+
             for (var prop in p) { // For all props in p.
                 if (deep) {
                     if (!context.sjl.empty(o[prop])
