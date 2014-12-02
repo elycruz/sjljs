@@ -1,4 +1,4 @@
-/**! sjl-set-functions-only.js Tue Dec 02 2014 00:04:36 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl-set-functions-only.js Tue Dec 02 2014 00:06:48 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * ** Cartesian functions copied from "Javascript the definitive guide"
  * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
@@ -85,6 +85,12 @@
         function extend (o, p, deep, useLegacyGettersAndSetters) {
             deep = deep || false;
             useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
+
+            // If `o` or `p` are not set bail
+            if (!sjl.isset(o) || !sjl.isset(p)) {
+                return o;
+            }
+
             for (var prop in p) { // For all props in p.
                 if (deep) {
                     if (!context.sjl.empty(o[prop])
