@@ -1,4 +1,4 @@
-/**! sjl-utilities-only.js Fri Oct 17 2014 07:42:57 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl-utilities-only.js Tue Dec 02 2014 00:04:36 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.

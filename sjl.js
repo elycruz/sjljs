@@ -1,4 +1,4 @@
-/**! sjl.js Fri Oct 17 2014 07:42:57 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Tue Dec 02 2014 00:04:36 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -1841,26 +1841,32 @@
     context.sjl.Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {
             this.collection = values || [];
-            this.pointer = pointer || 0;
+            this.pointer = sjl.classOfIs(pointer, 'Number') ? parseInt(pointer, 10) : 0;
         },
         {
             current: function () {
                 var self = this;
-                return {
-                    done: this.valid(),
+                return self.valid() ? {
+                    done: false,
                     value: self.getCollection()[self.getPointer()]
+                } : {
+                    done: true
                 };
             },
 
             next: function () {
                 var self = this,
-                    pointer = self.getPointer()
+                    pointer = self.getPointer();
 
-                self.pointer = pointer += 1;
+                pointer += 1;
 
-                return {
-                    done: self.valid(),
+                self.pointer = pointer;
+
+                return self.valid() ? {
+                    done: false,
                     value: self.getCollection()[pointer]
+                } : {
+                    done: true
                 };
             },
 
@@ -1869,11 +1875,11 @@
             },
 
             valid: function () {
-                return this.getCollection().length - 1 <= this.getPointer();
+                return this.getPointer() < this.getCollection().length;
             },
 
             getPointer: function () {
-                return /^\d+$/.test(this.pointer + '') ? 0 : this.pointer;
+                return context.sjl.classOfIs(this.pointer, 'Number') ? this.pointer : 0;
             },
 
             getCollection: function () {
