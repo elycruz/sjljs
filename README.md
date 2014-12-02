@@ -54,8 +54,7 @@ function (setPropertyName) or sets value directly if no setter or namespace stri
 - `sjl.Attributable` - A base attributable constructor which has one method attr (for setting and getting 
 multiple attributes).
 - `sjl.Extendable` - A base extendable constructor with an `extend`.
-- `sjl.Iterator` - A simple iterator constructor which mimicks the es6 iterator (partially) and other 
-iterator's from other languages (mainly the php `Iterator`) closely.
+- `sjl.Iterator` - A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 
 ### Requirements:
 - Javascript versions ecmascript 3+
