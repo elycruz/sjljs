@@ -28,27 +28,11 @@ only meant as a supplement to them.
 - `getValueFromObj` - 
 - `setValueOnObj` - 
 - `extend` - 
-- `clone` - 
-- `merge` - 
-- `subtract` - 
-- `restrict` - 
-- `union` - 
-- `intersection` - 
 
 ### OOP Util functions:
 - `copyOfProto` - 
 - `defineSubClass` - 
 - `throwNotOfTypeError` - 
-
-### Validators and associated classes:
-- `sjl.AbstractValidator` - An abstract validator from where to build validators (includes methods and an interface for building validators).
-- `sjl.InRangeValidator` - @todo refactor this so that it can also take care o validating integers/numbers
-- `sjl.RegexValidator` - A validator which you can pass a pattern to and then validate any value with.
-- `sjl.ValidatorChain` - A place to add multiple validators for one value.
-
-### Input and InputFilter
-- `sjl.Input`
-- `sjl.InputFilter`
 
 ### Shims:
 - `Function.prototype.extend` - Defines this method on `Function.prototype` only if it is not already
@@ -58,20 +42,6 @@ defined; Proxy for `sjl.defineSubClass`.
 - Tests for all components listed under "Utilities" above.
 - Tests to run on server.
 - Tests to run in browser (requires running `bower install` in root directory).
-
-## WIPs:
-
-#### OOP helpers:
-- `sjl.copyOfProto`
-- `sjl.defineSubClass`
-
-#### Cartesian helpers:
-- `sjl.extend`
-- `sjl.intersection`
-- `sjl.merge`
-- `sjl.restrict`
-- `sjl.subtract`
-- `sjl.union`
 
 #### Composition helpers:
 - `sjl.getValueFromObj` - Allows getting value by namespace string (ex: `'some.object.deep'`) 
@@ -84,8 +54,7 @@ function (setPropertyName) or sets value directly if no setter or namespace stri
 - `sjl.Attributable` - A base attributable constructor which has one method attr (for setting and getting 
 multiple attributes).
 - `sjl.Extendable` - A base extendable constructor with an `extend`.
-- `sjl.Iterator` - A simple iterator constructor which mimicks the es6 iterator (partially) and other 
-iterator's from other languages (mainly the php `Iterator`) closely.
+- `sjl.Iterator` - A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 
 ### Requirements:
 - Javascript versions ecmascript 3+
@@ -94,7 +63,6 @@ iterator's from other languages (mainly the php `Iterator`) closely.
 - ie8+, and all other browsers
 
 ## Todos:
-- [ ] - Write tests for all WIPs.
 - [ ] - Write tests for `sjl.Attributable`.
 - [ ] - Write tests for `sjl.getValueFromObj`
 - [ ] - Write tests for `sjl.setValueOnObj`

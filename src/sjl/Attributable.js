@@ -30,6 +30,10 @@
             return retVal;
         },
 
+        attr: function (attrs) {
+            return this.attrs(attrs);
+        },
+
         /**
          * Gets a set of attributes hash for queried attributes.
          * @param attribsList {Array} - Attributes list to return
