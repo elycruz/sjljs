@@ -92,7 +92,7 @@
             }
 
             for (var prop in p) { // For all props in p.
-                if (deep) {
+                if (deep && !useLegacyGettersAndSetters) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])
                         && context.sjl.classOfIs(o[prop], 'Object')

@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Dec 11 2014 10:16:13 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 11 2014 11:41:56 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -683,7 +683,7 @@
             _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
 
             // Make the constructor extendable
-            _constructor.prototype.extend = function (constructor, methods, statics) {
+            _constructor.prototype.extend = _constructor.extend = function (constructor, methods, statics) {
                     return context.sjl.defineSubClass(this, constructor, methods, statics);
                 };
 
@@ -720,23 +720,7 @@
      * The `Extendable` constructor
      * @constructor
      */
-    function Extendable() {}
-
-    // Get a handle to Extendable's prototype
-    var proto = Extendable.prototype;
-
-    /**
-     * Creates a subclass off of `constructor`
-     * @param constructor {Function}
-     * @param methods {Object} - optional
-     * @param statics {Object} - optional
-     * @returns {*}
-     */
-    proto.extend = function (constructor, methods, statics) {
-        return context.sjl.defineSubClass(this, constructor, methods, statics);
-    };
-
-    context.sjl.Extendable = Extendable;
+    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});;
 
 })(typeof window === 'undefined' ? global : window);
 
@@ -837,12 +821,13 @@
             },
 
             getOptions: function (options) {
-                var retVal = null;
+                var retVal = this.options;
                 if (context.sjl.classOfIs(options, 'Array')) {
                     retVal = this.options.attrs(options);
                 }
                 return retVal;
             }
+
         });
 
 })(typeof window === 'undefined' ? global : window);

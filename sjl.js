@@ -1,4 +1,4 @@
-/**! sjl.js Thu Dec 11 2014 10:36:58 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Thu Dec 11 2014 14:01:51 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -462,7 +462,7 @@
             }
 
             for (var prop in p) { // For all props in p.
-                if (deep) {
+                if (deep && !useLegacyGettersAndSetters) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])
                         && context.sjl.classOfIs(o[prop], 'Object')
@@ -680,8 +680,8 @@
             _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
 
             // Make the constructor extendable
-            _constructor.extend = function (constructor, methods, statics) {
-                    return context.sjl.defineSubClass(this, constructor, methods, statics);
+            _constructor.extend = function (constructor_, methods_, statics_) {
+                    return context.sjl.defineSubClass(this, constructor_, methods_, statics_);
                 };
 
             // Define constructor's constructor
@@ -1291,6 +1291,9 @@
 /**
  * Created by Ely on 7/24/2014.
  */
+/**
+ * Created by Ely on 7/21/2014.
+ */
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -1317,9 +1320,15 @@
                 messages: []
             });
 
+            if (!context.sjl.empty(options)) {
+                this.setOptions(options);
+            }
+
             // Only functions on objects;  Will
             // ignore options if it is a string
-            this.setOptions(options);
+            //if (context.sjl.classOfIs(options, 'Object')) {
+            //    sjl.extend(true, this.options, options, true);
+            //}
 
         }, {
 
@@ -1679,7 +1688,6 @@
             getInputs: function () {
                 var self = this;
                 if (!context.sjl.classOfIs(self.options.inputs, 'Object')) {
-                    console.log('inputs', self.options.inputs);
                     self.options.inputs = {};
                 }
                 return self.options.inputs;

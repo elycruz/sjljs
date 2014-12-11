@@ -185,7 +185,6 @@
             getInputs: function () {
                 var self = this;
                 if (!context.sjl.classOfIs(self.options.inputs, 'Object')) {
-                    console.log('inputs', self.options.inputs);
                     self.options.inputs = {};
                 }
                 return self.options.inputs;

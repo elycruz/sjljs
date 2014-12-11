@@ -1,6 +1,9 @@
 /**
  * Created by Ely on 7/24/2014.
  */
+/**
+ * Created by Ely on 7/21/2014.
+ */
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -27,9 +30,15 @@
                 messages: []
             });
 
+            if (!context.sjl.empty(options)) {
+                this.setOptions(options);
+            }
+
             // Only functions on objects;  Will
             // ignore options if it is a string
-            this.setOptions(options);
+            //if (context.sjl.classOfIs(options, 'Object')) {
+            //    sjl.extend(true, this.options, options, true);
+            //}
 
         }, {
 

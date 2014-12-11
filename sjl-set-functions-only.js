@@ -1,4 +1,4 @@
-/**! sjl-set-functions-only.js Thu Dec 11 2014 10:36:58 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl-set-functions-only.js Thu Dec 11 2014 14:01:51 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * ** Cartesian functions copied from "Javascript the definitive guide"
  * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
@@ -92,7 +92,7 @@
             }
 
             for (var prop in p) { // For all props in p.
-                if (deep) {
+                if (deep && !useLegacyGettersAndSetters) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])
                         && context.sjl.classOfIs(o[prop], 'Object')
