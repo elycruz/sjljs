@@ -90,9 +90,9 @@
             _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
 
             // Make the constructor extendable
-            _constructor.prototype.extend = function (constructor, methods, statics) {
-                return context.sjl.defineSubClass(this, constructor, methods, statics);
-            };
+            _constructor.extend = function (constructor, methods, statics) {
+                    return context.sjl.defineSubClass(this, constructor, methods, statics);
+                };
 
             // Define constructor's constructor
             _constructor.prototype.constructor = constructor;

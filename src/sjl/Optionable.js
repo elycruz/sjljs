@@ -29,12 +29,13 @@
             },
 
             getOptions: function (options) {
-                var retVal = null;
+                var retVal = this.options;
                 if (context.sjl.classOfIs(options, 'Array')) {
                     retVal = this.options.attrs(options);
                 }
                 return retVal;
             }
+
         });
 
 })(typeof window === 'undefined' ? global : window);

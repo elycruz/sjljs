@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Tue Dec 02 2014 00:12:48 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 11 2014 10:16:13 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -596,27 +596,6 @@
  */
 (function (context) {
 
-    if (typeof Function.prototype.extend === 'undefined') {
-        /**
-         * Make functions/constructors extendable
-         * @param constructor {function}
-         * @param methods {object} - optional
-         * @param statics {mixed|object|null|undefined} - optional
-         * @todo refactor this.  Figure out a way not to extend `Function`
-         * @returns {*}
-         */
-        Function.prototype.extend = function (constructor, methods, statics) {
-            return context.sjl.defineSubClass(this, constructor, methods, statics);
-        };
-    }
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 5/24/2014.
- */
-(function (context) {
-
     if (typeof context.sjl.copyOfProto === 'undefined') {
         /**
          * Creates a copy of a prototype to use for inheritance.
@@ -624,7 +603,7 @@
          * @returns {*}
          */
         context.sjl.copyOfProto = function (proto) {
-            if (proto == null) throw TypeError('`inherit` function expects param1 to be a non-null value.'); // p must be a non-null object
+            if (proto == null) throw TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // p must be a non-null object
             if (Object.create) // If Object.create() is defined...
                 return Object.create(proto); // then just use it.
             var type = typeof proto; // Otherwise do some more type checking
@@ -702,6 +681,11 @@
 
             // Set up the prototype object of the subclass
             _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
+
+            // Make the constructor extendable
+            _constructor.prototype.extend = function (constructor, methods, statics) {
+                    return context.sjl.defineSubClass(this, constructor, methods, statics);
+                };
 
             // Define constructor's constructor
             _constructor.prototype.constructor = constructor;

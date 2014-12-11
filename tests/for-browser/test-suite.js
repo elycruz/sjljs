@@ -40,9 +40,7 @@ describe('Sjl Extendable', function () {
     });
 
     it ('should have an `extend` function', function () {
-        var extendable = new sjl.Extendable();
-        expect(typeof extendable.extend).to.equal('function');
-        extendable = null;
+        expect(typeof sjl.Extendable.extend).to.equal('function');
     });
 
     // Extendable

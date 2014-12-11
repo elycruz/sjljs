@@ -1,9 +1,6 @@
 /**
  * Created by Ely on 7/24/2014.
  */
-/**
- * Created by Ely on 7/21/2014.
- */
 (function (context) {
 
     context.sjl = context.sjl || {};

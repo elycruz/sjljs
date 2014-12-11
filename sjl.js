@@ -1,4 +1,4 @@
-/**! sjl.js Tue Dec 02 2014 00:12:48 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Thu Dec 11 2014 10:36:58 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -593,27 +593,6 @@
  */
 (function (context) {
 
-    if (typeof Function.prototype.extend === 'undefined') {
-        /**
-         * Make functions/constructors extendable
-         * @param constructor {function}
-         * @param methods {object} - optional
-         * @param statics {mixed|object|null|undefined} - optional
-         * @todo refactor this.  Figure out a way not to extend `Function`
-         * @returns {*}
-         */
-        Function.prototype.extend = function (constructor, methods, statics) {
-            return context.sjl.defineSubClass(this, constructor, methods, statics);
-        };
-    }
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 5/24/2014.
- */
-(function (context) {
-
     if (typeof context.sjl.copyOfProto === 'undefined') {
         /**
          * Creates a copy of a prototype to use for inheritance.
@@ -621,7 +600,7 @@
          * @returns {*}
          */
         context.sjl.copyOfProto = function (proto) {
-            if (proto == null) throw TypeError('`inherit` function expects param1 to be a non-null value.'); // p must be a non-null object
+            if (proto == null) throw TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // p must be a non-null object
             if (Object.create) // If Object.create() is defined...
                 return Object.create(proto); // then just use it.
             var type = typeof proto; // Otherwise do some more type checking
@@ -700,6 +679,11 @@
             // Set up the prototype object of the subclass
             _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
 
+            // Make the constructor extendable
+            _constructor.extend = function (constructor, methods, statics) {
+                    return context.sjl.defineSubClass(this, constructor, methods, statics);
+                };
+
             // Define constructor's constructor
             _constructor.prototype.constructor = constructor;
 
@@ -733,23 +717,7 @@
      * The `Extendable` constructor
      * @constructor
      */
-    function Extendable() {}
-
-    // Get a handle to Extendable's prototype
-    var proto = Extendable.prototype;
-
-    /**
-     * Creates a subclass off of `constructor`
-     * @param constructor {Function}
-     * @param methods {Object} - optional
-     * @param statics {Object} - optional
-     * @returns {*}
-     */
-    proto.extend = function (constructor, methods, statics) {
-        return context.sjl.defineSubClass(this, constructor, methods, statics);
-    };
-
-    context.sjl.Extendable = Extendable;
+    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});;
 
 })(typeof window === 'undefined' ? global : window);
 
@@ -850,12 +818,13 @@
             },
 
             getOptions: function (options) {
-                var retVal = null;
+                var retVal = this.options;
                 if (context.sjl.classOfIs(options, 'Array')) {
                     retVal = this.options.attrs(options);
                 }
                 return retVal;
             }
+
         });
 
 })(typeof window === 'undefined' ? global : window);
@@ -1322,9 +1291,6 @@
 /**
  * Created by Ely on 7/24/2014.
  */
-/**
- * Created by Ely on 7/21/2014.
- */
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -1713,6 +1679,7 @@
             getInputs: function () {
                 var self = this;
                 if (!context.sjl.classOfIs(self.options.inputs, 'Object')) {
+                    console.log('inputs', self.options.inputs);
                     self.options.inputs = {};
                 }
                 return self.options.inputs;
