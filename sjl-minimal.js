@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Dec 11 2014 11:41:56 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 11 2014 14:10:23 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -465,7 +465,7 @@
             }
 
             for (var prop in p) { // For all props in p.
-                if (deep) {
+                if (deep && !useLegacyGettersAndSetters) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])
                         && context.sjl.classOfIs(o[prop], 'Object')
@@ -683,8 +683,8 @@
             _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
 
             // Make the constructor extendable
-            _constructor.prototype.extend = _constructor.extend = function (constructor, methods, statics) {
-                    return context.sjl.defineSubClass(this, constructor, methods, statics);
+            _constructor.extend = function (constructor_, methods_, statics_) {
+                    return context.sjl.defineSubClass(this, constructor_, methods_, statics_);
                 };
 
             // Define constructor's constructor
