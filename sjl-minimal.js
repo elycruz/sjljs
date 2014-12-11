@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Dec 11 2014 14:10:23 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 11 2014 14:44:53 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -839,6 +839,9 @@
 
     context.sjl.Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {
+            if (!(this instanceof sjl.Iterator)) {
+                return new sjl.Iterator(values, pointer);
+            }
             this.collection = values || [];
             this.pointer = sjl.classOfIs(pointer, 'Number') ? parseInt(pointer, 10) : 0;
         },
@@ -855,18 +858,15 @@
 
             next: function () {
                 var self = this,
-                    pointer = self.getPointer();
-
-                pointer += 1;
-
-                self.pointer = pointer;
-
-                return self.valid() ? {
-                    done: false,
-                    value: self.getCollection()[pointer]
-                } : {
-                    done: true
-                };
+                    pointer = self.getPointer(),
+                    retVal = self.valid() ? {
+                        done: false,
+                        value: self.getCollection()[pointer]
+                    } : {
+                        done: true
+                    };
+                self.pointer = pointer + 1;
+                return retVal;
             },
 
             rewind: function () {
@@ -877,8 +877,16 @@
                 return this.getPointer() < this.getCollection().length;
             },
 
-            getPointer: function () {
-                return context.sjl.classOfIs(this.pointer, 'Number') ? this.pointer : 0;
+            getPointer: function (defaultNum) {
+                defaultNum = sjl.classOfIs(defaultNum, 'Number') ?
+                    (isNaN(defaultNum) ? 0 : defaultNum) : 0;
+                if (!context.sjl.classOfIs(this.pointer, 'Number')) {
+                    this.pointer = parseInt(this.pointer, 10);
+                    if (isNaN(this.pointer)) {
+                        this.pointer = defaultNum;
+                    }
+                }
+                return this.pointer;
             },
 
             getCollection: function () {

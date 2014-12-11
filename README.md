@@ -25,23 +25,26 @@ only meant as a supplement to them.
 - `sjl.ucaseFirst` - Uppercases the first character of a string.
 
 ### Set functions (operations on objects):
-- `getValueFromObj` - 
-- `setValueOnObj` - 
-- `extend` - 
+- `extend` - Similiar to JQuery's `extend` method except with the following method signature:
+`extend((Boolean|*)[,obj, obj],[Boolean]) : Object`
+    - Where `*` is any type of object with type "Object".
+    - `obj` is any type of object of type "Object".
+    - and the last `[Boolean]` (optional boolean) is passed in to force
+    the extend method to use any composite styled set methods that may be available
+    for the key being merged on to the first object;  composite styled = `set{keyName}` | `setKeyName`.
+
+    This last item in the list above allows for interesting objects which inherit a waterfall
+    like property on instantiation (if you use the `extend` method to merge passed in options on instantiation).
 
 ### OOP Util functions:
-- `copyOfProto` - 
-- `defineSubClass` - 
-- `throwNotOfTypeError` - 
-
-### Shims:
-- `Function.prototype.extend` - Defines this method on `Function.prototype` only if it is not already
-defined; Proxy for `sjl.defineSubClass`.
+- `copyOfProto` - Creates a copy of a prototype (backward compatible to older IEs).
+- `defineSubClass` - Creates a sub class of a constructor and makes it extendable via the static method `extend`.
+- `throwNotOfTypeError` - This method is used internally but is tentative and may be removed later.
 
 ### Tests:
 - Tests for all components listed under "Utilities" above.
-- Tests to run on server.
-- Tests to run in browser (requires running `bower install` in root directory).
+- Tests to be run on server.
+- Tests to be run in browser (requires running `bower install` in root directory).
 
 #### Composition helpers:
 - `sjl.getValueFromObj` - Allows getting value by namespace string (ex: `'some.object.deep'`) 
@@ -67,6 +70,7 @@ multiple attributes).
 - [ ] - Write tests for `sjl.getValueFromObj`
 - [ ] - Write tests for `sjl.setValueOnObj`
 - [ ] - Write tests for `sjl.extend`'s new features
+- [ ] - Write tests for `sjl.Iterator`
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") & [MIT](http://opensource.org/licenses/MIT "http://opensource.org/licenses/MIT")
