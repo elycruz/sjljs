@@ -16,7 +16,7 @@ gulp.task('concat', function () {
     gulp.src([
         'src/sjl/sjl-util-functions.js',
         'src/sjl/sjl-set-functions.js',
-        'src/sjl/sjl-shims-and-augments.js',
+        //'src/sjl/sjl-shims-and-augments.js',
         'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Attributable.js',
@@ -38,7 +38,7 @@ gulp.task('uglify', function () {
     gulp.src([
         'src/sjl/sjl-util-functions.js',
         'src/sjl/sjl-set-functions.js',
-        'src/sjl/sjl-shims-and-augments.js',
+        //'src/sjl/sjl-shims-and-augments.js',
         'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Attributable.js',
@@ -61,7 +61,7 @@ gulp.task('minimal', function () {
     gulp.src([
         'src/sjl/sjl-util-functions.js',
         'src/sjl/sjl-set-functions.js',
-        'src/sjl/sjl-shims-and-augments.js',
+        //'src/sjl/sjl-shims-and-augments.js',
         'src/sjl/sjl-oop-util-functions.js',
         'src/sjl/Extendable.js',
         'src/sjl/Attributable.js',

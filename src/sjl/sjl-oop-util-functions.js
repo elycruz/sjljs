@@ -10,7 +10,7 @@
          * @returns {*}
          */
         context.sjl.copyOfProto = function (proto) {
-            if (proto == null) throw TypeError('`inherit` function expects param1 to be a non-null value.'); // p must be a non-null object
+            if (proto == null) throw TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // p must be a non-null object
             if (Object.create) // If Object.create() is defined...
                 return Object.create(proto); // then just use it.
             var type = typeof proto; // Otherwise do some more type checking
@@ -88,6 +88,11 @@
 
             // Set up the prototype object of the subclass
             _constructor.prototype = context.sjl.copyOfProto(superclass.prototype || superclass);
+
+            // Make the constructor extendable
+            _constructor.prototype.extend = function (constructor, methods, statics) {
+                return context.sjl.defineSubClass(this, constructor, methods, statics);
+            };
 
             // Define constructor's constructor
             _constructor.prototype.constructor = constructor;
