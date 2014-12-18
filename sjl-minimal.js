@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Wed Dec 17 2014 22:35:27 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Wed Dec 17 2014 23:09:22 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -731,7 +731,7 @@
      * The `Extendable` constructor
      * @constructor
      */
-    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});;
+    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});
 
 })(typeof window === 'undefined' ? global : window);
 
@@ -810,9 +810,7 @@
 
     context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
             this.options = new context.sjl.Attributable();
-            if (context.sjl.classOfIs(options, 'Object')) {
-                this.setOptions(options);
-            }
+            this.setOptions(options);
         },
         {
             setOption: function (key, value) {
@@ -837,6 +835,10 @@
                     retVal = this.options.attrs(options);
                 }
                 return retVal;
+            },
+
+            mergeOptions: function (options) {
+                sjl.extend.apply(sjl, [this.options].concat(sjl.argsToArray(arguments)));
             }
 
         });

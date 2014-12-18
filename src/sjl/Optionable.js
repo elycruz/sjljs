@@ -7,9 +7,7 @@
 
     context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
             this.options = new context.sjl.Attributable();
-            if (context.sjl.classOfIs(options, 'Object')) {
-                this.setOptions(options);
-            }
+            this.mergeOptions.apply(this, sjl.argsToArray(arguments));
         },
         {
             setOption: function (key, value) {
@@ -34,6 +32,10 @@
                     retVal = this.options.attrs(options);
                 }
                 return retVal;
+            },
+
+            mergeOptions: function (options) {
+                sjl.extend.apply(sjl, [this.options].concat(sjl.argsToArray(arguments)));
             }
 
         });

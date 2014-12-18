@@ -7,6 +7,6 @@
      * The `Extendable` constructor
      * @constructor
      */
-    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});;
+    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});
 
 })(typeof window === 'undefined' ? global : window);
