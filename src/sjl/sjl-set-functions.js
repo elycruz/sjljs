@@ -150,6 +150,17 @@
         };
     }
 
+    if (typeof context.sjl.jsonClone !== 'function') {
+        /**
+         * Returns copy of object using JSON stringify/parse.
+         * @param obj
+         * @returns {*}
+         */
+        context.sjl.jsonClone = function (obj) {
+            return JSON.parse(JSON.stringify(obj));
+        };
+    }
+
 //    if (typeof context.sjl.merge === 'undefined') {
         /**
          * Copy the enumerable properties of p to o, and return o.
