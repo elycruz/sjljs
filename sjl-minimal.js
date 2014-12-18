@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Wed Dec 17 2014 23:09:22 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 18 2014 10:33:10 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -430,7 +430,7 @@
 
             // Else set the value on the obj
             else if (key.indexOf('.') !== -1) {
-                retVal = context.sjl.namespace(key, value, obj);
+                retVal = context.sjl.namespace(key, obj, value);
             }
 
             else {
@@ -808,9 +808,14 @@
 
     context.sjl = context.sjl || {};
 
+    /**
+     * Optionable Constructor merges all objects passed in to it's `options` hash.
+     * Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
+     * @type {void|context.sjl.Optionable}
+     */
     context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
             this.options = new context.sjl.Attributable();
-            this.setOptions(options);
+            this.merge.apply(this, sjl.argsToArray(arguments));
         },
         {
             setOption: function (key, value) {
@@ -837,8 +842,83 @@
                 return retVal;
             },
 
-            mergeOptions: function (options) {
-                sjl.extend.apply(sjl, [this.options].concat(sjl.argsToArray(arguments)));
+            /**
+             * Gets one or many option values.
+             * @param keyOrArray
+             * @returns {*}
+             */
+            get: function (keyOrArray) {
+                var retVal = null,
+                    classOfKeyOrArray = sjl.classOf(keyOrArray);
+                if (classOfKeyOrArray === 'String') {
+                    retVal = this.getOptions(key);
+                }
+                else if (classOfKeyOrArray === 'Array') {
+                    retVal = this.getOptions(key);
+                }
+                return retVal;
+            },
+
+            /**
+             * Sets an option (key, value) or multiple options (Object) based on what's passed in.
+             * @param0 {String|Object}
+             * @param1 {*}
+             * @returns {context.sjl.Optionable}
+             */
+            set: function () {
+                var self = this,
+                    args = sjl.argsToArray(arguments),
+                    typeOfArgs0 = sjl.classOf(args[0]);
+                if (typeOfArgs0 === 'String') {
+                    self.setOption(args[0], args[1]);
+                }
+                else if (typeOfArgs0 === 'Object') {
+                    self.setOptions(args[0]);
+                }
+                return self;
+            },
+
+            /**
+             * Checks a key/namespace string ('a.b.c') to see if `this.options`
+             *  has a value (a non falsy value otherwise returns `false`).
+             * @param nsString - key or namespace string
+             * @returns {Boolean}
+             */
+            has: function (nsString) {
+                var parts = nsString.split('.'),
+                    i, nsStr, retVal = false;
+                if (parts.length > 1) {
+                    nsStr = parts.shift();
+                    for (i = 0; i <= parts.length; i += 1) {
+                        retVal = !sjl.empty(sjl.namespace(nsStr, this.options));
+                        if (!retVal) {
+                            break;
+                        }
+                        nsStr += '.' + parts[i];
+                    }
+                }
+                else {
+                    retVal = !sjl.empty(sjl.namespace(nsString, this.options));
+                }
+                return retVal;
+            },
+
+            /**
+             * Merges all objects passed in to `options`.
+             * @param0-* {Object} - Any number of `Object`s passed in.
+             * @lastParam {Object|Boolean} - If last param is a boolean then context.sjl.setValueOnObj will be used to
+             *  merge each key=>value pair to `options`.
+             * @returns {context.sjl.Optionable}
+             */
+            merge: function (options) {
+                var args = sjl.argsToArray(arguments),
+                    useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),
+                    tailConcat = args;
+                if (useLegacyGettersAndSetters) {
+                    tailConcat = args.concat([useLegacyGettersAndSetters]);
+                }
+                sjl.extend.apply(sjl, [true, this.options].concat(tailConcat));
+                return this;
             }
 
         });

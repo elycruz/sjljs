@@ -23,6 +23,9 @@
                 case 'Object':
                     context.sjl.extend(true, self, attrs, true);
                     break;
+                case 'String':
+                    retVal = context.sjl.getValueFromObj(attrs, self);
+                    break;
                 default:
                     retVal = self._getAttribs(attrs);
                     break;

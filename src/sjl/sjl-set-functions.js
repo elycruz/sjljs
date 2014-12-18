@@ -57,7 +57,7 @@
 
             // Else set the value on the obj
             else if (key.indexOf('.') !== -1) {
-                retVal = context.sjl.namespace(key, value, obj);
+                retVal = context.sjl.namespace(key, obj, value);
             }
 
             else {

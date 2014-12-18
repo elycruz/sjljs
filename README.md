@@ -54,10 +54,20 @@ a function also allows for fetching the value raw if it s a function.
 function (setPropertyName) or sets value directly if no setter or namespace string found/used.
 
 #### Classes/Constructors
-- `sjl.Attributable` - A base attributable constructor which has one method attr (for setting and getting 
-multiple attributes).
+- `sjl.Attributable` - A base attributable constructor which has two methods attr and attrs (for setting and getting multiple attributes jquery style).
 - `sjl.Extendable` - A base extendable constructor with an `extend`.
 - `sjl.Iterator` - A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
+
+##### `sjl.Optionable`
+
+    A simple Optionable class with `set`, `get`, `merge`, and `has` methods.
+
+ - `has (String value) :Boolean`  - Takes a regular string or a namespaced string to find out if value exists on the Optionable's object `options` object.
+ - `get (String key) :(null|*)`  - Takes a regular string or a namespaced one and pulls out the value from Optionable's `options` object.  Returns null `key` doesn't exist.
+ - `set (String key, * value) :Optionable`  - Takes a key and a value param or an object (sets multiple key value pairs in this case).  Key value can be a namespaced string.
+    Also if first value is an object then set uses `sjl.setValueOnObj` (see description of this method above) to set values on this Optionable.
+ - `merge ((Object|Boolean) param0-*) :Optionable` - Merges all `Object`s passed into it to Optionable's `options` object.  If last param in arguments is a Boolean
+ then checks extracts this boolean and passes it on to `sjl.extend` (in an attempt to invoke `extend`'s useLegacyGettersAndSetters` feature if the boolean is true and not invoke the feature to do the merge if the boolean is false).
 
 ### Requirements:
 - Javascript versions ecmascript 3+
@@ -66,6 +76,7 @@ multiple attributes).
 - ie8+, and all other browsers
 
 ## Todos:
+- [X] - Write tests for `sjl.Optionable`.
 - [ ] - Write tests for `sjl.Attributable`.
 - [ ] - Write tests for `sjl.getValueFromObj`
 - [ ] - Write tests for `sjl.setValueOnObj`

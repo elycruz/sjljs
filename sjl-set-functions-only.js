@@ -1,4 +1,4 @@
-/**! sjl-set-functions-only.js Thu Dec 18 2014 00:21:08 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl-set-functions-only.js Thu Dec 18 2014 12:12:51 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * ** Cartesian functions copied from "Javascript the definitive guide"
  * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
@@ -57,7 +57,7 @@
 
             // Else set the value on the obj
             else if (key.indexOf('.') !== -1) {
-                retVal = context.sjl.namespace(key, value, obj);
+                retVal = context.sjl.namespace(key, obj, value);
             }
 
             else {

@@ -198,10 +198,10 @@
                 i;
 
             for (i = 0; i < parts.length; i += 1) {
-                if (context.sjl.classOfIs(parent[parts[i]], 'Undefined') && !shouldSetValue) {
+                if (context.sjl.classOfIs(parent[parts[i]], 'Undefined')) {
                     parent[parts[i]] = {};
                 }
-                else if (i === parts.length - 1 && shouldSetValue) {
+                if (i === parts.length - 1 && shouldSetValue) {
                     parent[parts[i]] = valueToSet;
                 }
                 parent = parent[parts[i]];
