@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Dec 18 2014 10:33:10 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Sat Dec 20 2014 19:05:22 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -201,10 +201,10 @@
                 i;
 
             for (i = 0; i < parts.length; i += 1) {
-                if (context.sjl.classOfIs(parent[parts[i]], 'Undefined') && !shouldSetValue) {
+                if (context.sjl.classOfIs(parent[parts[i]], 'Undefined')) {
                     parent[parts[i]] = {};
                 }
-                else if (i === parts.length - 1 && shouldSetValue) {
+                if (i === parts.length - 1 && shouldSetValue) {
                     parent[parts[i]] = valueToSet;
                 }
                 parent = parent[parts[i]];
@@ -760,6 +760,9 @@
                 case 'Object':
                     context.sjl.extend(true, self, attrs, true);
                     break;
+                case 'String':
+                    retVal = context.sjl.getValueFromObj(attrs, self);
+                    break;
                 default:
                     retVal = self._getAttribs(attrs);
                     break;
@@ -803,6 +806,9 @@
 
 /**
  * Created by Ely on 7/21/2014.
+ * @note `set` and `setOptions` are different from the `merge` function in
+ *  that they force the use of legacy setters if they are available;
+ *  e.g., setName, setSomePropertyName, etc..
  */
 (function (context) {
 
@@ -818,11 +824,28 @@
             this.merge.apply(this, sjl.argsToArray(arguments));
         },
         {
+            /**
+             * Sets an option on Optionable's `options` using `sjl.setValueOnObj`;
+             *  E.g., `optionable.options = value`;
+             * @deprecated - Will be removed in version 1.0.0
+             * @param key
+             * @param value
+             * @returns {context.sjl.Optionable}
+             */
             setOption: function (key, value) {
                 context.sjl.setValueOnObj(key, value, this.options);
                 return this;
             },
 
+            /**
+             * Sets each key value pair to  Optionable's `options` using
+             *  `sjl.Attributable`'s `attrs` function;
+             *  E.g., `optionable.options.attrs(Object);
+             * @deprecated - Will be removed in version 1.0.0
+             * @param key {String}
+             * @param value {Object}
+             * @returns {context.sjl.Optionable}
+             */
             setOptions: function (options) {
                 if (context.sjl.classOfIs(options, 'Object')) {
                     this.options.attrs(options);
@@ -830,14 +853,31 @@
                 return this;
             },
 
+            /**
+             * Gets an options value by key.
+             * @deprecated - Slotted for removal in version 1.0.0
+             * @param key {String}
+             * @returns {*}
+             */
             getOption: function (key) {
                 return context.sjl.getValueFromObj(key, this.options);
             },
 
+             /**
+             * Gets options by either array or just by key.
+             * @deprecated - Slotted for removal in version 1.0.0
+             * @param options {Array|String}
+             * @returns {*}
+             */
             getOptions: function (options) {
-                var retVal = this.options;
-                if (context.sjl.classOfIs(options, 'Array')) {
+                var classOfOptions = sjl.classOf(options),
+                    retVal = null;
+                if (classOfOptions === 'Array' || classOfOptions === 'String') {
                     retVal = this.options.attrs(options);
+                }
+                else {
+                    console.warn('Tried to set options using a value of ' +
+                    'type "' + classOfOptions + '" on `Optionable.getOptions`.');
                 }
                 return retVal;
             },
@@ -850,17 +890,16 @@
             get: function (keyOrArray) {
                 var retVal = null,
                     classOfKeyOrArray = sjl.classOf(keyOrArray);
-                if (classOfKeyOrArray === 'String') {
-                    retVal = this.getOptions(key);
-                }
-                else if (classOfKeyOrArray === 'Array') {
-                    retVal = this.getOptions(key);
+                if (classOfKeyOrArray === 'String'
+                    || classOfKeyOrArray === 'Array') {
+                    retVal = this.getOptions(keyOrArray);
                 }
                 return retVal;
             },
 
             /**
-             * Sets an option (key, value) or multiple options (Object) based on what's passed in.
+             * Sets an option (key, value) or multiple options (Object)
+             * based on what's passed in.
              * @param0 {String|Object}
              * @param1 {*}
              * @returns {context.sjl.Optionable}
@@ -906,8 +945,9 @@
             /**
              * Merges all objects passed in to `options`.
              * @param0-* {Object} - Any number of `Object`s passed in.
-             * @lastParam {Object|Boolean} - If last param is a boolean then context.sjl.setValueOnObj will be used to
-             *  merge each key=>value pair to `options`.
+             * @lastParam {Object|Boolean} - If last param is a boolean then
+             *  context.sjl.setValueOnObj will be used to merge each
+             *  key=>value pair to `options`.
              * @returns {context.sjl.Optionable}
              */
             merge: function (options) {
