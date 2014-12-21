@@ -12,17 +12,17 @@ only meant as a supplement to them.
 ## Components included:
 
 ### Utilities:
-- `sjl.argsToArray(Arguments):Array` - Converts arguments to an array;  E.g., `sjl.argsToArray(arguments);` -> returns arguments as an array.
-- `sjl.camelCase(String, Boolean):String` - Camel Cases a string;  `sjl.camelCase('hello-world', boolean);` -> returns "helloWorld" if `boolean` is `false` else returns "HelloWorld" if `boolean` is `true`
-- `sjl.classOf(String):Boolean` - Gives you a String representation of the class of value;  e.g., `sjl.classOf("hello") === 'String'`.
-- `sjl.classOfIs(*, String):Boolean` - Checks whether a value is of class type string;  e.g., `sjl.classOfIs(0, 'Number') === true`.
+- `sjl.argsToArray(Arguments args):Array` - Converts arguments to an array;  E.g., `sjl.argsToArray(arguments);` -> returns arguments as an array.
+- `sjl.camelCase(String str, Boolean ucaseFirst):String` - Camel Cases a string;  `sjl.camelCase('hello-world', boolean);` -> returns "helloWorld" if `boolean` is `false` else returns "HelloWorld" if `boolean` is `true`
+- `sjl.classOf(*):Boolean` - Gives you a String representation of the class of value;  e.g., `sjl.classOf("hello") === 'String'`.
+- `sjl.classOfIs(*, String classStr):Boolean` - Checks whether a value is of class type string;  e.g., `sjl.classOfIs(0, 'Number') === true`.
 - `sjl.empty(*):Boolean` - Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, or empty object is true for one or one of many values.
-- `sjl.extractBoolFromArrayEnd(Array):Boolean` - Extracts a boolean from the end of an array.  If no boolean is found there returns `false`.
-- `sjl.extractBoolFromArrayStart(Array):Boolean` - Extracts a boolean from the beginning of an array.  If no boolean is found at the beginning of the array returns `false`.
+- `sjl.extractBoolFromArrayEnd(Array list):Boolean` - Extracts a boolean from the end of an array.  If no boolean is found there returns `false`.
+- `sjl.extractBoolFromArrayStart(Array list):Boolean` - Extracts a boolean from the beginning of an array.  If no boolean is found at the beginning of the array returns `false`.
 - `sjl.isset(*):Boolean` - Checks to see that a value(s) is not `null` or `undefined` for one or one of many values.
-- `sjl.lcaseFirst(String):String` - Lowercases the first character of a string;  E.g., `sjl.lcaseFirst ('Hello')` returns 'hello'.
-- `sjl.namespace(String, Object, *):*` - For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
-- `sjl.ucaseFirst String):String` - Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
+- `sjl.lcaseFirst(String str):String` - Lowercases the first character of a string;  E.g., `sjl.lcaseFirst ('Hello')` returns 'hello'.
+- `sjl.namespace(String key, Object objToSearch, * valueToSet):*` - For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
+- `sjl.ucaseFirst(String str):String` - Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
 
 ### Set functions (operations on objects):
 - `extend` - Similiar to JQuery's `extend` method except with the following method signature:
