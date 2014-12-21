@@ -12,17 +12,17 @@ only meant as a supplement to them.
 ## Components included:
 
 ### Utilities:
-- `sjl.argsToArray` - Converts arguments to an array.
-- `sjl.camelCase` - Camel Cases a string.
-- `sjl.classOf` - Gives you a String representation of the class of value;  e.g., `classOf("hello") === 'String'`.
-- `sjl.classOfIs` - Checks that whether a value is of class type;  e.g., `clasOfIs(0, 'Number') === true`.
-- `sjl.empty` - Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, or empty object is true for one or one of many values.
-- `sjl.extractBoolFromArrayEnd` - Extracts a boolean from the end of an array.  If no boolean is found there returns a boolean of value `false`.
-- `sjl.extractBoolFromArrayStart` - Extracts a boolean from the beginning of an array.  If no boolean is found at the beginning of the array returns a boolean of value `false`.
-- `sjl.isset` - Checks to see that a value(s) is not `null` or `undefined` for one or one of many values.
-- `sjl.lcaseFirst` - Lowercases the first character of a string.
-- `sjl.namespace` - For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
-- `sjl.ucaseFirst` - Uppercases the first character of a string.
+- `sjl.argsToArray(Arguments):Array` - Converts arguments to an array;  E.g., `sjl.argsToArray(arguments);` -> returns arguments as an array.
+- `sjl.camelCase(String, Boolean):String` - Camel Cases a string;  `sjl.camelCase('hello-world', boolean);` -> returns "helloWorld" if `boolean` is `false` else returns "HelloWorld" if `boolean` is `true`
+- `sjl.classOf(String):Boolean` - Gives you a String representation of the class of value;  e.g., `sjl.classOf("hello") === 'String'`.
+- `sjl.classOfIs(*, String):Boolean` - Checks whether a value is of class type string;  e.g., `sjl.classOfIs(0, 'Number') === true`.
+- `sjl.empty(*):Boolean` - Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, or empty object is true for one or one of many values.
+- `sjl.extractBoolFromArrayEnd(Array):Boolean` - Extracts a boolean from the end of an array.  If no boolean is found there returns `false`.
+- `sjl.extractBoolFromArrayStart(Array):Boolean` - Extracts a boolean from the beginning of an array.  If no boolean is found at the beginning of the array returns `false`.
+- `sjl.isset(*):Boolean` - Checks to see that a value(s) is not `null` or `undefined` for one or one of many values.
+- `sjl.lcaseFirst(String):String` - Lowercases the first character of a string;  E.g., `sjl.lcaseFirst ('Hello')` returns 'hello'.
+- `sjl.namespace(String, Object, *):*` - For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
+- `sjl.ucaseFirst String):String` - Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
 
 ### Set functions (operations on objects):
 - `extend` - Similiar to JQuery's `extend` method except with the following method signature:
@@ -38,36 +38,41 @@ only meant as a supplement to them.
 
 ### OOP Util functions:
 - `copyOfProto` - Creates a copy of a prototype (backward compatible to older IEs).
-- `defineSubClass` - Creates a sub class of a constructor and makes it extendable via the static method `extend`.
+- `defineSubClass` - Creates a sub class of a constructor and makes it extendable via the static method `extend`;  E.g., pretty much creates `sjl.Extendable`.
 - `throwNotOfTypeError` - This method is used internally but is tentative and may be removed later.
-
-### Tests:
-- Tests for all components listed under "Utilities" above.
-- Tests to be run on server.
-- Tests to be run in browser (requires running `bower install` in root directory).
 
 #### Composition helpers:
 - `sjl.getValueFromObj` - Allows getting value by namespace string (ex: `'some.object.deep'`) 
-also if value is a function automatically calls it and allows you to pass args to use with value if it is 
+also if return value is a function automatically calls it and allows you to pass args to use with value if it is
 a function also allows for fetching the value raw if it s a function.
 - `sjl.setValueOnObj` - Allows setting a value on an object by namespace string or conjoined setter 
 function (setPropertyName) or sets value directly if no setter or namespace string found/used.
 
 #### Classes/Constructors
-- `sjl.Attributable` - A base attributable constructor which has two methods attr and attrs (for setting and getting multiple attributes jquery style).
-- `sjl.Extendable` - A base extendable constructor with an `extend`.
-- `sjl.Iterator` - A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 
-##### `sjl.Optionable`
+##### sjl.Attributable
+A base attributable constructor which has two methods attr and attrs (for setting and getting multiple attributes jquery style).
 
-    A simple Optionable class with `set`, `get`, `merge`, and `has` methods.
+##### sjl.Iterator
+A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 
- - `has (String value) :Boolean`  - Takes a regular string or a namespaced string to find out if value exists on the Optionable's object `options` object.
- - `get (String key) :(null|*)`  - Takes a regular string or a namespaced one and pulls out the value from Optionable's `options` object.  Returns null `key` doesn't exist.
- - `set (String key, * value) :Optionable`  - Takes a key and a value param or an object (sets multiple key value pairs in this case).  Key value can be a namespaced string.
+##### sjl.Extendable
+A base extendable constructor with an `extend`.
+
+##### sjl.Optionable
+A simple Optionable class with `set`, `get`, `merge`, and `has` methods.
+
+- `has (String value) :Boolean`  - Takes a regular string or a namespaced string to find out if value exists on the Optionable's object `options` object.
+- `get (String key) :(null|*)`  - Takes a regular string or a namespaced one and pulls out the value from Optionable's `options` object.  Returns null `key` doesn't exist.
+- `set (String key, * value) :Optionable`  - Takes a key and a value param or an object (sets multiple key value pairs in this case).  Key value can be a namespaced string.
     Also if first value is an object then set uses `sjl.setValueOnObj` (see description of this method above) to set values on this Optionable.
- - `merge ((Object|Boolean) param0-*) :Optionable` - Merges all `Object`s passed into it to Optionable's `options` object.  If last param in arguments is a Boolean
- then checks extracts this boolean and passes it on to `sjl.extend` (in an attempt to invoke `extend`'s useLegacyGettersAndSetters` feature if the boolean is true and not invoke the feature to do the merge if the boolean is false).
+- `merge ((Object|Boolean) param0-*) :Optionable` - Merges all `Object`s passed into it to Optionable's `options` object.  If last param in arguments is a Boolean
+    then checks extracts this boolean and passes it on to `sjl.extend` (in an attempt to invoke `extend`'s useLegacyGettersAndSetters` feature if the boolean is true and not invoke the feature to do the merge if the boolean is false).
+
+### Tests:
+- Tests for all components listed under "Utilities" above.
+- Tests to be run on server.
+- Tests to be run in browser (requires running `bower install` in root directory).
 
 ### Requirements:
 - Javascript versions ecmascript 3+
