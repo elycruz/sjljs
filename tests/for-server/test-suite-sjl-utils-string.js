@@ -11,7 +11,7 @@ if (typeof expect === 'undefined') {
 
 describe ('Sjl String', function () {
 
-    "use strict";
+    'use strict';
 
     var funcToCaseAndResultMap = {
             lcaseFirst: {

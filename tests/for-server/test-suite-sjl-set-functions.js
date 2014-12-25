@@ -15,7 +15,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Set Functions', function () {
 
-    "use strict";
+    'use strict';
 
     describe ('It should have It\'s set functions set', function () {
         var funcNames = ['extend']; // 'intersection', 'merge', 'restrict', 'subtract', 'union'];
@@ -35,11 +35,11 @@ describe('Sjl Set Functions', function () {
         it ('should be able to unite two hash maps without the `deep` option', function () {
             var unitee1 = {
                     func: function func() { }, nil: null, num: 123, bln: false,
-                    obj: {a: 'A', b: 'B'}, str: "unitee1"
+                    obj: {a: 'A', b: 'B'}, str: 'unitee1'
                 },
                 unitee2 = {
                     func: function otherFunc() { }, num: 456, bln: true,
-                    obj: {c: 'C', d: 'D'}, str: "unitee2"
+                    obj: {c: 'C', d: 'D'}, str: 'unitee2'
                 },
                 expectedKeyTypeMap = { 'func': 'Function', 'nil': 'Null', 'num': 'Number',
                     'bln': 'Boolean',

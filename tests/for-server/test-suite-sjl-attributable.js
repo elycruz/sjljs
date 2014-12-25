@@ -14,6 +14,6 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Attributable', function () {
 
-    "use strict";
+    'use strict';
 
 });

@@ -3,6 +3,8 @@
  */
 (function (context) {
 
+    'use strict';
+
     context.sjl = context.sjl || {};
 
     context.sjl.Attributable = context.sjl.Extendable.extend(function Attributable () {},{

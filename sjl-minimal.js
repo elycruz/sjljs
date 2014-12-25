@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Sat Dec 20 2014 19:05:22 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 25 2014 02:16:52 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -8,6 +8,9 @@
  * @param {Object} context
  * @returns void
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -16,7 +19,12 @@
         notLCaseFirst = typeof context.sjl.lcaseFirst !== 'function',
         notUCaseFirst = typeof context.sjl.ucaseFirst !== 'function',
         noExtractBoolFromArrayStart = typeof context.sjl.extractBoolFromArrayStart !== 'function',
-        noExtractBoolFromArrayEnd = typeof context.sjl.extractBoolFromArrayEnd !== 'function';
+        noExtractBoolFromArrayEnd = typeof context.sjl.extractBoolFromArrayEnd !== 'function',
+        extractBoolFromArray,
+        changeCaseOfFirstChar,
+        isEmptyValue,
+        isEmptyObj,
+        isSet;
 
     if (typeof context.sjl.argsToArray !== 'function') {
         context.sjl.argsToArray = function (args) {
@@ -31,9 +39,9 @@
          * @param value
          * @returns {boolean}
          */
-        function isSet(value) {
+        isSet = function (value) {
             return (value !== undefined && value !== null);
-        }
+        };
 
         /**
          * Checks to see if any of the arguments passed in are
@@ -99,7 +107,7 @@
          * @param obj object to be checked
          * @returns {boolean}
          */
-        function isEmptyObj(obj) {
+        isEmptyObj = function (obj) {
             var retVal = obj === true ? false : true;
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {
@@ -108,7 +116,7 @@
                 }
             }
             return retVal;
-        }
+        };
 
         /**
          * Checks to see if value is empty (objects, arrays,
@@ -116,7 +124,7 @@
          * @param value
          * @returns {boolean}
          */
-        function isEmptyValue(value) {
+        isEmptyValue = function (value) {
             var retVal;
 
             // If value is an array or a string
@@ -137,7 +145,7 @@
             }
 
             return retVal;
-        }
+        };
 
         /**
          * Checks to see if any of the arguments passed in are empty.
@@ -226,7 +234,7 @@
          * @throws {TypeError} - If str is not of type "String"
          * @returns {String} - composed string
          */
-        function changeCaseOfFirstChar (str, func, thisFuncsName) {
+        changeCaseOfFirstChar = function (str, func, thisFuncsName) {
             var search, char, right, left;
 
             // If typeof `str` is not of type "String" then bail
@@ -256,7 +264,7 @@
             }
 
             return str;
-        }
+        };
     }
 
     if (notLCaseFirst) {
@@ -268,7 +276,7 @@
          */
         context.sjl.lcaseFirst = function (str) {
             return changeCaseOfFirstChar (str, 'toLowerCase', 'lcaseFirst');
-        }
+        };
     }
 
     if (notUCaseFirst) {
@@ -298,7 +306,7 @@
         context.sjl.camelCase = function (str, upperFirst, replaceStrRegex) {
             upperFirst = upperFirst || false;
             replaceStrRegex = replaceStrRegex || /[^a-z\d]/i;
-            var newStr = "", i,
+            var newStr = '', i,
 
             // Get clean string
                 parts = str.split(replaceStrRegex);
@@ -333,18 +341,23 @@
          * @param startOrEnd {Boolean}
          * @returns {Boolean}
          */
-        function extractBoolFromArray(array, startOrEndBln) {
+        extractBoolFromArray = function (array, startOrEndBln) {
             var expectedBool = startOrEndBln ? array[0] : array[array.length - 1],
                 retVal = false;
             if (context.sjl.classOfIs(expectedBool, 'Boolean')) {
                 retVal = startOrEndBln ? array.shift() : array.pop();
             }
             else if (context.sjl.classOfIs(expectedBool, 'Undefined')) {
-                startOrEndBln ? array.shift() : array.pop();
+                if (startOrEndBln) {
+                    array.shift();
+                }
+                else {
+                    array.pop();
+                }
                 retVal = false;
             }
             return retVal;
-        }
+        };
     }
 
     if (noExtractBoolFromArrayStart) {
@@ -376,9 +389,18 @@
  * ** Cartesian functions copied from "Javascript the definitive guide"
  * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
+
+    /**
+     * Used by sjl.extend definition
+     * @type {Function}
+     */
+    var extend;
 
     if (typeof context.sjl.getValueFromObj !== 'function') {
         /**
@@ -455,7 +477,7 @@
          * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use sjl.setValueOnObj for setting values (only works if not using the `deep` the feature or `deep` is `false`)
          * @returns {*} - returns o
          */
-        function extend (o, p, deep, useLegacyGettersAndSetters) {
+        extend = function (o, p, deep, useLegacyGettersAndSetters) {
             deep = deep || false;
             useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
@@ -485,7 +507,7 @@
                 }
             }
             return o;
-        }
+        };
 
         context.sjl.extend = function () {
             // Return if no arguments
@@ -496,7 +518,8 @@
             var args = context.sjl.argsToArray(arguments),
                 deep = context.sjl.extractBoolFromArrayStart(args),
                 useLegacyGettersAndSetters = context.sjl.extractBoolFromArrayEnd(args),
-                arg0 = args.shift();
+                arg0 = args.shift(),
+                arg;
 
             // Extend object `0` with other objects
             for (arg in args) {
@@ -607,6 +630,10 @@
  */
 (function (context) {
 
+    'use strict';
+
+    var resolveConstructor;
+
     if (typeof context.sjl.copyOfProto === 'undefined') {
         /**
          * Creates a copy of a prototype to use for inheritance.
@@ -614,15 +641,15 @@
          * @returns {*}
          */
         context.sjl.copyOfProto = function (proto) {
-            if (proto == null) throw TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // p must be a non-null object
+            if (proto === null) throw new TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // p must be a non-null object
             if (Object.create) // If Object.create() is defined...
                 return Object.create(proto); // then just use it.
             var type = typeof proto; // Otherwise do some more type checking
-            if (type !== "object" && type !== "function") throw TypeError();
-            function func() {
+            if (type !== 'object' && type !== 'function') throw new TypeError();
+            function Func() {
             } // Define a dummy constructor function.
-            func.prototype = proto; // Set its prototype property to p.
-            return new func();
+            Func.prototype = proto; // Set its prototype property to p.
+            return new Func();
         };
     }
 
@@ -635,7 +662,7 @@
          * @returns {*}
          * @throws {Error} - If can't resolve constructor from `val`
          */
-        function resolveConstructor (val) {
+        resolveConstructor = function (val) {
             // Check if is string and hold original string
             // Check if is string and hold original string
             var isString = sjl.classOfIs(val, 'String'),
@@ -656,7 +683,7 @@
                     // Else throw error
                     throw new Error('An error occurred while trying to define a ' +
                         'sub class using: "' + originalString + '" as a sub class in `sjl.defineSubClass`.  ' +
-                        'In unminified source: "./src/sjl/sjl-oop-util-functions.js"')
+                        'In unminified source: "./src/sjl/sjl-oop-util-functions.js"');
                 }
             }
 
@@ -673,7 +700,7 @@
             }
 
             return _val;
-        }
+        };
 
         /**
          * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods
@@ -727,6 +754,9 @@
  * Code copy pasted from "Javascript the definitive guide"
  */
 (function (context) {
+
+    'use strict';
+
     /**
      * The `Extendable` constructor
      * @constructor
@@ -739,6 +769,8 @@
  * Created by Ely on 6/21/2014.
  */
 (function (context) {
+
+    'use strict';
 
     context.sjl = context.sjl || {};
 
@@ -811,6 +843,8 @@
  *  e.g., setName, setSomePropertyName, etc..
  */
 (function (context) {
+
+    'use strict';
 
     context.sjl = context.sjl || {};
 
@@ -969,6 +1003,8 @@
  * Created by Ely on 4/12/2014.
  */
 (function (context) {
+
+    'use strict';
 
     context.sjl.Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {

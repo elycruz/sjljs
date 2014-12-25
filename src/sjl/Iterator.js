@@ -3,6 +3,8 @@
  */
 (function (context) {
 
+    'use strict';
+
     context.sjl.Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {
             if (!(this instanceof sjl.Iterator)) {

@@ -11,12 +11,12 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Utils', function () {
 
-    "use strict";
+    'use strict';
 
     describe('#`argsToArray`', function () {
 
         var helloFunc = function hello () {},
-            helloArray = ["a", "b", "c"];
+            helloArray = ['a', 'b', 'c'];
 
         it ('should return an array for an arguments object.', function () {
             expect(Array.isArray(sjl.argsToArray(arguments))).to.equal(true);
@@ -38,7 +38,7 @@ describe('Sjl Utils', function () {
                     expect(val).to.equal(valuesToPassIn[i]);
                 });
             });
-        })
+        });
 
     });
 
@@ -65,40 +65,40 @@ describe('Sjl Utils', function () {
         }
 
         var emptyValueMap = {
-                "0 value": 0,
-                "null value": null,
-                "undefined value": undefined,
-                "empty string": "",
-                "empty object": {},
-                "empty array": []
+                '0 value': 0,
+                'null value': null,
+                'undefined value': undefined,
+                'empty string': '',
+                'empty object': {},
+                'empty array': []
             },
 
             nonEmptyValueMap = {
-                "number other than zero": 1,
-                "negative number": -1,
-                "true value": true,
-                "non-empty object": {a: 'b'},
-                "non-empty array": [1],
-                "non-empty string": "0"
+                'number other than zero': 1,
+                'negative number': -1,
+                'true value': true,
+                'non-empty object': {a: 'b'},
+                'non-empty array': [1],
+                'non-empty string': '0'
             };
 
         // empty Should return true for empty values; I.e., 0, null, undefined, "", {}, []
         it('should return true for all ' +
             'empty values (0, null, undefined, "", {}, [])', function () {
-            expect(sjl.empty(0, null, undefined, "", {}, [])).to.equal(true);
+            expect(sjl.empty(0, null, undefined, '', {}, [])).to.equal(true);
         });
 
         // Should return false for each in empty values
-        makeEmptyTestsForValueMap(emptyValueMap, "true");
+        makeEmptyTestsForValueMap(emptyValueMap, 'true');
 
         // empty Should return false for all non-empty values
         it('should return false for all passed in non-empty ' +
             'values: [1], {hello: "world"}, "0", -1, true, 1', function () {
-            expect(sjl.empty([1], {hello: "world"}, "0", -1, true, 1)).to.equal(false);
+            expect(sjl.empty([1], {hello: 'world'}, '0', -1, true, 1)).to.equal(false);
         });
 
         // Should return false for each in non-empty values
-        makeEmptyTestsForValueMap(nonEmptyValueMap, "false");
+        makeEmptyTestsForValueMap(nonEmptyValueMap, 'false');
 
     });
 

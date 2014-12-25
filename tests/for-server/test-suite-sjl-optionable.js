@@ -2,7 +2,7 @@
  * Created by Ely on 12/17/2014.
  */
 
-"use strict";
+'use strict';
 
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {

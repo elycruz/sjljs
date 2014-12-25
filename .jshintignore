@@ -1,0 +1,5 @@
+./tests/for-browser/**/*
+./.bower_components
+./in-transit
+./node_modules
+./*.js

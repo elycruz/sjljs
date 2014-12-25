@@ -14,7 +14,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Attributable', function () {
 
-    "use strict";
+    'use strict';
 
 });
 
@@ -31,7 +31,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Extendable', function () {
 
-    "use strict";
+    'use strict';
 
     it ('should create an extendable class', function () {
         var extendable = new sjl.Extendable();
@@ -77,7 +77,7 @@ describe('Sjl Extendable', function () {
  * Created by Ely on 12/17/2014.
  */
 
-"use strict";
+'use strict';
 
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
@@ -269,7 +269,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Set Functions', function () {
 
-    "use strict";
+    'use strict';
 
     describe ('It should have It\'s set functions set', function () {
         var funcNames = ['extend']; // 'intersection', 'merge', 'restrict', 'subtract', 'union'];
@@ -289,11 +289,11 @@ describe('Sjl Set Functions', function () {
         it ('should be able to unite two hash maps without the `deep` option', function () {
             var unitee1 = {
                     func: function func() { }, nil: null, num: 123, bln: false,
-                    obj: {a: 'A', b: 'B'}, str: "unitee1"
+                    obj: {a: 'A', b: 'B'}, str: 'unitee1'
                 },
                 unitee2 = {
                     func: function otherFunc() { }, num: 456, bln: true,
-                    obj: {c: 'C', d: 'D'}, str: "unitee2"
+                    obj: {c: 'C', d: 'D'}, str: 'unitee2'
                 },
                 expectedKeyTypeMap = { 'func': 'Function', 'nil': 'Null', 'num': 'Number',
                     'bln': 'Boolean',
@@ -382,7 +382,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl#`namespace`', function () {
 
-    "use strict";
+    'use strict';
 
     // Sample obj
     var sampleObj = {},
@@ -399,7 +399,7 @@ describe('Sjl#`namespace`', function () {
         var evaluated = eval('(' + val + ')');
         sampleObj['value' + i] = evaluated;
         sampleObjWithMaps['value' + i] = evaluated;
-        evaluatedValues.push(evaluated)
+        evaluatedValues.push(evaluated);
     });
 
     // When fetching one level deep within `sampleObj`
@@ -476,7 +476,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Reflection', function () {
 
-    "use strict";
+    'use strict';
 
     describe('#`classOf`', function () {
         var valueMap = {
@@ -512,14 +512,14 @@ describe('Sjl Reflection', function () {
 
         // Eval keys and pass them in for tests
         var dataTypeClassStrings = {
-            "([])":         sjl.classOf( []        ),
-            "(true)":       sjl.classOf( true      ),
-            "(1)":          sjl.classOf( 1         ),
-            "({})":         sjl.classOf( {}        ),
-            "('')":         sjl.classOf( ''        ),
-            "(null)":       sjl.classOf( null      ),
-            "(undefined)":  sjl.classOf( undefined ),
-            "(function hello () {})":   sjl.classOf( (function hello() {}) )
+            '([])':         sjl.classOf( []        ),
+            '(true)':       sjl.classOf( true      ),
+            '(1)':          sjl.classOf( 1         ),
+            '({})':         sjl.classOf( {}        ),
+            '("")':         sjl.classOf( ''        ),
+            '(null)':       sjl.classOf( null      ),
+            '(undefined)':  sjl.classOf( undefined ),
+            '(function hello () {})':   sjl.classOf( function hello() {} )
         };
 
         Object.keys(dataTypeClassStrings).forEach(function (x) {
@@ -551,7 +551,7 @@ if (typeof expect === 'undefined') {
 
 describe ('Sjl String', function () {
 
-    "use strict";
+    'use strict';
 
     var funcToCaseAndResultMap = {
             lcaseFirst: {
@@ -620,12 +620,12 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Utils', function () {
 
-    "use strict";
+    'use strict';
 
     describe('#`argsToArray`', function () {
 
         var helloFunc = function hello () {},
-            helloArray = ["a", "b", "c"];
+            helloArray = ['a', 'b', 'c'];
 
         it ('should return an array for an arguments object.', function () {
             expect(Array.isArray(sjl.argsToArray(arguments))).to.equal(true);
@@ -647,7 +647,7 @@ describe('Sjl Utils', function () {
                     expect(val).to.equal(valuesToPassIn[i]);
                 });
             });
-        })
+        });
 
     });
 
@@ -674,40 +674,40 @@ describe('Sjl Utils', function () {
         }
 
         var emptyValueMap = {
-                "0 value": 0,
-                "null value": null,
-                "undefined value": undefined,
-                "empty string": "",
-                "empty object": {},
-                "empty array": []
+                '0 value': 0,
+                'null value': null,
+                'undefined value': undefined,
+                'empty string': '',
+                'empty object': {},
+                'empty array': []
             },
 
             nonEmptyValueMap = {
-                "number other than zero": 1,
-                "negative number": -1,
-                "true value": true,
-                "non-empty object": {a: 'b'},
-                "non-empty array": [1],
-                "non-empty string": "0"
+                'number other than zero': 1,
+                'negative number': -1,
+                'true value': true,
+                'non-empty object': {a: 'b'},
+                'non-empty array': [1],
+                'non-empty string': '0'
             };
 
         // empty Should return true for empty values; I.e., 0, null, undefined, "", {}, []
         it('should return true for all ' +
             'empty values (0, null, undefined, "", {}, [])', function () {
-            expect(sjl.empty(0, null, undefined, "", {}, [])).to.equal(true);
+            expect(sjl.empty(0, null, undefined, '', {}, [])).to.equal(true);
         });
 
         // Should return false for each in empty values
-        makeEmptyTestsForValueMap(emptyValueMap, "true");
+        makeEmptyTestsForValueMap(emptyValueMap, 'true');
 
         // empty Should return false for all non-empty values
         it('should return false for all passed in non-empty ' +
             'values: [1], {hello: "world"}, "0", -1, true, 1', function () {
-            expect(sjl.empty([1], {hello: "world"}, "0", -1, true, 1)).to.equal(false);
+            expect(sjl.empty([1], {hello: 'world'}, '0', -1, true, 1)).to.equal(false);
         });
 
         // Should return false for each in non-empty values
-        makeEmptyTestsForValueMap(nonEmptyValueMap, "false");
+        makeEmptyTestsForValueMap(nonEmptyValueMap, 'false');
 
     });
 

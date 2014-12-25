@@ -18,6 +18,8 @@
  */
 (function (context) {
 
+    'use strict';
+
     context.sjl = context.sjl || {};
 
     /**
@@ -60,7 +62,7 @@
 
     // Identity monad
     var identity = context.sjl.monad(),
-        identityMonad = identity("Hello World");
+        identityMonad = identity('Hello World');
     identityMonad.bind(console.log);
 
     // Maybe monad

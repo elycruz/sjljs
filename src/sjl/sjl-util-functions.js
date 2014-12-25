@@ -5,6 +5,9 @@
  * @param {Object} context
  * @returns void
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -13,7 +16,12 @@
         notLCaseFirst = typeof context.sjl.lcaseFirst !== 'function',
         notUCaseFirst = typeof context.sjl.ucaseFirst !== 'function',
         noExtractBoolFromArrayStart = typeof context.sjl.extractBoolFromArrayStart !== 'function',
-        noExtractBoolFromArrayEnd = typeof context.sjl.extractBoolFromArrayEnd !== 'function';
+        noExtractBoolFromArrayEnd = typeof context.sjl.extractBoolFromArrayEnd !== 'function',
+        extractBoolFromArray,
+        changeCaseOfFirstChar,
+        isEmptyValue,
+        isEmptyObj,
+        isSet;
 
     if (typeof context.sjl.argsToArray !== 'function') {
         context.sjl.argsToArray = function (args) {
@@ -28,9 +36,9 @@
          * @param value
          * @returns {boolean}
          */
-        function isSet(value) {
+        isSet = function (value) {
             return (value !== undefined && value !== null);
-        }
+        };
 
         /**
          * Checks to see if any of the arguments passed in are
@@ -96,7 +104,7 @@
          * @param obj object to be checked
          * @returns {boolean}
          */
-        function isEmptyObj(obj) {
+        isEmptyObj = function (obj) {
             var retVal = obj === true ? false : true;
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {
@@ -105,7 +113,7 @@
                 }
             }
             return retVal;
-        }
+        };
 
         /**
          * Checks to see if value is empty (objects, arrays,
@@ -113,7 +121,7 @@
          * @param value
          * @returns {boolean}
          */
-        function isEmptyValue(value) {
+        isEmptyValue = function (value) {
             var retVal;
 
             // If value is an array or a string
@@ -134,7 +142,7 @@
             }
 
             return retVal;
-        }
+        };
 
         /**
          * Checks to see if any of the arguments passed in are empty.
@@ -223,7 +231,7 @@
          * @throws {TypeError} - If str is not of type "String"
          * @returns {String} - composed string
          */
-        function changeCaseOfFirstChar (str, func, thisFuncsName) {
+        changeCaseOfFirstChar = function (str, func, thisFuncsName) {
             var search, char, right, left;
 
             // If typeof `str` is not of type "String" then bail
@@ -253,7 +261,7 @@
             }
 
             return str;
-        }
+        };
     }
 
     if (notLCaseFirst) {
@@ -265,7 +273,7 @@
          */
         context.sjl.lcaseFirst = function (str) {
             return changeCaseOfFirstChar (str, 'toLowerCase', 'lcaseFirst');
-        }
+        };
     }
 
     if (notUCaseFirst) {
@@ -295,7 +303,7 @@
         context.sjl.camelCase = function (str, upperFirst, replaceStrRegex) {
             upperFirst = upperFirst || false;
             replaceStrRegex = replaceStrRegex || /[^a-z\d]/i;
-            var newStr = "", i,
+            var newStr = '', i,
 
             // Get clean string
                 parts = str.split(replaceStrRegex);
@@ -330,18 +338,23 @@
          * @param startOrEnd {Boolean}
          * @returns {Boolean}
          */
-        function extractBoolFromArray(array, startOrEndBln) {
+        extractBoolFromArray = function (array, startOrEndBln) {
             var expectedBool = startOrEndBln ? array[0] : array[array.length - 1],
                 retVal = false;
             if (context.sjl.classOfIs(expectedBool, 'Boolean')) {
                 retVal = startOrEndBln ? array.shift() : array.pop();
             }
             else if (context.sjl.classOfIs(expectedBool, 'Undefined')) {
-                startOrEndBln ? array.shift() : array.pop();
+                if (startOrEndBln) {
+                    array.shift();
+                }
+                else {
+                    array.pop();
+                }
                 retVal = false;
             }
             return retVal;
-        }
+        };
     }
 
     if (noExtractBoolFromArrayStart) {

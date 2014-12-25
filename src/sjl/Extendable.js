@@ -3,6 +3,9 @@
  * Code copy pasted from "Javascript the definitive guide"
  */
 (function (context) {
+
+    'use strict';
+
     /**
      * The `Extendable` constructor
      * @constructor

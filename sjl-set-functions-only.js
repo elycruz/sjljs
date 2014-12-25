@@ -1,11 +1,20 @@
-/**! sjl-set-functions-only.js Sat Dec 20 2014 19:05:22 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl-set-functions-only.js Thu Dec 25 2014 02:21:31 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * ** Cartesian functions copied from "Javascript the definitive guide"
  * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
+
+    /**
+     * Used by sjl.extend definition
+     * @type {Function}
+     */
+    var extend;
 
     if (typeof context.sjl.getValueFromObj !== 'function') {
         /**
@@ -82,7 +91,7 @@
          * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use sjl.setValueOnObj for setting values (only works if not using the `deep` the feature or `deep` is `false`)
          * @returns {*} - returns o
          */
-        function extend (o, p, deep, useLegacyGettersAndSetters) {
+        extend = function (o, p, deep, useLegacyGettersAndSetters) {
             deep = deep || false;
             useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
@@ -112,7 +121,7 @@
                 }
             }
             return o;
-        }
+        };
 
         context.sjl.extend = function () {
             // Return if no arguments
@@ -123,7 +132,8 @@
             var args = context.sjl.argsToArray(arguments),
                 deep = context.sjl.extractBoolFromArrayStart(args),
                 useLegacyGettersAndSetters = context.sjl.extractBoolFromArrayEnd(args),
-                arg0 = args.shift();
+                arg0 = args.shift(),
+                arg;
 
             // Extend object `0` with other objects
             for (arg in args) {

@@ -6,6 +6,8 @@
  */
 (function (context) {
 
+    'use strict';
+
     context.sjl = context.sjl || {};
 
     /**

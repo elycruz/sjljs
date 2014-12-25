@@ -3,6 +3,10 @@
  */
 (function (context) {
 
+    'use strict';
+
+    var resolveConstructor;
+
     if (typeof context.sjl.copyOfProto === 'undefined') {
         /**
          * Creates a copy of a prototype to use for inheritance.
@@ -10,15 +14,15 @@
          * @returns {*}
          */
         context.sjl.copyOfProto = function (proto) {
-            if (proto == null) throw TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // p must be a non-null object
+            if (proto === null) throw new TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // p must be a non-null object
             if (Object.create) // If Object.create() is defined...
                 return Object.create(proto); // then just use it.
             var type = typeof proto; // Otherwise do some more type checking
-            if (type !== "object" && type !== "function") throw TypeError();
-            function func() {
+            if (type !== 'object' && type !== 'function') throw new TypeError();
+            function Func() {
             } // Define a dummy constructor function.
-            func.prototype = proto; // Set its prototype property to p.
-            return new func();
+            Func.prototype = proto; // Set its prototype property to p.
+            return new Func();
         };
     }
 
@@ -31,7 +35,7 @@
          * @returns {*}
          * @throws {Error} - If can't resolve constructor from `val`
          */
-        function resolveConstructor (val) {
+        resolveConstructor = function (val) {
             // Check if is string and hold original string
             // Check if is string and hold original string
             var isString = sjl.classOfIs(val, 'String'),
@@ -52,7 +56,7 @@
                     // Else throw error
                     throw new Error('An error occurred while trying to define a ' +
                         'sub class using: "' + originalString + '" as a sub class in `sjl.defineSubClass`.  ' +
-                        'In unminified source: "./src/sjl/sjl-oop-util-functions.js"')
+                        'In unminified source: "./src/sjl/sjl-oop-util-functions.js"');
                 }
             }
 
@@ -69,7 +73,7 @@
             }
 
             return _val;
-        }
+        };
 
         /**
          * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods

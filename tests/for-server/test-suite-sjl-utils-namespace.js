@@ -11,7 +11,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl#`namespace`', function () {
 
-    "use strict";
+    'use strict';
 
     // Sample obj
     var sampleObj = {},
@@ -28,7 +28,7 @@ describe('Sjl#`namespace`', function () {
         var evaluated = eval('(' + val + ')');
         sampleObj['value' + i] = evaluated;
         sampleObjWithMaps['value' + i] = evaluated;
-        evaluatedValues.push(evaluated)
+        evaluatedValues.push(evaluated);
     });
 
     // When fetching one level deep within `sampleObj`

@@ -11,7 +11,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Extendable', function () {
 
-    "use strict";
+    'use strict';
 
     it ('should create an extendable class', function () {
         var extendable = new sjl.Extendable();

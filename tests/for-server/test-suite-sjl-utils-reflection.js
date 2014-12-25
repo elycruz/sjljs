@@ -11,7 +11,7 @@ if (typeof expect === 'undefined') {
 
 describe('Sjl Reflection', function () {
 
-    "use strict";
+    'use strict';
 
     describe('#`classOf`', function () {
         var valueMap = {
@@ -47,14 +47,14 @@ describe('Sjl Reflection', function () {
 
         // Eval keys and pass them in for tests
         var dataTypeClassStrings = {
-            "([])":         sjl.classOf( []        ),
-            "(true)":       sjl.classOf( true      ),
-            "(1)":          sjl.classOf( 1         ),
-            "({})":         sjl.classOf( {}        ),
-            "('')":         sjl.classOf( ''        ),
-            "(null)":       sjl.classOf( null      ),
-            "(undefined)":  sjl.classOf( undefined ),
-            "(function hello () {})":   sjl.classOf( (function hello() {}) )
+            '([])':         sjl.classOf( []        ),
+            '(true)':       sjl.classOf( true      ),
+            '(1)':          sjl.classOf( 1         ),
+            '({})':         sjl.classOf( {}        ),
+            '("")':         sjl.classOf( ''        ),
+            '(null)':       sjl.classOf( null      ),
+            '(undefined)':  sjl.classOf( undefined ),
+            '(function hello () {})':   sjl.classOf( function hello() {} )
         };
 
         Object.keys(dataTypeClassStrings).forEach(function (x) {
