@@ -121,7 +121,7 @@
                     value;
                 for (value in _interface) {
                     if (_interface.hasOwnProperty(value)) {
-                        value = _interface[i];
+                        value = _interface[value];
                         if (!context.sjl.isset(validator[value]) ||
                             typeof validator[value] !== 'function') {
                             retVal = false;
