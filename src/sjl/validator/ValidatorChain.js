@@ -119,7 +119,7 @@
                 var _interface = ['isValid', 'getMessages'],
                     retVal = true,
                     value;
-                for (value in _interface.length) {
+                for (value in _interface) {
                     if (_interface.hasOwnProperty(value)) {
                         value = _interface[i];
                         if (!context.sjl.isset(validator[value]) ||
