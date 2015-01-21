@@ -1,4 +1,4 @@
-/**! sjl.js Wed Jan 21 2015 13:57:09 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Wed Jan 21 2015 14:38:43 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -1281,11 +1281,13 @@
                 validators = validatorChain.getValidators();
 
                 for (validator in validators) {
-                    validator = validators[validator];
-                    if (!self.verifyHasValidatorInterface(validator)) {
-                        throw new Error('A validator with out the validator interface' +
+                    if (validators.hasOwnProperty(validator)) {
+                        validator = validators[validator];
+                        if (!self.verifyHasValidatorInterface(validator)) {
+                            throw new Error('A validator with out the validator interface' +
                             'was found in ValidatorChain.  Please check the validators you are passing ' +
                             'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
+                        }
                     }
                 }
 

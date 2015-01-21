@@ -145,11 +145,13 @@
                 validators = validatorChain.getValidators();
 
                 for (validator in validators) {
-                    validator = validators[validator];
-                    if (!self.verifyHasValidatorInterface(validator)) {
-                        throw new Error('A validator with out the validator interface' +
+                    if (validators.hasOwnProperty(validator)) {
+                        validator = validators[validator];
+                        if (!self.verifyHasValidatorInterface(validator)) {
+                            throw new Error('A validator with out the validator interface' +
                             'was found in ValidatorChain.  Please check the validators you are passing ' +
                             'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
+                        }
                     }
                 }
 
