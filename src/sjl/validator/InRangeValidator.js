@@ -2,6 +2,9 @@
  * Created by Ely on 7/21/2014.
  * Initial idea copied from the Zend Framework 2's Between Validator
  */
+
+'use strict';
+
 (function (context) {
 
     function throwNotIntError (value, paramName, funcName, expectedType) {

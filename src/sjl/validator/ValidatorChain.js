@@ -1,6 +1,9 @@
 /**
  * Created by Ely on 7/21/2014.
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -112,7 +115,8 @@
 
             verifyHasValidatorInterface: function (validator) {
                 var _interface = ['isValid', 'getMessages'],
-                    retVal = true;
+                    retVal = true,
+                    value;
                 for (value in _interface) {
                     value = _interface[value];
                     if (!context.sjl.isset(validator[value]) ||
@@ -139,10 +143,9 @@
                 for (validator in validators) {
                     validator = validators[validator];
                     if (!self.verifyHasValidatorInterface(validator)) {
-                        throw new Error("A validator with out the validator interface" +
-                            "was found in ValidatorChain.  Please check the validators you are passing " +
-                            "in and make sure that they have the validator interface (['isValid', 'getMessages']).")
-                        break;
+                        throw new Error('A validator with out the validator interface' +
+                            'was found in ValidatorChain.  Please check the validators you are passing ' +
+                            'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
                     }
                 }
 

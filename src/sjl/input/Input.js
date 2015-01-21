@@ -4,16 +4,19 @@
 /**
  * Created by Ely on 7/21/2014.
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
 
     context.sjl.Input = context.sjl.Optionable.extend(
         function Input(options) {
-            var name = null;
+            var alias = null;
 
             if (context.sjl.classOfIs(options, 'String')) {
-                name = options;
+                alias = options;
             }
 
             // Set defaults as options on this class
@@ -23,7 +26,7 @@
                 breakOnFailure: false,
                 fallbackValue: null,
                 filterChain: null,
-                name: name,
+                alias: alias,
                 required: true,
                 validatorChain: null,
                 value: null,
@@ -115,12 +118,12 @@
                 return this;
             },
 
-            getName: function () {
-                return this.options.name;
+            getAlias: function () {
+                return this.options.alias;
             },
 
-            setName: function (value) {
-                this.options.name = value;
+            setAlias: function (value) {
+                this.options.alias = value;
             },
 
             getRawValue: function () {

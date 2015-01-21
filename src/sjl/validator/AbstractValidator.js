@@ -2,6 +2,9 @@
  * Created by Ely on 7/21/2014.
  * Initial idea borrowed from Zend Framework 2's Zend/Validator
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -10,7 +13,8 @@
     context.sjl.AbstractValidator =
 
         context.sjl.Optionable.extend(function AbstractValidator(options) {
-                var self = this;
+                var self = this,
+                    customTemplates;
 
                 // Extend with optionable and set preliminary defaults
                 context.sjl.Optionable.call(self, {
@@ -57,8 +61,8 @@
                 },
 
                 isValid: function (value) {
-                    throw Error("Can not instantiate `AbstractValidator` directly, all class named with " +
-                        "a prefixed \"Abstract\" should not be instantiated.");
+                    throw Error('Can not instantiate `AbstractValidator` directly, all class named with ' +
+                        'a prefixed "Abstract" should not be instantiated.');
                 },
 
                 isValueObscured: function () {

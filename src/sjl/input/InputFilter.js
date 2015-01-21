@@ -1,6 +1,9 @@
 /**
  * Created by Ely on 7/24/2014.
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -18,14 +21,14 @@
                 validationGroup: null
             });
 
-            this.setOptions(options);
+            sjl.extend(true, this.options, options);
 
         }, {
 
             // @todo beef up add, get, and has methods (do param type checking before using param)
             add: function (value) {
                 if (value instanceof context.sjl.Input) {
-                    this.getInputs()[value.getName()] = value;
+                    this.getInputs()[value.getAlias()] = value;
                 }
 
                 return this;
@@ -53,15 +56,15 @@
 
                 // If no data bail and throw an error
                 if (context.sjl.empty(data)) {
-                    throw new Error("InputFilter->isValid could\'nt " +
-                        "find any data for validation.");
+                    throw new Error('InputFilter->isValid could\'nt ' +
+                        'find any data for validation.');
                 }
 
                 return self.validateInputs(inputs, data);
             },
 
             validateInput: function (input, dataMap) {
-                var name = input.getName(),
+                var name = input.getAlias(),
                     dataExists = context.sjl.isset(dataMap[name]),
                     data = dataExists ? dataMap[name] : null,
                     required = input.getRequired(),
@@ -132,7 +135,7 @@
                 if (context.sjl.empty(invalidInputs)) {
                     retVal = true;
                 }
-                // else validtion failed
+                // else validation failed
                 else {
                     retVal = false;
                 }
@@ -151,7 +154,7 @@
                     input, name,
                     validators;
 
-                // Set default inputs value if inputs is not of type "Object"
+                // Set default inputs value if inputs is not of type 'Object'
                 if (!context.sjl.classOfIs(inputs, 'Object')) {
                     self.options.inputs = inputs = {};
                 }
@@ -165,8 +168,8 @@
                     delete inputs[input].validators;
 
                     // Set name if it is not set
-                    if (!context.sjl.isset(inputs[input].name)) {
-                      inputs[input].name = name;
+                    if (!context.sjl.isset(inputs[input].alias)) {
+                      inputs[input].alias = name;
                     }
 
                     // Create input
@@ -176,7 +179,7 @@
                     input.getValidatorChain().addValidators(validators);
 
                     // Save input
-                    self.options.inputs[input.getName()] = input;
+                    self.options.inputs[input.getAlias()] = input;
                 }
 
                 return self;
@@ -213,9 +216,6 @@
             setValidationGroup: function () {
             },
 
-            setValidationGroup: function () {
-            },
-
             getInvalidInputs: function () {
                 if (!context.sjl.classOfIs(this.options.invalidInputs, 'Object')) {
                     this.options.invalidInputs = {};
@@ -238,7 +238,7 @@
 
                 for (input in invalidInputs) {
                     input = invalidInputs[input];
-                    rawValues[input.getName()] = input.getRawValue();
+                    rawValues[input.getAlias()] = input.getRawValue();
                 }
                 return rawValues;
             },
@@ -251,7 +251,7 @@
 
                 for (input in invalidInputs) {
                     input = invalidInputs[input];
-                    values[input.getName()] = input.getValue();
+                    values[input.getAlias()] = input.getValue();
                 }
                 return values;
             },
@@ -264,7 +264,7 @@
 
                 for (key in invalidInputs) {
                     input = invalidInputs[key];
-                    messages[input.getName()] = input.getMessages();
+                    messages[input.getAlias()] = input.getMessages();
                 }
                 return messages;
             },
@@ -302,7 +302,7 @@
             factory: function (inputSpec) {
                 if (!context.sjl.classOfIs(inputSpec, 'Object')
                     || !context.sjl.isset(inputSpec.inputs)) {
-                    throw new Error("InputFilter class expects param 1 to be of type \"Object\".");
+                    throw new Error('InputFilter class expects param 1 to be of type "Object".');
                 }
                 var inputFilter = new context.sjl.InputFilter();
                 inputFilter.setInputs(inputSpec.inputs);

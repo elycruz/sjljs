@@ -7,7 +7,7 @@
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    require('./../../../../sjl.js');
+    require('./../../sjl.js');
 }
 
 // Get chai.expect
@@ -45,24 +45,31 @@ describe('Sjl InputFilter', function () {
     });
 
     describe ('Should create an auto-populated instance via it\'s static method "factory"', function () {
-        var inputFilter = sjl.InputFilter.factory({
-            inputs: {
-                id: {
-                    validators: [
-                        new sjl.RegexValidator({pattern: /^\d{1,20}$/})
-                    ]
-                },
-                // @todo fix the required attribute within the `InputFilter` class as it is overriding populated
-                // values and forcing validation to be skipped
-                alias: {
-                    validators: [
-                        new sjl.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
-                    ]
+        var inputFilter;
+
+        before(function (done) {
+            inputFilter = sjl.InputFilter.factory({
+                inputs: {
+                    id: {
+                        validators: [
+                            new sjl.RegexValidator({pattern: /^\d{1,20}$/})
+                        ]
+                    },
+                    // @todo fix the required attribute within the `InputFilter` class as it is overriding populated
+                    // values and forcing validation to be skipped
+                    alias: {
+                        validators: [
+                            new sjl.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
+                        ]
+                    }
                 }
-            }
+            });
+
+            done();
         });
 
         it ('should have 2 new created inputs', function () {
+            console.log('\n\n\n', inputFilter.options.inputs);
             expect(Object.keys(inputFilter.getInputs()).length).to.equal(2);
         });
 

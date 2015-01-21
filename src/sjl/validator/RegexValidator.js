@@ -1,6 +1,9 @@
 /**
  * Created by Ely on 7/21/2014.
  */
+
+'use strict';
+
 (function (context) {
 
     context.sjl = context.sjl || {};
@@ -57,7 +60,8 @@
             setPattern: function (pattern) {
                 if (context.sjl.classOfIs(pattern, 'RegExp')) {
                     this.clearMessages();
-                    return this.options.pattern = pattern;
+                    this.options.pattern = pattern;
+                    return pattern;
                 }
                 throw new Error('RegexValidator.setPattern expects `pattern` ' +
                     'to be of type "RegExp".  Type and value recieved: type: "' +

@@ -74,6 +74,164 @@ describe('Sjl Extendable', function () {
 });
 
 /**
+ * Created by edelacruz on 7/28/2014.
+ */
+/**
+ * Created by edelacruz on 7/28/2014.
+ */
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+}
+
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
+
+describe('Sjl Input', function () {
+
+    "use strict";
+
+    describe('Should have the appropriate interface', function () {
+        var input = new sjl.Input(),
+            propNames = [
+                'allowEmpty',
+                'breakOnFailure',
+                'errorMessage',
+                'filterChain',
+                'name',
+                'required',
+                'validatorChain',
+                'messages',
+                'value'
+            ],
+            getAndSetMethodNames = [],
+            otherMethodNames = [ 'isValid', 'merge' ],
+            methodNames = [],
+            method,
+            prop;
+
+        // Get prop setter and getter names
+        for (prop in propNames) {
+            prop = propNames[prop];
+            getAndSetMethodNames.push('set' + sjl.ucaseFirst(prop));
+            getAndSetMethodNames.push('get' + sjl.ucaseFirst(prop));
+        }
+
+        // Check methods exist
+        methodNames = otherMethodNames.concat(getAndSetMethodNames);
+
+        // Check methods exist
+        for (method in methodNames) {
+            method = methodNames[method];
+            it('should have a `' + method + '` method.', function () {
+                expect(typeof input[method]).to.equal('function');
+            });
+        }
+    });
+
+    describe('Should return a valid ValidatorChain via it\'s getter.', function () {
+
+    });
+
+});
+
+/**
+ * Created by edelacruz on 7/28/2014.
+ */
+/**
+ * Created by edelacruz on 7/28/2014.
+ */
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+}
+
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
+
+describe('Sjl InputFilter', function () {
+
+    "use strict";
+
+    describe ('Should have the appropriate interface', function () {
+        var inputFilter = new sjl.InputFilter();
+        var methods = [
+            'add', 'get','has',
+            'remove', 'setData', 'getData',
+            'isValid', 'getInvalidInputs',
+            'getValidInputs', 'getValue',
+            'getValues', 'getRawValue',
+            'getRawValues',
+            'getMessages'
+        ],
+            method;
+
+        for (method in methods) {
+            method = methods[method];
+            it ('it should a `' + method + '`.', function () {
+                expect(typeof inputFilter[method]).to.equal('function');
+            });
+        }
+    });
+
+    it ('Should have a static method "factory"', function () {
+        expect (typeof sjl.InputFilter.factory).to.equal('function');
+    });
+
+    describe ('Should create an auto-populated instance via it\'s static method "factory"', function () {
+        var inputFilter;
+
+        before(function (done) {
+            inputFilter = sjl.InputFilter.factory({
+                inputs: {
+                    id: {
+                        validators: [
+                            new sjl.RegexValidator({pattern: /^\d{1,20}$/})
+                        ]
+                    },
+                    // @todo fix the required attribute within the `InputFilter` class as it is overriding populated
+                    // values and forcing validation to be skipped
+                    alias: {
+                        validators: [
+                            new sjl.RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
+                        ]
+                    }
+                }
+            });
+
+            done();
+        });
+
+        it ('should have 2 new created inputs', function () {
+            console.log('\n\n\n', inputFilter.options.inputs);
+            expect(Object.keys(inputFilter.getInputs()).length).to.equal(2);
+        });
+
+        it ('should validate to true on valid values', function () {
+            // Set data
+            inputFilter.setData({id: '999', alias: 'hello-world'});
+            expect(inputFilter.isValid()).to.equal(true);
+            expect(Object.keys(inputFilter.getMessages()).length).to.equal(0);
+        });
+
+        it ('should validate to false on invalid values and should have error messages for each input datum', function () {
+            // Set data
+            inputFilter.setData({id: '99abc', alias: 'hello -world'});
+            expect(inputFilter.isValid()).to.equal(false);
+            expect(Object.keys(inputFilter.getMessages()).length).to.equal(2);
+        });
+
+    });
+
+});
+
+/**
  * Created by Ely on 12/17/2014.
  */
 
@@ -711,4 +869,182 @@ describe('Sjl Utils', function () {
 
     });
 
+});
+/**
+ * Created by edelacruz on 7/28/2014.
+ */
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+}
+
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
+
+describe('Sjl Validator NS', function () {
+
+    "use strict";
+
+    describe('#`sjl.RegexValidator`', function () {
+
+        function regexTest(keyValMap, validator, expected) {
+            var key, value, regex;
+            for (key in keyValMap) {
+                value = keyValMap[key];
+                regex = new RegExp(key);
+                validator.setPattern(regex);
+                it('should return ' + expected + ' when testing "' + key + '" with "' + value + '".', function () {
+                    expect(validator.isValid(value)).to.equal(expected);
+                });
+            }
+        }
+
+        var truthyMap = {
+                '/^\\d+$/': 199, // Unsigned Number
+                '/^[a-z]+$/': 'abc', // Alphabetical
+                '^(:?\\+|\\-)?\\d+$': '-100' // Signed Number
+            },
+            falsyMap = {
+                '/^\\d+$/': '-199edd1', // Unsigned Number
+                '/^[a-z]+$/': '0123a12bc', // Alphabetical
+                '^(:?\\+|\\-)?\\d+$': '-10sd0e+99' // Signed Number
+            },
+            validator = new sjl.RegexValidator();
+
+        // Run tests
+        regexTest(truthyMap, validator, true);
+        regexTest(falsyMap, validator, false);
+
+    });
+
+    describe('#`sjl.InRangeValidator`', function () {
+
+        function inRangeTest(keyValMap, validator, expected) {
+            var key, config, min, max, value;
+            for (key in keyValMap) {
+                config = keyValMap[key];
+                validator.setOptions(config);
+                min = validator.getMin();
+                max = validator.getMax();
+                value = validator.getValue();
+                it('should return ' + expected + ' when testing for a ' +
+                    'Number within range {min: ' + min + ', max: ' + max + '} with value: ' + value, function () {
+                    expect(validator.isValid(value)).to.equal(expected);
+                });
+            }
+        }
+
+        var validator = new sjl.InRangeValidator(),
+            truthyMap = {
+                config1: {
+                    min: 0,
+                    max: 100,
+                    value: 99
+                },
+                config2: {
+                    min: -0,
+                    max: 1,
+                    value: 0
+                },
+                config3: {
+                    min: -1,
+                    max: 1,
+                    value: 0
+                }
+            },
+            falsyMap = {
+                config1: {
+                    min: 0,
+                    max: 100,
+                    value: 99e5
+                },
+                config2: {
+                    min: -0,
+                    max: 1,
+                    value: 11
+                },
+                config3: {
+                    min: -1,
+                    max: 1,
+                    value: 100
+                }
+            };
+
+        inRangeTest(truthyMap, validator, true);
+        inRangeTest(falsyMap, validator, false);
+    });
+
+    describe('#`sjl.ValidatorChain`', function () {
+        var chain = new sjl.ValidatorChain({
+            validators: [
+                new sjl.InRangeValidator({min: 0, max: 100}),
+                new sjl.RegexValidator({pattern: /^\d+$/})
+            ]
+        });
+
+        it ('should have the appropriate interface', function () {
+            var chain = new sjl.ValidatorChain(),
+                methods = ['isValid', 'addValidator', 'addValidators', 'getMessages'],
+                method;
+            for (method in methods) {
+                if (methods.hasOwnProperty(method)) {
+                    method = methods[method];
+                    expect(typeof chain[method]).to.equal('function');
+                }
+            }
+        });
+
+        // @todo explode this definition. It should be a separated into a definition per method test (defined this way it is due to shortness of time;  e.g., addValidator, addValidators, and constructor
+        it('should be able to add validators (one or many, also via constructor ' +
+            'and via `addValidator` and `addValidators`).', function () {
+            var chain1 = new sjl.ValidatorChain({
+                    validators: [new sjl.InRangeValidator()]
+                }),
+                chain2 = new sjl.ValidatorChain({
+                    validators: [
+                        new sjl.InRangeValidator({min: 0, max: 100}),
+                        new sjl.RegexValidator({pattern: /^\d+$/})
+                    ]
+                }),
+                chain3 = new sjl.ValidatorChain(),
+                chain4 = new sjl.ValidatorChain();
+
+            // Add multiple validators
+            chain3.addValidators([
+                new sjl.InRangeValidator({min: 0, max: 100}),
+                new sjl.RegexValidator({pattern: /^\d+$/})
+            ]);
+            chain3.addValidator(new sjl.InRangeValidator());
+
+            // Add validators one by one
+            chain4.addValidator(new sjl.InRangeValidator());
+            chain4.addValidator(new sjl.InRangeValidator());
+            chain4.addValidator(new sjl.InRangeValidator());
+            chain4.addValidator(new sjl.InRangeValidator());
+
+            // Validate
+            expect(chain1.getValidators().length).to.equal(1);
+            expect(chain2.getValidators().length).to.equal(2);
+            expect(chain3.getValidators().length).to.equal(3);
+            expect(chain4.getValidators().length).to.equal(4);
+        });
+
+        it('should return true when checking value `100` for a range ' +
+            'between 0-100 (inclusive) and should have zero error messages.', function () {
+            var messages = chain.getMessages();
+            expect(chain.isValid(100)).to.equal(true);
+            expect(messages.length).to.equal(0);
+        });
+
+        it('should return true when checking value `99` for a range ' +
+            'between 0-100 (exclusive) and should return 0 messages for each validator.', function () {
+            var messages = chain.getMessages();
+            expect(chain.isValid(99)).to.equal(true);
+            expect(messages.length).to.equal(0);
+        });
+
+    });
 });
