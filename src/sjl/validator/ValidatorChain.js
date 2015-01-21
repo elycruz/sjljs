@@ -72,7 +72,9 @@
 
             addValidators: function (validators) {
                 for (var validator in validators) {
-                    this.addValidator(validators[validator]);
+                    if (validator.hasOwnProperty(validator)) {
+                        this.addValidator(validators[validator]);
+                    }
                 }
             },
 
@@ -117,12 +119,14 @@
                 var _interface = ['isValid', 'getMessages'],
                     retVal = true,
                     value;
-                for (value in _interface) {
-                    value = _interface[value];
-                    if (!context.sjl.isset(validator[value]) ||
-                        typeof validator[value] !== 'function') {
-                        retVal = false;
-                        break;
+                for (value in _interface.length) {
+                    if (_interface.hasOwnProperty(value)) {
+                        value = _interface[i];
+                        if (!context.sjl.isset(validator[value]) ||
+                            typeof validator[value] !== 'function') {
+                            retVal = false;
+                            break;
+                        }
                     }
                 }
                 return retVal;
