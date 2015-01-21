@@ -1,4 +1,4 @@
-/**! sjl.js Wed Jan 21 2015 14:38:43 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Wed Jan 21 2015 14:50:46 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -1177,6 +1177,9 @@
 
                 // If we've made it this far validators are good proceed
                 for (validator in validators) {
+                    if (!validators.hasOwnProperty(validator)) {
+                        continue;
+                    }
                     validator = validators[validator];
                     if (validator.isValid(value)) {
                         continue;
@@ -1256,13 +1259,14 @@
                     retVal = true,
                     value;
                 for (value in _interface) {
-                    if (_interface.hasOwnProperty(value)) {
-                        value = _interface[value];
-                        if (!context.sjl.isset(validator[value]) ||
-                            typeof validator[value] !== 'function') {
-                            retVal = false;
-                            break;
-                        }
+                    if (!_interface.hasOwnProperty(value)) {
+                        continue;
+                    }
+                    value = _interface[value];
+                    if (!context.sjl.isset(validator[value]) ||
+                        typeof validator[value] !== 'function') {
+                        retVal = false;
+                        break;
                     }
                 }
                 return retVal;
@@ -1281,13 +1285,14 @@
                 validators = validatorChain.getValidators();
 
                 for (validator in validators) {
-                    if (validators.hasOwnProperty(validator)) {
-                        validator = validators[validator];
-                        if (!self.verifyHasValidatorInterface(validator)) {
-                            throw new Error('A validator with out the validator interface' +
-                            'was found in ValidatorChain.  Please check the validators you are passing ' +
-                            'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
-                        }
+                    if (!validators.hasOwnProperty(validator)) {
+                        continue;
+                    }
+                    validator = validators[validator];
+                    if (!self.verifyHasValidatorInterface(validator)) {
+                        throw new Error('A validator with out the validator interface' +
+                        'was found in ValidatorChain.  Please check the validators you are passing ' +
+                        'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
                     }
                 }
 
@@ -1297,6 +1302,7 @@
         });
 
 })(typeof window === 'undefined' ? global : window);
+
 
 /**
  * Created by Ely on 7/21/2014.
@@ -1893,6 +1899,9 @@
 
                 // Validate inputs
                 for (input in inputs) {
+                    if (!inputs.hasOwnProperty(input)) {
+                        continue;
+                    }
                     name = input;
                     input = inputs[input];
 
@@ -1935,6 +1944,10 @@
 
                 // Populate inputs
                 for (input in inputs) {
+                    if (!inputs.hasOwnProperty(input)) {
+                        continue;
+                    }
+
                     name = input;
 
                     validators = self._getValidatorsFromInputHash(inputs[input]);
@@ -2011,6 +2024,9 @@
                     invalidInputs = self.getInvalidInputs();
 
                 for (input in invalidInputs) {
+                    if (!invalidInputs.hasOwnProperty(input)) {
+                        continue;
+                    }
                     input = invalidInputs[input];
                     rawValues[input.getAlias()] = input.getRawValue();
                 }
@@ -2024,6 +2040,9 @@
                     invalidInputs = self.getInvalidInputs();
 
                 for (input in invalidInputs) {
+                    if (!invalidInputs.hasOwnProperty(input)) {
+                        continue;
+                    }
                     input = invalidInputs[input];
                     values[input.getAlias()] = input.getValue();
                 }
@@ -2037,6 +2056,9 @@
                     invalidInputs = self.getInvalidInputs();
 
                 for (key in invalidInputs) {
+                    if (!invalidInputs.hasOwnProperty(key)) {
+                        continue;
+                    }
                     input = invalidInputs[key];
                     messages[input.getAlias()] = input.getMessages();
                 }
@@ -2051,7 +2073,8 @@
                 data = data || self.getData();
 
                 for (key in data) {
-                    if (!context.sjl.isset(inputs[key])
+                    if (!data.hasOwnProperty(key)
+                         || !context.sjl.isset(inputs[key])
                          || !context.sjl.isset(data[key])) {
                         continue;
                     }

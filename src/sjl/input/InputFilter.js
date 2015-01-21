@@ -119,6 +119,9 @@
 
                 // Validate inputs
                 for (input in inputs) {
+                    if (!inputs.hasOwnProperty(input)) {
+                        continue;
+                    }
                     name = input;
                     input = inputs[input];
 
@@ -161,6 +164,10 @@
 
                 // Populate inputs
                 for (input in inputs) {
+                    if (!inputs.hasOwnProperty(input)) {
+                        continue;
+                    }
+
                     name = input;
 
                     validators = self._getValidatorsFromInputHash(inputs[input]);
@@ -237,6 +244,9 @@
                     invalidInputs = self.getInvalidInputs();
 
                 for (input in invalidInputs) {
+                    if (!invalidInputs.hasOwnProperty(input)) {
+                        continue;
+                    }
                     input = invalidInputs[input];
                     rawValues[input.getAlias()] = input.getRawValue();
                 }
@@ -250,6 +260,9 @@
                     invalidInputs = self.getInvalidInputs();
 
                 for (input in invalidInputs) {
+                    if (!invalidInputs.hasOwnProperty(input)) {
+                        continue;
+                    }
                     input = invalidInputs[input];
                     values[input.getAlias()] = input.getValue();
                 }
@@ -263,6 +276,9 @@
                     invalidInputs = self.getInvalidInputs();
 
                 for (key in invalidInputs) {
+                    if (!invalidInputs.hasOwnProperty(key)) {
+                        continue;
+                    }
                     input = invalidInputs[key];
                     messages[input.getAlias()] = input.getMessages();
                 }
@@ -277,7 +293,8 @@
                 data = data || self.getData();
 
                 for (key in data) {
-                    if (!context.sjl.isset(inputs[key])
+                    if (!data.hasOwnProperty(key)
+                         || !context.sjl.isset(inputs[key])
                          || !context.sjl.isset(data[key])) {
                         continue;
                     }

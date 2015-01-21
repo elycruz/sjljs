@@ -41,6 +41,9 @@
 
                 // If we've made it this far validators are good proceed
                 for (validator in validators) {
+                    if (!validators.hasOwnProperty(validator)) {
+                        continue;
+                    }
                     validator = validators[validator];
                     if (validator.isValid(value)) {
                         continue;
@@ -120,13 +123,14 @@
                     retVal = true,
                     value;
                 for (value in _interface) {
-                    if (_interface.hasOwnProperty(value)) {
-                        value = _interface[value];
-                        if (!context.sjl.isset(validator[value]) ||
-                            typeof validator[value] !== 'function') {
-                            retVal = false;
-                            break;
-                        }
+                    if (!_interface.hasOwnProperty(value)) {
+                        continue;
+                    }
+                    value = _interface[value];
+                    if (!context.sjl.isset(validator[value]) ||
+                        typeof validator[value] !== 'function') {
+                        retVal = false;
+                        break;
                     }
                 }
                 return retVal;
@@ -145,13 +149,14 @@
                 validators = validatorChain.getValidators();
 
                 for (validator in validators) {
-                    if (validators.hasOwnProperty(validator)) {
-                        validator = validators[validator];
-                        if (!self.verifyHasValidatorInterface(validator)) {
-                            throw new Error('A validator with out the validator interface' +
-                            'was found in ValidatorChain.  Please check the validators you are passing ' +
-                            'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
-                        }
+                    if (!validators.hasOwnProperty(validator)) {
+                        continue;
+                    }
+                    validator = validators[validator];
+                    if (!self.verifyHasValidatorInterface(validator)) {
+                        throw new Error('A validator with out the validator interface' +
+                        'was found in ValidatorChain.  Please check the validators you are passing ' +
+                        'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
                     }
                 }
 
@@ -161,3 +166,4 @@
         });
 
 })(typeof window === 'undefined' ? global : window);
+
