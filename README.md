@@ -80,13 +80,24 @@ A simple Optionable class with `set`, `get`, `merge`, and `has` methods.
 ### Supported browsers:
 - ie8+, and all other browsers
 
+## Notices/Deprecations/Warnings:
+The following convenience files will be removed in the next major release along with their build options:
+- 'sjl-functions-only*.js'
+- 'sjl-utilities-only*.js'
+
 ## Todos:
+
+### Testing Todos:
 - [X] - Write tests for `sjl.Optionable`.
 - [ ] - Write tests for `sjl.Attributable`.
 - [ ] - Write tests for `sjl.getValueFromObj`
 - [ ] - Write tests for `sjl.setValueOnObj`
 - [ ] - Write tests for `sjl.extend`'s new features
 - [ ] - Write tests for `sjl.Iterator`
+
+### Clean-up Todos:
+- [ ] - Remove 'sjl-functions-only*.js' and all of it's build options from the library.
+- [ ] - Remove 'sjl-utilities-only*.js' and all of it's build options from the library.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") & [MIT](http://opensource.org/licenses/MIT "http://opensource.org/licenses/MIT")
