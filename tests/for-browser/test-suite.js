@@ -1015,7 +1015,7 @@ describe('Sjl Validator NS', function () {
             // Add multiple validators
             chain3.addValidators([
                 new sjl.InRangeValidator({min: 0, max: 100}),
-                new sjl.RegexValidator({pattern: /^\d+$/})
+                new sjl.InRangeValidator({min: 0, max: 100})
             ]);
             chain3.addValidator(new sjl.InRangeValidator());
 
@@ -1023,7 +1023,7 @@ describe('Sjl Validator NS', function () {
             chain4.addValidator(new sjl.InRangeValidator());
             chain4.addValidator(new sjl.InRangeValidator());
             chain4.addValidator(new sjl.InRangeValidator());
-            chain4.addValidator(new sjl.InRangeValidator());
+            chain4.addValidator(new sjl.RegexValidator());
 
             // Validate
             expect(chain1.getValidators().length).to.equal(1);

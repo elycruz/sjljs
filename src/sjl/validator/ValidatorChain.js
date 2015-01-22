@@ -75,7 +75,7 @@
 
             addValidators: function (validators) {
                 for (var validator in validators) {
-                    if (validator.hasOwnProperty(validator)) {
+                    if (validators.hasOwnProperty(validator)) {
                         this.addValidator(validators[validator]);
                     }
                 }
