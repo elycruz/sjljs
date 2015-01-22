@@ -106,6 +106,9 @@ The following convenience files will be removed in the next major release along 
     properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
 - [ ] - Review entirety of library and look for places that could be refactored.
 
+### MVP for 0.5.1+
+- [ ] - Add changelog.md and inline in main readme.
+
 #### TENTATIVE:
 - [ ] - Refactor Optionable to not have the following methods or to have them as private methods:
     - [ ] - `setOption`.  Instead `set` should be used.
@@ -116,6 +119,9 @@ The following convenience files will be removed in the next major release along 
 ### Clean-up:
 - [ ] - Remove 'sjl-functions-only*.js' and all of it's build options from the library.
 - [ ] - Remove 'sjl-utilities-only*.js' and all of it's build options from the library.
+
+## Notes:
+There is no changelog as the library hasn't been publicized but there will be a changelog starting version 0.5.0.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") & [MIT](http://opensource.org/licenses/MIT "http://opensource.org/licenses/MIT")
