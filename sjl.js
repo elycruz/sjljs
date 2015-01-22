@@ -1,4 +1,4 @@
-/**! sjl.js Wed Jan 21 2015 14:50:46 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Thu Jan 22 2015 00:14:02 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -1211,7 +1211,7 @@
 
             addValidators: function (validators) {
                 for (var validator in validators) {
-                    if (validator.hasOwnProperty(validator)) {
+                    if (validators.hasOwnProperty(validator)) {
                         this.addValidator(validators[validator]);
                     }
                 }
