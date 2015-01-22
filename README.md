@@ -87,15 +87,33 @@ The following convenience files will be removed in the next major release along 
 
 ## Todos:
 
-### Testing Todos:
-- [X] - Write tests for `sjl.Optionable`.
-- [ ] - Write tests for `sjl.Attributable`.
-- [ ] - Write tests for `sjl.getValueFromObj`
-- [ ] - Write tests for `sjl.setValueOnObj`
-- [ ] - Write tests for `sjl.extend`'s new features
-- [ ] - Write tests for `sjl.Iterator`
+### MVP Todos:
+- [X] - Write tests for:
+    - [ ] - `sjl.Optionable`.
+    - [ ] - `sjl.Attributable`.
+    - [ ] - `sjl.getValueFromObj`
+    - [ ] - `sjl.setValueOnObj`
+    - [ ] - `sjl.extend` (for new features)
+    - [ ] - `sjl.Iterator`
 
-### Clean-up Todos:
+### MVP for 0.5.0:
+- [ ] - Write docs for all validator classes.
+- [ ] - Write tests for all validator classes:
+    - [ ] - `sjl.NumberValidator`.
+    - [ ] - `sjl.AlphaNumValidator`.
+- [ ] - Write a filter chain class.
+- [ ] - Change interface check to check for 'isValid' and 'message'
+    properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
+- [ ] - Review entirety of library and look for places that could be refactored.
+
+#### TENTATIVE:
+- [ ] - Refactor Optionable to not have the following methods or to have them as private methods:
+    - [ ] - `setOption`.  Instead `set` should be used.
+    - [ ] - `setOptions`. Instead `set` should be used.
+    - [ ] - `getOption`.  Instead `get` should be used.
+    - [ ] - `getOptions`.  Instead `get` should be used.
+
+### Clean-up:
 - [ ] - Remove 'sjl-functions-only*.js' and all of it's build options from the library.
 - [ ] - Remove 'sjl-utilities-only*.js' and all of it's build options from the library.
 
