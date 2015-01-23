@@ -105,6 +105,8 @@ The following convenience files will be removed in the next major release along 
 - [ ] - Change interface check to check for 'isValid' and 'message'
     properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
 - [ ] - Review entirety of library and look for places that could be refactored.
+- [ ] - Refactor the `input` package
+- [ ] - Refactor the `validator` package
 
 ### MVP for 0.5.1+
 - [ ] - Add changelog.md and inline in main readme.
