@@ -1,4 +1,4 @@
-/**! sjl.js Thu Jan 22 2015 00:22:32 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Mon Feb 02 2015 09:37:05 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -1210,9 +1210,16 @@
             },
 
             addValidators: function (validators) {
-                for (var validator in validators) {
-                    if (validators.hasOwnProperty(validator)) {
-                        this.addValidator(validators[validator]);
+                if (context.sjl.classOfIs(validators, 'Array')) {
+                    for (var i = 0; i < validators.length; i += 1) {
+                        this.addValidator(validators[i]);
+                    }
+                }
+                else if (context.sjl.classOfIs(validators, 'Object')) {
+                    for (var validator in validators) {
+                        if (validator.hasOwnProperty(validator)) {
+                            this.addValidator(validators[validator]);
+                        }
                     }
                 }
             },
@@ -1586,7 +1593,7 @@
             // Set defaults as options on this class
             context.sjl.Optionable.call(this, {
                 allowEmpty: false,
-                continueIfEmpty: false,
+                continueIfEmpty: true,
                 breakOnFailure: false,
                 fallbackValue: null,
                 filterChain: null,
@@ -1600,6 +1607,9 @@
             if (!context.sjl.empty(options)) {
                 this.setOptions(options);
             }
+
+            // Protect from adding programmatic validators, from within `isValid`, more than once
+            this.options.isValidHasRun = false;
 
             // Only functions on objects;  Will
             // ignore options if it is a string
@@ -1618,18 +1628,20 @@
             isValid: function (value) {
 
                 var self = this,
-                    validatorChain,
+
+                    // Get the validator chain, value and validate
+                    validatorChain = self.getValidatorChain(),
+
                     retVal = false;
 
                 // Clear messages
                 self.clearMessages();
 
-                if (!self.getContinueIfEmpty()) {
-                    // inject non empty validator
+                // Check whether we need to add an empty validator
+                if (!self.options.isValidHasRun && !self.getContinueIfEmpty()) {
+                    validatorChain.addValidator(new context.sjl.EmptyValidator());
                 }
 
-                // Get the validator chain, value and validate
-                validatorChain = self.getValidatorChain();
                 value = value || self.getValue();
                 retVal = validatorChain.isValid(value);
 
@@ -1641,6 +1653,11 @@
 
                 // Set messages internally
                 self.setMessages();
+
+                // Protect from adding programmatic validators more than once..
+                if (!self.options.isValidHasRun) {
+                    self.options.isValidHasRun= true;
+                }
 
                 return retVal;
             },
@@ -1745,7 +1762,7 @@
             },
 
             getContinueIfEmpty: function () {
-                return this.options.breakOnFailure;
+                return this.options.continueIfEmpty;
             },
 
             setContinueIfEmpty: function (value) {

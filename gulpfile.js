@@ -33,9 +33,12 @@ gulp.task('concat', function () {
         'src/sjl/Optionable.js',
         'src/sjl/validator/AbstractValidator.js',
         'src/sjl/validator/ValidatorChain.js',
+        'src/sjl/validator/AlphaNumValidator.js',
+        'src/sjl/validator/EmptyValidator.js',
         'src/sjl/validator/InRangeValidator.js',
         'src/sjl/validator/RegexValidator.js',
         'src/sjl/validator/EmailValidator.js',
+        'src/sjl/validator/NumberValidator.js',
         'src/sjl/input/Input.js',
         'src/sjl/input/InputFilter.js',
         'src/sjl/Iterator.js'
