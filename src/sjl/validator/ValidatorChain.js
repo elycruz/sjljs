@@ -74,9 +74,16 @@
             },
 
             addValidators: function (validators) {
-                for (var validator in validators) {
-                    if (validators.hasOwnProperty(validator)) {
-                        this.addValidator(validators[validator]);
+                if (context.sjl.classOfIs(validators, 'Array')) {
+                    for (var i = 0; i < validators.length; i += 1) {
+                        this.addValidator(validators[i]);
+                    }
+                }
+                else if (context.sjl.classOfIs(validators, 'Object')) {
+                    for (var validator in validators) {
+                        if (validator.hasOwnProperty(validator)) {
+                            this.addValidator(validators[validator]);
+                        }
                     }
                 }
             },
