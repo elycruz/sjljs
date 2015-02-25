@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Tue Feb 24 2015 22:07:18 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Tue Feb 24 2015 22:17:56 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
