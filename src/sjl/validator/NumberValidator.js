@@ -5,6 +5,8 @@
  */
 (function (context) {
 
+    'use strict';
+
     context.sjl = context.sjl || {};
 
     context.sjl.NumberValidator = context.sjl.AbstractValidator.extend(function NumberValidator (options) {
