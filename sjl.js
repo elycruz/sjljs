@@ -1,4 +1,4 @@
-/**! sjl.js Tue Feb 24 2015 22:17:56 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Mon Mar 02 2015 15:20:50 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -2114,7 +2114,8 @@
                 inputs: {},
                 invalidInputs: [],
                 validInputs: [],
-                validationGroup: null
+                validationGroup: null,
+                messages: {}
             });
 
             sjl.extend(true, this.options, options);
@@ -2143,8 +2144,9 @@
                     inputs = self.getInputs(),
                     data = self.getData();
 
-                self.clearInvalidInputs();
-                self.clearValidInputs();
+                self.clearInvalidInputs()
+                    .clearValidInputs()
+                    .clearMessages();
 
                 // Populate inputs with data
                 self.setDataOnInputs();
@@ -2367,18 +2369,44 @@
 
             getMessages: function () {
                 var self = this,
-                    messages = {},
+                    messages = self.options.messages,
                     input, key,
-                    invalidInputs = self.getInvalidInputs();
+                    invalidInputs = self.getInvalidInputs(),
+                    messageItem;
 
                 for (key in invalidInputs) {
                     if (!invalidInputs.hasOwnProperty(key)) {
                         continue;
                     }
                     input = invalidInputs[key];
-                    messages[input.getAlias()] = input.getMessages();
+                    if (sjl.empty())
+                    messageItem = messages[input.getAlias()];
+                    if (sjl.classOfIs(messageItem, 'Array')) {
+                        messages[input.getAlias()] = messageItem.concat(input.getMessages());
+                    }
+                    else {
+                        messages[input.getAlias()] = input.getMessages();
+                    }
                 }
                 return messages;
+            },
+
+            mergeMessages: function (messages) {
+                if (!messages) {
+                    throw new Error('`InputFilter.mergeMessages` requires a "messages" hash parameter.');
+                }
+                var currentMessages = this.options.messages,
+                    key;
+                for (key in messages) {
+                    if (messages.hasOwnProperty(key)) {
+                        currentMessages[key] = messages[key].concat(currentMessages.hasOwnProperty(key) ? currentMessages[key] : []);
+                    }
+                }
+                return this;
+            },
+
+            clearMessages: function () {
+                this.options.messages = {};
             },
 
             setDataOnInputs: function (data) {
@@ -2400,10 +2428,12 @@
 
             clearValidInputs: function () {
                 this.setOption('validInputs', {});
+                return this;
             },
 
             clearInvalidInputs: function () {
                 this.setOption('invalidInputs', {});
+                return this;
             },
 
             _getValidatorsFromInputHash: function (inputHash) {
