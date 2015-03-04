@@ -87,48 +87,6 @@ gulp.task('minimal-min', ['minimal'], function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('set-functions-only', function () {
-    gulp.src([
-        'src/sjl/sjl-set-functions.js'
-    ])
-        .pipe(jsHintPipe())
-        .pipe(concat('./sjl-set-functions-only.js'))
-        .pipe(header('/**! sjl-set-functions-only.js <%= (new Date()) %> **/'))
-        .pipe(gulp.dest('./'));
-});
-
-gulp.task('set-functions-only-min', function () {
-    gulp.src([
-        'src/sjl/sjl-set-functions.js'
-    ])
-        .pipe(jsHintPipe())
-        .pipe(concat('./sjl-set-functions-only.min.js'))
-        .pipe(uglify())
-        .pipe(header('/**! sjl-set-functions-only.min.js <%= (new Date()) %> **/'))
-        .pipe(gulp.dest('./'));
-});
-
-gulp.task('utilities-only', function () {
-    gulp.src([
-        'src/sjl/sjl-util-functions.js'
-    ])
-        .pipe(jsHintPipe())
-        .pipe(concat('./sjl-utilities-only.js'))
-        .pipe(header('/**! sjl-utilities-only.js <%= (new Date()) %> **/'))
-        .pipe(gulp.dest('./'));
-});
-
-gulp.task('utilities-only-min', function () {
-    gulp.src([
-        'src/sjl/sjl-util-functions.js'
-    ])
-        .pipe(jsHintPipe())
-        .pipe(concat('./sjl-utilities-only.min.js'))
-        .pipe(uglify())
-        .pipe(header('/**! sjl-utilities-only.min.js <%= (new Date()) %> **/'))
-        .pipe(gulp.dest('./'));
-});
-
 gulp.task('make-browser-test-suite', function () {
     gulp.src(['tests/for-server/**/*.js'])
         .pipe(jsHintPipe())
@@ -142,10 +100,6 @@ gulp.task('watch', function () {
         'uglify',
         'minimal',
         'minimal-min',
-        'set-functions-only',
-        'set-functions-only-min',
-        'utilities-only',
-        'utilities-only-min',
         'make-browser-test-suite'
     ]);
 });
@@ -156,10 +110,6 @@ gulp.task('default', [
     'uglify',
     'minimal',
     'minimal-min',
-    'set-functions-only',
-    'set-functions-only-min',
-    'utilities-only',
-    'utilities-only-min',
     'make-browser-test-suite',
     'watch'
 ]);
