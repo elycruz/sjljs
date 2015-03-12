@@ -1,4 +1,4 @@
-/**! sjl.js Tue Mar 03 2015 21:56:32 GMT-0500 (EST) **//**
+/**! sjl.js Thu Mar 12 2015 19:56:26 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -484,9 +484,6 @@
             }
 
             for (var prop in p) { // For all props in p.
-                if (prop === 'name') {
-                    continue;
-                }
                 if (deep && !useLegacyGettersAndSetters) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])

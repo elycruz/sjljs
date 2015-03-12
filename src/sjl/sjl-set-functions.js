@@ -101,9 +101,6 @@
             }
 
             for (var prop in p) { // For all props in p.
-                if (prop === 'name') {
-                    continue;
-                }
                 if (deep && !useLegacyGettersAndSetters) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])
