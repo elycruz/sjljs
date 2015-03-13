@@ -1,4 +1,4 @@
-/**! sjl.js Thu Mar 12 2015 19:56:26 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Thu Mar 12 2015 20:42:20 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -397,7 +397,8 @@
      * Used by sjl.extend definition
      * @type {Function}
      */
-    var extend;
+    var extend,
+        getOwnPropertyDescriptor = typeof Object.getOwnPropertyDescriptor === 'function' ? Object.getOwnPropertyDescriptor : null;
 
     if (typeof context.sjl.getValueFromObj !== 'function') {
         /**
@@ -478,12 +479,23 @@
             deep = deep || false;
             useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
+            var prop, propDescription;
+
             // If `o` or `p` are not set bail
             if (!sjl.isset(o) || !sjl.isset(p)) {
                 return o;
             }
 
-            for (var prop in p) { // For all props in p.
+            for (prop in p) { // For all props in p.
+
+                // If property is present on target (o) and is not writable, skip iteration
+                if (getOwnPropertyDescriptor) {
+                    propDescription = getOwnPropertyDescriptor(o, prop);
+                    if (propDescription && !propDescription.writable) {
+                        continue;
+                    }
+                }
+
                 if (deep && !useLegacyGettersAndSetters) {
                     if (!context.sjl.empty(o[prop])
                         && !context.sjl.empty(o[prop])
