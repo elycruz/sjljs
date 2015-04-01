@@ -1,4 +1,4 @@
-/**! sjl.js Thu Mar 12 2015 20:42:20 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Wed Apr 01 2015 13:17:53 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -75,13 +75,21 @@
          * @param val {mixed}
          * @returns {string}
          */
-        context.sjl.classOf = function (val) {
-            return typeof val === 'undefined' ? 'Undefined' :
-                (val === null ? 'Null' :
-                    (function () {
-                        var retVal = Object.prototype.toString.call(val);
-                        return retVal.substring(8, retVal.length - 1);
-                    }()));
+        context.sjl.classOf = function (value) {
+            var typeofValue = typeof value,
+                retVal;
+
+            if (typeofValue === 'undefined') {
+                retVal = 'Undefined';
+            }
+            else if (value === null) {
+                retVal = 'Null';
+            }
+            else {
+                value = Object.prototype.toString.call(value);
+                retVal = value.substring(8, value.length - 1);
+            }
+            return retVal;
         };
     }
 
@@ -671,12 +679,12 @@
          * @returns {*}
          * @throws {Error} - If can't resolve constructor from `val`
          */
-        resolveConstructor = function (val) {
+        resolveConstructor = function (value) {
             // Check if is string and hold original string
             // Check if is string and hold original string
-            var isString = sjl.classOfIs(val, 'String'),
-                originalString = val,
-                _val = val;
+            var isString = sjl.classOfIs(value, 'String'),
+                originalString = value,
+                _val = value;
 
             // If constructor is a string, create it from string
             if (isString) {

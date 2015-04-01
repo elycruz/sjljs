@@ -75,13 +75,21 @@
          * @param val {mixed}
          * @returns {string}
          */
-        context.sjl.classOf = function (val) {
-            return typeof val === 'undefined' ? 'Undefined' :
-                (val === null ? 'Null' :
-                    (function () {
-                        var retVal = Object.prototype.toString.call(val);
-                        return retVal.substring(8, retVal.length - 1);
-                    }()));
+        context.sjl.classOf = function (value) {
+            var typeofValue = typeof value,
+                retVal;
+
+            if (typeofValue === 'undefined') {
+                retVal = 'Undefined';
+            }
+            else if (value === null) {
+                retVal = 'Null';
+            }
+            else {
+                value = Object.prototype.toString.call(value);
+                retVal = value.substring(8, value.length - 1);
+            }
+            return retVal;
         };
     }
 
