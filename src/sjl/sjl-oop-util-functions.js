@@ -35,12 +35,12 @@
          * @returns {*}
          * @throws {Error} - If can't resolve constructor from `val`
          */
-        resolveConstructor = function (val) {
+        resolveConstructor = function (value) {
             // Check if is string and hold original string
             // Check if is string and hold original string
-            var isString = sjl.classOfIs(val, 'String'),
-                originalString = val,
-                _val = val;
+            var isString = sjl.classOfIs(value, 'String'),
+                originalString = value,
+                _val = value;
 
             // If constructor is a string, create it from string
             if (isString) {
