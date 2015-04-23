@@ -85,6 +85,16 @@
                     })() : this.getOption('value');
                 },
 
+                value: function (value) {
+                    var classOfValue = sjl.classOf(value),
+                        retVal = this.get('value');
+                    if (classOfValue !== 'Undefined') {
+                        this.options.value = value;
+                        retVal = this;
+                    }
+                    return retVal;
+                },
+
                 addErrorByKey: function (key) {
                     var self = this,
                         messageTemplate = self.getOption('messageTemplates'),
