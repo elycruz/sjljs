@@ -18,6 +18,13 @@ var gulp        = require('gulp'),
         .pipe(jshint.reporter, 'jshint-stylish');
         //.pipe(jshint.reporter, 'fail');
 
+gulp.task('changelog', function () {
+    gulp.src('changelog-fragments/*.md')
+        .pipe(header('## Changelogs\n\n'))
+        .pipe(concat('changelog.md'))
+        .pipe(gulp.dest('./'));
+});
+
 gulp.task('tests', function () {
     gulp.src('tests/for-server/**/*.js')
         .pipe(mocha());

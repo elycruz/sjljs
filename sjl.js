@@ -1,4 +1,4 @@
-/**! sjl.js Wed Apr 22 2015 23:25:51 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Thu Apr 23 2015 14:35:32 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
@@ -1921,7 +1921,7 @@
                     'GB': /^[ABCDEFGHIJKLMNOPRSTUWYZ]([ABCDEFGHKLMNOPQRSTUVWXY]\d[ABEHMNPRVWXY]|\d[ABCDEFGHJKPSTUW]|\d\d?|[ABCDEFGHKLMNOPQRSTUVWXY]\d\d?)(\s?\d[ABDEFGHJLNPQRSTUVWXYZ]{2})?$/i
                 },
                 postCodeRegexes: {
-                    'GB': /^[ABCDEFGHIJKLMNOPRSTUWYZ]([ABCDEFGHKLMNOPQRSTUVWXY]\d[ABEHMNPRVWXY]|\d[ABCDEFGHJKPSTUW]|\d\d?|[ABCDEFGHKLMNOPQRSTUVWXY]\d\d?)(\s?\d[ABDEFGHJLNPQRSTUVWXYZ]{2})?$/i,
+                    'GB': /^[A-PR-UWYZ]([A-HK-Y]\d[ABEHMNPRVWXY]|\d[A-HJKPSTUW]|\d\d?|[A-HK-Y]\d\d?)(\s?\d[A-HJLNP-Z]{2})?$/i,
                     //'GB': 'GIR\\s?0AA|^((A[BL]|B[ABDHLNRST]|C[ABFHMORTVW]|D[ADEGHLNTY]|E[CHNX]|F[KY]|G[LYU]|H[ADGPRSUX]|' +
                     //    'I[GMPV]|JE|K[ATWY]|L[ADELNSU]{0,1}|M[EKL]{0,1}|N[EGNPRW]{0,1}|O[LX]|P[AEHLOR]|R[GHM]|' +
                     //    'S[AEGKLMNOPRSTWY]{0,1}|T[ADFNQRSW]|UB|W[ACDFNRSV]|YO|ZE)' +
@@ -2165,8 +2165,11 @@
             format: function (format) {
                 var classOfFormat = sjl.classOf(format),
                     retVal = this.get('format');
-                if (classOfFormat !== 'String' && classOfFormat !== 'Undefined') {
-                    throw new Error('');
+                if (classOfFormat !== 'String'
+                        && classOfFormat !== 'RegExp'
+                        && classOfFormat !== 'Undefined') {
+                    throw new Error('`sjl.PostCodeValidator.format` method only accepts a `format` parameter of type' +
+                        ' "String", "RegExp", or "Undefined".  `format` parameter value received: "' + format + '".');
                 }
                 if (classOfFormat !== 'Undefined') {
                     // Normalize regex
