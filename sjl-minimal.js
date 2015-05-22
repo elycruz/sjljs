@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Apr 23 2015 14:35:31 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Fri May 22 2015 12:23:12 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/24/2014.
@@ -69,6 +69,16 @@
             }
 
             return retVal;
+        };
+
+        /**
+         * Checks whether a key on an object is set.
+         * @param obj {Object} - Object to search on.
+         * @param key {String} - Key to search on `obj`.
+         * @returns {boolean}
+         */
+        context.sjl.issetObjKey = function (obj, key) {
+            return obj.hasOwnProperty(key) && isSet(obj[key]);
         };
     }
 
@@ -192,6 +202,26 @@
             }
 
             return retVal;
+        };
+
+        /**
+         * Retruns a boolean based on whether a key on an object has an empty value or is empty (not set, undefined, null)
+         * @param obj {Object} - Object to search on.
+         * @param key {String} - Key to search for one `obj`.
+         * @param type {String} - Optional.
+         * @returns {boolean}
+         */
+        context.sjl.isEmptyObjKey = function (obj, key, type) {
+            var isOfType = true,
+                issetObjKey = context.sjl.issetObjKey(obj, key),
+                isEmpty = !issetObjKey || context.sjl.empty(obj[key]) || false;
+
+            // Check obj[key] type if type isset
+            if (issetObjKey && typeof type !== 'undefined' && context.sjl.classOfIs(type, 'String')) {
+                isOfType = context.sjl.classOfIs(obj[key], type);
+            }
+
+            return isEmpty || !isOfType;
         };
     }
 

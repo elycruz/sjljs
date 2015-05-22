@@ -23,6 +23,8 @@ only meant as a supplement to them.
 - `sjl.lcaseFirst(String str):String` - Lowercases the first character of a string;  E.g., `sjl.lcaseFirst ('Hello')` returns 'hello'.
 - `sjl.namespace(String key, Object objToSearch, * valueToSet):*` - For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'` finds or sets `{all: {your: {base: ...}}}`).
 - `sjl.ucaseFirst(String str):String` - Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
+- `sjl.issetObjKey(Object obj, String key):Boolean` - Checks whether an object has own property for a key and that the key isset (has a value other than null or undefined).
+- `sjl.isEmptyObjKey(Object obj, String key, String type(optional)):Boolean` - Does everything `sjl.issetObjKey` does plus also checks whether `obj[key]`'s value is empty or not.
 
 ### Set functions (operations on objects):
 - `extend` - Similiar to JQuery's `extend` method except with the following method signature:
@@ -107,6 +109,8 @@ The following convenience files will be removed in the next major release along 
 - [ ] - Review entirety of library and look for places that could be refactored.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
+- [ ] - Update readme to a more readable format.
+- [ ] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
 
 ### MVP for 0.5.1+
 - [ ] - Add changelog.md and inline in main readme.

@@ -804,7 +804,7 @@ describe ('Sjl String', function () {
 
 });
 // Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
+if (typeof window === 'undefined' && typeof chai === 'undefined') {
     var chai = require('chai');
     require('./../../sjl.js');
 }
@@ -817,6 +817,32 @@ if (typeof expect === 'undefined') {
 describe('Sjl Utils', function () {
 
     'use strict';
+
+    // @note We use IIFE strings cause we parse these through
+    // eval and eval will only return a value if a value is returned to it
+    var objForIssetAndEmptyChecks = {
+        nullValue: 'null',
+        undefinedValue: 'undefined',
+        nonEmptyStringValue: '"hello"',
+        emptyStringValue: '""',
+        nonEmptyNumberValue: '1',
+        emptyNumberValue: '0',
+        nonEmptyBooleanValue: 'true',
+        emptyBooleanValue: 'false',
+        functionValue: '(function () { return function HelloWorld () {} }())',
+        emptyObjValue: '(function () { return {} }())',
+        nonEmptyObjectValue: '(function () { return {all:{your:{base:{are:{belong:{to:{us:{}}}}}}}} }())',
+        emptyArrayValue: '(function () { return [] }())',
+        nonEmptyArrayValue: '(function () { return [1] }())'
+    };
+
+    function returnedObjWithEvaledValues (obj) {
+        var newObj = {};
+        Object.keys(obj).forEach(function (key) {
+            newObj[key] = eval(obj[key]);
+        });
+        return newObj;
+    }
 
     describe('#`argsToArray`', function () {
 
@@ -857,6 +883,52 @@ describe('Sjl Utils', function () {
         it('should return true for a defiend value (1).', function () {
             expect(sjl.isset(1)).to.equal(true);
         });
+    });
+
+    describe('#`issetObjKey`', function () {
+        var obj = objForIssetAndEmptyChecks,
+            evaledObj = returnedObjWithEvaledValues(objForIssetAndEmptyChecks);
+
+        // Falsy values
+        ['nullValue', 'undefinedValue'].forEach(function (key) {
+            it('should return false for value "' + obj[key] + '" of type "'
+            + sjl.classOf(evaledObj[key]) + '".', function () {
+                expect(sjl.issetObjKey(evaledObj, key)).to.equal(false);
+            });
+        });
+
+        // Truthy values
+        Object.keys(obj).forEach(function (key) {
+            if (['nullValue', 'undefinedValue'].indexOf(key) > -1) return;
+            it('should return true for value "' + obj[key] + '" of type "'
+            + sjl.classOf(evaledObj[key]) + '".', function () {
+                expect(sjl.issetObjKey(evaledObj, key)).to.equal(true);
+            });
+        });
+    });
+
+    describe('#`isEmptyObjKey`', function () {
+        var obj = objForIssetAndEmptyChecks,
+            evaledObj = returnedObjWithEvaledValues(objForIssetAndEmptyChecks);
+
+        // Falsy values
+        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'functionValue', 'emptyBooleanValue']
+        .forEach(function (key) {
+            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when no `type` param is passed in.', function () {
+                expect(sjl.isEmptyObjKey(evaledObj, key)).to.equal(true);
+            });
+        });
+
+        // Truthy values
+        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'functionValue', 'emptyBooleanValue']
+        .forEach(function (key) {
+            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when no `type` param is passed in.', function () {
+                expect(sjl.isEmptyObjKey(evaledObj, key)).to.equal(true);
+            });
+        });
+
     });
 
     describe('#`empty`', function () {
