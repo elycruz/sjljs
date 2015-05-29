@@ -15,7 +15,9 @@ only meant as a supplement to them.
 - [Set Functions](#set-functions)
 - [OOP Util Functions](#oop-util-functions)
 - [Composition Helpers](#composition-helpers)
-- [Classes/Constructors](#clasesconstructors)
+- [Classes/Constructors](#classesconstructors)
+
+## Other Sections in Readme:
 - [Tests](#tests)
 - [Requirements](#requirements)
 - [Supported Browsers](#supported-browsers)
