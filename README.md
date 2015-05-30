@@ -10,20 +10,21 @@ A Simple Javascript Library.
 Not meant to replace popular libraries (Backbone, Underscore, Jquery etc.)
 only meant as a supplement to them.
 
-## Components included:
-- [Utilities](#utilities)
-- [Set Functions](#set-functions)
-- [OOP Util Functions](#oop-util-functions)
-- [Composition Helpers](#composition-helpers)
-- [Classes/Constructors](#classesconstructors)
-
-## Other Sections in Readme:
+## Sections in Readme:
+- [Components Included](#components-included)
 - [Tests](#tests)
 - [Requirements](#requirements)
 - [Supported Browsers](#supported-browsers)
 - [Todos](#todos)
 - [Notes](#notes)
 - [License](#license)
+
+## Components included:
+- [Utilities](#utilities)
+- [Set Functions](#set-functions)
+- [OOP Util Functions](#oop-util-functions)
+- [Composition Helpers](#composition-helpers)
+- [Classes/Constructors](#classesconstructors)
 
 ### Utilities:
 
@@ -34,7 +35,7 @@ Converts arguments to an array;  E.g., `sjl.argsToArray(arguments);` -> returns 
 Camel Cases a string;  `sjl.camelCase('hello-world', boolean);` -> returns "helloWorld" if `boolean` is `false`
  else returns "HelloWorld" if `boolean` is `true`
 
-##### sjl.classOf(*):Boolean
+##### sjl.classOf(*):String
 Gives you a String representation of the class of value;  e.g., `sjl.classOf("hello") === 'String'`.
 
 ##### sjl.classOfIs(*, String classStr):Boolean
@@ -61,14 +62,14 @@ Lowercases the first character of a string;  E.g., `sjl.lcaseFirst ('Hello')` re
 For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'`
  finds or sets `{all: {your: {base: ...}}}`).
 
-##### sjl.ucaseFirst(String str):String
-Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
+##### sjl.isEmptyObjKey(Object obj, String key, String type(optional)):Boolean
+Does everything `sjl.issetObjKey` does plus also checks whether `obj[key]`'s value is empty or not.
 
 ##### sjl.issetObjKey(Object obj, String key):Boolean
 Checks whether an object has own property for a key and that the key isset (has a value other than null or undefined).
 
-##### sjl.isEmptyObjKey(Object obj, String key, String type(optional)):Boolean
-Does everything `sjl.issetObjKey` does plus also checks whether `obj[key]`'s value is empty or not.
+##### sjl.ucaseFirst(String str):String
+Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
 
 ### Set Functions:
 
@@ -89,7 +90,7 @@ Similiar to JQuery's `extend` method except with the following method signature:
 ##### copyOfProto(Prototype prototype)
 Creates a copy of a prototype (backward compatible to older IEs).
 
-##### defineSubClass(superclass, constructor, methods, statics): Constructor
+##### defineSubClass(Constructor superclass, Constructor constructor, Object methods, Object statics): Constructor
 Creates a sub class of a constructor and makes it extendable via the static method `extend`;  E.g., pretty much 
 creates `sjl.Extendable`.
 
@@ -109,17 +110,17 @@ directly if no setter or namespace string found/used.
 
 ### Classes/Constructors
 
-##### sjl.Attributable
+##### sjl.Attributable()
 A base attributable constructor which has two methods attr and attrs (for setting and getting multiple attributes 
 jquery style).
 
-##### sjl.Iterator
+##### sjl.Iterator()
 A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 
-##### sjl.Extendable
+##### sjl.Extendable()
 A base extendable constructor with an `extend`.
 
-##### sjl.Optionable
+##### sjl.Optionable([,obj])
 A simple Optionable class with `set`, `get`, `merge`, and `has` methods.
 
 ###### has (String value) :Boolean
