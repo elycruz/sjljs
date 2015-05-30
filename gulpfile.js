@@ -19,19 +19,19 @@ var gulp        = require('gulp'),
         .pipe(jshint.reporter, 'jshint-stylish');
         //.pipe(jshint.reporter, 'fail');
 
-gulp.task('jsdoc', function () {
-    return gulp.src(['./src/**/*.js', './README.md'])
-        .pipe(jsdoc('./jsdocs'))
-});
-
 gulp.task('changelog', function () {
     gulp.src('changelog-fragments/*.md')
         .pipe(concat('changelog.md'))
         .pipe(gulp.dest('./'));
 
-    gulp.src(['README.md', 'changelog.md'])
+    gulp.src(['readme-fragments/README.md', 'changelog.md'])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
+});
+
+gulp.task('jsdoc', function () {
+    return gulp.src(['./src/**/*.js', './README.md'])
+        .pipe(jsdoc('./jsdocs'))
 });
 
 gulp.task('tests', function () {
@@ -114,8 +114,7 @@ gulp.task('make-browser-test-suite', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['./tests/for-server/*', './src/**/*'], [
-        'changelog',
+    gulp.watch(['./tests/for-server/*', './src/**/*', 'README.md'], [
         'jsdoc',
         'concat',
         'uglify',
@@ -123,11 +122,15 @@ gulp.task('watch', function () {
         'minimal-min',
         'make-browser-test-suite'
     ]);
+
+    gulp.watch(['readme-fragments/*.md', 'changelog-fragments/*.md'], [
+        'changelog'
+    ]);
+
 });
 
 // Default task
 gulp.task('default', [
-    'changelog',
     'jsdoc',
     'concat',
     'uglify',
