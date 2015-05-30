@@ -10,6 +10,7 @@ var gulp        = require('gulp'),
     duration    = require('gulp-duration'),
     lazypipe    = require('lazypipe'),
     chalk       = require('chalk'),
+    jsdoc       = require("gulp-jsdoc"),
 
     // LazyPipes
     jsHintPipe  = lazypipe()
@@ -18,10 +19,18 @@ var gulp        = require('gulp'),
         .pipe(jshint.reporter, 'jshint-stylish');
         //.pipe(jshint.reporter, 'fail');
 
+gulp.task('jsdoc', function () {
+    return gulp.src(['./src/**/*.js', './README.md'])
+        .pipe(jsdoc('./jsdocs'))
+});
+
 gulp.task('changelog', function () {
     gulp.src('changelog-fragments/*.md')
-        .pipe(header('## Changelogs\n\n'))
         .pipe(concat('changelog.md'))
+        .pipe(gulp.dest('./'));
+
+    gulp.src(['README.md', 'changelog.md'])
+        .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });
 
@@ -32,6 +41,7 @@ gulp.task('tests', function () {
 
 gulp.task('concat', function () {
     gulp.src([
+        'src/sjl/Sjl.js',
         'src/sjl/sjl-util-functions.js',
         'src/sjl/sjl-set-functions.js',
         'src/sjl/sjl-oop-util-functions.js',
@@ -68,6 +78,7 @@ gulp.task('uglify', ['concat'], function () {
 
 gulp.task('minimal', function () {
     gulp.src([
+        'src/sjl/Sjl.js',
         'src/sjl/sjl-util-functions.js',
         'src/sjl/sjl-set-functions.js',
         'src/sjl/sjl-oop-util-functions.js',
@@ -104,6 +115,8 @@ gulp.task('make-browser-test-suite', function () {
 
 gulp.task('watch', function () {
     gulp.watch(['./tests/for-server/*', './src/**/*'], [
+        'changelog',
+        'jsdoc',
         'concat',
         'uglify',
         'minimal',
@@ -114,6 +127,8 @@ gulp.task('watch', function () {
 
 // Default task
 gulp.task('default', [
+    'changelog',
+    'jsdoc',
     'concat',
     'uglify',
     'minimal',

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: validator/AbstractValidator.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: validator/AbstractValidator.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Ely on 7/21/2014.
+ * Initial idea borrowed from Zend Framework 2's Zend/Validator
+ */
+
+'use strict';
+
+(function (context) {
+
+    context.sjl = context.sjl || {};
+    context.sjl.validator = context.sjl.isset(context.sjl.validator) ? context.sjl.validator : {};
+
+    context.sjl.AbstractValidator =
+
+        context.sjl.Optionable.extend(function AbstractValidator(options) {
+                var self = this,
+                    customTemplates;
+
+                // Extend with optionable and set preliminary defaults
+                context.sjl.Optionable.call(self, {
+                    messages: [],
+                    messageTemplates: {},
+                    messageVariables: {},
+                    messagesMaxLength: 100,
+                    valueObscured: false,
+                    value: null
+                });
+
+                // Merge custome templates in if they are set
+                if (context.sjl.isset(options.customMessageTemplates)) {
+                    customTemplates = options.customMessageTemplates;
+                    options.customeMessageTemplates = null;
+                    delete options.customeMessageTemplates;
+                    self.setCustomMessageTemplates(customTemplates);
+                }
+
+                // Set passed in options if (any)
+                self.setOptions(options);
+
+            },
+            {
+                getMessagesMaxLength: function () {
+                    var self = this,
+                        maxMessageLen = self.getOption('maxMessagesLength');
+                    return context.sjl.classOfIs(maxMessageLen, 'Number') ? maxMessageLen: -1;
+                },
+
+                getMessages: function () {
+                    var self = this,
+                        messages = self.getOption('messages');
+                    return context.sjl.classOfIs(messages, 'Array') ? messages : [];
+                },
+
+                setMessages: function (messages) {
+                    this.options.messages = context.sjl.classOfIs(messages, 'Array') ? messages : [];
+                    return this;
+                },
+
+                clearMessages: function () {
+                    this.options.messages = [];
+                },
+
+                isValid: function (value) {
+                    throw Error('Can not instantiate `AbstractValidator` directly, all class named with ' +
+                        'a prefixed "Abstract" should not be instantiated.');
+                },
+
+                isValueObscured: function () {
+                    var self = this,
+                        valObscured = self.getOption('valueObscured');
+                    return context.sjl.classOfIs(valObscured, 'Boolean') ? valObscured : false;
+                },
+
+                setValue: function (value) {
+                    this.options.value = value;
+                    this.options.messages = [];
+                    return this;
+                },
+
+                getValue: function (value) {
+                    var self = this;
+                    return !context.sjl.classOfIs(value, 'Undefined') ? (function () {
+                        self.setValue(value);
+                        return value;
+                    })() : this.getOption('value');
+                },
+
+                value: function (value) {
+                    var classOfValue = sjl.classOf(value),
+                        retVal = this.get('value');
+                    if (classOfValue !== 'Undefined') {
+                        this.options.value = value;
+                        retVal = this;
+                    }
+                    return retVal;
+                },
+
+                addErrorByKey: function (key) {
+                    var self = this,
+                        messageTemplate = self.getOption('messageTemplates'),
+                        messages = self.getOption('messages');
+
+                    // If key is string
+                    if (context.sjl.classOfIs(key, 'String') &amp;&amp;
+                        context.sjl.isset(messageTemplate[key])) {
+                        if (typeof messageTemplate[key] === 'function') {
+                            messages.push(messageTemplate[key].apply(self));
+                        }
+                        else if (context.sjl.classOfIs(messageTemplate[key], 'String')) {
+                            messages.push(messageTemplate[key]);
+                        }
+                    }
+                    else if (context.sjl.classOfIs(key, 'function')) {
+                        messages.push(key.apply(self));
+                    }
+                    else {
+                        messages.push(key);
+                    }
+                    return self;
+                },
+
+                getMessageTemplates: function () {
+                    return this.options.messageTemplates;
+                },
+
+                setMessageTemplates: function (templates) {
+                    if (!sjl.classOfIs(templates, 'Object')) {
+                        throw new Error('`AddToBagModel.setMessageTemplates` ' +
+                            'expects parameter 1 to be of type "Object".');
+                    }
+                    this.options.messagesTemplates = templates;
+                    return this;
+                },
+
+                updateMessageTemplates: function (templates) {
+                    var self = this;
+                    if (!sjl.classOfIs(templates, 'Object')) {
+                        throw new Error('`AddToBagModel.updateMessageTemplates` ' +
+                            'expects parameter 1 to be of type "Object".');
+                    }
+                    self.options.messageTemplates = sjl.extend(true, self.getMessageTemplates(), templates);
+                    return self;
+                }
+
+            });
+
+})(typeof window === 'undefined' ? global : window);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-sjl.html">sjl</a></li></ul><h3>Classes</h3><ul><li><a href="sjl.Attributable.html">Attributable</a></li><li><a href="sjl.Extendable.html">Extendable</a></li><li><a href="sjl.Iterator.html">Iterator</a></li><li><a href="sjl.Optionable.html">Optionable</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Fri May 29 2015 22:49:56 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

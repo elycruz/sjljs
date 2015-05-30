@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: input/Input.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: input/Input.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Ely on 7/24/2014.
+ */
+/**
+ * Created by Ely on 7/21/2014.
+ */
+
+'use strict';
+
+(function (context) {
+
+    context.sjl = context.sjl || {};
+
+    context.sjl.Input = context.sjl.Optionable.extend(
+        function Input(options) {
+            var alias = null;
+
+            if (context.sjl.classOfIs(options, 'String')) {
+                alias = options;
+            }
+
+            // Set defaults as options on this class
+            context.sjl.Optionable.call(this, {
+                allowEmpty: false,
+                continueIfEmpty: true,
+                breakOnFailure: false,
+                fallbackValue: null,
+                filterChain: null,
+                alias: alias,
+                required: true,
+                validatorChain: null,
+                value: null,
+                messages: []
+            });
+
+            if (!context.sjl.empty(options)) {
+                this.setOptions(options);
+            }
+
+            // Protect from adding programmatic validators, from within `isValid`, more than once
+            this.options.isValidHasRun = false;
+
+            // Only functions on objects;  Will
+            // ignore options if it is a string
+            //if (context.sjl.classOfIs(options, 'Object')) {
+            //    sjl.extend(true, this.options, options, true);
+            //}
+
+        }, {
+
+            /**
+             * This is a crude implementation
+             * @todo review if we really want to have fallback value
+             *      functionality for javascript
+             * @returns {boolean}
+             */
+            isValid: function (value) {
+
+                var self = this,
+
+                    // Get the validator chain, value and validate
+                    validatorChain = self.getValidatorChain(),
+
+                    retVal = false;
+
+                // Clear messages
+                self.clearMessages();
+
+                // Check whether we need to add an empty validator
+                if (!self.options.isValidHasRun &amp;&amp; !self.getContinueIfEmpty()) {
+                    validatorChain.addValidator(new context.sjl.EmptyValidator());
+                }
+
+                value = value || self.getValue();
+                retVal = validatorChain.isValid(value);
+
+                // Fallback value
+                if (retVal === false &amp;&amp; self.hasFallbackValue()) {
+                    self.setValue(self.getFallbackValue());
+                    retVal = true;
+                }
+
+                // Set messages internally
+                self.setMessages();
+
+                // Protect from adding programmatic validators more than once..
+                if (!self.options.isValidHasRun) {
+                    self.options.isValidHasRun= true;
+                }
+
+                return retVal;
+            },
+
+            getInputFilter: function () {
+                return this.options.inputFilter;
+            },
+
+            setInputFilter: function (value) {
+                this.options.inputFilter = value;
+            },
+
+            getFilterChain: function () {
+                return this.options.filterChain;
+            },
+
+            setFilterChain: function (value) {
+                this.options.filterChain = value;
+            },
+
+            getValidatorChain: function () {
+                var self = this;
+                if (!context.sjl.isset(self.options.validatorChain)) {
+                    self.options.validatorChain = new context.sjl.ValidatorChain({
+                        breakOnFailure: self.getBreakOnFailure()
+                    });
+                }
+                return self.options.validatorChain;
+            },
+
+            setValidatorChain: function (value) {
+                if (context.sjl.classOfIs(value, 'Object')
+                    &amp;&amp; context.sjl.isset(value.validators)) {
+                    this.getValidatorChain().setOption('validators', value.validators);
+                }
+                else {
+                    this.options.validatorChain = value;
+                }
+                return this;
+            },
+
+            getAlias: function () {
+                return this.options.alias;
+            },
+
+            setAlias: function (value) {
+                this.options.alias = value;
+            },
+
+            getRawValue: function () {
+                return this.options.rawValue;
+            },
+
+            setRawValue: function (value) {
+                this.options.rawValue = value;
+            },
+
+            getValue: function (value) {
+                return this.options.value;
+            },
+
+            setValue: function (value) {
+                this.options.value =
+                    this.options.rawValue = value;
+            },
+
+            getFallbackValue: function () {
+                return this.options.fallbackValue;
+            },
+
+            setFallbackValue: function (value) {
+                this.options.fallbackValue = value;
+            },
+
+            hasFallbackValue: function () {
+                return !context.sjl.classOfIs(this.getFallbackValue(), 'Undefined') &amp;&amp;
+                    !context.sjl.classOfIs(this.getFallbackValue(), 'Null');
+            },
+
+            getRequired: function () {
+                return this.options.required;
+            },
+
+            setRequired: function (value) {
+                this.options.required = value;
+            },
+
+            getAllowEmpty: function () {
+                return this.options.allowEmpty;
+            },
+
+            setAllowEmpty: function (value) {
+                this.options.allowEmpty = value;
+            },
+
+            getBreakOnFailure: function () {
+                return this.options.breakOnFailure;
+            },
+
+            setBreakOnFailure: function (value) {
+                this.options.breakOnFailure = value;
+            },
+
+            getContinueIfEmpty: function () {
+                return this.options.continueIfEmpty;
+            },
+
+            setContinueIfEmpty: function (value) {
+                this.options.continueIfEmpty = value;
+            },
+
+            clearMessages: function () {
+                this.options.messages = [];
+            },
+
+            setMessages: function (messages) {
+                var self = this;
+                if (context.sjl.classOfIs(messages, 'Array')) {
+                    self.options.messages = messages;
+                }
+                else {
+                    self.options.messages = self.getValidatorChain().getMessages();
+                }
+                return self;
+            },
+
+            getMessages: function () {
+                var self = this;
+                if (!context.sjl.isset(self.options.messages)) {
+                    self.options.messages = [];
+                }
+                return self.options.messages;
+            }
+        });
+
+})(typeof window === 'undefined' ? global : window);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-sjl.html">sjl</a></li></ul><h3>Classes</h3><ul><li><a href="sjl.Attributable.html">Attributable</a></li><li><a href="sjl.Extendable.html">Extendable</a></li><li><a href="sjl.Iterator.html">Iterator</a></li><li><a href="sjl.Optionable.html">Optionable</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Fri May 29 2015 22:49:56 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

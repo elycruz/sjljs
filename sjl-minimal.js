@@ -1,19 +1,30 @@
 /**! 
- * sjl-minimal.js Fri May 22 2015 12:23:12 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Fri May 29 2015 22:49:55 GMT-0400 (Eastern Daylight Time)
  **/
+/**
+ * Created by Ely on 5/29/2015.
+ */
+(function (context) {
+    /**
+     * @module sjl
+     * @description Sjl object.
+     * @type {Object}
+     */
+    context.sjl = !context.hasOwnProperty('sjl')
+        || Object.prototype.toString.apply(context.sjl)
+            .indexOf('Object') === -1 ? {} : context.sjl;
+
+}(typeof window === 'undefined' ? global : window));
+
 /**
  * Created by Ely on 5/24/2014.
  * Defines argsToArray, classOfIs, classOf, empty,
  *  isset, keys, and namespace, on the passed in context.
- * @param {Object} context
- * @returns void
  */
 
 'use strict';
 
 (function (context) {
-
-    context.sjl = context.sjl || {};
 
     var slice = Array.prototype.slice,
         notLCaseFirst = typeof context.sjl.lcaseFirst !== 'function',
@@ -27,6 +38,12 @@
         isSet;
 
     if (typeof context.sjl.argsToArray !== 'function') {
+        /**
+         * Calls Array.prototype.slice on arguments object passed in.
+         * @function module:sjl.argsToArray
+         * @param args {Arguments}
+         * @returns {Array}
+         */
         context.sjl.argsToArray = function (args) {
             return slice.call(args, 0, args.length);
         };
@@ -48,6 +65,7 @@
          * set (not undefined and not null).
          * Returns false on the first argument encountered that
          * is null or undefined.
+         * @function module:sjl.isset
          * @returns {boolean}
          */
         context.sjl.isset = function () {
@@ -73,6 +91,7 @@
 
         /**
          * Checks whether a key on an object is set.
+         * @function module:sjl.issetObjKey
          * @param obj {Object} - Object to search on.
          * @param key {String} - Key to search on `obj`.
          * @returns {boolean}
@@ -85,6 +104,7 @@
     if (typeof context.sjl.classOf !== 'function') {
         /**
          * Returns the class name of an object from it's class string.
+         * @function module:sjl.classOf
          * @param val {mixed}
          * @returns {string}
          */
@@ -110,6 +130,7 @@
 
         /**
          * Checks to see if an object is of type humanString (class name) .
+         * @function module:sjl.classOfIs
          * @param humanString {string} (class string; I.e., "Number", "Object", etc.)
          * @param obj {mixed}
          * @returns {boolean}
@@ -167,6 +188,7 @@
 
         /**
          * Checks to see if any of the arguments passed in are empty.
+         * @function module:sjl.empty
          * @returns {boolean}
          */
         context.sjl.empty = function () {
@@ -206,6 +228,7 @@
 
         /**
          * Retruns a boolean based on whether a key on an object has an empty value or is empty (not set, undefined, null)
+         * @function module:sjl.isEmptyObjKey
          * @param obj {Object} - Object to search on.
          * @param key {String} - Key to search for one `obj`.
          * @param type {String} - Optional.
@@ -230,13 +253,14 @@
          * Takes a namespace string and fetches that location out from
          * an object/Map.  If the namespace doesn't exists it is created then
          * returned.
-         * Example: namespace('hello.world.how.are.you.doing', obj) will
-         * create/fetch within `obj`:
-         * hello: { world: { how: { are: { you: { doing: {} } } } } }
-         * @param ns_string {String} the namespace you wish to fetch
-         * @param objToSearch {Object} object to search for namespace on
-         * @param valueToSet {Object} optional, a value to set on the key
-         *  (last key if key string (a.b.c.d = value))
+         * @example
+         * // will create/fetch within `obj`: hello: { world: { how: { are: { you: { doing: {} } } } } }
+         * namespace('hello.world.how.are.you.doing', obj)
+         *
+         * @function module:sjl.namespace
+         * @param ns_string {String} - The namespace you wish to fetch
+         * @param objToSearch {Object} - The object to search for namespace on
+         * @param valueToSet {Object} - Optional.  A value to set on the key (last key if key string (a.b.c.d = value)).
          * @returns {Object}
          */
         context.sjl.namespace = function (ns_string, objToSearch, valueToSet) {
@@ -308,6 +332,7 @@
     if (notLCaseFirst) {
         /**
          * Lower cases first character of a string.
+         * @function module:sjl.lcaseFirst
          * @param {String} str
          * @throws {TypeError}
          * @returns {String}
@@ -320,6 +345,7 @@
     if (notUCaseFirst) {
         /**
          * Upper cases first character of a string.
+         * @function module:sjl.ucaseFirst
          * @param {String} str
          * @returns {String}
          */
@@ -336,6 +362,7 @@
          * to replace unwanted characters with a '-' and then splits and merges
          * the parts with the proper casing, pass in `true` for lcaseFirst
          * to lower case the first character.
+         * @function module:sjl.camelCase
          * @param {String} str
          * @param {Boolean} lowerFirst default `false`
          * @param {Regex} replaceStrRegex default /[^a-z0-9] * /i (without spaces before and after '*')
@@ -401,6 +428,7 @@
     if (noExtractBoolFromArrayStart) {
         /**
          * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
+         * @function module:sjl.extractBoolFromArrayStart
          * @param array {Array}
          * @returns {Boolean}
          */
@@ -412,6 +440,7 @@
     if (noExtractBoolFromArrayEnd) {
         /**
          * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
+         * @function module:sjl.extractBoolFromArrayEnd
          * @param array {Array}
          * @returns {Boolean}
          */
@@ -424,15 +453,13 @@
 
 /**
  * Created by Ely on 5/24/2014.
- * ** Cartesian functions copied from "Javascript the definitive guide"
- * ** getValueFromObj and setValueOnObj are not from "Javascript ..."
+ * Cartesian functions copied from "Javascript the definitive guide"
+ * getValueFromObj and setValueOnObj are not from "Javascript ..."
  */
 
 'use strict';
 
 (function (context) {
-
-    context.sjl = context.sjl || {};
 
     /**
      * Used by sjl.extend definition
@@ -446,7 +473,7 @@
          * Searches obj for key and returns it's value.  If value is a function
          * calls function, with optional `args`, and returns it's return value.
          * If `raw` is true returns the actual function if value found is a function.
-         * @method getValueFromObj
+         * @function module:sjl.getValueFromObj
          * @param key {String} The hash key to search for
          * @param obj {Object} the hash to search within
          * @param args {Array} optional the array to pass to value if it is a function
@@ -472,6 +499,7 @@
     if (typeof context.sjl.setValueOnObj !== 'function') {
         /**
          * Sets a key to value on obj.
+         * @function module:sjl.setValueOnObj
          * @param key {String} - Key to search for (can be a dot
          * separated string 'all.your.base' will traverse {all: {your: {base: {...}}})
          * @param value {*} - Value to set on obj
@@ -559,6 +587,25 @@
             return o;
         };
 
+        /**
+         * Extends first object passed in with all other object passed in after.
+         * First param could be a boolean indicating whether or not to perform a deep extend.
+         * Last param could also be a boolean indicating whether to use legacy setters if they are available
+         * when extending one object with another.
+         *
+         * @example
+         *  var o = {setGreeting: v => this.greeting = 'Hello ' + v},
+         *      otherObject = {greeting: 'Junior'};
+         *  // Calls o.setGreeting when merging otherObject because `true` was passed in
+         *  // as the last parameter
+         *  sjl.extend(o, otherObject, true);
+         *
+         * @function module:sjl.extend
+         * @param [, boolean, obj] {Object|Boolean} - If boolean, causes `extend` to perform a deep extend.  Optional.
+         * @param [, obj, obj] {Object} - Objects to hierarchically extend.
+         * @param [, boolean] {Boolean} - Optional.
+         * @returns {Object} - Returns first object passed in.
+         */
         context.sjl.extend = function () {
             // Return if no arguments
             if (arguments.length === 0) {
@@ -588,8 +635,9 @@
     if (typeof context.sjl.clone !== 'function') {
         /**
          * Returns copy of object.
-         * @param obj
-         * @returns {*}
+         * @function module:sjl.clone
+         * @param obj {Object}
+         * @returns {*} - Cloned object.
          */
         context.sjl.clone = function (obj) {
             return  context.sjl.extend(true, {}, obj);
@@ -599,8 +647,9 @@
     if (typeof context.sjl.jsonClone !== 'function') {
         /**
          * Returns copy of object using JSON stringify/parse.
-         * @param obj
-         * @returns {*}
+         * @function module:sjl.jsonClone
+         * @param obj {Object} - Object to clone.
+         * @returns {*} - Cloned object.
          */
         context.sjl.jsonClone = function (obj) {
             return JSON.parse(JSON.stringify(obj));
@@ -687,7 +736,8 @@
     if (typeof context.sjl.copyOfProto === 'undefined') {
         /**
          * Creates a copy of a prototype to use for inheritance.
-         * @param proto
+         * @function module:sjl.copyOfProto
+         * @param proto {Prototype|Object} - Prototype to make a copy of.
          * @returns {*}
          */
         context.sjl.copyOfProto = function (proto) {
@@ -708,9 +758,9 @@
         /**
          * Helper function which creates a constructor using `val` as a string
          * or just returns the constructor if `val` is a constructor.
-         * @param val
+         * @param value {*} - Value to resolve to constructor.
          * @returns {*}
-         * @throws {Error} - If can't resolve constructor from `val`
+         * @throws {Error} - If can't resolve constructor from `value`
          */
         resolveConstructor = function (value) {
             // Check if is string and hold original string
@@ -754,11 +804,12 @@
 
         /**
          * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods
-         * @param superclass {Function}
-         * @param constructor {Function}
-         * @param methods {Object} - optional
-         * @param statics {Object} - optional
-         * @returns {*}
+         * @function module:sjl.defineSubClass
+         * @param superclass {Constructor} - SuperClass's constructor.  Required.
+         * @param constructor {Constructor} -  Constructor.  Required.
+         * @param methods {Object} - Optional.
+         * @param statics {Object} - Static methods. Optional.
+         * @returns {Constructor}
          */
         context.sjl.defineSubClass = function (superclass, // Constructor of the superclass
                                                constructor, // The constructor for the new subclass
@@ -791,6 +842,16 @@
     }
 
     if (typeof context.sjl.throwNotOfTypeError === 'undefined') {
+        /**
+         * Throws an error using a formatted string that reports the function name,
+         * the expected parameter type, and the value recieved.
+         * @function module:sjl.throwNotOfTypeError
+         * @param value
+         * @param paramName
+         * @param funcName
+         * @param expectedType
+         * @throws {Error}
+         */
         context.sjl.throwNotOfTypeError = function (value, paramName, funcName, expectedType) {
             throw Error(funcName + ' expects ' + paramName +
                 ' to be of type "' + expectedType + '".  Value received: ' + value);
@@ -808,10 +869,19 @@
     'use strict';
 
     /**
-     * The `Extendable` constructor
-     * @constructor
+     * The `sjl.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
+     * @class module:sjl.Extendable
+     * @name sjl.Extendable
      */
     context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});
+
+    /**
+     * Extends a new copy of self with passed in parameters.
+     * @method sjl.Extendable.extend
+     * @param constructor {Constructor} - Required.
+     * @param methods {Object} - Optional.
+     * @param statics {Object} - Static methods. Optional.
+     */
 
 })(typeof window === 'undefined' ? global : window);
 
@@ -822,15 +892,19 @@
 
     'use strict';
 
-    context.sjl = context.sjl || {};
-
+    /**
+     * @class sjl.Attributable
+     * @extends sjl.Extendable
+     * @type {void|Object|*}
+     */
     context.sjl.Attributable = context.sjl.Extendable.extend(function Attributable () {},{
 
         /**
          * Gets or sets a collection of attributes.
+         * @method sjl.Attributable#attrs
          * @param attrs {mixed|Array|Object} - Attributes to set or get from object
          * @todo add an `attr` function to this class
-         * @returns {context.sjl.Attributable}
+         * @returns {sjl.Attributable}
          */
         attrs: function (attrs) {
             var self = this,
@@ -858,6 +932,7 @@
 
         /**
          * Gets a set of attributes hash for queried attributes.
+         * @method sjl.Attributable#_getAttribs
          * @param attribsList {Array} - Attributes list to return
          * @returns {*}
          * @private
@@ -896,11 +971,11 @@
 
     'use strict';
 
-    context.sjl = context.sjl || {};
-
     /**
      * Optionable Constructor merges all objects passed in to it's `options` hash.
      * Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
+     * @class sjl.Optionable
+     * @extends sjl.Extendable
      * @type {void|context.sjl.Optionable}
      */
     context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
@@ -912,9 +987,10 @@
              * Sets an option on Optionable's `options` using `sjl.setValueOnObj`;
              *  E.g., `optionable.options = value`;
              * @deprecated - Will be removed in version 1.0.0
+             * @method sjl.Optionable#setOption
              * @param key
              * @param value
-             * @returns {context.sjl.Optionable}
+             * @returns {sjl.Optionable}
              */
             setOption: function (key, value) {
                 context.sjl.setValueOnObj(key, value, this.options);
@@ -926,9 +1002,10 @@
              *  `sjl.Attributable`'s `attrs` function;
              *  E.g., `optionable.options.attrs(Object);
              * @deprecated - Will be removed in version 1.0.0
+             * @method sjl.Optionable#setOptions
              * @param key {String}
              * @param value {Object}
-             * @returns {context.sjl.Optionable}
+             * @returns {sjl.Optionable}
              */
             setOptions: function (options) {
                 if (context.sjl.classOfIs(options, 'Object')) {
@@ -940,6 +1017,7 @@
             /**
              * Gets an options value by key.
              * @deprecated - Slotted for removal in version 1.0.0
+             * @method sjl.Optionable#getOption
              * @param key {String}
              * @returns {*}
              */
@@ -947,9 +1025,10 @@
                 return context.sjl.getValueFromObj(key, this.options);
             },
 
-             /**
+            /**
              * Gets options by either array or just by key.
              * @deprecated - Slotted for removal in version 1.0.0
+             * @method sjl.Optionable#getOptions
              * @param options {Array|String}
              * @returns {*}
              */
@@ -968,6 +1047,7 @@
 
             /**
              * Gets one or many option values.
+             * @method sjl.Optionable#get
              * @param keyOrArray
              * @returns {*}
              */
@@ -984,9 +1064,10 @@
             /**
              * Sets an option (key, value) or multiple options (Object)
              * based on what's passed in.
+             * @method sjl.Optionable#set
              * @param0 {String|Object}
              * @param1 {*}
-             * @returns {context.sjl.Optionable}
+             * @returns {sjl.Optionable}
              */
             set: function () {
                 var self = this,
@@ -1004,6 +1085,7 @@
             /**
              * Checks a key/namespace string ('a.b.c') to see if `this.options`
              *  has a value (a non falsy value otherwise returns `false`).
+             * @method sjl.Optionable#has
              * @param nsString - key or namespace string
              * @returns {Boolean}
              */
@@ -1028,11 +1110,12 @@
 
             /**
              * Merges all objects passed in to `options`.
+             * @method sjl.Optionable#merge
              * @param0-* {Object} - Any number of `Object`s passed in.
              * @lastParam {Object|Boolean} - If last param is a boolean then
              *  context.sjl.setValueOnObj will be used to merge each
              *  key=>value pair to `options`.
-             * @returns {context.sjl.Optionable}
+             * @returns {sjl.Optionable}
              */
             merge: function (options) {
                 var args = sjl.argsToArray(arguments),
@@ -1056,6 +1139,11 @@
 
     'use strict';
 
+    /**
+     * @class sjl.Iterator
+     * @extends sjl.Extendable
+     * @type {void|Object|*}
+     */
     context.sjl.Iterator = context.sjl.Extendable.extend(
         function Iterator(values, pointer) {
             if (!(this instanceof sjl.Iterator)) {

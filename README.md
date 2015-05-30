@@ -18,6 +18,7 @@ only meant as a supplement to them.
 - [Todos](#todos)
 - [Notes](#notes)
 - [License](#license)
+- [Changelogs](#changelogs)
 
 ## Components included:
 - [Utilities](#utilities)
@@ -152,11 +153,6 @@ Merges all `Object`s passed into it to Optionable's `options` object.  If last p
 ## Supported browsers:
 - ie8+, and all other browsers
 
-## Notices/Deprecations/Warnings:
-The following convenience files will be removed in the next major release along with their build options:
-- 'sjl-functions-only*.js'
-- 'sjl-utilities-only*.js'
-
 ## Todos:
 
 ### MVP Todos:
@@ -192,13 +188,18 @@ The following convenience files will be removed in the next major release along 
     - [ ] - `getOption`.  Instead `get` should be used.
     - [ ] - `getOptions`.  Instead `get` should be used.
 
-### Clean-up:
-- [X] - Remove 'sjl-functions-only*.js' and all of it's build options from the library.
-- [X] - Remove 'sjl-utilities-only*.js' and all of it's build options from the library.
-
 ## Notes:
 There is no changelog as the library hasn't been publicized but there will be a changelog starting version 0.5.0.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") &
 [MIT](http://opensource.org/licenses/MIT "http://opensource.org/licenses/MIT")
+
+## Changelogs
+
+#### Changelog for 04/23/2015:
+- Updated tests for `sjl.PostCodeValidator`.
+
+#### Changelog for 05/29/2015:
+- Updated main readme.md format.
+- Removed notices from main readme.md.

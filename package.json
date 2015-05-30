@@ -1,6 +1,6 @@
 {
   "name": "sjljs",
-  "version": "0.4.29",
+  "version": "0.4.30",
   "description": "Simple Javascript Library",
   "main": "sjl.js",
   "directories": {
@@ -14,6 +14,7 @@
     "gulp-concat": "~2.2.0",
     "gulp-duration": "0.0.0",
     "gulp-header": "~1.0.2",
+    "gulp-jsdoc": "^0.1.4",
     "gulp-jshint": "^1.9.0",
     "gulp-mocha": "~0.4.1",
     "gulp-uglify": "~0.2.1",
@@ -21,8 +22,7 @@
     "lazypipe": "^0.2.2",
     "mocha": "^1.21.5"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "scripts": {
     "test": "mocha tests/for-server"
   },
