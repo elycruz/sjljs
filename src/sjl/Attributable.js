@@ -33,14 +33,20 @@
                     retVal = context.sjl.getValueFromObj(attrs, self);
                     break;
                 default:
-                    retVal = self._getAttribs(attrs);
+                    context.sjl.extend(true, self, attrs, true);
                     break;
             }
             return retVal;
         },
 
-        attr: function (attrs) {
-            return this.attrs(attrs);
+        /**
+         * Setter and getter for attributes on self {Optionable}.
+         * @param 0 {Object|String} - Key or object to set on self.
+         * @param 1 {*} - Value to set when using function as a setter.
+         * @returns {*|sjl.Attributable} - If setter returns self else returned mixed.
+         */
+        attr: function () {
+            return this.attrs(arguments);
         },
 
         /**
@@ -54,11 +60,6 @@
             var attrib,
                 out = {},
                 self = this;
-
-            // If attribute list is not an array
-            if (!context.sjl.classOfIs(attrsList, 'Array')) {
-                return;
-            }
 
             // Loop through attributes to get and set them for return
             for (attrib in attrsList) {

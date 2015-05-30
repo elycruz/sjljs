@@ -15,9 +15,9 @@
      * @extends sjl.Extendable
      * @type {void|context.sjl.Optionable}
      */
-    context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
+    context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(/*[, options]*/) {
             this.options = new context.sjl.Attributable();
-            this.merge.apply(this, sjl.argsToArray(arguments));
+            this.merge.apply(this, arguments);
         },
         {
             /**
@@ -48,6 +48,9 @@
                 if (context.sjl.classOfIs(options, 'Object')) {
                     this.options.attrs(options);
                 }
+                //else {
+                //    throw context.sjl.throwNotOfTypeError(options, 'options', 'setOptions', 'Object');
+                //}
                 return this;
             },
 
@@ -71,13 +74,9 @@
              */
             getOptions: function (options) {
                 var classOfOptions = sjl.classOf(options),
-                    retVal = null;
+                    retVal = this.options;
                 if (classOfOptions === 'Array' || classOfOptions === 'String') {
                     retVal = this.options.attrs(options);
-                }
-                else {
-                    console.warn('Tried to set options using a value of ' +
-                    'type "' + classOfOptions + '" on `Optionable.getOptions`.');
                 }
                 return retVal;
             },
@@ -89,13 +88,7 @@
              * @returns {*}
              */
             get: function (keyOrArray) {
-                var retVal = null,
-                    classOfKeyOrArray = sjl.classOf(keyOrArray);
-                if (classOfKeyOrArray === 'String'
-                    || classOfKeyOrArray === 'Array') {
-                    retVal = this.getOptions(keyOrArray);
-                }
-                return retVal;
+                return this.getOptions(keyOrArray);
             },
 
             /**

@@ -31,13 +31,10 @@
         context.sjl.getValueFromObj = function (key, obj, args, raw) {
             args = args || null;
             raw = raw || false;
-            var retVal = null;
-            if (context.sjl.classOfIs(key, 'String') && context.sjl.isset(obj)) {
-                retVal = key.indexOf('.') !== -1 ? context.sjl.namespace(key, obj) :
+            var retVal = key.indexOf('.') !== -1 ? context.sjl.namespace(key, obj) :
                     (typeof obj[key] !== 'undefined' ? obj[key] : null);
-                if (context.sjl.classOfIs(retVal, 'Function') && context.sjl.empty(raw)) {
-                    retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
-                }
+            if (context.sjl.classOfIs(retVal, 'Function') && context.sjl.empty(raw)) {
+                retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
             }
             return retVal;
         };
@@ -56,17 +53,23 @@
          */
         context.sjl.setValueOnObj = function (key, value, obj) {
             // Get qualified setter function name
-            var setterFunc = 'set' + context.sjl.camelCase(key, true),
+            var overloadedSetterFunc = context.sjl.camelCase(key, false),
+                setterFunc = 'set' + context.sjl.camelCase(key, true),
                 retVal = obj;
 
+
+            // Else set the value on the obj
+            if (key.indexOf('.') !== -1) {
+                retVal = context.sjl.namespace(key, obj, value);
+            }
+
             // If obj has a setter function for key, call it
-            if (context.sjl.isset(obj[setterFunc])) {
+            else if (!context.sjl.isEmptyObjKey(obj, setterFunc, 'Function')) {
                 retVal = obj[setterFunc](value);
             }
 
-            // Else set the value on the obj
-            else if (key.indexOf('.') !== -1) {
-                retVal = context.sjl.namespace(key, obj, value);
+            else if (!context.sjl.isEmptyObjKey(obj, overloadedSetterFunc, 'Function')) {
+                retVal = obj[overloadedSetterFunc](value);
             }
 
             else {

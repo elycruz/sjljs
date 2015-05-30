@@ -1,10 +1,13 @@
 /**! 
- * sjl-minimal.js Fri May 29 2015 23:29:39 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Sat May 30 2015 12:10:31 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
+
+    'use strict';
+
     /**
      * @module sjl
      * @description Sjl object.
@@ -484,13 +487,10 @@
         context.sjl.getValueFromObj = function (key, obj, args, raw) {
             args = args || null;
             raw = raw || false;
-            var retVal = null;
-            if (context.sjl.classOfIs(key, 'String') && context.sjl.isset(obj)) {
-                retVal = key.indexOf('.') !== -1 ? context.sjl.namespace(key, obj) :
+            var retVal = key.indexOf('.') !== -1 ? context.sjl.namespace(key, obj) :
                     (typeof obj[key] !== 'undefined' ? obj[key] : null);
-                if (context.sjl.classOfIs(retVal, 'Function') && context.sjl.empty(raw)) {
-                    retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
-                }
+            if (context.sjl.classOfIs(retVal, 'Function') && context.sjl.empty(raw)) {
+                retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
             }
             return retVal;
         };
@@ -509,17 +509,23 @@
          */
         context.sjl.setValueOnObj = function (key, value, obj) {
             // Get qualified setter function name
-            var setterFunc = 'set' + context.sjl.camelCase(key, true),
+            var overloadedSetterFunc = context.sjl.camelCase(key, false),
+                setterFunc = 'set' + context.sjl.camelCase(key, true),
                 retVal = obj;
 
+
+            // Else set the value on the obj
+            if (key.indexOf('.') !== -1) {
+                retVal = context.sjl.namespace(key, obj, value);
+            }
+
             // If obj has a setter function for key, call it
-            if (context.sjl.isset(obj[setterFunc])) {
+            else if (!context.sjl.isEmptyObjKey(obj, setterFunc, 'Function')) {
                 retVal = obj[setterFunc](value);
             }
 
-            // Else set the value on the obj
-            else if (key.indexOf('.') !== -1) {
-                retVal = context.sjl.namespace(key, obj, value);
+            else if (!context.sjl.isEmptyObjKey(obj, overloadedSetterFunc, 'Function')) {
+                retVal = obj[overloadedSetterFunc](value);
             }
 
             else {
@@ -920,14 +926,20 @@
                     retVal = context.sjl.getValueFromObj(attrs, self);
                     break;
                 default:
-                    retVal = self._getAttribs(attrs);
+                    context.sjl.extend(true, self, attrs, true);
                     break;
             }
             return retVal;
         },
 
-        attr: function (attrs) {
-            return this.attrs(attrs);
+        /**
+         * Setter and getter for attributes on self {Optionable}.
+         * @param 0 {Object|String} - Key or object to set on self.
+         * @param 1 {*} - Value to set when using function as a setter.
+         * @returns {*|sjl.Attributable} - If setter returns self else returned mixed.
+         */
+        attr: function () {
+            return this.attrs(arguments);
         },
 
         /**
@@ -941,11 +953,6 @@
             var attrib,
                 out = {},
                 self = this;
-
-            // If attribute list is not an array
-            if (!context.sjl.classOfIs(attrsList, 'Array')) {
-                return;
-            }
 
             // Loop through attributes to get and set them for return
             for (attrib in attrsList) {
@@ -978,9 +985,9 @@
      * @extends sjl.Extendable
      * @type {void|context.sjl.Optionable}
      */
-    context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(options) {
+    context.sjl.Optionable = context.sjl.Extendable.extend(function Optionable(/*[, options]*/) {
             this.options = new context.sjl.Attributable();
-            this.merge.apply(this, sjl.argsToArray(arguments));
+            this.merge.apply(this, arguments);
         },
         {
             /**
@@ -1011,6 +1018,9 @@
                 if (context.sjl.classOfIs(options, 'Object')) {
                     this.options.attrs(options);
                 }
+                //else {
+                //    throw context.sjl.throwNotOfTypeError(options, 'options', 'setOptions', 'Object');
+                //}
                 return this;
             },
 
@@ -1034,13 +1044,9 @@
              */
             getOptions: function (options) {
                 var classOfOptions = sjl.classOf(options),
-                    retVal = null;
+                    retVal = this.options;
                 if (classOfOptions === 'Array' || classOfOptions === 'String') {
                     retVal = this.options.attrs(options);
-                }
-                else {
-                    console.warn('Tried to set options using a value of ' +
-                    'type "' + classOfOptions + '" on `Optionable.getOptions`.');
                 }
                 return retVal;
             },
@@ -1052,13 +1058,7 @@
              * @returns {*}
              */
             get: function (keyOrArray) {
-                var retVal = null,
-                    classOfKeyOrArray = sjl.classOf(keyOrArray);
-                if (classOfKeyOrArray === 'String'
-                    || classOfKeyOrArray === 'Array') {
-                    retVal = this.getOptions(keyOrArray);
-                }
-                return retVal;
+                return this.getOptions(keyOrArray);
             },
 
             /**

@@ -2,6 +2,9 @@
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
+
+    'use strict';
+
     /**
      * @module sjl
      * @description Sjl object.
