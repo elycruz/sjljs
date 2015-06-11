@@ -74,7 +74,7 @@ Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  r
 
 ### Set Functions:
 
-##### extend((Boolean|*)[,obj, obj][,Boolean]) : Object
+##### sjl.extend((Boolean|*)[,obj, obj][,Boolean]) : Object
 Similiar to JQuery's `extend` method except with the following method signature:
 `extend((Boolean|*)[,obj, obj],[Boolean]) : Object`
     - Where `*` is any type of object with type "Object".
@@ -88,14 +88,14 @@ like property on instantiation (if you use the `extend` method to merge passed i
 
 ### OOP Util functions:
 
-##### copyOfProto(Prototype prototype)
+##### sjl.copyOfProto(Prototype prototype)
 Creates a copy of a prototype (backward compatible to older IEs).
 
-##### defineSubClass(Constructor superclass, Constructor constructor, Object methods, Object statics): Constructor
+##### sjl.defineSubClass(Constructor superclass, Constructor constructor, Object methods, Object statics): Constructor
 Creates a sub class of a constructor and makes it extendable via the static method `extend`;  E.g., pretty much 
 creates `sjl.Extendable`.
 
-##### throwNotOfTypeError() 
+##### sjl.throwNotOfTypeError() 
 This method is used internally but is tentative and may be removed later.
 
 #### Composition helpers:
@@ -105,7 +105,7 @@ Allows getting value by namespace string (ex: `'some.object.deep'`) also if retu
 calls it and allows you to pass args to use with value if it is a function also allows for fetching the value raw if 
 it is a function.
 
-#####  sjl.setValueOnObj
+##### sjl.setValueOnObj
 Allows setting a value on an object by namespace string or conjoined setter function (setPropertyName) or sets value 
 directly if no setter or namespace string found/used.
 
@@ -157,11 +157,11 @@ Merges all `Object`s passed into it to Optionable's `options` object.  If last p
 
 ### MVP Todos:
 - [X] - Write tests for:
-    - [ ] - `sjl.Optionable`.
+    - [X] - `sjl.Optionable`.
     - [ ] - `sjl.Attributable`.
-    - [ ] - `sjl.getValueFromObj`
-    - [ ] - `sjl.setValueOnObj`
-    - [ ] - `sjl.extend` (for new features)
+    - [X] - `sjl.getValueFromObj`
+    - [X] - `sjl.setValueOnObj`
+    - [X] - `sjl.extend` (for new features)
     - [ ] - `sjl.Iterator`
 
 ### MVP for 0.5.0:
@@ -175,19 +175,12 @@ Merges all `Object`s passed into it to Optionable's `options` object.  If last p
 - [ ] - Review entirety of library and look for places that could be refactored.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
-- [ ] - Update readme to a more readable format.
+- [X] - Update readme to a more readable format.
 - [ ] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
-- [ ] - Changelog.
+- [X] - Changelog.
 
 ### MVP for 0.5.1+
 - [ ] - Add changelog.md and inline in main readme.
-
-#### TENTATIVE:
-- [ ] - Refactor Optionable to not have the following methods or to have them as private methods:
-    - [ ] - `setOption`.  Instead `set` should be used.
-    - [ ] - `setOptions`. Instead `set` should be used.
-    - [ ] - `getOption`.  Instead `get` should be used.
-    - [ ] - `getOptions`.  Instead `get` should be used.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") &

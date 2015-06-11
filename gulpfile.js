@@ -19,7 +19,7 @@ var gulp        = require('gulp'),
         .pipe(jshint.reporter, 'jshint-stylish');
         //.pipe(jshint.reporter, 'fail');
 
-gulp.task('changelog', function () {
+gulp.task('readme', function () {
     gulp.src('changelog-fragments/*.md')
         .pipe(concat('changelog.md'))
         .pipe(gulp.dest('./'));
