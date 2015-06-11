@@ -55,7 +55,17 @@ describe('Sjl Reflection', function () {
             '(null)':       sjl.classOf( null      ),
             '(undefined)':  sjl.classOf( undefined ),
             '(function hello () {})':   sjl.classOf( function hello() {} )
-        };
+        },
+            checkForMultipleClassStrings = {
+                '([])':         ['String', 'SomeClass', sjl.classOf( []        )],
+                '(true)':       ['Number', 'Undefined', sjl.classOf( true      )],
+                '(1)':          ['Null', 'Undefined',   sjl.classOf( 1         )],
+                '({})':         ['Number', 'Map',       sjl.classOf( {}        )],
+                '("")':         ['Undefined', 'Array',  sjl.classOf( ''        )],
+                '(null)':       ['Undefined', 'Null',   sjl.classOf( null      )],
+                '(undefined)':  ['Array', 'Undefined',  sjl.classOf( undefined )],
+                '(function hello () {})':   ['Array', 'Null', sjl.classOf( function hello() {} )]
+            };
 
         Object.keys(dataTypeClassStrings).forEach(function (x) {
             it('should return true for alias "' +
@@ -64,6 +74,16 @@ describe('Sjl Reflection', function () {
                 expect(
 
                     sjl.classOfIs(eval(x), sjl.classOf(eval(x)))
+
+                ).to.equal(true);
+            });
+        });
+
+        Object.keys(checkForMultipleClassStrings).forEach(function (x) {
+            it('should find the matching class in list and return true for alias "' +
+                checkForMultipleClassStrings[x].join(', ') +
+                '" when checking "' + x +'"', function () {
+                expect( sjl.classOfIs.apply(sjl, [eval(x)].concat(checkForMultipleClassStrings[x]))
 
                 ).to.equal(true);
             });

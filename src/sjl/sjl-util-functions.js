@@ -118,7 +118,17 @@
          * @returns {boolean}
          */
         context.sjl.classOfIs = function (obj, humanString) {
-            return context.sjl.classOf(obj) === humanString;
+            var args = context.sjl.argsToArray(arguments),
+                retVal = false;
+            args.shift();
+            for (var i = 0; i < args.length; i += 1) {
+                humanString = args[i];
+                retVal = context.sjl.classOf(obj) === humanString;
+                if (retVal) {
+                    break;
+                }
+            }
+            return retVal;
         };
     }
 
