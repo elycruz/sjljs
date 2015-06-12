@@ -62,7 +62,8 @@ module.exports = sjl.Extendable.extend(function SomeConstructor () {}, {
 // Bring in 'SomeOtherConstructor'
 var SomeOtherConstructor = require('SomeOtherConstructor');
 
-// Inherits statics and prototype of SomeOtherConstructor and is also extendable via the static method `extend` 
+// Inherits statics and prototype of SomeOtherConstructor and 
+// is also extendable via the static method `extend` 
 module.exports = SomeOtherConstructor.extend(function SomeSuperOtherConstructor () {
         SomeOtherConstructor.apply(this, arguments);
     }, {
@@ -158,10 +159,10 @@ Does everything `sjl.issetObjKey` does.  In addition checks whether `obj[key]`'s
 and whether `obj[key]` is of one of the class strings passed in (`...type`).
 
 ```
-sjl.isEmptyObjKey({hello: 'world'}, 'hello');   // false.  Object's 'hello' property is not empty.
-sjl.isEmptyObjKey({hello: 0}, 'hello');         // false.  Object's 'hello' property is not empty.
-sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'Number');  // true.  Object's 'hello' property does not match type 'Number'.
-sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'Number', 'String');  // false.  Object's 'hello' property is not empty and matches type 'String'.
+sjl.isEmptyObjKey({hello: 'world'}, 'hello');   // false
+sjl.isEmptyObjKey({hello: 0}, 'hello');         // false
+sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'Number');  // true 
+sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'Number', 'String');  // false 
 ```
 **Note** - This method will be refactored in a future release to 
 
@@ -173,7 +174,7 @@ Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  r
 
 ### Set Functions:
 
-##### sjl.extend(obj {Object|Boolean}, ...obj {Object|undefined}, useLegacyGettersAndSetters {Boolean}) : Object
+##### sjl.extend(obj {Object|Boolean}, ...obj {Object|undefined}, useLegacyGettersAndSetters {Boolean|undefined}) : Object
 Similiar to JQuery's `extend` method except with the following method signature: 
 `extend((Boolean|*)[,obj, obj],[Boolean]) : Object`
 - If the first param is a Boolean then the `deep` option is set (extends first object found from passed in params (arguments[1]) deeply)
