@@ -16,7 +16,7 @@
 - Added some new methods.
     - `sjl.issetAndOfType`
     - `sjl.issetObjKeyAndOfType`
-    - `sjl.isEmptyObjKeyAndOfType`
+    - `sjl.isEmptyObjKeyOrNotOfType`
     - `sjl.hasMethod`
     - `sjl.hasGetterMethod`
     - `sjl.hasSetterMethod`
