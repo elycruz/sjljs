@@ -65,27 +65,42 @@ describe('Sjl Reflection', function () {
                 '(null)':       ['Undefined', 'Null',   sjl.classOf( null      )],
                 '(undefined)':  ['Array', 'Undefined',  sjl.classOf( undefined )],
                 '(function hello () {})':   ['Array', 'Null', sjl.classOf( function hello() {} )]
+            },
+
+            failForMultipleClassStrings = {
+                '([])':         ['String', 'SomeClass'],
+                '(true)':       ['Number', 'Undefined'],
+                '(1)':          ['Null', 'Undefined'],
+                '({})':         ['Number', 'Map'],
+                '("")':         ['Undefined', 'Array'],
+                '(null)':       ['Undefined', 'Set'],
+                '(undefined)':  ['Array', 'Map'],
+                '(function hello () {})':   ['Array', 'Null']
             };
 
         Object.keys(dataTypeClassStrings).forEach(function (x) {
             it('should return true for alias "' +
                 dataTypeClassStrings[x] +
                 '" when checking "' + x +'"', function () {
-                expect(
-
-                    sjl.classOfIs(eval(x), sjl.classOf(eval(x)))
-
-                ).to.equal(true);
+                expect(sjl.classOfIs(eval(x), sjl.classOf(eval(x)))).to.equal(true);
             });
         });
 
         Object.keys(checkForMultipleClassStrings).forEach(function (x) {
-            it('should find the matching class in list and return true for alias "' +
+            it('should find the matching class in list and return true for array "[' +
                 checkForMultipleClassStrings[x].join(', ') +
-                '" when checking "' + x +'"', function () {
-                expect( sjl.classOfIs.apply(sjl, [eval(x)].concat(checkForMultipleClassStrings[x]))
+                ']" when checking "' + x +'"', function () {
+                expect( sjl.classOfIs.apply(sjl,
+                    [eval(x)].concat(checkForMultipleClassStrings[x]))).to.equal(true);
+            });
+        });
 
-                ).to.equal(true);
+        Object.keys(checkForMultipleClassStrings).forEach(function (x) {
+            it('should find the matching class in list and return false for array "[' +
+                failForMultipleClassStrings[x].join(', ') +
+                ']" when checking "' + x +'"', function () {
+                expect( sjl.classOfIs.apply(sjl,
+                    [eval(x)].concat(failForMultipleClassStrings[x]))).to.equal(false);
             });
         });
 

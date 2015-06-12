@@ -113,9 +113,10 @@
         /**
          * Checks to see if an object is of type humanString (class name) .
          * @function module:sjl.classOfIs
-         * @param humanString {string} (class string; I.e., "Number", "Object", etc.)
-         * @param obj {mixed}
-         * @returns {boolean}
+         * @param obj {*} - Object to be checked.
+         * @param humanString {String} - Class string to check for; I.e., "Number", "Object", etc.
+         * @param ...rest {String} - Same as `humanString`.  Optional.
+         * @returns {Boolean} - Whether object matches class string(s) or not.
          */
         context.sjl.classOfIs = function (obj, humanString) {
             var args = context.sjl.argsToArray(arguments),

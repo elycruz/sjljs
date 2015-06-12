@@ -1,4 +1,4 @@
-/**! sjl.js Sat May 30 2015 12:10:32 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Fri Jun 12 2015 09:51:26 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
@@ -131,12 +131,23 @@
         /**
          * Checks to see if an object is of type humanString (class name) .
          * @function module:sjl.classOfIs
-         * @param humanString {string} (class string; I.e., "Number", "Object", etc.)
-         * @param obj {mixed}
-         * @returns {boolean}
+         * @param obj {*} - Object to be checked.
+         * @param humanString {String} - Class string to check for; I.e., "Number", "Object", etc.
+         * @param ...rest {String} - Same as `humanString`.  Optional.
+         * @returns {Boolean} - Whether object matches class string(s) or not.
          */
         context.sjl.classOfIs = function (obj, humanString) {
-            return context.sjl.classOf(obj) === humanString;
+            var args = context.sjl.argsToArray(arguments),
+                retVal = false;
+            args.shift();
+            for (var i = 0; i < args.length; i += 1) {
+                humanString = args[i];
+                retVal = context.sjl.classOf(obj) === humanString;
+                if (retVal) {
+                    break;
+                }
+            }
+            return retVal;
         };
     }
 

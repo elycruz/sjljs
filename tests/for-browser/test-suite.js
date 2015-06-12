@@ -209,7 +209,6 @@ describe('Sjl InputFilter', function () {
         });
 
         it ('should have 2 new created inputs', function () {
-            console.log('\n\n\n', inputFilter.options.inputs);
             expect(Object.keys(inputFilter.getInputs()).length).to.equal(2);
         });
 
@@ -716,17 +715,52 @@ describe('Sjl Reflection', function () {
             '(null)':       sjl.classOf( null      ),
             '(undefined)':  sjl.classOf( undefined ),
             '(function hello () {})':   sjl.classOf( function hello() {} )
-        };
+        },
+            checkForMultipleClassStrings = {
+                '([])':         ['String', 'SomeClass', sjl.classOf( []        )],
+                '(true)':       ['Number', 'Undefined', sjl.classOf( true      )],
+                '(1)':          ['Null', 'Undefined',   sjl.classOf( 1         )],
+                '({})':         ['Number', 'Map',       sjl.classOf( {}        )],
+                '("")':         ['Undefined', 'Array',  sjl.classOf( ''        )],
+                '(null)':       ['Undefined', 'Null',   sjl.classOf( null      )],
+                '(undefined)':  ['Array', 'Undefined',  sjl.classOf( undefined )],
+                '(function hello () {})':   ['Array', 'Null', sjl.classOf( function hello() {} )]
+            },
+
+            failForMultipleClassStrings = {
+                '([])':         ['String', 'SomeClass'],
+                '(true)':       ['Number', 'Undefined'],
+                '(1)':          ['Null', 'Undefined'],
+                '({})':         ['Number', 'Map'],
+                '("")':         ['Undefined', 'Array'],
+                '(null)':       ['Undefined', 'Set'],
+                '(undefined)':  ['Array', 'Map'],
+                '(function hello () {})':   ['Array', 'Null']
+            };
 
         Object.keys(dataTypeClassStrings).forEach(function (x) {
             it('should return true for alias "' +
                 dataTypeClassStrings[x] +
                 '" when checking "' + x +'"', function () {
-                expect(
+                expect(sjl.classOfIs(eval(x), sjl.classOf(eval(x)))).to.equal(true);
+            });
+        });
 
-                    sjl.classOfIs(eval(x), sjl.classOf(eval(x)))
+        Object.keys(checkForMultipleClassStrings).forEach(function (x) {
+            it('should find the matching class in list and return true for array "[' +
+                checkForMultipleClassStrings[x].join(', ') +
+                ']" when checking "' + x +'"', function () {
+                expect( sjl.classOfIs.apply(sjl,
+                    [eval(x)].concat(checkForMultipleClassStrings[x]))).to.equal(true);
+            });
+        });
 
-                ).to.equal(true);
+        Object.keys(checkForMultipleClassStrings).forEach(function (x) {
+            it('should find the matching class in list and return false for array "[' +
+                failForMultipleClassStrings[x].join(', ') +
+                ']" when checking "' + x +'"', function () {
+                expect( sjl.classOfIs.apply(sjl,
+                    [eval(x)].concat(failForMultipleClassStrings[x]))).to.equal(false);
             });
         });
 
