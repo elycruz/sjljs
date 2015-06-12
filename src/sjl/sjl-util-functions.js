@@ -245,13 +245,13 @@
 
     /**
      * Retruns a boolean based on whether a key on an object has an empty value or is empty (not set, undefined, null)
-     * @function module:sjl.isEmptyObjKey
+     * @function module:sjl.isEmptyObjKeyOrNotOfType
      * @param obj {Object} - Object to search on.
      * @param key {String} - Key to search for one `obj`.
      * @param type {String} - Optional. {...type} one or more types to search on.
      * @returns {Boolean}
      */
-    sjl.isEmptyObjKeyAndOfType = function (obj, key, type) {
+    sjl.isEmptyObjKeyOrNotOfType = function (obj, key, type) {
         var issetObjKey = arguments.length > 2
             ? sjl.issetObjKeyAndOfType.apply(sjl, arguments) : sjl.issetObjKey(obj, key);
         return !issetObjKey || sjl.empty(obj[key]) || false;
@@ -263,11 +263,11 @@
      * @param obj {Object} - Object to search on.
      * @param key {String} - Key to search for one `obj`.
      * @param type {String} - Optional. {...type} one or more types to search on.
-     * @note Use sjl.isEmptyObjKeyAndOfType when you need to ensure the type as well.  Do not use the type checking
+     * @note Use sjl.isEmptyObjKeyOrNotOfType when you need to ensure the type as well.  Do not use the type checking
      *  facility in this function as that functionality will be removed in a later version.
      * @returns {Boolean}
      */
-    sjl.isEmptyObjKey = sjl.isEmptyObjKeyAndOfType;
+    sjl.isEmptyObjKey = sjl.isEmptyObjKeyOrNotOfType;
 
     /**
      * Takes a namespace string and fetches that location out from
