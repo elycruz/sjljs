@@ -5,12 +5,17 @@
 
     'use strict';
 
+    var sjl = context.sjl;
+
     /**
      * @class sjl.Attributable
      * @extends sjl.Extendable
+     * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @type {void|Object|*}
      */
-    context.sjl.Attributable = context.sjl.Extendable.extend(function Attributable () {},{
+    sjl.Attributable = sjl.Extendable.extend(function Attributable (attributes) {
+        this.attrs(attributes);
+    },{
 
         /**
          * Gets or sets a collection of attributes.
@@ -22,18 +27,18 @@
         attrs: function (attrs) {
             var self = this,
                 retVal = self;
-            switch(context.sjl.classOf(attrs)) {
+            switch(sjl.classOf(attrs)) {
                 case 'Array':
                     retVal = self._getAttribs(attrs);
                     break;
                 case 'Object':
-                    context.sjl.extend(true, self, attrs, true);
+                    sjl.extend(true, self, attrs, true);
                     break;
                 case 'String':
-                    retVal = context.sjl.getValueFromObj(attrs, self);
+                    retVal = sjl.getValueFromObj(attrs, self);
                     break;
                 default:
-                    context.sjl.extend(true, self, attrs, true);
+                    sjl.extend(true, self, attrs, true);
                     break;
             }
             return retVal;
@@ -65,7 +70,7 @@
             for (attrib in attrsList) {
                 attrib = attrsList[attrib];
                 out[attrib] = typeof self[attrib] !== 'undefined'
-                    ? context.sjl.getValueFromObj(attrib, self) : null;
+                    ? sjl.getValueFromObj(attrib, self) : null;
             }
 
             // Return queried attributes

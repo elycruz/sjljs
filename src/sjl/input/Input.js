@@ -52,7 +52,7 @@
              * This is a crude implementation
              * @todo review if we really want to have fallback value
              *      functionality for javascript
-             * @returns {boolean}
+             * @returns {Boolean}
              */
             isValid: function (value) {
 

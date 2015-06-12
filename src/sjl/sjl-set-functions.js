@@ -2,6 +2,8 @@
  * Created by Ely on 5/24/2014.
  * Cartesian functions copied from "Javascript the definitive guide"
  * getValueFromObj and setValueOnObj are not from "Javascript ..."
+ * @note using legacy getters and setters from within `extend` method requires a refactor
+ * as it does not work with the deep option and should.
  */
 
 'use strict';
@@ -12,201 +14,238 @@
      * Used by sjl.extend definition
      * @type {Function}
      */
-    var extend,
-        getOwnPropertyDescriptor = typeof Object.getOwnPropertyDescriptor === 'function' ? Object.getOwnPropertyDescriptor : null;
+    var getOwnPropertyDescriptor =
+            typeof Object.getOwnPropertyDescriptor === 'function'
+                ? Object.getOwnPropertyDescriptor : null,
+        sjl = context.sjl;
 
-    if (typeof context.sjl.getValueFromObj !== 'function') {
-        /**
-         * Searches obj for key and returns it's value.  If value is a function
-         * calls function, with optional `args`, and returns it's return value.
-         * If `raw` is true returns the actual function if value found is a function.
-         * @function module:sjl.getValueFromObj
-         * @param key {String} The hash key to search for
-         * @param obj {Object} the hash to search within
-         * @param args {Array} optional the array to pass to value if it is a function
-         * @param raw {Boolean} optional whether to return value even if it is a function
-         * @todo allow this function to use getter function for key if it exists
-         * @returns {*}
-         */
-        context.sjl.getValueFromObj = function (key, obj, args, raw) {
-            args = args || null;
-            raw = raw || false;
-            var retVal = key.indexOf('.') !== -1 ? context.sjl.namespace(key, obj) :
-                    (typeof obj[key] !== 'undefined' ? obj[key] : null);
-            if (context.sjl.classOfIs(retVal, 'Function') && context.sjl.empty(raw)) {
-                retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
-            }
-            return retVal;
-        };
-    }
+    /**
+     * Checks if object has method key passed.
+     * @function module:sjl.hasMethod
+     * @param obj {Object|*} - Object to search on.
+     * @param method - Method name to search for.
+     * @returns {Boolean}
+     */
+    sjl.hasMethod = function (obj, method) {
+        return !sjl.isEmptyObjKey(obj, method, 'Function');
+    };
 
-    if (typeof context.sjl.setValueOnObj !== 'function') {
-        /**
-         * Sets a key to value on obj.
-         * @function module:sjl.setValueOnObj
-         * @param key {String} - Key to search for (can be a dot
-         * separated string 'all.your.base' will traverse {all: {your: {base: {...}}})
-         * @param value {*} - Value to set on obj
-         * @param obj {Object} - Object to set key to value on
-         * @returns {*|Object} returns result of setting key to value on obj or obj
-         * if no value resulting from set operation
-         */
-        context.sjl.setValueOnObj = function (key, value, obj) {
-            // Get qualified setter function name
-            var overloadedSetterFunc = context.sjl.camelCase(key, false),
-                setterFunc = 'set' + context.sjl.camelCase(key, true),
-                retVal = obj;
+    /**
+     * Returns whether `obj` has a getter method for key passed in.
+     * Method formats searched for: getKeyName or keyName
+     * @function module:sjl.hasGetterMethodForKey
+     * @param obj {Object|*} - Object to search on.
+     * @param key - Key to normalize to method name to search for.
+     * @returns {Boolean}
+     */
+    sjl.hasGetterMethodForKey = function (obj, key) {
+        // Camel case and uppercase first letter
+        key = sjl.camelCase(key, true);
+        return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'get' + key);
+    };
 
+    /**
+     * Returns whether `obj` has a setter method for key passed in.
+     * Method formats searched for: setKeyName or keyName
+     * @function module:sjl.hasSetterMethodForKey
+     * @param obj {Object|*} - Object to search on.
+     * @param key - Key to normalize to method name to search for.
+     * @returns {Boolean}
+     */
+    sjl.hasSetterMethodForKey = function (obj, key) {
+        // Camel case and uppercase first letter
+        key = sjl.camelCase(key, true);
+        return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'set' + key);
+    };
 
-            // Else set the value on the obj
-            if (key.indexOf('.') !== -1) {
-                retVal = context.sjl.namespace(key, obj, value);
-            }
+    /**
+     * Searches obj for key and returns it's value.  If value is a function
+     * calls function, with optional `args`, and returns it's return value.
+     * If `raw` is true returns the actual function if value found is a function.
+     * @function module:sjl.getValueFromObj
+     * @param key {String} The hash key to search for
+     * @param obj {Object} the hash to search within
+     * @param args {Array} optional the array to pass to value if it is a function
+     * @param raw {Boolean} optional whether to return value even if it is a function
+     * @todo allow this function to use getter function for key if it exists
+     * @returns {*}
+     */
+    sjl.getValueFromObj = function (key, obj, args, raw) {
+        args = args || null;
+        raw = raw || false;
+        var retVal = null;
 
-            // If obj has a setter function for key, call it
-            else if (!context.sjl.isEmptyObjKey(obj, setterFunc, 'Function')) {
-                retVal = obj[setterFunc](value);
-            }
+        // Resolve return value
+        if (key.indexOf('.') !== -1) {
+            retVal = sjl.namespace(key, obj);
+        }
+        else if (typeof obj[key] !== 'undefined') {
+            retVal = obj[key];
+        }
 
-            else if (!context.sjl.isEmptyObjKey(obj, overloadedSetterFunc, 'Function')) {
-                retVal = obj[overloadedSetterFunc](value);
-            }
+        // Decide what to do if return value is a function
+        if (sjl.classOfIs(retVal, 'Function') && sjl.empty(raw)) {
+            retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
+        }
 
-            else {
-                obj[key] = typeof value !== 'undefined' ? value : null;
-            }
+        return retVal;
+    };
 
-            // Return result of setting value on obj, else return obj
-            return retVal;
-        };
-    }
+    /**
+     * Sets a key to value on obj.
+     * @function module:sjl.setValueOnObj
+     * @param key {String} - Key to search for (can be a dot
+     * separated string 'all.your.base' will traverse {all: {your: {base: {...}}})
+     * @param value {*} - Value to set on obj
+     * @param obj {Object} - Object to set key to value on
+     * @returns {*|Object} returns result of setting key to value on obj or obj
+     * if no value resulting from set operation
+     */
+    sjl.setValueOnObj = function (key, value, obj) {
+        // Get qualified setter function name
+        var overloadedSetterFunc = sjl.camelCase(key, false),
+            setterFunc = 'set' + sjl.camelCase(key, true),
+            retVal = obj;
 
-    if (typeof context.sjl.extend === 'undefined') {
-        /**
-         * Copy the enumerable properties of p to o, and return o.
-         * If o and p have a property by the same name, o's property is overwritten.
-         * This function does not handle getters and setters or copy attributes but
-         * does search for setter methods in the format "setPropertyName" and uses them
-         * if they are available for property `useLegacyGettersAndSetters` is set to true.
-         * @param o {mixed} - *object to extend
-         * @param p {mixed} - *object to extend from
-         * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
-         * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use sjl.setValueOnObj for setting values (only works if not using the `deep` the feature or `deep` is `false`)
-         * @returns {*} - returns o
-         */
-        extend = function (o, p, deep, useLegacyGettersAndSetters) {
-            deep = deep || false;
-            useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
+        // Else set the value on the obj
+        if (key.indexOf('.') !== -1) {
+            retVal = sjl.namespace(key, obj, value);
+        }
+        // If obj has a setter function for key, call it
+        else if (sjl.hasMethod(obj, setterFunc)) {
+            retVal = obj[setterFunc](value);
+        }
+        else if (sjl.hasMethod(obj, overloadedSetterFunc)) {
+            retVal = obj[overloadedSetterFunc](value);
+        }
+        else {
+            obj[key] = typeof value !== 'undefined' ? value : null;
+        }
 
-            var prop, propDescription;
+        // Return result of setting value on obj, else return obj
+        return retVal;
+    };
 
-            // If `o` or `p` are not set bail
-            if (!sjl.isset(o) || !sjl.isset(p)) {
-                return o;
-            }
+    /**
+     * Copy the enumerable properties of p to o, and return o.
+     * If o and p have a property by the same name, o's property is overwritten.
+     * This function does not handle getters and setters or copy attributes but
+     * does search for setter methods in the format "setPropertyName" and uses them
+     * if they are available for property `useLegacyGettersAndSetters` is set to true.
+     * @param o {mixed} - *object to extend
+     * @param p {mixed} - *object to extend from
+     * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use sjl.setValueOnObj for setting values (only works if not using the `deep` the feature or `deep` is `false`)
+     * @returns {*} - returns o
+     */
+     function extend (o, p, deep, useLegacyGettersAndSetters) {
+        deep = deep || false;
+        useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
-            for (prop in p) { // For all props in p.
+        var prop, propDescription;
 
-                // If property is present on target (o) and is not writable, skip iteration
-                if (getOwnPropertyDescriptor) {
-                    propDescription = getOwnPropertyDescriptor(o, prop);
-                    if (propDescription && !propDescription.writable) {
-                        continue;
-                    }
+        // If `o` or `p` are not set bail
+        if (!sjl.isset(o) || !sjl.isset(p)) {
+            return o;
+        }
+
+        for (prop in p) { // For all props in p.
+
+            // If property is present on target (o) and is not writable, skip iteration
+            if (getOwnPropertyDescriptor) {
+                propDescription = getOwnPropertyDescriptor(o, prop);
+                if (propDescription && !propDescription.writable) {
+                    continue;
                 }
+            }
 
-                if (deep && !useLegacyGettersAndSetters) {
-                    if (!context.sjl.empty(o[prop])
-                        && !context.sjl.empty(o[prop])
-                        && context.sjl.classOfIs(o[prop], 'Object')
-                        && context.sjl.classOfIs(p[prop], 'Object')) {
-                        context.sjl.extend(deep, o[prop], p[prop]);
-                    }
-                    else {
-                        o[prop] = p[prop];
-                    }
-                }
-                else if (useLegacyGettersAndSetters) {
-                    context.sjl.setValueOnObj(prop,
-                        context.sjl.getValueFromObj(prop, p), o); // Add the property to o.
+            if (deep && !useLegacyGettersAndSetters) {
+                if (!sjl.empty(o[prop])
+                    && !sjl.empty(o[prop])
+                    && sjl.classOfIs(o[prop], 'Object')
+                    && sjl.classOfIs(p[prop], 'Object')) {
+                    sjl.extend(deep, o[prop], p[prop]);
                 }
                 else {
                     o[prop] = p[prop];
                 }
             }
-            return o;
-        };
-
-        /**
-         * Extends first object passed in with all other object passed in after.
-         * First param could be a boolean indicating whether or not to perform a deep extend.
-         * Last param could also be a boolean indicating whether to use legacy setters if they are available
-         * when extending one object with another.
-         *
-         * @example
-         *  var o = {setGreeting: v => this.greeting = 'Hello ' + v},
-         *      otherObject = {greeting: 'Junior'};
-         *  // Calls o.setGreeting when merging otherObject because `true` was passed in
-         *  // as the last parameter
-         *  sjl.extend(o, otherObject, true);
-         *
-         * @function module:sjl.extend
-         * @param [, boolean, obj] {Object|Boolean} - If boolean, causes `extend` to perform a deep extend.  Optional.
-         * @param [, obj, obj] {Object} - Objects to hierarchically extend.
-         * @param [, boolean] {Boolean} - Optional.
-         * @returns {Object} - Returns first object passed in.
-         */
-        context.sjl.extend = function () {
-            // Return if no arguments
-            if (arguments.length === 0) {
-                return;
+            else if (useLegacyGettersAndSetters) {
+                sjl.setValueOnObj(prop,
+                    sjl.getValueFromObj(prop, p), o); // Add the property to o.
             }
-
-            var args = context.sjl.argsToArray(arguments),
-                deep = context.sjl.extractBoolFromArrayStart(args),
-                useLegacyGettersAndSetters = context.sjl.extractBoolFromArrayEnd(args),
-                arg0 = args.shift(),
-                arg;
-
-            // Extend object `0` with other objects
-            for (arg in args) {
-                arg = args[arg];
-
-                // Extend `arg0` if `arg` is an object
-                if (sjl.classOfIs(arg, 'Object')) {
-                    extend(arg0, arg, deep, useLegacyGettersAndSetters);
-                }
+            else {
+                o[prop] = p[prop];
             }
-
-            return arg0;
-        };
+        }
+        return o;
     }
 
-    if (typeof context.sjl.clone !== 'function') {
-        /**
-         * Returns copy of object.
-         * @function module:sjl.clone
-         * @param obj {Object}
-         * @returns {*} - Cloned object.
-         */
-        context.sjl.clone = function (obj) {
-            return  context.sjl.extend(true, {}, obj);
-        };
-    }
+    /**
+     * Extends first object passed in with all other object passed in after.
+     * First param could be a boolean indicating whether or not to perform a deep extend.
+     * Last param could also be a boolean indicating whether to use legacy setters if they are available
+     * when extending one object with another.
+     *
+     * @example
+     *  var o = {setGreeting: v => this.greeting = 'Hello ' + v},
+     *      otherObject = {greeting: 'Junior'};
+     *  // Calls o.setGreeting when merging otherObject because `true` was passed in
+     *  // as the last parameter
+     *  sjl.extend(o, otherObject, true);
+     *
+     * @function module:sjl.extend
+     * @param [, Boolean, obj] {Object|Boolean} - If boolean, causes `extend` to perform a deep extend.  Optional.
+     * @param [, obj, obj] {Object} - Objects to hierarchically extend.
+     * @param [, Boolean] {Boolean} - Optional.
+     * @returns {Object} - Returns first object passed in.
+     */
+    sjl.extend = function () {
+        // Return if no arguments
+        if (arguments.length === 0) {
+            return;
+        }
 
-    if (typeof context.sjl.jsonClone !== 'function') {
-        /**
-         * Returns copy of object using JSON stringify/parse.
-         * @function module:sjl.jsonClone
-         * @param obj {Object} - Object to clone.
-         * @returns {*} - Cloned object.
-         */
-        context.sjl.jsonClone = function (obj) {
-            return JSON.parse(JSON.stringify(obj));
-        };
-    }
+        var args = sjl.argsToArray(arguments),
+            deep = sjl.extractBoolFromArrayStart(args),
+            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),
+            arg0 = args.shift(),
+            arg;
 
-//    if (typeof context.sjl.merge === 'undefined') {
+        // Extend object `0` with other objects
+        for (arg in args) {
+            arg = args[arg];
+
+            // Extend `arg0` if `arg` is an object
+            if (sjl.classOfIs(arg, 'Object')) {
+                extend(arg0, arg, deep, useLegacyGettersAndSetters);
+            }
+        }
+
+        return arg0;
+    };
+
+    /**
+     * Returns copy of object.
+     * @function module:sjl.clone
+     * @param obj {Object}
+     * @returns {*} - Cloned object.
+     */
+    sjl.clone = function (obj) {
+        return  sjl.extend(true, {}, obj);
+    };
+
+    /**
+     * Returns copy of object using JSON stringify/parse.
+     * @function module:sjl.jsonClone
+     * @param obj {Object} - Object to clone.
+     * @returns {*} - Cloned object.
+     */
+    sjl.jsonClone = function (obj) {
+        return JSON.parse(JSON.stringify(obj));
+    };
+
+//    if (typeof sjl.merge === 'undefined') {
         /**
          * Copy the enumerable properties of p to o, and return o.
          * If o and p have a property by the same name, o's property is left alone.
@@ -215,7 +254,7 @@
          * @param p {mixed} - *object to merge from
          * @returns {*} - returns o
          */
-//        context.sjl.merge = function (o, p) {
+//        sjl.merge = function (o, p) {
 //            for (prop in p) { // For all props in p.
 //                if (o.hasOwnProperty[prop]) continue; // Except those already in o.
 //                o[prop] = p[prop]; // Add the property to o.
@@ -224,12 +263,12 @@
 //        };
 //    }
 
-//    if (typeof context.sjl.subtract === 'undefined') {
+//    if (typeof sjl.subtract === 'undefined') {
         /**
          * For each property of p, delete the property with the same name from o.
          * Return o.
          */
-//        context.sjl.subtract = function (o, p) {
+//        sjl.subtract = function (o, p) {
 //            for (prop in p) { // For all props in p
 //                delete o[prop]; // Delete from o (deleting a
 //                // nonexistent prop is harmless)
@@ -238,12 +277,12 @@
 //        };
 //    }
 
-//    if (typeof context.sjl.restrict === 'undefined') {
+//    if (typeof sjl.restrict === 'undefined') {
         /**
          * Remove properties from o if there is not a property with the same name in p.
          * Return o.
          */
-//        context.sjl.restrict = function (o, p) {
+//        sjl.restrict = function (o, p) {
 //            for (prop in o) { // For all props in o
 //                if (!(prop in p)) delete o[prop]; // Delete if not in p
 //            }
@@ -251,24 +290,24 @@
 //        };
 //    }
 
-//    if (typeof context.sjl.union === 'undefined') {
+//    if (typeof sjl.union === 'undefined') {
         /**
          * Return a new object that holds the properties of both o and p.
          * If o and p have properties by the same name, the values from p are used.
          */
-//        context.sjl.union = function (o, p, deep, useLegacyGettersAndSetters) {
-//            return context.sjl.extend(deep, context.sjl.clone(o), p, useLegacyGettersAndSetters);
+//        sjl.union = function (o, p, deep, useLegacyGettersAndSetters) {
+//            return sjl.extend(deep, sjl.clone(o), p, useLegacyGettersAndSetters);
 //        };
 //    }
 
-//    if (typeof context.sjl.intersection === 'undefined') {
+//    if (typeof sjl.intersection === 'undefined') {
         /**
          * Return a new object that holds only the properties of o that also appear
          * in p. This is something like the intersection of o and p, but the values of
          * the properties in p are discarded
          */
-//        context.sjl.intersection = function (o, p) {
-//            return context.sjl.restrict(context.sjl.clone(o), p);
+//        sjl.intersection = function (o, p) {
+//            return sjl.restrict(sjl.clone(o), p);
 //        };
 //    }
 

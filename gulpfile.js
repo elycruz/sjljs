@@ -124,7 +124,7 @@ gulp.task('watch', function () {
     ]);
 
     gulp.watch(['readme-fragments/*.md', 'changelog-fragments/*.md'], [
-        'changelog'
+        'readme'
     ]);
 
 });

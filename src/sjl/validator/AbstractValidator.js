@@ -26,7 +26,7 @@
                     value: null
                 });
 
-                // Merge custome templates in if they are set
+                // Merge custom templates in if they are set
                 if (context.sjl.isset(options.customMessageTemplates)) {
                     customTemplates = options.customMessageTemplates;
                     options.customeMessageTemplates = null;

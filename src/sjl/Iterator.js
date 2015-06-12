@@ -5,12 +5,14 @@
 
     'use strict';
 
+    var sjl = context.sjl;
+
     /**
      * @class sjl.Iterator
      * @extends sjl.Extendable
      * @type {void|Object|*}
      */
-    context.sjl.Iterator = context.sjl.Extendable.extend(
+    sjl.Iterator = sjl.Extendable.extend(
         function Iterator(values, pointer) {
             if (!(this instanceof sjl.Iterator)) {
                 return new sjl.Iterator(values, pointer);
@@ -53,7 +55,7 @@
             getPointer: function (defaultNum) {
                 defaultNum = sjl.classOfIs(defaultNum, 'Number') ?
                     (isNaN(defaultNum) ? 0 : defaultNum) : 0;
-                if (!context.sjl.classOfIs(this.pointer, 'Number')) {
+                if (!sjl.classOfIs(this.pointer, 'Number')) {
                     this.pointer = parseInt(this.pointer, 10);
                     if (isNaN(this.pointer)) {
                         this.pointer = defaultNum;
@@ -63,7 +65,7 @@
             },
 
             getCollection: function () {
-                return context.sjl.classOfIs(this.collection, 'Array') ? this.collection : [];
+                return sjl.classOfIs(this.collection, 'Array') ? this.collection : [];
             }
 
         });
