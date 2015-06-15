@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Fri Jun 12 2015 17:58:07 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Mon Jun 15 2015 09:59:11 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -551,16 +551,30 @@
      * @param args {Array} optional the array to pass to value if it is a function
      * @param raw {Boolean} optional whether to return value even if it is a function
      * @todo allow this function to use getter function for key if it exists
+     * @param noLegacyGetters {Boolean} - Default false (use legacy getters).
+     *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
      * @returns {*}
      */
-    sjl.getValueFromObj = function (key, obj, args, raw) {
+    sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
         args = args || null;
         raw = raw || false;
-        var retVal = null;
+        noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;
+
+        // Get qualified getter function names
+        var overloadedGetterFunc = sjl.camelCase(key, false),
+            getterFunc = 'get' + sjl.camelCase(key, true),
+            retVal = null;
 
         // Resolve return value
         if (key.indexOf('.') !== -1) {
             retVal = sjl.namespace(key, obj);
+        }
+        // If obj has a getter function for key, call it
+        else if (!noLegacyGetters && sjl.hasMethod(obj, getterFunc)) {
+            retVal = obj[getterFunc]();
+        }
+        else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
+            retVal = obj[overloadedGetterFunc]();
         }
         else if (typeof obj[key] !== 'undefined') {
             retVal = obj[key];
@@ -571,6 +585,7 @@
             retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
         }
 
+        // Return result of setting value on obj, else return obj
         return retVal;
     };
 
@@ -644,7 +659,6 @@
                 }
             }
 
-            // Extend deep raw (no legacy getters and setters)
             if (deep) {
                 if (classOf_o_prop === 'Object'
                     && classOf_p_prop === 'Object'
@@ -692,7 +706,7 @@
 
         var args = sjl.argsToArray(arguments),
             deep = sjl.extractBoolFromArrayStart(args),
-            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),
+            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),// Can't remove this until version 0.5 cause it may cause breaking changes in dependant projects
             arg0 = args.shift(),
             arg;
 
@@ -702,7 +716,7 @@
 
             // Extend `arg0` if `arg` is an object
             if (sjl.classOfIs(arg, 'Object')) {
-                extend(arg0, arg, deep, useLegacyGettersAndSetters);
+                extend(arg0, arg, deep);
             }
         }
 
