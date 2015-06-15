@@ -66,16 +66,30 @@
      * @param args {Array} optional the array to pass to value if it is a function
      * @param raw {Boolean} optional whether to return value even if it is a function
      * @todo allow this function to use getter function for key if it exists
+     * @param noLegacyGetters {Boolean} - Default false (use legacy getters).
+     *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
      * @returns {*}
      */
-    sjl.getValueFromObj = function (key, obj, args, raw) {
+    sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
         args = args || null;
         raw = raw || false;
-        var retVal = null;
+        noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;
+
+        // Get qualified getter function names
+        var overloadedGetterFunc = sjl.camelCase(key, false),
+            getterFunc = 'get' + sjl.camelCase(key, true),
+            retVal = null;
 
         // Resolve return value
         if (key.indexOf('.') !== -1) {
             retVal = sjl.namespace(key, obj);
+        }
+        // If obj has a getter function for key, call it
+        else if (!noLegacyGetters && sjl.hasMethod(obj, getterFunc)) {
+            retVal = obj[getterFunc]();
+        }
+        else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
+            retVal = obj[overloadedGetterFunc]();
         }
         else if (typeof obj[key] !== 'undefined') {
             retVal = obj[key];
@@ -86,6 +100,7 @@
             retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
         }
 
+        // Return result of setting value on obj, else return obj
         return retVal;
     };
 
@@ -133,14 +148,14 @@
      * @param o {mixed} - *object to extend
      * @param p {mixed} - *object to extend from
      * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
-     * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use sjl.setValueOnObj for setting values (only works if not using the `deep` the feature or `deep` is `false`)
      * @returns {*} - returns o
      */
-     function extend (o, p, deep, useLegacyGettersAndSetters) {
+     function extend (o, p, deep) {
         deep = deep || false;
-        useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
-        var prop, propDescription;
+        var prop, propDescription,
+            classOf_p_prop,
+            classOf_o_prop;
 
         // If `o` or `p` are not set bail
         if (!sjl.isset(o) || !sjl.isset(p)) {
@@ -148,6 +163,8 @@
         }
 
         for (prop in p) { // For all props in p.
+            classOf_p_prop = sjl.issetObjKey(p, prop) ? sjl.classOf(p[prop]) : 'Empty';
+            classOf_o_prop = sjl.issetObjKey(o, prop) ? sjl.classOf(o[prop]) : 'Empty';
 
             // If property is present on target (o) and is not writable, skip iteration
             if (getOwnPropertyDescriptor) {
@@ -157,25 +174,23 @@
                 }
             }
 
-            if (deep && !useLegacyGettersAndSetters) {
-                if (!sjl.empty(o[prop])
-                    && !sjl.empty(o[prop])
-                    && sjl.classOfIs(o[prop], 'Object')
-                    && sjl.classOfIs(p[prop], 'Object')) {
-                    sjl.extend(deep, o[prop], p[prop]);
+            if (deep) {
+                if (classOf_o_prop === 'Object'
+                    && classOf_p_prop === 'Object'
+                    && !sjl.isEmptyObj(p[prop])) {
+                    extend(o[prop], p[prop], deep);
                 }
                 else {
-                    o[prop] = p[prop];
+                    sjl.setValueOnObj(prop, sjl.getValueFromObj(prop, p, null, true), o);
                 }
             }
-            else if (useLegacyGettersAndSetters) {
-                sjl.setValueOnObj(prop,
-                    sjl.getValueFromObj(prop, p), o); // Add the property to o.
-            }
+
+            // Else set
             else {
                 o[prop] = p[prop];
             }
         }
+
         return o;
     }
 
@@ -206,7 +221,7 @@
 
         var args = sjl.argsToArray(arguments),
             deep = sjl.extractBoolFromArrayStart(args),
-            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),
+            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),// Can't remove this until version 0.5 cause it may cause breaking changes in dependant projects
             arg0 = args.shift(),
             arg;
 
@@ -216,7 +231,7 @@
 
             // Extend `arg0` if `arg` is an object
             if (sjl.classOfIs(arg, 'Object')) {
-                extend(arg0, arg, deep, useLegacyGettersAndSetters);
+                extend(arg0, arg, deep);
             }
         }
 

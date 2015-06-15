@@ -211,7 +211,7 @@
     sjl.empty = function () {
         var retVal, check,
             i, item,
-            args = sjl.argsToArray(arguments);
+            args = arguments;
 
         // If multiple arguments
         if (args.length > 1) {
@@ -242,6 +242,13 @@
 
         return retVal;
     };
+
+    /**
+     * Checks object's own properties to see if it is empty.
+     * @param obj object to be checked
+     * @returns {Boolean}
+     */
+    sjl.isEmptyObj = isEmptyObj;
 
     /**
      * Retruns a boolean based on whether a key on an object has an empty value or is empty (not set, undefined, null)

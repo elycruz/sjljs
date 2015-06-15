@@ -32,13 +32,13 @@
                     retVal = self._getAttribs(attrs);
                     break;
                 case 'Object':
-                    sjl.extend(true, self, attrs, true);
+                    sjl.extend(true, self, attrs);
                     break;
                 case 'String':
                     retVal = sjl.getValueFromObj(attrs, self);
                     break;
                 default:
-                    sjl.extend(true, self, attrs, true);
+                    sjl.extend(true, self, attrs);
                     break;
             }
             return retVal;

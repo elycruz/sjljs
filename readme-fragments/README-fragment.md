@@ -248,6 +248,9 @@ See './tests/for-browser'.
     - [ ] - `sjl.hasMethod`
     - [ ] - `sjl.hasGetterMethod`
     - [ ] - `sjl.hasSetterMethod`
+- [ ] - Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)
+- [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+ right not it is not apparent to people that this is the default behaviour) (code smell).
 
 ### MVP for 0.5.0:
 - [ ] - Write docs for all validator classes.

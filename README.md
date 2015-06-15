@@ -248,6 +248,9 @@ See './tests/for-browser'.
     - [ ] - `sjl.hasMethod`
     - [ ] - `sjl.hasGetterMethod`
     - [ ] - `sjl.hasSetterMethod`
+- [ ] - Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)
+- [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+ right not it is not apparent to people that this is the default behaviour) (code smell).
 
 ### MVP for 0.5.0:
 - [ ] - Write docs for all validator classes.
@@ -291,10 +294,14 @@ See './tests/for-browser'.
 - Added some new methods.
     - `sjl.issetAndOfType`
     - `sjl.issetObjKeyAndOfType`
-    - `sjl.isEmptyObjKeyAndOfType`
+    - `sjl.isEmptyObjKeyOrNotOfType`
     - `sjl.hasMethod`
     - `sjl.hasGetterMethod`
     - `sjl.hasSetterMethod`
 - Started using new methods within sjl-util-* and main classes directly within ./src/sjl.
 - Updated todos in main readme.
 - Rebuilt jsdocs and readme.
+
+### Changelog for 06/15/2015:
+- Updated `sjl.getValueFromObj` to use legacy getter and/or overloaded getter methods if they are available (when searching on `obj`).
+- Rebuilt jsdocs, changelog, readme.
