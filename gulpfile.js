@@ -24,7 +24,7 @@ gulp.task('readme', function () {
         .pipe(concat('changelog.md'))
         .pipe(gulp.dest('./'));
 
-    gulp.src(['readme-fragments/README.md', 'changelog.md'])
+    gulp.src(['readme-fragments/README-fragment.md', 'changelog.md'])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });
