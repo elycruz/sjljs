@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Mon Jun 15 2015 10:15:38 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Thu Jun 18 2015 12:01:44 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -139,10 +139,8 @@
      * @returns {string}
      */
     sjl.classOf = function (value) {
-        var typeofValue = typeof value,
-            retVal;
-
-        if (typeofValue === 'undefined') {
+        var retVal;
+        if (typeof value === 'undefined') {
             retVal = 'Undefined';
         }
         else if (value === null) {
@@ -282,7 +280,7 @@
     sjl.isEmptyObjKeyOrNotOfType = function (obj, key, type) {
         var issetObjKey = arguments.length > 2
             ? sjl.issetObjKeyAndOfType.apply(sjl, arguments) : sjl.issetObjKey(obj, key);
-        return !issetObjKey || sjl.empty(obj[key]) || false;
+        return !issetObjKey || sjl.empty(obj[key]);
     };
 
     /**

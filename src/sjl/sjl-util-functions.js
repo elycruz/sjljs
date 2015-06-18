@@ -118,10 +118,8 @@
      * @returns {string}
      */
     sjl.classOf = function (value) {
-        var typeofValue = typeof value,
-            retVal;
-
-        if (typeofValue === 'undefined') {
+        var retVal;
+        if (typeof value === 'undefined') {
             retVal = 'Undefined';
         }
         else if (value === null) {
@@ -261,7 +259,7 @@
     sjl.isEmptyObjKeyOrNotOfType = function (obj, key, type) {
         var issetObjKey = arguments.length > 2
             ? sjl.issetObjKeyAndOfType.apply(sjl, arguments) : sjl.issetObjKey(obj, key);
-        return !issetObjKey || sjl.empty(obj[key]) || false;
+        return !issetObjKey || sjl.empty(obj[key]);
     };
 
     /**

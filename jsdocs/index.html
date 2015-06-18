@@ -41,7 +41,246 @@
 
 
     <section>
-        <article><h3 id="changelog-for-04-23-2015-">Changelog for 04/23/2015:</h3>
+        <article><p><a href="https://travis-ci.org/elycruz/sjljs"><img src="https://travis-ci.org/elycruz/sjljs.png" alt="Build Status"></a> 
+<a href="http://badge.fury.io/gh/elycruz%2Fsjljs"><img src="https://badge.fury.io/gh/elycruz%2Fsjljs.svg" alt="GitHub version"></a> 
+<a href="http://badge.fury.io/js/sjljs"><img src="https://badge.fury.io/js/sjljs.svg" alt="NPM version"></a>
+<a href="https://david-dm.org/elycruz/sjljs"><img src="https://david-dm.org/elycruz/sjljs.png" alt="Dependencies"></a></p>
+<h1 id="sjljs">sjljs</h1>
+<p>A library for building applications and building libraries from the ground up. </p>
+<p>Not meant to replace popular libraries (Backbone, Underscore, Jquery etc.)
+only meant as a supplement to them.</p>
+<h2 id="sections-in-readme-">Sections in Readme:</h2>
+<ul>
+<li><a href="#components-included">Components Included</a></li>
+<li><a href="#tests">Tests</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#supported-browsers">Supported Browsers</a></li>
+<li><a href="#todos">Todos</a></li>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#changelogs">Changelogs</a></li>
+</ul>
+<h2 id="components-included-">Components included:</h2>
+<ul>
+<li><a href="#classesconstructors">Classes/Constructors</a></li>
+<li><a href="#utilities">Utilities</a></li>
+<li><a href="#set-functions">Set Functions</a></li>
+<li><a href="#oop-util-functions">OOP Util Functions</a></li>
+<li><a href="#composition-helpers">Composition Helpers</a></li>
+</ul>
+<h3 id="classes-constructors">Classes/Constructors</h3>
+<h5 id="sjl-attributable-attributes-object-undefined-sjl-attributable">sjl.Attributable(attributes {Object|undefined}):sjl.Attributable</h5>
+<p>A base attributable constructor which has two methods <code>attr</code> and <code>attrs</code> (for setting and getting multiple attributes 
+jquery style).</p>
+<h5 id="sjl-iterator-values-array-undefined-pointer-number-undefined-sjl-iterator">sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}):sjl.Iterator</h5>
+<p>A simple iterator constructor which mimicks the es6 iterator and the php <code>Iterator</code> class.
+Can be called as a method and acts as a factory method in this case.</p>
+<h5 id="sjl-extendable-constructor-string-function-methods-object-undefined-statics-object-undefined-sjl-extendable">sjl.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}):sjl.Extendable</h5>
+<p>A base extendable constructor with a static <code>extend</code> method that allows you to easily extend constructors; E.g.,</p>
+<pre><code>// SomeConstructor.js
+// Using node, requirejs, browserify or some other AMD/UMD helper (here we&#39;ll use nodejs)
+
+// Make `SomeConstructor` extendable
+module.exports = sjl.Extendable.extend(function SomeConstructor () {}, {
+     someMethod: function () {
+         // Do something here
+     }
+ },
+ {
+     someStaticMethod: function () {
+         // Do something here
+     }
+ });
+
+
+// SomeSuperOtherConstructor.js
+
+// Bring in &#39;SomeOtherConstructor&#39;
+var SomeOtherConstructor = require(&#39;SomeOtherConstructor&#39;);
+
+// Inherits statics and prototype of SomeOtherConstructor and 
+// is also extendable via the static method `extend` 
+module.exports = SomeOtherConstructor.extend(function SomeSuperOtherConstructor () {
+        SomeOtherConstructor.apply(this, arguments);
+    }, {
+        // methods
+    });
+</code></pre><h5 id="sjl-optionable-obj-object-undefined-sjl-optionable">sjl.Optionable(...obj {Object|undefined}):sjl.Optionable</h5>
+<p>A simple Optionable class with <code>set</code>, <code>get</code>, <code>merge</code>, and <code>has</code> methods meant to be similiar to Backbone&#39;s Model constructor
+but with some enhanced methods on it and without the ajax stuff (barebones object).</p>
+<h6 id="has-value-string-boolean">has (value {String}) :Boolean</h6>
+<p>Takes a regular string or a namespaced string to find out if value exists on the Optionable&#39;s object <code>options</code> object.</p>
+<h6 id="get-key-string-null-">get (key {String}) :{null|*}</h6>
+<p>Takes a regular string or a namespaced one (&#39;hello.world.some.key&#39;) and pulls out the value from Optionable&#39;s <code>options</code> object.
+  Returns null if <code>key</code> cannot be found on Optionable.</p>
+<h6 id="set-key-string-value-optionable">set (key {String}, value {*}) :Optionable</h6>
+<p>Takes a key and a value param or an object (sets multiple key value pairs in this case).<br>Key value can be a namespaced string.  Also if first value is an object then set uses <code>sjl.setValueOnObj</code> 
+(see description of this method above) to set values on this Optionable.</p>
+<h6 id="merge-obj-object-obj-object-undefined-uselegacysetterandgetters-boolean-undefined-optionable">merge (obj {Object}, ...obj {Object|undefined}, useLegacySetterAndGetters {Boolean|undefined}) :Optionable</h6>
+<p>Merges all <code>Object</code>s passed into it to Optionable&#39;s <code>options</code> object recursively (deeply).  If last param in arguments is a Boolean
+    then checks, extracts this boolean and passes it on to <code>sjl.extend</code> (in an attempt to invoke <code>extend</code>&#39;s 
+    useLegacyGettersAndSetters` feature if the boolean is true and not invoke the feature to do the merge if the
+     boolean is false).</p>
+<h3 id="utilities-">Utilities:</h3>
+<h5 id="sjl-argstoarray-arguments-arguments-array">sjl.argsToArray(arguments {Arguments}):Array</h5>
+<p>Converts arguments to an array;  E.g., 
+<code>sjl.argsToArray(arguments);</code> -&gt; returns arguments as an array.</p>
+<h5 id="sjl-camelcase-str-string-ucasefirst-boolean-undefined-string">sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}):String</h5>
+<p>Camel Cases a string;<br><code>sjl.camelCase(&#39;hello-world&#39;, boolean);</code> -&gt; returns &quot;helloWorld&quot; if <code>boolean</code> is <code>false</code>
+ else returns &quot;HelloWorld&quot; if <code>boolean</code> is <code>true</code></p>
+<h5 id="sjl-classof-obj-string">sjl.classOf(obj {*}):String</h5>
+<p>Gives you a String representation of the class of value;  E.g., </p>
+<pre><code>sjl.classOf(&quot;hello&quot;) === &#39;String&#39; // true
+sjl.classOf(new Map()) === &#39;Map&#39;  // true
+// etc.
+</code></pre><h5 id="sjl-classofis-obj-classtypestr-string-boolean">sjl.classOfIs(obj {*}, ...classTypeStr {String}):Boolean</h5>
+<p>Checks whether <code>obj</code> is of one of the <code>classTypeStr</code>&#39;s passed in;  E.g., </p>
+<pre><code>sjl.classOfIs(0, &#39;String&#39;, &#39;Number&#39;) // true.  Matches &#39;Number&#39;.
+sjl.classOfIs([], &#39;Array&#39;) === true  // true
+sjl.classOfIs([], &#39;Number&#39;, &#39;Array&#39;) // true.  Matches &#39;Array&#39;.
+</code></pre><h5 id="sjl-empty-value-boolean">sjl.empty(...value {*}):Boolean</h5>
+<p>Opinionated <code>empty</code> check.  Checks if <code>false</code>, <code>0</code>, <code>null</code>, <code>undefined</code>, empty array, or empty object is true for one
+ or one of many values.</p>
+<pre><code>sjl.empty(false); // true
+sjl.empty(true);  // false
+sjl.empty(0, false, null, undefined, [], {});    // true
+sjl.empty(1, true, {prop: &#39;value&#39;}, [&#39;value&#39;]);  // false
+</code></pre><h5 id="sjl-extractboolfromarrayend-list-array-boolean">sjl.extractBoolFromArrayEnd(list {Array}):Boolean</h5>
+<p>Pops a boolean off of the end of an array and returns it.<br>If no boolean is found there returns <code>false</code>.</p>
+<h5 id="sjl-extractboolfromarraystart-list-array-boolean">sjl.extractBoolFromArrayStart(list {Array}):Boolean</h5>
+<p>Shifts a boolean off of the beginning of an array and returns it.<br>If no boolean is found at there returns <code>false</code>.</p>
+<h5 id="sjl-isset-value-boolean">sjl.isset(...value {*}):Boolean</h5>
+<p>Checks for a value that is not <code>null</code> or <code>undefined</code> and returns true if it finds one.  Works for one or one of many values.</p>
+<pre><code>sjl.isset(someUndefinedValue)           // false.  Value is not set.
+sjl.isset(null, someUndefinedValue)     // false.  None of the values is set.
+sjl.isset(null, 1, someUndefinedValue)  // true.   &#39;1&#39; is a non empty value.
+</code></pre><h5 id="sjl-lcasefirst-str-string-string">sjl.lcaseFirst(str {String}):String</h5>
+<p>Lowercases the first character of a string;  E.g., 
+<code>sjl.lcaseFirst (&#39;Hello&#39;)</code> returns &#39;hello&#39;.</p>
+<h5 id="sjl-namespace-key-string-objtosearch-object-valuetoset-undefined-objtosearch">sjl.namespace(key {String}, objToSearch {Object}, valueToSet {*|undefined}):objToSearch</h5>
+<p>For getting and setting values on hash objects (allows deep searching by namespace string (<code>&#39;all.your.base&#39;</code>
+ finds or sets <code>{all: {your: {base: ...}}}</code>).</p>
+<h5 id="sjl-isemptyobjkey-obj-object-key-string-type-string-undefined-boolean">sjl.isEmptyObjKey(obj {Object}, key {String}, ...type {String|undefined}):Boolean</h5>
+<p>Does everything <code>sjl.issetObjKey</code> does.  In addition checks whether <code>obj[key]</code>&#39;s value is empty ([0, null, undefined, [], {}, false]) or not.
+and whether <code>obj[key]</code> is of one of the class strings passed in (<code>...type</code>).</p>
+<pre><code>sjl.isEmptyObjKey({hello: &#39;world&#39;}, &#39;hello&#39;);   // false
+sjl.isEmptyObjKey({hello: 0}, &#39;hello&#39;);         // false
+sjl.isEmptyObjKey({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;);  // true 
+sjl.isEmptyObjKey({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;, &#39;String&#39;);  // false
+</code></pre><p><strong>Note</strong> - This method will be refactored in a future release to </p>
+<h5 id="sjl-issetobjkey-obj-object-key-string-boolean">sjl.issetObjKey(obj {Object}, key {String}):Boolean</h5>
+<p>Checks whether an object has own property for a key and that the key isset (has a value other than null or undefined).</p>
+<h5 id="sjl-ucasefirst-str-string-string">sjl.ucaseFirst(str {String}):String</h5>
+<p>Uppercases the first character of a string;  E.g., <code>sjl.ucaseFirst(&#39;hello&#39;);</code>  returns &#39;Hello&#39;.</p>
+<h3 id="set-functions-">Set Functions:</h3>
+<h5 id="sjl-extend-obj-object-boolean-obj-object-undefined-uselegacygettersandsetters-boolean-undefined-object">sjl.extend(obj {Object|Boolean}, ...obj {Object|undefined}, useLegacyGettersAndSetters {Boolean|undefined}) : Object</h5>
+<p>Similiar to JQuery&#39;s <code>extend</code> method except with the following method signature: 
+<code>extend((Boolean|*)[,obj, obj],[Boolean]) : Object</code></p>
+<ul>
+<li>If the first param is a Boolean then the <code>deep</code> option is set (extends first object found from passed in params (arguments[1]) deeply)</li>
+<li>Where <code>*</code> is any type of object with type &quot;Object&quot;.</li>
+<li><code>obj</code> is any type of object of type &quot;Object&quot;.</li>
+<li>and the last <code>[Boolean]</code> (optional boolean) is passed in to force
+the extend method to use any composite styled set and get methods that may be available
+for the key being merged on to the first object;  composite styled = <code>set{keyName}</code> | <code>setKeyName</code> or also
+if <code>keyName</code> is a function on the object to extend then it gets called as a setter if <code>extend</code>&#39;s last param is a Boolean.</li>
+</ul>
+<p>This last item in the list above allows for interesting objects which inherit a waterfall
+like property on instantiation (if you use the <code>extend</code> method to merge passed in options from within the constructor).</p>
+<h3 id="oop-util-functions-">OOP Util functions:</h3>
+<h5 id="sjl-copyofproto-prototype-prototype-object-object-prototype">sjl.copyOfProto(prototype {Prototype|Object}):Object|Prototype</h5>
+<p>Creates a copy of a prototype (backward compatible to older IEs).</p>
+<h5 id="sjl-definesubclass-superclass-function-constructor-function-methods-object-statics-object-function">sjl.defineSubClass(superclass {Function}, constructor {Function}, methods {Object}, statics {Object}) :Function</h5>
+<p>Creates a sub class of a constructor and makes it extendable via the static method <code>extend</code>;  E.g., pretty much 
+creates <code>sjl.Extendable</code>.</p>
+<h5 id="sjl-thrownotoftypeerror-value-paramname-string-funcname-string-expectedtype-string-void">sjl.throwNotOfTypeError(value {*}, paramName {String}, funcName {String}, expectedType {String}) :Void</h5>
+<p>This method is used internally but is tentative and may be removed later.</p>
+<h4 id="composition-helpers-">Composition helpers:</h4>
+<h5 id="sjl-getvaluefromobj-key-string-obj-object-args-undefined-raw-boolean-undefined-">sjl.getValueFromObj (key {String}, obj {Object}, args {<em>|undefined}, raw {Boolean|undefined}) :</em></h5>
+<p>Allows getting value by namespace string (ex: <code>&#39;some.object.deep&#39;</code>) also if return value is a function automatically 
+calls it and allows you to pass args to use with it also allows for fetching the function raw if <code>raw</code> is <code>true</code>.</p>
+<h5 id="sjl-setvalueonobj-key-string-value-obj-object-object-">sjl.setValueOnObj (key {String}, value {<em>}, obj {Object}) :{Object|</em>}</h5>
+<p>Allows setting a value on an object by namespace string or conjoined setter function (setPropertyName) or sets value 
+directly if no setter or namespace string found/used.</p>
+<h3 id="tests-">Tests:</h3>
+<ul>
+<li>Tests for all components listed under &quot;Utilities&quot; above.</li>
+<li>Tests to be run on server.  See &#39;./tests/for-server&#39;.</li>
+<li>Tests to be run in browser (requires running <code>bower install</code> in root directory).
+See &#39;./tests/for-browser&#39;.</li>
+</ul>
+<h2 id="requirements-">Requirements:</h2>
+<ul>
+<li>Javascript versions ecmascript 3+</li>
+</ul>
+<h2 id="supported-browsers-">Supported browsers:</h2>
+<ul>
+<li>ie8+, and all other browsers</li>
+</ul>
+<h2 id="todos-">Todos:</h2>
+<h3 id="mvp-todos-">MVP Todos:</h3>
+<ul>
+<li>[X] - Write tests for:<ul>
+<li>[X] - <code>sjl.Optionable</code>.</li>
+<li>[ ] - <code>sjl.Attributable</code>.</li>
+<li>[X] - <code>sjl.getValueFromObj</code></li>
+<li>[X] - <code>sjl.setValueOnObj</code></li>
+<li>[X] - <code>sjl.extend</code> (for new features)</li>
+<li>[ ] - <code>sjl.Iterator</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="mvp-for-0-4-9-">Mvp for 0.4.9:</h3>
+<ul>
+<li>[ ] - Write tests for:<ul>
+<li>[ ] - <code>sjl.issetAndOfType</code></li>
+<li>[ ] - <code>sjl.issetObjKeyAndOfType</code></li>
+<li>[ ] - <code>sjl.isEmptyObjKeyAndOfType</code></li>
+<li>[ ] - <code>sjl.hasMethod</code></li>
+<li>[ ] - <code>sjl.hasGetterMethod</code></li>
+<li>[ ] - <code>sjl.hasSetterMethod</code></li>
+</ul>
+</li>
+<li>[ ] - Write doc sections in main readme for:<ul>
+<li>[ ] - <code>sjl.issetAndOfType</code></li>
+<li>[ ] - <code>sjl.issetObjKeyAndOfType</code></li>
+<li>[ ] - <code>sjl.isEmptyObjKeyAndOfType</code></li>
+<li>[ ] - <code>sjl.hasMethod</code></li>
+<li>[ ] - <code>sjl.hasGetterMethod</code></li>
+<li>[ ] - <code>sjl.hasSetterMethod</code></li>
+</ul>
+</li>
+<li>[ ] - Change <code>sjl.empty</code> to <code>sjl.isEmpty</code> (maybe for version 0.5.0)</li>
+<li>[ ] - Change <code>sjl.getValueOnObj</code>&#39;s <code>raw</code> param to have a default <code>true</code> (needs to be set to true by default cause
+right not it is not apparent to people that this is the default behaviour) (code smell).</li>
+</ul>
+<h3 id="mvp-for-0-5-0-">MVP for 0.5.0:</h3>
+<ul>
+<li>[ ] - Write docs for all validator classes.</li>
+<li>[ ] - Write tests for all validator classes:<ul>
+<li>[ ] - <code>sjl.NumberValidator</code>.</li>
+<li>[ ] - <code>sjl.AlphaNumValidator</code>.</li>
+</ul>
+</li>
+<li>[ ] - Write a filter chain class.</li>
+<li>[ ] - Change interface check to check for &#39;isValid&#39; and &#39;message&#39;
+  properties on a &#39;AbstractValidator&#39; class passed to a &#39;ValidatorChain&#39; class.</li>
+<li>[ ] - Review entirety of library and look for places that could be refactored.</li>
+<li>[ ] - Refactor the <code>input</code> package</li>
+<li>[ ] - Refactor the <code>validator</code> package</li>
+<li>[X] - Update readme to a more readable format.</li>
+<li>[X] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).</li>
+<li>[X] - Changelog.</li>
+</ul>
+<h3 id="mvp-for-0-5-1-">MVP for 0.5.1+</h3>
+<ul>
+<li>[X] - Add changelog.md in main readme.</li>
+</ul>
+<h2 id="license-">License:</h2>
+<p><a href="http://www.gnu.org/licenses/gpl-2.0.html" title="http://www.gnu.org/licenses/gpl-2.0.html">GPL v2-3+</a> &amp;
+<a href="http://opensource.org/licenses/MIT" title="http://opensource.org/licenses/MIT">MIT</a></p>
+<h2 id="changelog">Changelog</h2>
+<h3 id="changelog-for-04-23-2015-">Changelog for 04/23/2015:</h3>
 <ul>
 <li>Updated tests for <code>sjl.PostCodeValidator</code>.</li>
 </ul>
@@ -72,6 +311,11 @@
 <li>Updated todos in main readme.</li>
 <li>Rebuilt jsdocs and readme.</li>
 </ul>
+<h3 id="changelog-for-06-15-2015-">Changelog for 06/15/2015:</h3>
+<ul>
+<li>Updated <code>sjl.getValueFromObj</code> to use legacy getter and/or overloaded getter methods if they are available (when searching on <code>obj</code>).</li>
+<li>Rebuilt jsdocs, changelog, readme.</li>
+</ul>
 </article>
     </section>
 
@@ -89,7 +333,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Jun 15 2015 10:15:39 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Jun 18 2015 12:01:46 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
