@@ -29,15 +29,15 @@ only meant as a supplement to them.
 
 ### Classes/Constructors
 
-##### sjl.Attributable(attributes {Object|undefined}):sjl.Attributable
+##### sjl.Attributable(attributes {Object|undefined}) :sjl.Attributable
 A base attributable constructor which has two methods `attr` and `attrs` (for setting and getting multiple attributes 
 jquery style).
 
-##### sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}):sjl.Iterator
+##### sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}) :sjl.Iterator
 A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 Can be called as a method and acts as a factory method in this case.
 
-##### sjl.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}):sjl.Extendable
+##### sjl.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable
 A base extendable constructor with a static `extend` method that allows you to easily extend constructors; E.g.,
 
 ```
@@ -71,7 +71,7 @@ module.exports = SomeOtherConstructor.extend(function SomeSuperOtherConstructor 
     });
 ```
 
-##### sjl.Optionable(...obj {Object|undefined}):sjl.Optionable
+##### sjl.Optionable(...obj {Object|undefined}) :sjl.Optionable
 A simple Optionable class with `set`, `get`, `merge`, and `has` methods meant to be similiar to Backbone's Model constructor
 but with some enhanced methods on it and without the ajax stuff (barebones object).
 
@@ -95,16 +95,36 @@ Merges all `Object`s passed into it to Optionable's `options` object recursively
 
 ### Utilities:
 
-##### sjl.argsToArray(arguments {Arguments}):Array
+##### sjl.argsToArray(arguments {Arguments}) :Array
 Converts arguments to an array;  E.g., 
 `sjl.argsToArray(arguments);` -> returns arguments as an array.
 
-##### sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}):String
+##### sjl.restArgs(arguments {Arguments}, start {Number|undefined}, end {Number|undefined}) :Array
+Returns the rest of the arguments from the given `start` to `end` (optional) positions, E.g.,
+```
+function someFunction (arg1, arg2, arg3) {
+    var otherArgs = sjl.restArgs(arguments, 2); // Will give us everything after `arg2`
+}
+
+// This function will call will give us the array ['value3', 'value4', 'value5'] within `otherArgs`
+someFunction ('value1', 'value2', 'valu3', 'value4', 'value5'); 
+```
+
+##### sjl.hasMethod (obj, methodName) :Boolean
+Checks whether an `obj` has the given method/function defined on it.  E.g.,
+```
+var obj = {hello: function () {}, someNonFunctionValueKey: 'hello world'};
+sjl.hasMethod(obj, 'hello');  // true.  Found key is of type 'Function'.
+sjl.hasMethod(obj, 'someNonFunctionValueKey');  // false.  Found key is not of type 'Function'.
+sjl.hasMethod(obj, 'someNonExistentMethod');    // false.
+```
+
+##### sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}) :String
 Camel Cases a string;  
 `sjl.camelCase('hello-world', boolean);` -> returns "helloWorld" if `boolean` is `false`
  else returns "HelloWorld" if `boolean` is `true`
 
-##### sjl.classOf(obj {*}):String
+##### sjl.classOf(obj {*}) :String
 Gives you a String representation of the class of value;  E.g., 
 ```
 sjl.classOf("hello") === 'String' // true
@@ -112,7 +132,7 @@ sjl.classOf(new Map()) === 'Map'  // true
 // etc.
 ```
 
-##### sjl.classOfIs(obj {*}, ...classTypeStr {String}):Boolean
+##### sjl.classOfIs(obj {*}, ...classTypeStr {String}) :Boolean
 Checks whether `obj` is of one of the `classTypeStr`'s passed in;  E.g., 
 ```
 sjl.classOfIs(0, 'String', 'Number') // true.  Matches 'Number'.
@@ -120,7 +140,7 @@ sjl.classOfIs([], 'Array') === true  // true
 sjl.classOfIs([], 'Number', 'Array') // true.  Matches 'Array'.
 ```
 
-##### sjl.empty(...value {*}):Boolean
+##### sjl.empty(...value {*}) :Boolean
 Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, or empty object is true for one
  or one of many values.
 ```
@@ -130,15 +150,15 @@ sjl.empty(0, false, null, undefined, [], {});    // true
 sjl.empty(1, true, {prop: 'value'}, ['value']);  // false
 ```
 
-##### sjl.extractBoolFromArrayEnd(list {Array}):Boolean
+##### sjl.extractBoolFromArrayEnd(list {Array}) :Boolean
 Pops a boolean off of the end of an array and returns it.  
 If no boolean is found there returns `false`.
 
-##### sjl.extractBoolFromArrayStart(list {Array}):Boolean
+##### sjl.extractBoolFromArrayStart(list {Array}) :Boolean
 Shifts a boolean off of the beginning of an array and returns it.  
 If no boolean is found at there returns `false`.
 
-##### sjl.isset(...value {*}):Boolean
+##### sjl.isset(...value {*}) :Boolean
 Checks for a value that is not `null` or `undefined` and returns true if it finds one.  Works for one or one of many values.
 ```
 sjl.isset(someUndefinedValue)           // false.  Value is not set.
@@ -146,30 +166,78 @@ sjl.isset(null, someUndefinedValue)     // false.  None of the values is set.
 sjl.isset(null, 1, someUndefinedValue)  // true.   '1' is a non empty value.
 ```
 
-##### sjl.lcaseFirst(str {String}):String
+##### sjl.issetAndOfType(value {*}, type {String|Array<String>}, ...type {String}) :Boolean
+Checks to see if a value is set and is of given type(s).  E.g.,
+```
+sjl.issetAndOfType(someFunctionValue, 'Function')   // true.  Value is set and is of type of function.
+sjl.issetAndOfType(someUndefinedValue, 'Function')  // false.  Value is not set.
+sjl.issetAndOfType(someNumberValue, 'Function', 'String', 'Number')  // true.  Matches type 'Number'.
+sjl.issetAndOfType(someNumberValue, ['String', 'Number', 'Function']) // true.  Matches type 'Number'.
+```
+
+##### sjl.issetObjKey (obj {*}, key {String}) :Boolean
+Checks whether an object has own `key` and whether the value of found `key` is not `undefined` or not `null`.
+```
+var someObj = {hello: 'world', myNameIs: null};
+// Check keys on `someObj`
+sjl.issetObjKey(someObj, 'hello')       // true.  Key is set and not null or undefined.
+sjl.issetObjKey(someObj, 'myNameIs')    // false.  Key exists on object but is null.
+sjl.issetObjKey(someObj, 'nonExistentProperty')    // false.  Key does not exists on object.
+```
+
+##### issetObjKeyAndOfType (obj {*}, key {String}, ...type {String}) :Boolean
+Does the same thing as `sjl.issetObjKey` but also checks if the found `key` matches one of the passed in types.
+```
+var someObj = {someNum: 100, someNullValue: null, someStringValue: 'hello world'};
+// Check keys on `someObj`
+sjl.issetObjKeyAndOfType(someObj, 'someNum', 'String', 'Number')  // true.  Key is set and matches the type 'Number'.
+sjl.issetObjKey(someObj, 'someNullValue', 'String', 'Array')      // false.  Key exists on object but is null.
+sjl.issetObjKey(someObj, 'nonExistentProperty')                   // false.  Key does not exists on object.
+```
+
+##### sjl.lcaseFirst(str {String}) :String
 Lowercases the first character of a string;  E.g., 
 `sjl.lcaseFirst ('Hello')` returns 'hello'.
 
-##### sjl.namespace(key {String}, objToSearch {Object}, valueToSet {*|undefined}):objToSearch
+##### sjl.namespace(key {String}, objToSearch {Object}, valueToSet {*|undefined}) :objToSearch
 For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'`
  finds or sets `{all: {your: {base: ...}}}`).
 
-##### sjl.isEmptyObjKey(obj {Object}, key {String}, ...type {String|undefined}):Boolean
+##### sjl.isEmptyObjKey(obj {Object}, key {String}, ...type {String|undefined}) :Boolean
 Does everything `sjl.issetObjKey` does.  In addition checks whether `obj[key]`'s value is empty ([0, null, undefined, [], {}, false]) or not.
 and whether `obj[key]` is of one of the class strings passed in (`...type`).
-
 ```
 sjl.isEmptyObjKey({hello: 'world'}, 'hello');   // false
-sjl.isEmptyObjKey({hello: 0}, 'hello');         // false
+sjl.isEmptyObjKey({hello: 100}, 'hello');       // false
 sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'Number');  // true 
 sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'Number', 'String');  // false 
 ```
-**Note** - This method will be refactored in a future release to 
+**Note** - The use of checking types a in this method will be removed in the next major release of the library.
+For checking whther a key on an object is empty and is of type use `sjl.isEmptyObjKeyAndOfType` instead.
 
-##### sjl.issetObjKey(obj {Object}, key {String}):Boolean
-Checks whether an object has own property for a key and that the key isset (has a value other than null or undefined).
+##### sjl.isEmptyObjKeyOrNotOfType(obj {Object}, key {String}, ...type {String|undefined}) :Boolean
+Does everything `sjl.issetObjKey` does.  In addition checks whether `obj[key]`'s value is empty ([0, null, undefined, [], {}, false]) or not.
+and whether `obj[key]` is of one of the class strings passed in (`...type`).
+```
+sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello');   // false.  Found key is not empty.
+sjl.isEmptyObjKeyOrNotOfType({hello: 100}, 'hello');       // false.  Found key is not empty.
+sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', 'Number');            // true.  Found key is not empty but is not of given type(s). 
+sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', 'Number', 'String');  // false.  Found key is not empty and is of given type.
+```
 
-##### sjl.ucaseFirst(str {String}):String
+##### sjl.jsonClone (obj {*}) :*
+Clones an object using the JSON object.  E.g.,
+```
+// Does this `JSON.parse(JSON.stringify(obj));`
+
+var obj = {hello: 'ola', world: 'mundo'};
+sjl.jsonClone(obj); // Returns an object with the same properties as `obj` but the object is completely unique
+```
+
+##### sjl.clone (obj {*}) :*
+Returns a new object with the properties from `obj`.
+
+##### sjl.ucaseFirst(str {String}) :String
 Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
 
 ### Set Functions:
@@ -190,7 +258,7 @@ like property on instantiation (if you use the `extend` method to merge passed i
 
 ### OOP Util functions:
 
-##### sjl.copyOfProto(prototype {Prototype|Object}):Object|Prototype
+##### sjl.copyOfProto(prototype {Prototype|Object}) :Object|Prototype
 Creates a copy of a prototype (backward compatible to older IEs).
 
 ##### sjl.defineSubClass(superclass {Function}, constructor {Function}, methods {Object}, statics {Object}) :Function

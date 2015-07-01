@@ -19,26 +19,33 @@ var gulp        = require('gulp'),
         .pipe(jshint.reporter, 'jshint-stylish');
         //.pipe(jshint.reporter, 'fail');
 
-gulp.task('readme', function () {
-    gulp.src('changelog-fragments/*.md')
+// Builds './changelog.md'
+gulp.task('changelog', function () {
+    return gulp.src('changelog-fragments/*.md')
         .pipe(concat('changelog.md'))
         .pipe(gulp.dest('./'));
+});
 
+// Builds './README.md'
+gulp.task('readme', ['changelog'], function () {
     gulp.src(['readme-fragments/README-fragment.md', 'changelog.md'])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });
 
+// Builds './jsdocs'
 gulp.task('jsdoc', function () {
     return gulp.src(['./src/**/*.js', './README.md'])
         .pipe(jsdoc('./jsdocs'))
 });
 
+// Runs mocha tests 'for-server'
 gulp.task('tests', function () {
-    gulp.src('tests/for-server/**/*.js')
+    gulp.src('tests/for-server/*.js')
         .pipe(mocha());
 });
 
+// Builds './sjl.js'
 gulp.task('concat', function () {
     gulp.src([
         'src/sjl/Sjl.js',
@@ -67,6 +74,7 @@ gulp.task('concat', function () {
         .pipe(gulp.dest('./'));
 });
 
+// Builds './sjl.min.js'
 gulp.task('uglify', ['concat'], function () {
     gulp.src('./sjl.js')
         .pipe(jsHintPipe())
@@ -76,6 +84,7 @@ gulp.task('uglify', ['concat'], function () {
         .pipe(gulp.dest('./'));
 });
 
+// Builds './sjl-minimal.js'
 gulp.task('minimal', function () {
     gulp.src([
         'src/sjl/Sjl.js',
@@ -95,6 +104,7 @@ gulp.task('minimal', function () {
         .pipe(gulp.dest('./'));
 });
 
+// Builds './sjl-minimal.min.js'
 gulp.task('minimal-min', ['minimal'], function () {
     gulp.src([
         'sjl-minimal.js'
@@ -106,6 +116,7 @@ gulp.task('minimal-min', ['minimal'], function () {
         .pipe(gulp.dest('./'));
 });
 
+// Builds './tests/for-browser/test-suite.js'
 gulp.task('make-browser-test-suite', function () {
     gulp.src(['tests/for-server/**/*.js'])
         .pipe(jsHintPipe())
@@ -113,8 +124,11 @@ gulp.task('make-browser-test-suite', function () {
         .pipe(gulp.dest('./'));
 });
 
+// Watches multiple sources
 gulp.task('watch', function () {
-    gulp.watch(['./tests/for-server/*', './src/**/*', 'README.md'], [
+
+    // Watch all javascript files
+    gulp.watch(['./tests/for-server/*', './src/**/*'], [
         'jsdoc',
         'concat',
         'uglify',
@@ -123,19 +137,23 @@ gulp.task('watch', function () {
         'make-browser-test-suite'
     ]);
 
-    gulp.watch(['readme-fragments/*.md', 'changelog-fragments/*.md'], [
-        'readme'
-    ]);
+    // Watch readme for 'jsdoc' task
+    gulp.watch(['README.md'], ['jsdoc']);
+
+    // Watch changelog-fragments and readme-fragments for 'readme' task
+    gulp.watch(['readme-fragments/*.md', 'changelog-fragments/*.md'], ['readme']);
 
 });
 
 // Default task
 gulp.task('default', [
+    'readme',
     'jsdoc',
     'concat',
     'uglify',
     'minimal',
     'minimal-min',
+    'tests',
     'make-browser-test-suite',
     'watch'
 ]);

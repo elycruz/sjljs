@@ -1,4 +1,4 @@
-/**! sjl.js Thu Jun 18 2015 12:01:45 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Wed Jul 01 2015 14:46:12 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
@@ -42,9 +42,9 @@
     /**
      * Slices passed in arguments object (not own arguments object) into array from `start` to `end`.
      * @function module:sjl.restArgs
-     * @param start {Number}
-     * @param end {Number}
      * @param args {Arguments|Array}
+     * @param start {Number|undefined} - Optional.  Default `0`.
+     * @param end {Number|undefined} - Optional.  Default `args.length`.
      * @returns {Array.<T>}
      */
     sjl.restArgs = function (args, start, end) {
@@ -118,7 +118,7 @@
 
     /**
      * Checks whether an object's key is set and is of type (...type one of the types passed in)
-     * @function module:sjl.issetAndOfType
+     * @function module:sjl.issetObjKeyAndOfType
      * @param obj {Object}
      * @param key {String}
      * @param type {String|Array} - Optional.
