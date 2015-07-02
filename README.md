@@ -307,15 +307,15 @@ See './tests/for-browser'.
     - [ ] - `sjl.issetObjKeyAndOfType`
     - [ ] - `sjl.isEmptyObjKeyAndOfType`
     - [ ] - `sjl.hasMethod`
-    - [ ] - `sjl.hasGetterMethod`
-    - [ ] - `sjl.hasSetterMethod`
+    - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
+    - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
 - [ ] - Write doc sections in main readme for:
-    - [ ] - `sjl.issetAndOfType`
-    - [ ] - `sjl.issetObjKeyAndOfType`
-    - [ ] - `sjl.isEmptyObjKeyAndOfType`
-    - [ ] - `sjl.hasMethod`
-    - [ ] - `sjl.hasGetterMethod`
-    - [ ] - `sjl.hasSetterMethod`
+    - [X] - `sjl.issetAndOfType`
+    - [X] - `sjl.issetObjKeyAndOfType`
+    - [X] - `sjl.isEmptyObjKeyAndOfType`
+    - [X] - `sjl.hasMethod`
+    - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
+    - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
 - [ ] - Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)
 - [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
  right not it is not apparent to people that this is the default behaviour) (code smell).
