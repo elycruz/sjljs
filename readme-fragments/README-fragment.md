@@ -303,7 +303,7 @@ See './tests/for-browser'.
 
 ### Mvp for 0.4.9:
 - [ ] - Write tests for:
-    - [ ] - `sjl.issetAndOfType`
+    - [X] - `sjl.issetAndOfType`
     - [ ] - `sjl.issetObjKeyAndOfType`
     - [ ] - `sjl.isEmptyObjKeyAndOfType`
     - [ ] - `sjl.hasMethod`
