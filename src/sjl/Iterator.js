@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var sjl = context.sjl;
+    var sjl = context.sjl,
+        iteratorKey = sjl.Symbol.iterator;
 
     /**
      * Turns an array into an iterable.
@@ -14,27 +15,13 @@
      * @returns {*}
      */
     sjl.iterable = function (array, pointer) {
-        if (typeof array['@@iterator'] !== 'function') {
-            array['@@iterator'] = function () {
+        if (!array.hasOwnProperty('_iteratorOverridden')) {
+            array[iteratorKey] = function () {
                 return sjl.Iterator(array, pointer);
             };
+            array._iteratorOverridden = true;
         }
         return array;
-    };
-
-    /**
-     * Makes object iterable (object needs to have a keys() and a values() methods).
-     * @param object {Object} - Object with keys() and values() methods.
-     * @param pointer {Number|undefined}
-     * @returns {Object} - Object passed in.
-     */
-    sjl.objectIterable = function (object, pointer) {
-        if (typeof object['@@iterator'] === 'undefined') {
-            object['@@iterator'] = function () {
-                return sjl.ObjectIterator(object.keys(), object.values(), pointer);
-            };
-        }
-        return object;
     };
 
     /**
@@ -154,26 +141,7 @@
                             (selfCollectionIsArray ? this.__internal.values : []);
                 }
                 return retVal;
-            },
-
-            /**
-             * @method sjl.Iterator#getPointer
-             * @deprecated Use self.pointer() instead
-             * @returns {Number}
-             */
-            getPointer: function () {
-                return this.pointer();
-            },
-
-            /**
-             * @method sjl.Iterator#getCollection
-             * @deprecated Use self.values() instead
-             * @returns {Array}
-             */
-            getCollection: function () {
-                return this.values();
             }
-
         });
 
     /**
@@ -185,10 +153,10 @@
         function ObjectIterator (keys, values, pointer) {
             // Allow Iterator to be called as a function
             if (!(this instanceof sjl.ObjectIterator)) {
-                return new sjl.ObjectIterator(values, pointer);
+                return new sjl.ObjectIterator(keys, values, pointer);
             }
+            sjl.Iterator.call(this, values, pointer);
             this.__internal.keys = keys;
-            sjl.Iterator.apply(this, values, pointer);
         },
         {
         /**

@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Fri Jul 17 2015 03:48:38 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Fri Jul 17 2015 15:08:11 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -17,7 +17,7 @@
         || Object.prototype.toString.apply(context.sjl)
             .indexOf('Object') === -1 ? {} : context.sjl;
 
-    context.sjl.defineProperty = Object.defineProperty
+    context.sjl.defineProperty = typeof Object['defineProperty'] === 'function' ? Object.defineProperty : null;
 
 }(typeof window === 'undefined' ? global : window));
 
@@ -56,6 +56,42 @@
         start = typeof start === 'undefined' ? 0 : start;
         end = end || args.length;
         return slice.call(args, start, end);
+    };
+
+    /**
+     * Foreach loop for arrays.
+     * @function module:sjl.forEach
+     * @param array {Array}
+     * @param callback {Function}
+     * @param context {undefined|*}
+     * @returns {Array}
+     */
+    sjl.forEach = function (array, callback, context) {
+        for (var i in array) {
+            if (array.hasOwnProperty(i)) {
+                i = parseInt(i, 10);
+                callback.call(context, array[i], i, array);
+            }
+        }
+        return array;
+    };
+
+    /**
+     * Array indexOf method.
+     * @param array Array
+     * @param value
+     * @returns {number}
+     */
+    sjl.indexOf = function (array, value) {
+        var classOfValue = sjl.classOf(value),
+            _index = -1;
+        sjl.forEach(array, function (_value, i) {
+            if (sjl.classOf(_value) === classOfValue
+                && _value === value) {
+                _index = i;
+            }
+        });
+        return _index;
     };
 
     /**
@@ -954,6 +990,25 @@
 })(typeof window === 'undefined' ? global : window);
 
 /**
+ * Created by Ely on 7/17/2015.
+ */
+(function (context) {
+
+    'use strict';
+
+    var sjl = context.sjl;
+
+    if (typeof Symbol === 'undefined') {
+        sjl.Symbol = {
+            iterator: '@@iterator'
+        };
+    }
+    else {
+        sjl.Symbol = Symbol;
+    }
+
+})(typeof window === 'undefined' ? global : window);
+/**
  * Created by Ely on 4/12/2014.
  * Code copy pasted from "Javascript the definitive guide"
  */
@@ -1224,7 +1279,8 @@
 
     'use strict';
 
-    var sjl = context.sjl;
+    var sjl = context.sjl,
+        iteratorKey = sjl.Symbol.iterator;
 
     /**
      * Turns an array into an iterable.
@@ -1233,27 +1289,13 @@
      * @returns {*}
      */
     sjl.iterable = function (array, pointer) {
-        if (typeof array['@@iterator'] !== 'function') {
-            array['@@iterator'] = function () {
+        if (!array.hasOwnProperty('_iteratorOverridden')) {
+            array[iteratorKey] = function () {
                 return sjl.Iterator(array, pointer);
             };
+            array._iteratorOverridden = true;
         }
         return array;
-    };
-
-    /**
-     * Makes object iterable (object needs to have a keys() and a values() methods).
-     * @param object {Object} - Object with keys() and values() methods.
-     * @param pointer {Number|undefined}
-     * @returns {Object} - Object passed in.
-     */
-    sjl.objectIterable = function (object, pointer) {
-        if (typeof object['@@iterator'] === 'undefined') {
-            object['@@iterator'] = function () {
-                return sjl.ObjectIterator(object.keys(), object.values(), pointer);
-            };
-        }
-        return object;
     };
 
     /**
@@ -1373,26 +1415,7 @@
                             (selfCollectionIsArray ? this.__internal.values : []);
                 }
                 return retVal;
-            },
-
-            /**
-             * @method sjl.Iterator#getPointer
-             * @deprecated Use self.pointer() instead
-             * @returns {Number}
-             */
-            getPointer: function () {
-                return this.pointer();
-            },
-
-            /**
-             * @method sjl.Iterator#getCollection
-             * @deprecated Use self.values() instead
-             * @returns {Array}
-             */
-            getCollection: function () {
-                return this.values();
             }
-
         });
 
     /**
@@ -1404,10 +1427,10 @@
         function ObjectIterator (keys, values, pointer) {
             // Allow Iterator to be called as a function
             if (!(this instanceof sjl.ObjectIterator)) {
-                return new sjl.ObjectIterator(values, pointer);
+                return new sjl.ObjectIterator(keys, values, pointer);
             }
+            sjl.Iterator.call(this, values, pointer);
             this.__internal.keys = keys;
-            sjl.Iterator.apply(this, values, pointer);
         },
         {
         /**

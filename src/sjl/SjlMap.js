@@ -10,7 +10,6 @@
     sjl.Extendable.extend(function SjlMap (iterable) {
         this._values = [];
         this._entries = [];
-
     }, {
         size: function () {},
         clear: function () {},
@@ -22,7 +21,6 @@
         set: function () {},
         keys: function () {},
         values: function () {},
-        '@@iterator': function () {}
     });
 
 })(typeof window === 'undefined' ? global : window);
