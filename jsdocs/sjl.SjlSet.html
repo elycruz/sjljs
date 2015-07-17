@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Extendable</title>
+    <title>JSDoc: Class: SjlSet</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Extendable</h1>
+    <h1 class="page-title">Class: SjlSet</h1>
 
     
 
@@ -27,7 +27,7 @@
 
 <header>
     <h2>
-    Extendable
+    SjlSet
     </h2>
     
 </header>
@@ -39,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="Extendable"><span class="type-signature"></span>new Extendable<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="SjlSet"><span class="type-signature"></span>new SjlSet<span class="signature">(iterable)</span><span class="type-signature"></span></h4>
 
     
 </dt>
@@ -47,96 +47,7 @@
 
     
     <div class="description">
-        The `sjl.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Extendable.js.html">Extendable.js</a>, <a href="Extendable.js.html#line9">line 9</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name" id="extend"><span class="type-signature">&lt;static> </span>extend<span class="signature">(constructor, methods, statics)</span><span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Extends a new copy of self with passed in parameters.
+        SjlSet constructor.  This object has the same interface as the es6 `Set`object.  The only difference is this one uses a more sugery iterator whichhas, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and`valid` methods (@see sjl.Iterator)
     </div>
     
 
@@ -170,13 +81,13 @@
 
         <tr>
             
-                <td class="name"><code>constructor</code></td>
+                <td class="name"><code>iterable</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Constructor</span>
+<span class="param-type">Array</span>
 
 
             
@@ -186,53 +97,7 @@
 
             
 
-            <td class="description last">Required.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>methods</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Optional.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>statics</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Static methods. Optional.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -263,7 +128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Extendable.js.html">Extendable.js</a>, <a href="Extendable.js.html#line16">line 16</a>
+        <a href="SjlSet.js.html">SjlSet.js</a>, <a href="SjlSet.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -290,7 +155,27 @@
     
 </dd>
 
-        </dl>
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+            <li><a href="sjl.Extendable.html">sjl.Extendable</a></li>
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
     
 
     

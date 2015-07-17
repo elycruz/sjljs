@@ -36,6 +36,42 @@
     };
 
     /**
+     * Foreach loop for arrays.
+     * @function module:sjl.forEach
+     * @param array {Array}
+     * @param callback {Function}
+     * @param context {undefined|*}
+     * @returns {Array}
+     */
+    sjl.forEach = function (array, callback, context) {
+        for (var i in array) {
+            if (array.hasOwnProperty(i)) {
+                i = parseInt(i, 10);
+                callback.call(context, array[i], i, array);
+            }
+        }
+        return array;
+    };
+
+    /**
+     * Array indexOf method.
+     * @param array Array
+     * @param value
+     * @returns {number}
+     */
+    sjl.indexOf = function (array, value) {
+        var classOfValue = sjl.classOf(value),
+            _index = -1;
+        sjl.forEach(array, function (_value, i) {
+            if (sjl.classOf(_value) === classOfValue
+                && _value === value) {
+                _index = i;
+            }
+        });
+        return _index;
+    };
+
+    /**
      * Checks to see if value is set (not null and not undefined).
      * @param value
      * @returns {Boolean}
