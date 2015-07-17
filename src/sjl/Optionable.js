@@ -102,7 +102,7 @@
              */
             set: function () {
                 var self = this,
-                    args = sjl.argsToArray(arguments),
+                    args = arguments,
                     typeOfArgs0 = sjl.classOf(args[0]);
                 if (typeOfArgs0 === 'String') {
                     self.setOption(args[0], args[1]);

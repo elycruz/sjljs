@@ -249,7 +249,7 @@ describe('sjl.Iterator', function () {
     'use strict';
 
     var interfaceKeys = [
-        'current', 'next', 'rewind', 'pointer', 'collection', 'valid'
+        'current', 'next', 'rewind', 'pointer', 'values', 'valid'
         ],
         basicArray = 'abcdefghijklmnopqrstuvwxyz'.split(''),
         iterator = sjl.Iterator(basicArray);
@@ -259,9 +259,9 @@ describe('sjl.Iterator', function () {
         expect((new sjl.Iterator(basicArray, 3)) instanceof sjl.Iterator).to.equal(true);
     });
 
-    it ('should have it\'s main properties (`collection` and `pointer`) set on an `internal` object', function () {
-        expect(sjl.issetObjKeyAndOfType(iterator.internal, 'collection', 'Array')).to.equal(true);
-        expect(sjl.issetObjKeyAndOfType(iterator.internal, 'pointer', 'Number')).to.equal(true);
+    it ('should have it\'s main properties (`values` and `pointer`) set on an `__internal` object', function () {
+        expect(sjl.issetObjKeyAndOfType(iterator.__internal, 'values', 'Array')).to.equal(true);
+        expect(sjl.issetObjKeyAndOfType(iterator.__internal, 'pointer', 'Number')).to.equal(true);
     });
 
     it ('should have the appropriate interface: [' + interfaceKeys.join(', ') + '] .', function () {
@@ -284,12 +284,12 @@ describe('sjl.Iterator', function () {
         expect(iterator.rewind().pointer()).to.equal(0);
     });
 
-    it ('should be able to set the internal `pointer` via the `pointer` method.', function () {
+    it ('should be able to set the __internal `pointer` via the `pointer` method.', function () {
         expect(iterator.pointer(16).pointer()).to.equal(16);
     });
 
-    it ('should be able to set the internal `collection` via the `collection` method.', function () {
-        expect(iterator.collection(['a', 'b', 'c']).collection().length).to.equal(3);
+    it ('should be able to set the __internal `values` via the `values` method.', function () {
+        expect(iterator.values(['a', 'b', 'c']).values().length).to.equal(3);
     });
 
     it ('should be able to get the value at the `current` pointer position via the `current` method.', function () {

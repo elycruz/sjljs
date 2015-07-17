@@ -309,7 +309,7 @@ See './tests/for-browser'.
     - [ ] - `sjl.hasMethod`
     - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
     - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
-- [ ] - Write doc sections in main readme for:
+- [X] - Write doc sections in main readme for:
     - [X] - `sjl.issetAndOfType`
     - [X] - `sjl.issetObjKeyAndOfType`
     - [X] - `sjl.isEmptyObjKeyAndOfType`

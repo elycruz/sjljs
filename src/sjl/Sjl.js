@@ -14,4 +14,6 @@
         || Object.prototype.toString.apply(context.sjl)
             .indexOf('Object') === -1 ? {} : context.sjl;
 
+    context.sjl.defineProperty = typeof Object['defineProperty'] === 'function' ? Object.defineProperty : null;
+
 }(typeof window === 'undefined' ? global : window));

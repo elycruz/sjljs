@@ -66,7 +66,8 @@ gulp.task('concat', function () {
         'src/sjl/validator/PostCodeValidator.js',
         'src/sjl/input/Input.js',
         'src/sjl/input/InputFilter.js',
-        'src/sjl/Iterator.js'
+        'src/sjl/Iterator.js',
+        'src/sjl/SjlSet.js'
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
