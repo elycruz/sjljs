@@ -33,7 +33,7 @@ only meant as a supplement to them.
 A base attributable constructor which has two methods `attr` and `attrs` (for setting and getting multiple attributes 
 jquery style).
 
-##### sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}) :sjl.Iterator
+##### sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}) :sjl.Iterator (@deprecated)
 A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 Can be called as a method and acts as a factory method in this case.
 
@@ -299,7 +299,7 @@ See './tests/for-browser'.
     - [X] - `sjl.getValueFromObj`
     - [X] - `sjl.setValueOnObj`
     - [X] - `sjl.extend` (for new features)
-    - [ ] - `sjl.Iterator`
+    - [X] - `sjl.Iterator`
 
 ### Mvp for 0.4.9:
 - [ ] - Write tests for:

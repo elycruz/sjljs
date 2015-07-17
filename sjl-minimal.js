@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Wed Jul 01 2015 14:46:11 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Fri Jul 17 2015 00:27:14 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -48,7 +48,7 @@
      * @param args {Arguments|Array}
      * @param start {Number|undefined} - Optional.  Default `0`.
      * @param end {Number|undefined} - Optional.  Default `args.length`.
-     * @returns {Array.<T>}
+     * @returns {Array}
      */
     sjl.restArgs = function (args, start, end) {
         start = typeof start === 'undefined' ? 0 : start;
@@ -79,18 +79,19 @@
 
         if (arguments.length > 1) {
             for (var i in arguments) {
-                i = arguments[i];
-                check = isSet(i);
-                if (!check) {
-                    retVal = check;
-                    break;
+                if (arguments.hasOwnProperty(i)) {
+                    i = arguments[i];
+                    check = isSet(i);
+                    if (!check) {
+                        retVal = check;
+                        break;
+                    }
                 }
             }
         }
         else if (arguments.length === 1) {
             retVal = isSet(arguments[0]);
         }
-
         return retVal;
     };
 
@@ -134,12 +135,14 @@
 
     /**
      * Returns the class name of an object from it's class string.
+     * **Note** - Returns 'NaN' if type is 'Number' and isNaN as of version 0.4.85.
      * @function module:sjl.classOf
-     * @param val {mixed}
-     * @returns {string}
+     * @param value {*}
+     * @returns {string} - A string representation of the type of the value; E.g., 'Number' for `0`
      */
     sjl.classOf = function (value) {
-        var retVal;
+        var retVal,
+            valueType;
         if (typeof value === 'undefined') {
             retVal = 'Undefined';
         }
@@ -147,8 +150,9 @@
             retVal = 'Null';
         }
         else {
-            value = Object.prototype.toString.call(value);
-            retVal = value.substring(8, value.length - 1);
+            valueType = Object.prototype.toString.call(value);
+            retVal = valueType.substring(8, valueType.length - 1);
+            retVal = retVal === 'Number' && isNaN(value) ? 'NaN' : retVal;
         }
         return retVal;
     };
@@ -157,8 +161,9 @@
      * Checks to see if an object is of type humanString (class name) .
      * @function module:sjl.classOfIs
      * @param obj {*} - Object to be checked.
-     * @param humanString {String} - Class string to check for; I.e., "Number", "Object", etc.
-     * @param ...rest {String} - Same as `humanString`.  Optional.
+     * @param humanString {String|Array} - Class string to check for or Array of class strings to check for.
+     *  Can also just be ...rest params of class strings which will be parsed internally as an array of class strings;
+     *  I.e., "Number", "Object", etc.
      * @returns {Boolean} - Whether object matches class string(s) or not.
      */
     sjl.classOfIs = function (obj, humanString) {
@@ -182,7 +187,7 @@
      * @returns {Boolean}
      */
     function isEmptyObj (obj) {
-        var retVal = obj === true ? false : true;
+        var retVal = obj !== true;
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
                 retVal = false;
@@ -219,7 +224,7 @@
         }
 
         return retVal;
-    };
+    }
 
     /**
      * Checks to see if any of the arguments passed in are empty.
@@ -312,8 +317,7 @@
     sjl.namespace = function (ns_string, objToSearch, valueToSet) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
-            shouldSetValue = sjl.classOfIs(valueToSet, 'Undefined')
-                ? false : true,
+            shouldSetValue = !sjl.classOfIs(valueToSet, 'Undefined'),
             i;
 
         for (i = 0; i < parts.length; i += 1) {
@@ -370,7 +374,7 @@
         }
 
         return str;
-    };
+    }
 
     /**
      * Lower cases first character of a string.
@@ -400,9 +404,9 @@
      * the parts with the proper casing, pass in `true` for lcaseFirst
      * to lower case the first character.
      * @function module:sjl.camelCase
-     * @param {String} str
-     * @param {Boolean} lowerFirst default `false`
-     * @param {Regex} replaceStrRegex default /[^a-z0-9] * /i (without spaces before and after '*')
+     * @param str {String}
+     * @param upperFirst {Boolean} default `false`
+     * @param replaceStrRegex {RegExp} default /[^a-z0-9] * /i (without spaces before and after '*')
      * @returns {String}
      */
     sjl.camelCase = function (str, upperFirst, replaceStrRegex) {
@@ -438,7 +442,7 @@
      * Extracts a boolean from the beginning or ending of an array depending on startOrEndBln.
      * @todo ** Note ** Closure within this function is temporary and should be removed.
      * @param array {Array}
-     * @param startOrEnd {Boolean}
+     * @param startOrEndBln {Boolean}
      * @returns {Boolean}
      */
     function extractBoolFromArray (array, startOrEndBln) {
@@ -457,7 +461,7 @@
             retVal = false;
         }
         return retVal;
-    };
+    }
 
     /**
      * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
@@ -477,6 +481,16 @@
      */
     sjl.extractBoolFromArrayEnd = function (array) {
         return extractBoolFromArray(array, false);
+    };
+
+    /**
+     * @function module:sjl.isUsableNumber
+     * Sugar for checking for 'Number' type and that the passed in value is not NaN.
+     * @param value {*}
+     * @returns {Boolean|boolean}
+     */
+    sjl.isUsableNumber = function (value) {
+        return sjl.classOfIs(value, 'Number') && !isNaN(value);
     };
 
 })(typeof window === 'undefined' ? global : window);
@@ -1211,64 +1225,156 @@
     var sjl = context.sjl;
 
     /**
+     * Turns an array into an iterable.
+     * @param array
+     * @param pointer
+     * @returns {*}
+     * @deprecated
+     */
+    sjl.iterable = function (array, pointer) {
+        array['@@iterator'] = function () {
+            return sjl.Iterator(array, pointer);
+        };
+        return array;
+    };
+
+    /**
      * @class sjl.Iterator
      * @extends sjl.Extendable
      * @type {void|Object|*}
+     * @deprecated
      */
     sjl.Iterator = sjl.Extendable.extend(
         function Iterator(values, pointer) {
+
+            //
             if (!(this instanceof sjl.Iterator)) {
                 return new sjl.Iterator(values, pointer);
             }
-            this.collection = values || [];
-            this.pointer = sjl.classOfIs(pointer, 'Number') ? parseInt(pointer, 10) : 0;
+
+            // Internalize the collection and pointer here
+            // to make this class more functional.
+            this.internal = {
+                collection: values || [],
+                pointer: sjl.classOfIs(pointer, 'Number') ? pointer : 0
+            };
         },
         {
+            /**
+             * Returns the current value that `pointer()` is pointing to.
+             * @method sjl.Iterator#current
+             * @returns {{done: boolean, value: *}}
+             */
             current: function () {
                 var self = this;
                 return self.valid() ? {
                     done: false,
-                    value: self.getCollection()[self.getPointer()]
+                    value: self.collection()[self.pointer()]
                 } : {
                     done: true
                 };
             },
 
+            /**
+             * Method which returns the current position in the iterator based on where the pointer is.
+             * This method also increases the pointer after it is done fetching the value to return.
+             * @method sjl.Iterator#next
+             * @returns {{done: boolean, value: *}}
+             */
             next: function () {
                 var self = this,
-                    pointer = self.getPointer(),
+                    pointer = self.pointer(),
                     retVal = self.valid() ? {
                         done: false,
-                        value: self.getCollection()[pointer]
+                        value: self.collection()[pointer]
                     } : {
                         done: true
                     };
-                self.pointer = pointer + 1;
+                self.pointer(pointer + 1);
                 return retVal;
             },
 
+            /**
+             * Rewinds the iterator.
+             * @method sjl.Iterator#rewind
+             * @returns {sjl.Iterator}
+             */
             rewind: function () {
-                this.pointer = 0;
+                return this.pointer(0);
             },
 
+            /**
+             * Returns whether the iterator has reached it's end.
+             * @method sjl.Iterator#valid
+             * @returns {boolean}
+             */
             valid: function () {
-                return this.getPointer() < this.getCollection().length;
+                return this.pointer() < this.collection().length;
             },
 
-            getPointer: function (defaultNum) {
-                defaultNum = sjl.classOfIs(defaultNum, 'Number') ?
-                    (isNaN(defaultNum) ? 0 : defaultNum) : 0;
-                if (!sjl.classOfIs(this.pointer, 'Number')) {
-                    this.pointer = parseInt(this.pointer, 10);
-                    if (isNaN(this.pointer)) {
-                        this.pointer = defaultNum;
-                    }
+            /**
+             * Overloaded method for fetching or setting the internal pointer value.
+             * @method sjl.Iterator#pointer
+             * @param pointer
+             * @returns {sjl.Iterator|Number}
+             */
+            pointer: function (pointer) {
+                var self = this,
+                    isGetterCall = typeof pointer === 'undefined',
+                    defaultNum = sjl.classOfIs(self.internal.pointer, 'Number')
+                            ? self.internal.pointer : 0,
+                    retVal = self;
+                if (isGetterCall) {
+                    retVal = defaultNum;
                 }
-                return this.pointer;
+                // Else set pointer
+                else {
+                    self.internal.pointer = sjl.classOfIs(pointer, 'Number') ? pointer : defaultNum;
+                }
+                return retVal;
             },
 
+            /**
+             * Overloaded method for fetching or setting the internal collection array.
+             * @method sjl.Itertator#collection
+             * @param collection {Array|undefined}
+             * @returns {sjl.Iterator|Array}
+             */
+            collection: function (collection) {
+                var isGetterCall = typeof collection === 'undefined',
+                    retVal = this,
+                    selfCollectionIsArray;
+                if (isGetterCall) {
+                    retVal = this.internal.collection;
+                }
+                else {
+                    selfCollectionIsArray = sjl.classOfIs(this.internal.collection, 'Array');
+                    // Set the internal collection to `collection` if `collection` is an array
+                    // else if self internal collection is an array leave as is
+                    // else set internal collection to an empty array
+                    this.internal.collection =
+                        sjl.classOfIs(collection, 'Array') ? collection :
+                            (selfCollectionIsArray ? this.internal.collection : []);
+                }
+                return retVal;
+            },
+
+            /**
+             * @method sjl.Iterator#getPointer
+             * @deprecated Use self.pointer() instead
+             * @returns {Number}
+             */
+            getPointer: function () {
+                return this.pointer();
+            },
+
+            /**
+             * @method sjl.Iterator#getCollection
+             * @deprecated Use self.collection() instead
+             * @returns {Array}
+             */
             getCollection: function () {
-                return sjl.classOfIs(this.collection, 'Array') ? this.collection : [];
+                return this.collection();
             }
 
         });

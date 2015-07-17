@@ -33,7 +33,7 @@ only meant as a supplement to them.
 A base attributable constructor which has two methods `attr` and `attrs` (for setting and getting multiple attributes 
 jquery style).
 
-##### sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}) :sjl.Iterator
+##### sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}) :sjl.Iterator (@deprecated)
 A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
 Can be called as a method and acts as a factory method in this case.
 
@@ -299,7 +299,7 @@ See './tests/for-browser'.
     - [X] - `sjl.getValueFromObj`
     - [X] - `sjl.setValueOnObj`
     - [X] - `sjl.extend` (for new features)
-    - [ ] - `sjl.Iterator`
+    - [X] - `sjl.Iterator`
 
 ### Mvp for 0.4.9:
 - [ ] - Write tests for:
@@ -382,3 +382,12 @@ See './tests/for-browser'.
 - Added 'changelog' as a separate task in gulpfile.
 - Added commenting to gulpfile (since the code there is growing).
 - Updated gulpfile tasks dependencies for 'readme' task.
+
+### Changelog for 07/16/2015:
+- Updated jsdoc section in sjl-util-functions.js.
+- Added filtering for 'for in' loops in sjl-util*.js.
+- Simplified complex if checks in sjl-util*.js.
+- Updated readme-fragment.md to reflect changes.
+- Marked sjl.Iterator and sjl.iterator as deprecated.
+- Rebuilt jsdocs.
+- Rebuilt README.md.

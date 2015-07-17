@@ -27,7 +27,7 @@
      * @param args {Arguments|Array}
      * @param start {Number|undefined} - Optional.  Default `0`.
      * @param end {Number|undefined} - Optional.  Default `args.length`.
-     * @returns {Array.<T>}
+     * @returns {Array}
      */
     sjl.restArgs = function (args, start, end) {
         start = typeof start === 'undefined' ? 0 : start;
@@ -58,18 +58,19 @@
 
         if (arguments.length > 1) {
             for (var i in arguments) {
-                i = arguments[i];
-                check = isSet(i);
-                if (!check) {
-                    retVal = check;
-                    break;
+                if (arguments.hasOwnProperty(i)) {
+                    i = arguments[i];
+                    check = isSet(i);
+                    if (!check) {
+                        retVal = check;
+                        break;
+                    }
                 }
             }
         }
         else if (arguments.length === 1) {
             retVal = isSet(arguments[0]);
         }
-
         return retVal;
     };
 
@@ -113,12 +114,14 @@
 
     /**
      * Returns the class name of an object from it's class string.
+     * **Note** - Returns 'NaN' if type is 'Number' and isNaN as of version 0.4.85.
      * @function module:sjl.classOf
-     * @param val {mixed}
-     * @returns {string}
+     * @param value {*}
+     * @returns {string} - A string representation of the type of the value; E.g., 'Number' for `0`
      */
     sjl.classOf = function (value) {
-        var retVal;
+        var retVal,
+            valueType;
         if (typeof value === 'undefined') {
             retVal = 'Undefined';
         }
@@ -126,8 +129,9 @@
             retVal = 'Null';
         }
         else {
-            value = Object.prototype.toString.call(value);
-            retVal = value.substring(8, value.length - 1);
+            valueType = Object.prototype.toString.call(value);
+            retVal = valueType.substring(8, valueType.length - 1);
+            retVal = retVal === 'Number' && isNaN(value) ? 'NaN' : retVal;
         }
         return retVal;
     };
@@ -136,8 +140,9 @@
      * Checks to see if an object is of type humanString (class name) .
      * @function module:sjl.classOfIs
      * @param obj {*} - Object to be checked.
-     * @param humanString {String} - Class string to check for; I.e., "Number", "Object", etc.
-     * @param ...rest {String} - Same as `humanString`.  Optional.
+     * @param humanString {String|Array} - Class string to check for or Array of class strings to check for.
+     *  Can also just be ...rest params of class strings which will be parsed internally as an array of class strings;
+     *  I.e., "Number", "Object", etc.
      * @returns {Boolean} - Whether object matches class string(s) or not.
      */
     sjl.classOfIs = function (obj, humanString) {
@@ -161,7 +166,7 @@
      * @returns {Boolean}
      */
     function isEmptyObj (obj) {
-        var retVal = obj === true ? false : true;
+        var retVal = obj !== true;
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
                 retVal = false;
@@ -198,7 +203,7 @@
         }
 
         return retVal;
-    };
+    }
 
     /**
      * Checks to see if any of the arguments passed in are empty.
@@ -291,8 +296,7 @@
     sjl.namespace = function (ns_string, objToSearch, valueToSet) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
-            shouldSetValue = sjl.classOfIs(valueToSet, 'Undefined')
-                ? false : true,
+            shouldSetValue = !sjl.classOfIs(valueToSet, 'Undefined'),
             i;
 
         for (i = 0; i < parts.length; i += 1) {
@@ -349,7 +353,7 @@
         }
 
         return str;
-    };
+    }
 
     /**
      * Lower cases first character of a string.
@@ -379,9 +383,9 @@
      * the parts with the proper casing, pass in `true` for lcaseFirst
      * to lower case the first character.
      * @function module:sjl.camelCase
-     * @param {String} str
-     * @param {Boolean} lowerFirst default `false`
-     * @param {Regex} replaceStrRegex default /[^a-z0-9] * /i (without spaces before and after '*')
+     * @param str {String}
+     * @param upperFirst {Boolean} default `false`
+     * @param replaceStrRegex {RegExp} default /[^a-z0-9] * /i (without spaces before and after '*')
      * @returns {String}
      */
     sjl.camelCase = function (str, upperFirst, replaceStrRegex) {
@@ -417,7 +421,7 @@
      * Extracts a boolean from the beginning or ending of an array depending on startOrEndBln.
      * @todo ** Note ** Closure within this function is temporary and should be removed.
      * @param array {Array}
-     * @param startOrEnd {Boolean}
+     * @param startOrEndBln {Boolean}
      * @returns {Boolean}
      */
     function extractBoolFromArray (array, startOrEndBln) {
@@ -436,7 +440,7 @@
             retVal = false;
         }
         return retVal;
-    };
+    }
 
     /**
      * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
@@ -456,6 +460,16 @@
      */
     sjl.extractBoolFromArrayEnd = function (array) {
         return extractBoolFromArray(array, false);
+    };
+
+    /**
+     * @function module:sjl.isUsableNumber
+     * Sugar for checking for 'Number' type and that the passed in value is not NaN.
+     * @param value {*}
+     * @returns {Boolean|boolean}
+     */
+    sjl.isUsableNumber = function (value) {
+        return sjl.classOfIs(value, 'Number') && !isNaN(value);
     };
 
 })(typeof window === 'undefined' ? global : window);
