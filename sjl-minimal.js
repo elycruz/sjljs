@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Tue Jul 21 2015 23:08:48 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Wed Jul 22 2015 00:08:18 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -242,19 +242,20 @@
      * @returns {Boolean}
      */
     function isEmptyValue (value) {
-        var retVal;
+        var classOfValue = sjl.classOf(value),
+            retVal;
 
         // If value is an array or a string
-        if (sjl.classOfIs(value, 'Array', 'String')) {
+        if (classOfValue === 'Array' || classOfValue === 'String') {
             retVal = value.length === 0;
         }
 
-        // If value is a number and is not 0
-        else if (sjl.classOfIs(value, 'Number') && value !== 0) {
+        else if ((classOfValue === 'Number' && value !== 0) || (classOfValue === 'Function')) {
             retVal = false;
         }
 
-        // Else
+        // If value is not number and is not equal to zero or if value is not a function
+        // then check for other empty values
         else {
             retVal = (value === 0 || value === false
                 || value === undefined || value === null

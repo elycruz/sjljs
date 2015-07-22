@@ -535,7 +535,7 @@ describe('Sjl Set Functions', function () {
     'use strict';
 
     describe ('It should have It\'s set functions set', function () {
-        var funcNames = ['extend']; // 'intersection', 'merge', 'restrict', 'subtract', 'union'];
+        var funcNames = ['extend', 'hasMethod']; // 'intersection', 'merge', 'restrict', 'subtract', 'union'];
 
         // Check that the set functions are defined
         funcNames.forEach(function (funcName) {
@@ -611,6 +611,13 @@ describe('Sjl Set Functions', function () {
 
         });
 
+    });
+
+    describe ('#`hasMethod`', function () {
+        it ('should detect when an object has a method defined on it.', function () {
+            expect(sjl.hasMethod({hello: function () {return 'hello';}}, 'hello' )).to.equal(true);
+            expect(sjl.hasMethod({}, 'hello')).to.equal(false);
+        });
     });
 
 //    describe ('#`merge` tests', function () {
@@ -931,28 +938,27 @@ describe('Sjl Utils', function () {
             emptyNumberValue: '0',
             nonEmptyBooleanValue: 'true',
             emptyBooleanValue: 'false',
-            functionValue: '(function () { return function HelloWorld () {} }())',
-            emptyObjValue: '(function () { return {} }())',
+            functionValue:       '(function () { return function HelloWorld () {} }())',
+            emptyObjectValue:    '(function () { return {} }())',
             nonEmptyObjectValue: '(function () { return {all:{your:{base:{are:{belong:{to:{us:{}}}}}}}} }())',
-            emptyArrayValue: '(function () { return [] }())',
-            nonEmptyArrayValue: '(function () { return [1] }())'
+            emptyArrayValue:     '(function () { return [] }())',
+            nonEmptyArrayValue:  '(function () { return [1] }())'
         },
         keyTypesForIssetAndEmptyChecks = {
-            nullValue: 'Null',
-            undefinedValue: 'Undefined',
-            nonEmptyStringValue: 'String',
-            emptyStringValue: 'String',
-            nonEmptyNumberValue: 'Number',
-            emptyNumberValue: 'Number',
-            nonEmptyBooleanValue: 'Boolean',
-            emptyBooleanValue: 'Boolean',
-            functionValue: 'Function',
-            emptyObjValue: 'Object',
-            nonEmptyObjectValue: 'Object',
-            emptyArrayValue: 'Array',
-            nonEmptyArrayValue: 'Array'
+            nullValue:              'Null',
+            undefinedValue:         'Undefined',
+            nonEmptyStringValue:    'String',
+            emptyStringValue:       'String',
+            nonEmptyNumberValue:    'Number',
+            emptyNumberValue:       'Number',
+            nonEmptyBooleanValue:   'Boolean',
+            emptyBooleanValue:      'Boolean',
+            functionValue:          'Function',
+            emptyObjectValue:       'Object',
+            nonEmptyObjectValue:    'Object',
+            emptyArrayValue:        'Array',
+            nonEmptyArrayValue:     'Array'
         },
-
         truthyKeysForMultipleTypes = {
             nullValue:              ['String', 'Function', 'Null'],
             undefinedValue:         ['String', 'Undefined', 'Number'],
@@ -963,12 +969,11 @@ describe('Sjl Utils', function () {
             nonEmptyBooleanValue:   ['Boolean'],
             emptyBooleanValue:      ['Boolean', 'Function'],
             functionValue:          ['Function', 'Boolean'],
-            emptyObjValue:          ['Object', 'String'],
+            emptyObjectValue:       ['Object', 'String'],
             nonEmptyObjectValue:    ['Object'],
             emptyArrayValue:        ['Function', 'Object', 'Number', 'Array'],
             nonEmptyArrayValue:     ['Function', 'Object', 'Array', 'Number']
         },
-
         falsyKeysForMultipleTypes = {
             nullValue:              ['String', 'Function'],
             undefinedValue:         ['String', 'Number'],
@@ -979,7 +984,7 @@ describe('Sjl Utils', function () {
             nonEmptyBooleanValue:   ['Number'],
             emptyBooleanValue:      ['Function'],
             functionValue:          ['Boolean'],
-            emptyObjValue:          ['String'],
+            emptyObjectValue:       ['String'],
             nonEmptyObjectValue:    ['Function'],
             emptyArrayValue:        ['Function', 'Object', 'Number'],
             nonEmptyArrayValue:     ['Function', 'Object', 'Number']
@@ -1060,8 +1065,8 @@ describe('Sjl Utils', function () {
         var obj = objForIssetAndEmptyChecks,
             evaledObj = returnedObjWithEvaledValues(objForIssetAndEmptyChecks);
 
-        // Falsy values
-        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'functionValue', 'emptyBooleanValue']
+        // Truthy values
+        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'emptyObjectValue', 'emptyBooleanValue', 'emptyArrayValue']
         .forEach(function (key) {
             it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
             '" when no `type` param is passed in.', function () {
@@ -1069,12 +1074,12 @@ describe('Sjl Utils', function () {
             });
         });
 
-        // Truthy values
-        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'functionValue', 'emptyBooleanValue']
+        // Falsy values
+        ['nonEmptyNumberValue', 'nonEmptyBooleanValue', 'nonEmptyStringValue', 'nonEmptyArrayValue', 'nonEmptyObjectValue']
         .forEach(function (key) {
-            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            it('should return `false` for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
             '" when no `type` param is passed in.', function () {
-                expect(sjl.isEmptyObjKey(evaledObj, key)).to.equal(true);
+                expect(sjl.isEmptyObjKey(evaledObj, key)).to.equal(false);
             });
         });
 

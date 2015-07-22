@@ -18,7 +18,7 @@ describe('Sjl Set Functions', function () {
     'use strict';
 
     describe ('It should have It\'s set functions set', function () {
-        var funcNames = ['extend']; // 'intersection', 'merge', 'restrict', 'subtract', 'union'];
+        var funcNames = ['extend', 'hasMethod']; // 'intersection', 'merge', 'restrict', 'subtract', 'union'];
 
         // Check that the set functions are defined
         funcNames.forEach(function (funcName) {
@@ -94,6 +94,13 @@ describe('Sjl Set Functions', function () {
 
         });
 
+    });
+
+    describe ('#`hasMethod`', function () {
+        it ('should detect when an object has a method defined on it.', function () {
+            expect(sjl.hasMethod({hello: function () {return 'hello';}}, 'hello' )).to.equal(true);
+            expect(sjl.hasMethod({}, 'hello')).to.equal(false);
+        });
     });
 
 //    describe ('#`merge` tests', function () {
