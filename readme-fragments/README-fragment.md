@@ -305,10 +305,11 @@ See './tests/for-browser'.
 - [ ] - Write tests for:
     - [X] - `sjl.issetAndOfType`
     - [ ] - `sjl.issetObjKeyAndOfType`
-    - [ ] - `sjl.isEmptyObjKeyAndOfType`
-    - [ ] - `sjl.hasMethod`
-    - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
-    - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
+    - [X] - `sjl.isEmptyObjKey`
+    - [X] - `sjl.isEmptyObjKeyAndOfType`
+    - [X] - `sjl.hasMethod`
+    - [X] - ~~`sjl.hasGetterMethod`~~ Method has been replaced with `sjl.hasMethod`.
+    - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed with `sjl.hasMethod`.
 - [X] - Write doc sections in main readme for:
     - [X] - `sjl.issetAndOfType`
     - [X] - `sjl.issetObjKeyAndOfType`

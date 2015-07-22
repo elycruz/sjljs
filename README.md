@@ -305,8 +305,9 @@ See './tests/for-browser'.
 - [ ] - Write tests for:
     - [X] - `sjl.issetAndOfType`
     - [ ] - `sjl.issetObjKeyAndOfType`
+    - [X] - `sjl.isEmptyObjKey`
     - [ ] - `sjl.isEmptyObjKeyAndOfType`
-    - [ ] - `sjl.hasMethod`
+    - [X] - `sjl.hasMethod`
     - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
     - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
 - [X] - Write doc sections in main readme for:

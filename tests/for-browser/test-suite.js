@@ -1061,16 +1061,19 @@ describe('Sjl Utils', function () {
         });
     });
 
-    describe('#`isEmptyObjKey`', function () {
+    describe('#`isEmptyObjKeyOrNotOfType` and #`isEmptyObjKey`', function () {
         var obj = objForIssetAndEmptyChecks,
             evaledObj = returnedObjWithEvaledValues(objForIssetAndEmptyChecks);
+
+        // Ensure legacy alias for function
+        expect(sjl.hasOwnProperty('isEmptyObjKey') && sjl.classOfIs(sjl.isEmptyObjKey, 'Function')).to.equal(true);
 
         // Truthy values
         ['nullValue', 'undefinedValue', 'emptyNumberValue', 'emptyObjectValue', 'emptyBooleanValue', 'emptyArrayValue']
         .forEach(function (key) {
             it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
             '" when no `type` param is passed in.', function () {
-                expect(sjl.isEmptyObjKey(evaledObj, key)).to.equal(true);
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key)).to.equal(true);
             });
         });
 
@@ -1079,7 +1082,25 @@ describe('Sjl Utils', function () {
         .forEach(function (key) {
             it('should return `false` for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
             '" when no `type` param is passed in.', function () {
-                expect(sjl.isEmptyObjKey(evaledObj, key)).to.equal(false);
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key)).to.equal(false);
+            });
+        });
+
+        // Truthy values
+        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'emptyObjectValue', 'emptyBooleanValue', 'emptyArrayValue']
+        .forEach(function (key) {
+            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when `type` params are passed in.  Passed in type params: [' + falsyKeysForMultipleTypes[key].join(',') + ']', function () {
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key, falsyKeysForMultipleTypes[key])).to.equal(true);
+            });
+        });
+
+        // Falsy values
+        ['nonEmptyNumberValue', 'nonEmptyBooleanValue', 'nonEmptyStringValue', 'nonEmptyArrayValue', 'nonEmptyObjectValue']
+        .forEach(function (key) {
+            it('should return `false` for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when  `type` params are passed in.  Passed in type params: [' + truthyKeysForMultipleTypes[key].join(',') + ']', function () {
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key, truthyKeysForMultipleTypes[key])).to.equal(false);
             });
         });
 
