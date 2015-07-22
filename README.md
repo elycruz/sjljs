@@ -295,7 +295,7 @@ See './tests/for-browser'.
 ### MVP Todos:
 - [X] - Write tests for:
     - [X] - `sjl.Optionable`.
-    - [ ] - `sjl.Attributable`.
+    - [X] - `sjl.Attributable`.
     - [X] - `sjl.getValueFromObj`
     - [X] - `sjl.setValueOnObj`
     - [X] - `sjl.extend` (for new features)
@@ -335,6 +335,7 @@ See './tests/for-browser'.
 - [ ] - ~~Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)~~ Moved to version 0.5.0.
 - [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
  right now it is not apparent to people that this is the default behaviour).
+- [ ] - Remove `attrs` method from `sjl.Attributable`.
 - [X] - Update readme to a more readable format.
 - [X] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
 - [X] - Changelog.
