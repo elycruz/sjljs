@@ -66,7 +66,7 @@
                 // Booleans
                 allowFloat =  self.get('allowFloat'),
                 allowCommas =  self.get('allowCommas'),
-                allowSigned =  self.get('allowSigned'),
+                //allowSigned =  self.get('allowSigned'),
                 allowBinary =  self.get('allowBinary'),
                 allowHex =  self.get('allowHex'),
                 allowOctal =  self.get('allowOctal'),

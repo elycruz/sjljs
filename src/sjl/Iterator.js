@@ -203,7 +203,7 @@
          * Overloaded getter/setter method for internal `keys` property.
          * @returns {sjl.ObjectIterator|Array<*>}
          */
-        keys: function () {
+        keys: function (keys) {
             var isGetterCall = typeof keys === 'undefined',
                 retVal = this,
                 selfCollectionIsArray;

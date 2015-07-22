@@ -128,6 +128,12 @@ gulp.task('make-browser-test-suite', function () {
         .pipe(gulp.dest('./'));
 });
 
+// Jshint pipe
+gulp.task('jshint', function () {
+    return gulp.src('src/**/*.js')
+        .pipe(jsHintPipe());
+});
+
 // Watches multiple sources
 gulp.task('watch', function () {
 

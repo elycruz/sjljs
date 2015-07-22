@@ -1,4 +1,4 @@
-/**! sjl.js Wed Jul 22 2015 01:03:06 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Wed Jul 22 2015 01:38:51 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
@@ -14,7 +14,7 @@
         || Object.prototype.toString.apply(context.sjl)
             .indexOf('Object') === -1 ? {} : context.sjl;
 
-    context.sjl.defineProperty = typeof Object['defineProperty'] === 'function' ? Object.defineProperty : null;
+    context.sjl.defineProperty = typeof Object.defineProperty === 'function' ? Object.defineProperty : null;
 
 }(typeof window === 'undefined' ? global : window));
 
@@ -1060,20 +1060,34 @@
         attrs: function (attrs) {
             var self = this,
                 retVal = self;
+
             switch(sjl.classOf(attrs)) {
+                // If is 'array' then is a getter
                 case 'Array':
                     retVal = self._getAttribs(attrs);
                     break;
+
+                // If is an 'object' then is a setter
                 case 'Object':
                     sjl.extend(true, self, attrs);
                     break;
+
+                // If is a 'string' then is a getter
                 case 'String':
-                    retVal = sjl.getValueFromObj(attrs, self);
+                    // Is setter
+                    if (arguments.length >= 2) {
+                        sjl.setValueOnObj(attrs, arguments[1], self);
+                    }
+                    // Is getter
+                    else {
+                        retVal = sjl.getValueFromObj(attrs, self);
+                    }
                     break;
                 default:
                     sjl.extend(true, self, attrs);
                     break;
             }
+
             return retVal;
         },
 
@@ -1084,7 +1098,7 @@
          * @returns {*|sjl.Attributable} - If setter returns self else returned mixed.
          */
         attr: function () {
-            return this.attrs(arguments);
+            return this.attrs.apply(this, arguments);
         },
 
         /**
@@ -2026,7 +2040,7 @@
                 // Booleans
                 allowFloat =  self.get('allowFloat'),
                 allowCommas =  self.get('allowCommas'),
-                allowSigned =  self.get('allowSigned'),
+                //allowSigned =  self.get('allowSigned'),
                 allowBinary =  self.get('allowBinary'),
                 allowHex =  self.get('allowHex'),
                 allowOctal =  self.get('allowOctal'),
@@ -3250,7 +3264,7 @@
          * Overloaded getter/setter method for internal `keys` property.
          * @returns {sjl.ObjectIterator|Array<*>}
          */
-        keys: function () {
+        keys: function (keys) {
             var isGetterCall = typeof keys === 'undefined',
                 retVal = this,
                 selfCollectionIsArray;
@@ -3312,7 +3326,7 @@
 
         // Set custom iterator function on `this`
         self[sjl.Symbol.iterator] = function () {
-            return sjl.ObjectIterator(self._values, self._values, pointer);
+            return sjl.ObjectIterator(self._values, self._values, 0);
         };
 
         // Set flag to remember that original iterator was overridden
@@ -3412,7 +3426,7 @@
 
             // Set custom iterator function on `this`
             self[sjl.Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._values, self._values, pointer);
+                return sjl.ObjectIterator(self._values, self._values, 0);
             };
 
             // Set flag to remember that original iterator was overridden
@@ -3430,6 +3444,7 @@
                 return this;
             },
             delete: function (key) {
+                var _index = sjl.indexOf(this._values, key);
                 if (this.has(key)) {
                     delete this._values[_index];
                     delete this._keys[_index];
@@ -3465,7 +3480,7 @@
                 }
                 else {
                     this._keys.push(key);
-                    this._values.push(value);;
+                    this._vales.push(value);
                 }
                 index = null;
                 return this;

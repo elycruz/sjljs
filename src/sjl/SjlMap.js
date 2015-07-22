@@ -29,7 +29,7 @@
 
             // Set custom iterator function on `this`
             self[sjl.Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._values, self._values, pointer);
+                return sjl.ObjectIterator(self._values, self._values, 0);
             };
 
             // Set flag to remember that original iterator was overridden
@@ -47,6 +47,7 @@
                 return this;
             },
             delete: function (key) {
+                var _index = sjl.indexOf(this._values, key);
                 if (this.has(key)) {
                     delete this._values[_index];
                     delete this._keys[_index];
@@ -82,7 +83,7 @@
                 }
                 else {
                     this._keys.push(key);
-                    this._values.push(value);;
+                    this._vales.push(value);
                 }
                 index = null;
                 return this;

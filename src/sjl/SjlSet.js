@@ -37,7 +37,7 @@
 
         // Set custom iterator function on `this`
         self[sjl.Symbol.iterator] = function () {
-            return sjl.ObjectIterator(self._values, self._values, pointer);
+            return sjl.ObjectIterator(self._values, self._values, 0);
         };
 
         // Set flag to remember that original iterator was overridden
