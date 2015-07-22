@@ -26,6 +26,12 @@
             self.addFromArray(iterable);
         }
 
+        // If anything other than an array is passed in throw an Error
+        else if (typeof iterable !== 'undefined') {
+            throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
+            ' Parameter received: ', iterable);
+        }
+
         // Make our `_values` array inherit our special iterator
         sjl.iterable(self._values, 0);
 
@@ -90,6 +96,7 @@
             while (iterator.valid()) {
                 this.add(iterator.next().value);
             }
+            iterator = null;
             return this;
         },
 
