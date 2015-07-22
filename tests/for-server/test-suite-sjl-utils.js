@@ -147,63 +147,18 @@ describe('Sjl Utils', function () {
         });
     });
 
-    describe('#`isEmptyObjKeyOrNotOfType` and #`isEmptyObjKey`', function () {
-        var obj = objForIssetAndEmptyChecks,
-            evaledObj = returnedObjWithEvaledValues(objForIssetAndEmptyChecks);
-
-        // Ensure legacy alias for function
-        expect(sjl.hasOwnProperty('isEmptyObjKey') && sjl.classOfIs(sjl.isEmptyObjKey, 'Function')).to.equal(true);
-
-        // Truthy values
-        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'emptyObjectValue', 'emptyBooleanValue', 'emptyArrayValue']
-        .forEach(function (key) {
-            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when no `type` param is passed in.', function () {
-                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key)).to.equal(true);
-            });
-        });
-
-        // Falsy values
-        ['nonEmptyNumberValue', 'nonEmptyBooleanValue', 'nonEmptyStringValue', 'nonEmptyArrayValue', 'nonEmptyObjectValue']
-        .forEach(function (key) {
-            it('should return `false` for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when no `type` param is passed in.', function () {
-                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key)).to.equal(false);
-            });
-        });
-
-        // Truthy values
-        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'emptyObjectValue', 'emptyBooleanValue', 'emptyArrayValue']
-        .forEach(function (key) {
-            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when `type` params are passed in.  Passed in type params: [' + falsyKeysForMultipleTypes[key].join(',') + ']', function () {
-                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key, falsyKeysForMultipleTypes[key])).to.equal(true);
-            });
-        });
-
-        // Falsy values
-        ['nonEmptyNumberValue', 'nonEmptyBooleanValue', 'nonEmptyStringValue', 'nonEmptyArrayValue', 'nonEmptyObjectValue']
-        .forEach(function (key) {
-            it('should return `false` for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when  `type` params are passed in.  Passed in type params: [' + truthyKeysForMultipleTypes[key].join(',') + ']', function () {
-                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key, truthyKeysForMultipleTypes[key])).to.equal(false);
-            });
-        });
-
-    });
-
     describe('#`issetAndOfType`', function () {
         var refObj = objForIssetAndEmptyChecks,
             evaledObj = returnedObjWithEvaledValues(refObj),
             types = keyTypesForIssetAndEmptyChecks,
             keys = Object.keys(evaledObj),
 
-            // Remove not set values for truthy tests
+        // Remove not set values for truthy tests
             truthyKeys = keys.filter(function (key) {
                 return evaledObj[key] !== null && evaledObj[key] !== undefined;
             }),
 
-            // Falsy keys to test
+        // Falsy keys to test
             falsyKeys = ['nullValue', 'undefinedValue'];
 
 
@@ -268,6 +223,129 @@ describe('Sjl Utils', function () {
         });
 
     });
+
+    describe('#`issetObjKeyAndOfType`', function () {
+        var refObj = objForIssetAndEmptyChecks,
+            evaledObj = returnedObjWithEvaledValues(refObj),
+            types = keyTypesForIssetAndEmptyChecks,
+            keys = Object.keys(evaledObj),
+
+            // Remove not set values for truthy tests
+            truthyKeys = keys.filter(function (key) {
+                return evaledObj[key] !== null && evaledObj[key] !== undefined;
+            }),
+
+            // Falsy keys to test
+            falsyKeys = ['nullValue', 'undefinedValue'];
+
+        // -------------------------------------------------------------------------------------------------------
+        // Tests for key values when passing in one type value to check against
+        // -------------------------------------------------------------------------------------------------------
+
+        // Perform truthy tests
+        truthyKeys.forEach(function (key) {
+            it('should return true for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when value is set and passed in type is "' + types[key] + '".', function () {
+                expect(sjl.issetObjKeyAndOfType(evaledObj, key, types[key])).to.equal(true);
+            });
+        });
+
+        // Perform falsy tests
+        falsyKeys.forEach(function (key) {
+            it('should return false for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when value is not set or passed in type is "' + types[key] + '".', function () {
+                expect(sjl.issetObjKeyAndOfType(evaledObj, key, types[key])).to.equal(false);
+            });
+        });
+
+        // -------------------------------------------------------------------------------------------------------
+        // Tests for key values when passing in one or more types
+        // -------------------------------------------------------------------------------------------------------
+
+        // Perform truthy tests with array of types
+        truthyKeys.forEach(function (key) {
+            it('should return true for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when value is set and comparison type(s) are "[' + truthyKeysForMultipleTypes[key].join(',') + ']" and passed in as an array.', function () {
+                expect(sjl.issetObjKeyAndOfType.call(sjl, evaledObj, key, truthyKeysForMultipleTypes[key])).to.equal(true);
+            });
+        });
+
+        // Perform falsy tests for array of types
+        keys.forEach(function (key) {
+            it('should return false for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when value is not set or comparison type(s) are "[' + falsyKeysForMultipleTypes[key].join(',') + ']" and passed in as an array.', function () {
+                expect(sjl.issetObjKeyAndOfType.call(sjl, evaledObj, key, falsyKeysForMultipleTypes[key])).to.equal(false);
+            });
+        });
+
+        // -------------------------------------------------------------------------------------------------------
+        // Tests for key values when passing in an array of types
+        // -------------------------------------------------------------------------------------------------------
+
+        // Perform truthy tests when passing in one or more types
+        truthyKeys.forEach(function (key) {
+            it('should return true for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when value is set and of given comparison type(s) "[' + truthyKeysForMultipleTypes[key].join(',') + ']" and passed in as separate params.', function () {
+                expect(sjl.issetObjKeyAndOfType.apply(sjl, [evaledObj, key].concat(truthyKeysForMultipleTypes[key]))).to.equal(true);
+            });
+        });
+
+        // Perform falsy tests when passing in one or more types
+        keys.forEach(function (key) {
+            it('should return false for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when value is not set or value is not of given comparison type(s) "[' + falsyKeysForMultipleTypes[key].join(',') + ']" and passed in as separate params.', function () {
+                expect(sjl.issetObjKeyAndOfType.apply(sjl, [evaledObj, key].concat(falsyKeysForMultipleTypes[key]))).to.equal(false);
+            });
+        });
+
+    });
+
+    describe('#`isEmptyObjKeyOrNotOfType` and #`isEmptyObjKey`', function () {
+        var obj = objForIssetAndEmptyChecks,
+            evaledObj = returnedObjWithEvaledValues(objForIssetAndEmptyChecks);
+
+        // Ensure legacy alias for function
+        expect(sjl.hasOwnProperty('isEmptyObjKey') && sjl.classOfIs(sjl.isEmptyObjKey, 'Function')).to.equal(true);
+
+        // Truthy values
+        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'emptyObjectValue', 'emptyBooleanValue', 'emptyArrayValue']
+        .forEach(function (key) {
+            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when no `type` param is passed in.', function () {
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key)).to.equal(true);
+            });
+        });
+
+        // Falsy values
+        ['nonEmptyNumberValue', 'nonEmptyBooleanValue', 'nonEmptyStringValue', 'nonEmptyArrayValue', 'nonEmptyObjectValue']
+        .forEach(function (key) {
+            it('should return `false` for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when no `type` param is passed in.', function () {
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key)).to.equal(false);
+            });
+        });
+
+        // Truthy values
+        ['nullValue', 'undefinedValue', 'emptyNumberValue', 'emptyObjectValue', 'emptyBooleanValue', 'emptyArrayValue']
+        .forEach(function (key) {
+            it('should return true for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when `type` params are passed in.  Passed in type params: [' + falsyKeysForMultipleTypes[key].join(',') + ']', function () {
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key, falsyKeysForMultipleTypes[key])).to.equal(true);
+            });
+        });
+
+        // Falsy values
+        ['nonEmptyNumberValue', 'nonEmptyBooleanValue', 'nonEmptyStringValue', 'nonEmptyArrayValue', 'nonEmptyObjectValue']
+        .forEach(function (key) {
+            it('should return `false` for value "' + obj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
+            '" when  `type` params are passed in.  Passed in type params: [' + truthyKeysForMultipleTypes[key].join(',') + ']', function () {
+                expect(sjl.isEmptyObjKeyOrNotOfType(evaledObj, key, truthyKeysForMultipleTypes[key])).to.equal(false);
+            });
+        });
+
+    });
+
+
 
     describe('#`empty`', function () {
 

@@ -302,9 +302,9 @@ See './tests/for-browser'.
     - [X] - `sjl.Iterator`
 
 ### Mvp for 0.4.9:
-- [ ] - Write tests for:
+- [X] - Write tests for:
     - [X] - `sjl.issetAndOfType`
-    - [ ] - `sjl.issetObjKeyAndOfType`
+    - [X] - `sjl.issetObjKeyAndOfType`
     - [X] - `sjl.isEmptyObjKey`
     - [X] - `sjl.isEmptyObjKeyAndOfType`
     - [X] - `sjl.hasMethod`
@@ -317,9 +317,9 @@ See './tests/for-browser'.
     - [X] - `sjl.hasMethod`
     - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
     - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
-- [ ] - Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)
-- [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
- right not it is not apparent to people that this is the default behaviour) (code smell).
+- [X] - ~~Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)~~ Moved to version 0.5.0.
+- [X] - ~~Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+ right now it is not apparent to people that this is the default behaviour).~~  Moved to version 0.5.0.
 
 ### MVP for 0.5.0:
 - [ ] - Write docs for all validator classes.
@@ -332,9 +332,13 @@ See './tests/for-browser'.
 - [ ] - Review entirety of library and look for places that could be refactored.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
+- [ ] - ~~Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)~~ Moved to version 0.5.0.
+- [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+ right now it is not apparent to people that this is the default behaviour).
 - [X] - Update readme to a more readable format.
 - [X] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
 - [X] - Changelog.
+
 
 ### MVP for 0.5.1+
 - [X] - Add changelog.md in main readme.
