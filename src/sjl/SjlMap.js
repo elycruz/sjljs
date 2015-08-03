@@ -83,7 +83,7 @@
                 }
                 else {
                     this._keys.push(key);
-                    this._vales.push(value);
+                    this._values.push(value);
                 }
                 index = null;
                 return this;
