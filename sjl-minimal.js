@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Wed Jul 22 2015 14:13:06 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Tue Aug 04 2015 16:10:13 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -684,10 +684,12 @@
      * @param o {mixed} - *object to extend
      * @param p {mixed} - *object to extend from
      * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @param useLegacyGettersAndSetters {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
      * @returns {*} - returns o
      */
-     function extend (o, p, deep) {
+     function extend (o, p, deep, useLegacyGettersAndSetters) {
         deep = deep || false;
+        useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
         var prop, propDescription,
             classOf_p_prop,
@@ -716,8 +718,11 @@
                     && !sjl.isEmptyObj(p[prop])) {
                     extend(o[prop], p[prop], deep);
                 }
+                else if (useLegacyGettersAndSetters) {
+                    sjl.setValueOnObj(prop, sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters), o);
+                }
                 else {
-                    sjl.setValueOnObj(prop, sjl.getValueFromObj(prop, p, null, true), o);
+                    o[prop] = p[prop]
                 }
             }
 
@@ -758,18 +763,15 @@
         var args = sjl.argsToArray(arguments),
             deep = sjl.extractBoolFromArrayStart(args),
             useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),// Can't remove this until version 0.5 cause it may cause breaking changes in dependant projects
-            arg0 = args.shift(),
-            arg;
+            arg0 = args.shift();
 
         // Extend object `0` with other objects
-        for (arg in args) {
-            arg = args[arg];
-
+        sjl.forEach(args, function (arg) {
             // Extend `arg0` if `arg` is an object
             if (sjl.classOfIs(arg, 'Object')) {
-                extend(arg0, arg, deep);
+                extend(arg0, arg, deep, useLegacyGettersAndSetters);
             }
-        }
+        });
 
         return arg0;
     };
