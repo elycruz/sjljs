@@ -5,9 +5,14 @@
 
     'use strict';
 
-    var sjl = context.sjl;
+    var sjl = context.sjl,
 
-    sjl.SjlMap = sjl.Extendable.extend(function SjlMap (iterable) {
+        /**
+         * SjlMap Constructor.
+         * @param iterable
+         * @constructor
+         */
+        SjlMap = function SjlMap (iterable) {
             var self = this;
             self.size = 0;
 
@@ -34,8 +39,9 @@
 
             // Set flag to remember that original iterator was overridden
             self._iteratorOverridden = true;
-        },
-        {
+        };
+
+    sjl.SjlMap = sjl.Extendable.extend(SjlMap, {
             clear: function () {
                 while (this._values.length > 0) {
                     this._values.pop();
