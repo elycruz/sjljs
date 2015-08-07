@@ -326,10 +326,12 @@ See './tests/for-browser'.
 - [ ] - Write tests for all validator classes:
     - [ ] - `sjl.NumberValidator`.
     - [ ] - `sjl.AlphaNumValidator`.
+    - [X] - `sjl.SjlMap`.
+    - [X] - `sjl.SjlSet`.
 - [ ] - Write a filter chain class.
 - [ ] - Change interface check to check for 'isValid' and 'message'
     properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
-- [ ] - Review entirety of library and look for places that could be refactored.
+- [ ] - Review entirety of library and look fgit or places that could be refactored.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
 - [ ] - ~~Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)~~ Moved to version 0.5.0.
