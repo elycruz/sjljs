@@ -135,19 +135,68 @@ describe('SjlSet', function () {
     });
 
     describe('#`sjl.SjlSet#keys`', function () {
-
+        var values = [1, 2, 3, 4, 5, 6, 6, 5, 4],
+            sjlSet = new sjl.SjlSet(values);
+        it ('should return an iterable object.', function () {
+            var iterator = sjlSet.keys(),
+                value,
+                index = 0;
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.value).to.equal(values[index]);
+                index += 1;
+            }
+        });
     });
 
     describe('#`sjl.SjlSet#values`', function () {
-
+        var values = [1, 2, 3, 4, 5, 6, 6, 5, 4],
+            sjlSet = new sjl.SjlSet(values);
+        it ('should return an iterable', function () {
+            var iterator = sjlSet.values(),
+                value,
+                index = 0;
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.value).to.equal(values[index]);
+                index += 1;
+            }
+        });
     });
 
     describe('#`sjl.SjlSet#addFromArray`', function () {
-
+        it ('should import unique values from an array.', function () {
+            var values = [1, 2, 3, 4, 5],
+                otherValues = [6, 7, 8, 9, 10],
+                expectedValues = values.concat(otherValues),
+                sjlSet = new sjl.SjlSet(values),
+                value,
+                index = 0,
+                iterator;
+            sjlSet.addFromArray(otherValues);
+            iterator = sjlSet.values();
+            expect(sjlSet.size).to.equal(expectedValues.length);
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.value).to.equal(expectedValues[index]);
+                index += 1;
+            }
+        });
     });
 
     describe('#`sjl.SjlSet#iterator`', function () {
-
+        var values = [1, 2, 3, 4, 5, 6, 6, 5, 4],
+            sjlSet = new sjl.SjlSet(values);
+        it ('should return an iterable object which contains values.', function () {
+            var iterator = sjlSet.iterator(),
+                value,
+                index = 0;
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.value).to.equal(values[index]);
+                index += 1;
+            }
+        });
     });
 
 });
