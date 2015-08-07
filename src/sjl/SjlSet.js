@@ -70,8 +70,8 @@
         entries: function () {
             return sjl.ObjectIterator(this._values, this._values, 0);
         },
-        forEach: function (callback) {
-            sjl.forEach(this._values, callback);
+        forEach: function (callback, context) {
+            sjl.forEach(this._values, callback, context);
             return this;
         },
         has: function (value) {

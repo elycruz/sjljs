@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Sjl.js</title>
+    <title>JSDoc: Source: mvc/router/RouteStack.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Sjl.js</h1>
+    <h1 class="page-title">Source: mvc/router/RouteStack.js</h1>
 
     
 
@@ -26,25 +26,22 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Created by Ely on 5/29/2015.
+ * Created by Ely on 8/2/2015.
  */
-(function (context) {
+(function () {
 
-    'use strict';
+    var RouteStack = sjl.Extendable.extend(function RouteStack () {
 
-    /**
-     * @module sjl
-     * @description Sjl object.
-     * @type {Object}
-     */
-    context.sjl = !context.hasOwnProperty('sjl')
-        || Object.prototype.toString.apply(context.sjl)
-            .indexOf('Object') === -1 ? {} : context.sjl;
+        },
+        {
+            addRoute: function (alias, route, priority) {},
+            addRoutes: function (routes) {},
+            removeRoute: function (alias) {},
+            removeRoutes: function (routeAliases) {},
+            setRoutes: function (routes) {}
+        });
 
-    context.sjl.defineProperty = typeof Object.defineProperty === 'function' ? Object.defineProperty : null;
-
-}(typeof window === 'undefined' ? global : window));
-</code></pre>
+}());</code></pre>
         </article>
     </section>
 

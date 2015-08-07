@@ -15,12 +15,9 @@
      * @returns {*}
      */
     sjl.iterable = function (array, pointer) {
-        if (!array.hasOwnProperty('_iteratorOverridden')) {
-            array[iteratorKey] = function () {
-                return sjl.Iterator(array, pointer);
-            };
-            array._iteratorOverridden = true;
-        }
+        array[iteratorKey] = function () {
+            return sjl.Iterator(array, pointer);
+        };
         return array;
     };
 
