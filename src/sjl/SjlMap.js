@@ -53,20 +53,21 @@
                 return this;
             },
             delete: function (key) {
-                var _index = sjl.indexOf(this._values, key);
+                var _index = sjl.indexOf(this._keys, key);
                 if (this.has(key)) {
                     delete this._values[_index];
                     delete this._keys[_index];
-                    this.size -= 1;
-                    this.size = this.size < 0 ? 1 : 0;
+                    this.size -= sjl.classOfIs(this.size, 'Number') && this.size > 0 ? 1 : 0;
                 }
                 return this;
             },
             entries: function () {
                 return sjl.ObjectIterator(this._keys, this._values, 0);
             },
-            forEach: function (callback) {
-                sjl.forEach(this._values, callback);
+            forEach: function (callback, context) {
+                for (var i = 0; i < this._keys.length - 1; i += 1) {
+                    callback.call(context, this._keys[i], this._values[i]);
+                }
                 return this;
             },
             has: function (key) {
@@ -90,6 +91,7 @@
                 else {
                     this._keys.push(key);
                     this._values.push(value);
+                    this.size += 1;
                 }
                 index = null;
                 return this;
