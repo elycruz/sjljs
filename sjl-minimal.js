@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Tue Aug 04 2015 16:10:13 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Thu Aug 06 2015 21:34:08 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -1306,12 +1306,9 @@
      * @returns {*}
      */
     sjl.iterable = function (array, pointer) {
-        if (!array.hasOwnProperty('_iteratorOverridden')) {
-            array[iteratorKey] = function () {
-                return sjl.Iterator(array, pointer);
-            };
-            array._iteratorOverridden = true;
-        }
+        array[iteratorKey] = function () {
+            return sjl.Iterator(array, pointer);
+        };
         return array;
     };
 

@@ -1,4 +1,4 @@
-/**! sjl.js Tue Aug 04 2015 16:10:14 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Thu Aug 06 2015 21:34:08 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
@@ -3078,12 +3078,9 @@
      * @returns {*}
      */
     sjl.iterable = function (array, pointer) {
-        if (!array.hasOwnProperty('_iteratorOverridden')) {
-            array[iteratorKey] = function () {
-                return sjl.Iterator(array, pointer);
-            };
-            array._iteratorOverridden = true;
-        }
+        array[iteratorKey] = function () {
+            return sjl.Iterator(array, pointer);
+        };
         return array;
     };
 
@@ -3361,8 +3358,8 @@
         entries: function () {
             return sjl.ObjectIterator(this._values, this._values, 0);
         },
-        forEach: function (callback) {
-            sjl.forEach(this._values, callback);
+        forEach: function (callback, context) {
+            sjl.forEach(this._values, callback, context);
             return this;
         },
         has: function (value) {
@@ -3404,9 +3401,14 @@
 
     'use strict';
 
-    var sjl = context.sjl;
+    var sjl = context.sjl,
 
-    sjl.SjlMap = sjl.Extendable.extend(function SjlMap (iterable) {
+        /**
+         * SjlMap Constructor.
+         * @param iterable
+         * @constructor
+         */
+        SjlMap = function SjlMap (iterable) {
             var self = this;
             self.size = 0;
 
@@ -3433,8 +3435,9 @@
 
             // Set flag to remember that original iterator was overridden
             self._iteratorOverridden = true;
-        },
-        {
+        };
+
+    sjl.SjlMap = sjl.Extendable.extend(SjlMap, {
             clear: function () {
                 while (this._values.length > 0) {
                     this._values.pop();
@@ -3482,7 +3485,7 @@
                 }
                 else {
                     this._keys.push(key);
-                    this._vales.push(value);
+                    this._values.push(value);
                 }
                 index = null;
                 return this;
