@@ -15,9 +15,11 @@
      * @returns {*}
      */
     sjl.iterable = function (array, pointer) {
-        array[iteratorKey] = function () {
-            return sjl.Iterator(array, pointer);
-        };
+        if (array) {
+            array[iteratorKey] = function () {
+                return sjl.Iterator(array, pointer);
+            };
+        }
         return array;
     };
 

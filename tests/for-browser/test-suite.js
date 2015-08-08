@@ -17,7 +17,10 @@ describe('SjlMap', function () {
     "use strict";
 
     describe('#`SjlMap Methods Existence`', function () {
-        var sjlMap = new sjl.SjlMap(),
+        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            ['v4', 4], ['v5', 5], ['v6', 6],
+            ['v7', 5], ['v8', 4]],
+            sjlMap = new sjl.SjlMap([]),
             methods = ['clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', 'get', 'set', 'addFromArray', 'iterator'];
         it ('should have the following methods: [`' + methods.join('`, `') + '`]', function () {
             methods.forEach(function (method) {
@@ -27,11 +30,13 @@ describe('SjlMap', function () {
     });
 
     describe('#`SjlMap#clear`', function () {
-        var mapFrom = [ ['a', 0], ['b', 1], ['c', 3] ],
-            sjlMap = new sjl.SjlMap(mapFrom);
+        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            ['v4', 4], ['v5', 5], ['v6', 6],
+            ['v7', 5], ['v8', 4]],
+            sjlMap = new sjl.SjlMap(entries);
 
         it ('should return `self`.', function () {
-            expect(sjlMap.size).to.equal(mapFrom.length);
+            expect(sjlMap.size).to.equal(entries.length);
             // Ensure `clear` returns `self`
             expect(sjlMap.clear()).to.equal(sjlMap);
         });
@@ -42,7 +47,10 @@ describe('SjlMap', function () {
     });
 
     describe('#`SjlMap#delete`', function () {
-        var keyEntryToDelete = 'b',
+        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+                ['v4', 4], ['v5', 5], ['v6', 6],
+                ['v7', 5], ['v8', 4]],
+            keyEntryToDelete = 'b',
             keyEntryToDeleteValue = 1,
             mapFrom = [ ['a', 0], [keyEntryToDelete, keyEntryToDeleteValue], ['c', 3] ],
             sjlMap = new sjl.SjlMap(mapFrom);
@@ -66,14 +74,10 @@ describe('SjlMap', function () {
     describe('#`SjlMap#entries`', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
                 ['v4', 4], ['v5', 5], ['v6', 6],
-                ['v7', 5], ['v8', 4] ],
+                ['v7', 5], ['v8', 4]],
             sjlMap = new sjl.SjlMap(entries),
             iterator = sjlMap.entries(),
             value;
-
-        it ('should have an `entries` function.', function () {
-            expect(typeof sjlMap.entries).to.equal('function');
-        });
 
         // Validate
         it ('should work as an iterator with included extra functions (`valid`).', function () {
@@ -89,7 +93,7 @@ describe('SjlMap', function () {
     describe('#`SjlMap#forEach`', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
                 ['v4', 4], ['v5', 5], ['v6', 6],
-                ['v7', 5], ['v8', 4] ],
+                ['v7', 5], ['v8', 4]],
             sjlMap = new sjl.SjlMap(entries),
             exampleContext = {someProperty: 'someValue'},
             indexCount = 0;
@@ -120,16 +124,14 @@ describe('SjlMap', function () {
 
     describe('#`SjlMap#has`', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
-            ['v4', 4], ['v5', 5], ['v6', 6],
-            ['v7', 5], ['v8', 4], [5, 'five']],
-            keyInMap = 5,
-            keyNotInMap = 8,
+                ['v4', 4], ['v5', 5], ['v6', 6],
+                ['v7', 5], ['v8', 4]],
+            keyInMap = 'v5',
+            keyNotInMap = 'v9',
             sjlMap = new sjl.SjlMap(entries);
-
         it ('should return `false` for keys not in set.', function () {
             expect(sjlMap.has(keyNotInMap)).to.equal(false);
         });
-
         it ('should return `true` for keys in set.', function () {
             expect(sjlMap.has(keyInMap)).to.equal(true);
         });
@@ -137,9 +139,9 @@ describe('SjlMap', function () {
 
     describe('#`SjlMap#keys`', function () {
         it ('should return an iterable object.', function () {
-            var  entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
                     ['v4', 4], ['v5', 5], ['v6', 6],
-                    ['v7', 5], ['v8', 4], [5, 'five']],
+                    ['v7', 5], ['v8', 4]],
                 sjlMap = new sjl.SjlMap(entries),
                 iterator = sjlMap.keys(),
                 value,
@@ -152,11 +154,95 @@ describe('SjlMap', function () {
         });
     });
 
-    describe('#`SjlMap#values`', function () { });
-    describe('#`SjlMap#get`', function () { });
-    describe('#`SjlMap#set`', function () { });
-    describe('#`SjlMap#addFromArray`', function () { });
-    describe('#`SjlMap#iterator`', function () { });
+    describe('#`SjlMap#values`', function () {
+        it ('should return an iterable', function () {
+            var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+                    ['v4', 4], ['v5', 5], ['v6', 6],
+                    ['v7', 5], ['v8', 4]],
+                sjlMap = new sjl.SjlMap(entries),
+                iterator = sjlMap.values(),
+                value,
+                index = 0;
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.value).to.equal(entries[index][1]);
+                index += 1;
+            }
+        });
+    });
+
+    describe('#`SjlMap#get`', function () {
+        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            ['v4', 4], ['v5', 5], ['v6', 6],
+            ['v7', 5], ['v8', 4]],
+            sjlMap = new sjl.SjlMap(entries);
+        it ('should return the correct value for a given key.', function () {
+            expect(sjlMap.get('v1')).to.equal(1);
+        });
+
+        it ('should return undefined for for a given non-existent key entry.', function () {
+            expect(sjlMap.get('v9')).to.equal(undefined);
+        });
+    });
+
+    describe('#`SjlMap#set`', function () {
+        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            ['v4', 4], ['v5', 5], ['v6', 6],
+            ['v7', 5], ['v8', 4]],
+            sjlMap = new sjl.SjlMap(entries);
+        it ('should return `self` when setting a key-value pair.', function () {
+            expect(sjlMap.has('v9')).to.equal(false);
+            expect(sjlMap.set('v9')).to.equal(sjlMap);
+            expect(sjlMap.has('v9')).to.equal(true);
+        });
+
+        it ('should return undefined for for a given non-existent key entry.', function () {
+            expect(sjlMap.get('v10')).to.equal(undefined);
+        });
+    });
+
+    describe('#`SjlMap#addFromArray`', function () {
+        it ('should import unique values from an array.', function () {
+            var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+                    ['v4', 4], ['v5', 5], ['v6', 6],
+                    ['v7', 5], ['v8', 4]],
+                otherEntries = [['v10', 7], ['v11', 8], ['v12', 9]],
+                expectedEntries = entries.concat(otherEntries),
+                sjlMap = new sjl.SjlMap(entries),
+                value,
+                index = 0,
+                iterator;
+            //console.log(sjlMap.iterator());
+            sjlMap.addFromArray(otherEntries);
+            iterator = sjlMap.entries();
+            expect(sjlMap.size).to.equal(expectedEntries.length);
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.value[0]).to.equal(expectedEntries[index][0]);
+                expect(value.value[1]).to.equal(expectedEntries[index][1]);
+                index += 1;
+            }
+        });
+    });
+
+    describe('#`SjlMap#iterator`', function () {
+        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+                ['v4', 4], ['v5', 5], ['v6', 6],
+                ['v7', 5], ['v8', 4]],
+            sjlMap = new sjl.SjlMap(entries),
+            iterator = sjlMap.iterator(),
+            value;
+
+        // Validate
+        it ('should work as an iterator with included extra functions (`valid`).', function () {
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.done).to.equal(false);
+                expect(value.value[0]).to.equal(entries[iterator.pointer() - 1][0]);
+                expect(value.value[1]).to.equal(entries[iterator.pointer() - 1][1]);
+            }
+        });
+    });
 
 });
 /**

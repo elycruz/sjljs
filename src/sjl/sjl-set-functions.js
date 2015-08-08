@@ -186,7 +186,7 @@
                     sjl.setValueOnObj(prop, sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters), o);
                 }
                 else {
-                    o[prop] = p[prop]
+                    o[prop] = p[prop];
                 }
             }
 

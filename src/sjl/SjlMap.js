@@ -15,15 +15,15 @@
         SjlMap = function SjlMap (iterable) {
             var self = this;
             self.size = 0;
+            self._keys = [];
+            self._values = [];
 
             // If an array was passed in inject values
             if (sjl.classOfIs(iterable, 'Array')) {
-
-                // Make our internal arrays inherit our special iterator
-                self._values = sjl.iterable([], 0);
-                self._keys = sjl.iterable([], 0);
-
                 self.addFromArray(iterable);
+                // Make our internal arrays inherit our special iterator
+                self._values = sjl.iterable(self._values, 0);
+                self._keys = sjl.iterable(self._keys, 0);
             }
 
             // If anything other than an array is passed in throw an Error
@@ -34,7 +34,7 @@
 
             // Set custom iterator function on `this`
             self[sjl.Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._values, self._values, 0);
+                return sjl.ObjectIterator(self._keys, self._values, 0);
             };
 
             // Set flag to remember that original iterator was overridden
@@ -86,7 +86,9 @@
             set: function (key, value) {
                 var index = sjl.indexOf(this._keys, key);
                 if (index > -1) {
+                    this._keys[index] = key;
                     this._values[index] = value;
+                    this.size += 1;
                 }
                 else {
                     this._keys.push(key);
@@ -101,15 +103,15 @@
              * METHODS NOT PART OF THE `Set` spec for ES6:
              **************************************************/
 
-            addFromArray: function (value) {
+            addFromArray: function (array) {
                 // Iterate through the passed in iterable and add all values to `_values`
-                var iterator = sjl.iterable(value, 0)[sjl.Symbol.iterator](),
+                var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
                     entry;
 
                 // Loop through values and add them
                 while (iterator.valid()) {
-                    entry = iterator.next().value;
-                    this.set(entry[0], entry[1]);
+                    entry = iterator.next();
+                    this.set(entry.value[0], entry.value[1]);
                 }
                 iterator = null;
                 entry = null;
@@ -117,7 +119,7 @@
             },
 
             iterator: function () {
-                return this._values[sjl.Symbol.iterator]();
+                return this.entries();
             }
         });
 
