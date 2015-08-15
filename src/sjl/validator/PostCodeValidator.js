@@ -9,8 +9,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.PostCodeValidator = context.sjl.AbstractValidator.extend(
         function PostCodeValidator(options) {
 

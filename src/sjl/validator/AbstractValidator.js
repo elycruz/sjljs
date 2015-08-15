@@ -7,7 +7,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
     context.sjl.validator = context.sjl.isset(context.sjl.validator) ? context.sjl.validator : {};
 
     context.sjl.AbstractValidator =

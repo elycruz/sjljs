@@ -6,8 +6,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.RegexValidator = context.sjl.AbstractValidator.extend(
         function RegexValidator(options) {
 

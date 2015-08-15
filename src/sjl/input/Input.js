@@ -9,8 +9,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.Input = context.sjl.Optionable.extend(
         function Input(options) {
             var alias = null;

@@ -1,15 +1,14 @@
 /**
  * Created by Ely on 8/15/2015.
- * Navigation namespace
  */
-(function (context) {
+(function () {
+    /**
+     * BaseContainer constructor
+     * @type {Object|void|*}
+     */
+    var BaseContainer = sjl.package('navigation.BaseContainer'),
+        Navigation = BaseContainer.extend(function Navigation() {});
 
-    var navigation = {};
-
-    // Make navigation namespace read only
-    Object.defineProperty(context.sjl, 'navigation', {
-        get: function () { return navigation; },
-        set: function () {}
-    });
-
-}(typeof window === 'undefined' ? global : window));
+    // Set Base Container property as gettable only
+    return sjl.package('navigation.BaseContainer', Navigation);
+}());

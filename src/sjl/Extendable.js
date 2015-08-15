@@ -11,7 +11,7 @@
      * @class module:sjl.Extendable
      * @name sjl.Extendable
      */
-    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});
+    context.sjl.Extendable = context.sjl.defineClass(Function, function Extendable() {});
 
     /**
      * Extends a new copy of self with passed in parameters.

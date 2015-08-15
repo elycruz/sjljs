@@ -6,8 +6,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.InputFilter = context.sjl.Optionable.extend(
 
         function InputFilter(options) {

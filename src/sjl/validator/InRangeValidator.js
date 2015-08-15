@@ -12,8 +12,6 @@
             ' to be of type "' + expectedType + '".  Value received: ' + value);
     }
 
-    context.sjl = context.sjl || {};
-
     context.sjl.InRangeValidator = context.sjl.AbstractValidator.extend(function InRangeValidator (options) {
 
         // Set defaults and extend with abstract validator

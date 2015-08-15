@@ -10,8 +10,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.AlphaNumValidator = context.sjl.AbstractValidator.extend(function AlphaNumValidator (options) {
 
         // Set defaults and extend with abstract validator
