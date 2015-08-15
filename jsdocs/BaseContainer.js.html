@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Extendable.js</title>
+    <title>JSDoc: Source: navigation/BaseContainer.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Extendable.js</h1>
+    <h1 class="page-title">Source: navigation/BaseContainer.js</h1>
 
     
 
@@ -26,30 +26,30 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Created by Ely on 4/12/2014.
- * Code copy pasted from "Javascript the definitive guide"
+ * Created by Ely on 8/15/2015.
  */
 (function (context) {
 
-    'use strict';
+    var sjl = context.sjl,
+        BaseContainer = function BaseContainer (pages) {
+            sjl.SjlMap.call(this);
+            this.addPages(pages);
+        };
 
-    /**
-     * The `sjl.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-     * @class module:sjl.Extendable
-     * @name sjl.Extendable
-     */
-    context.sjl.Extendable = context.sjl.defineClass(Function, function Extendable() {});
+    return sjl.package('navigation.BaseContainer',
+        sjl.SjlMap.extend(BaseContainer, {
+            addPage: function (page) {},
+            addPages: function (pages) {},
+            findAllBy: function (params) {},
+            findBy: function (params) {},
+            findFirstBy: function (params) {},
+            children: function () {},
+            removePage: function (params) {},
+            removePages: function (params) {},
+            setPages: function (pages) {}
+        }));
 
-    /**
-     * Extends a new copy of self with passed in parameters.
-     * @method sjl.Extendable.extend
-     * @param constructor {Constructor} - Required.
-     * @param methods {Object} - Optional.
-     * @param statics {Object} - Static methods. Optional.
-     */
-
-})(typeof window === 'undefined' ? global : window);
-</code></pre>
+}(typeof window === 'undefined' ? global : window));</code></pre>
         </article>
     </section>
 

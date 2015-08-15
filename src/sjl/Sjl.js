@@ -5,14 +5,19 @@
 
     'use strict';
 
+    // Singleton instance
+    var sjl = {};
+
     /**
      * @module sjl
      * @description Sjl object.
      * @type {Object}
      */
-    context.sjl = !context.hasOwnProperty('sjl')
-        || Object.prototype.toString.apply(context.sjl)
-            .indexOf('Object') === -1 ? {} : context.sjl;
+    Object.defineProperty(context, 'sjl', {
+        get: function () {
+            return sjl;
+        }
+    });
 
     context.sjl.defineProperty = typeof Object.defineProperty === 'function' ? Object.defineProperty : null;
 

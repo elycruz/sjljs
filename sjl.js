@@ -1,18 +1,23 @@
-/**! sjl.js Sat Aug 08 2015 17:12:03 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Sat Aug 15 2015 18:53:43 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
 
     'use strict';
 
+    // Singleton instance
+    var sjl = {};
+
     /**
      * @module sjl
      * @description Sjl object.
      * @type {Object}
      */
-    context.sjl = !context.hasOwnProperty('sjl')
-        || Object.prototype.toString.apply(context.sjl)
-            .indexOf('Object') === -1 ? {} : context.sjl;
+    Object.defineProperty(context, 'sjl', {
+        get: function () {
+            return sjl;
+        }
+    });
 
     context.sjl.defineProperty = typeof Object.defineProperty === 'function' ? Object.defineProperty : null;
 
@@ -915,7 +920,7 @@
             catch (e) {
                 // Else throw error
                 throw new Error('An error occurred while trying to define a ' +
-                    'sub class using: "' + originalString + '" as a sub class in `sjl.defineSubClass`.  ' +
+                    'sub class using: "' + originalString + '" as a sub class in `sjl.defineClass`.  ' +
                     'In unminified source: "./src/sjl/sjl-oop-util-functions.js"');
             }
         }
@@ -927,7 +932,7 @@
 
         // If not a constructor and not a string
         else if (!sjl.classOfIs(_val, 'Function') && !isString) {
-            throw new Error ('`sjl.defineSubClass` requires constructor ' +
+            throw new Error ('`sjl.defineClass` requires constructor ' +
                 'or string to create a subclass of "' +
                 '.  In unminified source "./src/sjl/sjl-oop-util-functions.js"');
         }
@@ -937,18 +942,22 @@
 
     /**
      * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods
-     * @function module:sjl.defineSubClass
+     * @function module:sjl.defineClass
      * @param superclass {Constructor} - SuperClass's constructor.  Required.
      * @param constructor {Constructor} -  Constructor.  Required.
      * @param methods {Object} - Optional.
      * @param statics {Object} - Static methods. Optional.
      * @returns {Constructor}
      */
-    sjl.defineSubClass = function (superclass, // Constructor of the superclass
-                                           constructor, // The constructor for the new subclass
-                                           methods, // Instance methods: copied to prototype
-                                           statics) // Class properties: copied to constructor
+    sjl.defineClass = function (superclass, // Constructor of the superclass
+                                   constructor, // The constructor for the new subclass
+                                   methods, // Instance methods: copied to prototype
+                                   statics) // Class properties: copied to constructor
     {
+        // Resolve superclass
+        superclass = superclass || sjl.copyOfProto(Object.prototype);
+
+        // Resolve constructor
         var _constructor = resolveConstructor(constructor);
 
         // Set up the prototype object of the subclass
@@ -956,7 +965,7 @@
 
         // Make the constructor extendable
         _constructor.extend = function (constructor_, methods_, statics_) {
-                return sjl.defineSubClass(this, constructor_, methods_, statics_);
+                return sjl.defineClass(this, constructor_, methods_, statics_);
             };
 
         // Define constructor's constructor
@@ -990,6 +999,76 @@
 })(typeof window === 'undefined' ? global : window);
 
 /**
+ * Created by Ely on 8/15/2015.
+ */
+(function (context) {
+
+    'use strict';
+
+    /**
+     * Private package object.
+     * @type {{}}
+     */
+    var packages = {};
+
+    /**
+     * Makes a property non settable on `obj` and sets `value` as the returnable property.
+     * @param obj {Object}
+     * @param key {String}
+     * @param value {*}
+     */
+    function makeNotSettableProp(obj, key, value) {
+        (function (_obj, _key, _value) {
+            Object.defineProperty(_obj, _key, {
+                get: function () { return _value; }
+            });
+        }(obj, key, value));
+    }
+
+    /**
+     * Sets properties on obj passed in and makes those properties unsettable.
+     * @param ns_string {String} - Namespace string; E.g., 'all.your.base'
+     * @param objToSearch {Object}
+     * @param valueToSet {*|undefined}
+     * @returns {*} - Found or set value in the object to search.
+     * @private
+     */
+    function namespace (ns_string, objToSearch, valueToSet) {
+        var parts = ns_string.split('.'),
+            parent = objToSearch,
+            shouldSetValue = typeof valueToSet !== 'undefined',
+            hasOwnProperty;
+
+        sjl.forEach(parts, function (key, i) {
+            hasOwnProperty = parent.hasOwnProperty(key);
+            if (i === parts.length - 1
+                && shouldSetValue && !hasOwnProperty) {
+                makeNotSettableProp(parent, key, valueToSet);
+            }
+            else if (typeof parent[key] === 'undefined' && !hasOwnProperty) {
+                makeNotSettableProp(parent, key, {});
+            }
+            parent = parent[key];
+        });
+
+        return parent;
+    }
+
+    /**
+     * Returns a property from sjl packages.
+     * @note If `nsString` is undefined returns the protected packages object itself.
+     * @function module:sjl.package
+     * @param propName {String}
+     * @param value {*}
+     * @returns {*}
+     */
+    context.sjl.package = function (nsString, value) {
+        return typeof nsString === 'undefined' ? packages
+            : namespace(nsString, packages, value);
+    };
+
+}(typeof window === 'undefined' ? global : window));
+/**
  * Created by Ely on 7/17/2015.
  */
 (function (context) {
@@ -1021,7 +1100,7 @@
      * @class module:sjl.Extendable
      * @name sjl.Extendable
      */
-    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});
+    context.sjl.Extendable = context.sjl.defineClass(Function, function Extendable() {});
 
     /**
      * Extends a new copy of self with passed in parameters.
@@ -1295,7 +1374,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
     context.sjl.validator = context.sjl.isset(context.sjl.validator) ? context.sjl.validator : {};
 
     context.sjl.AbstractValidator =
@@ -1441,8 +1519,6 @@
 'use strict';
 
 (function (context) {
-
-    context.sjl = context.sjl || {};
 
     context.sjl.ValidatorChain = context.sjl.AbstractValidator.extend(
         function ValidatorChain(options) {
@@ -1623,8 +1699,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.AlphaNumValidator = context.sjl.AbstractValidator.extend(function AlphaNumValidator (options) {
 
         // Set defaults and extend with abstract validator
@@ -1671,8 +1745,6 @@
 'use strict';
 
 (function (context) {
-
-    context.sjl = context.sjl || {};
 
     context.sjl.EmptyValidator = context.sjl.AbstractValidator.extend(
         function EmptyValidator(options) {
@@ -1729,8 +1801,6 @@
         throw Error(funcName + ' expects ' + paramName +
             ' to be of type "' + expectedType + '".  Value received: ' + value);
     }
-
-    context.sjl = context.sjl || {};
 
     context.sjl.InRangeValidator = context.sjl.AbstractValidator.extend(function InRangeValidator (options) {
 
@@ -1827,8 +1897,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.RegexValidator = context.sjl.AbstractValidator.extend(
         function RegexValidator(options) {
 
@@ -1900,8 +1968,6 @@
 'use strict';
 
 (function (context) {
-
-    context.sjl = context.sjl || {};
 
     context.sjl.EmailValidator = context.sjl.RegexValidator.extend(
         function EmailValidator(options) {
@@ -1982,8 +2048,6 @@
 (function (context) {
 
     'use strict';
-
-    context.sjl = context.sjl || {};
 
     context.sjl.NumberValidator = context.sjl.AbstractValidator.extend(function NumberValidator (options) {
 
@@ -2175,8 +2239,6 @@
 'use strict';
 
 (function (context) {
-
-    context.sjl = context.sjl || {};
 
     context.sjl.PostCodeValidator = context.sjl.AbstractValidator.extend(
         function PostCodeValidator(options) {
@@ -2482,8 +2544,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.Input = context.sjl.Optionable.extend(
         function Input(options) {
             var alias = null;
@@ -2704,8 +2764,6 @@
 'use strict';
 
 (function (context) {
-
-    context.sjl = context.sjl || {};
 
     context.sjl.InputFilter = context.sjl.Optionable.extend(
 

@@ -6,8 +6,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.EmptyValidator = context.sjl.AbstractValidator.extend(
         function EmptyValidator(options) {
 

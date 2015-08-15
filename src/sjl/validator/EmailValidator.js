@@ -6,8 +6,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.EmailValidator = context.sjl.RegexValidator.extend(
         function EmailValidator(options) {
 

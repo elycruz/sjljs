@@ -52,7 +52,7 @@
             catch (e) {
                 // Else throw error
                 throw new Error('An error occurred while trying to define a ' +
-                    'sub class using: "' + originalString + '" as a sub class in `sjl.defineSubClass`.  ' +
+                    'sub class using: "' + originalString + '" as a sub class in `sjl.defineClass`.  ' +
                     'In unminified source: "./src/sjl/sjl-oop-util-functions.js"');
             }
         }
@@ -64,7 +64,7 @@
 
         // If not a constructor and not a string
         else if (!sjl.classOfIs(_val, 'Function') && !isString) {
-            throw new Error ('`sjl.defineSubClass` requires constructor ' +
+            throw new Error ('`sjl.defineClass` requires constructor ' +
                 'or string to create a subclass of "' +
                 '.  In unminified source "./src/sjl/sjl-oop-util-functions.js"');
         }
@@ -74,18 +74,22 @@
 
     /**
      * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods
-     * @function module:sjl.defineSubClass
+     * @function module:sjl.defineClass
      * @param superclass {Constructor} - SuperClass's constructor.  Required.
      * @param constructor {Constructor} -  Constructor.  Required.
      * @param methods {Object} - Optional.
      * @param statics {Object} - Static methods. Optional.
      * @returns {Constructor}
      */
-    sjl.defineSubClass = function (superclass, // Constructor of the superclass
-                                           constructor, // The constructor for the new subclass
-                                           methods, // Instance methods: copied to prototype
-                                           statics) // Class properties: copied to constructor
+    sjl.defineClass = function (superclass, // Constructor of the superclass
+                                   constructor, // The constructor for the new subclass
+                                   methods, // Instance methods: copied to prototype
+                                   statics) // Class properties: copied to constructor
     {
+        // Resolve superclass
+        superclass = superclass || sjl.copyOfProto(Object.prototype);
+
+        // Resolve constructor
         var _constructor = resolveConstructor(constructor);
 
         // Set up the prototype object of the subclass
@@ -93,7 +97,7 @@
 
         // Make the constructor extendable
         _constructor.extend = function (constructor_, methods_, statics_) {
-                return sjl.defineSubClass(this, constructor_, methods_, statics_);
+                return sjl.defineClass(this, constructor_, methods_, statics_);
             };
 
         // Define constructor's constructor

@@ -6,8 +6,6 @@
 
 (function (context) {
 
-    context.sjl = context.sjl || {};
-
     context.sjl.ValidatorChain = context.sjl.AbstractValidator.extend(
         function ValidatorChain(options) {
 
