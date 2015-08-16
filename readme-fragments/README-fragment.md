@@ -334,14 +334,19 @@ See './tests/for-browser'.
 - [ ] - Review entirety of library and look fgit or places that could be refactored.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
-- [ ] - ~~Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)~~ Moved to version 0.5.0.
+- [ ] - `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0).
 - [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
  right now it is not apparent to people that this is the default behaviour).
 - [ ] - Remove `attrs` method from `sjl.Attributable`.
 - [X] - Update readme to a more readable format.
 - [X] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
 - [X] - Changelog.
-
+- [ ] - Change the library from being a global for nodejs to being an exported package.
+- [ ] - Set all components (constructors) of sjl to be exported when being used in nodejs.
+- [ ] - Support for AMD if it is available when used on the frontend.
+- [ ] - Remove use of eval option for `defineSubClass` (now `defineClass`).
+- [ ] - Create docs for `sjl.package`.
+- [ ] - Shim `sjl.forEach` and `sjl.indexOf`.
 
 ### MVP for 0.5.1+
 - [X] - Add changelog.md in main readme.

@@ -9,6 +9,6 @@
     var BaseContainer = sjl.package('navigation.BaseContainer'),
         Navigation = BaseContainer.extend(function Navigation() {});
 
-    // Set Base Container property as gettable only
-    return sjl.package('navigation.BaseContainer', Navigation);
+    // Set Navigation Constructor as gettable only
+    return sjl.package('navigation.Navigation', Navigation);
 }());
