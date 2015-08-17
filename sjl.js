@@ -1,4 +1,4 @@
-/**! sjl.js Sun Aug 16 2015 04:48:07 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Mon Aug 17 2015 19:52:24 GMT-0400 (Eastern Daylight Time) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
@@ -999,17 +999,14 @@
 })(typeof window === 'undefined' ? global : window);
 
 /**
- * Created by Ely on 8/15/2015.
+ * Created by Ely on 8/17/2015.
  */
 (function (context) {
 
     'use strict';
 
-    /**
-     * Private package object.
-     * @type {{}}
-     */
-    var packages = {};
+    // Get `sjl` variable
+    var sjl = context.sjl;
 
     /**
      * Makes a property non settable on `obj` and sets `value` as the returnable property.
@@ -1020,7 +1017,9 @@
     function makeNotSettableProp(obj, key, value) {
         (function (_obj, _key, _value) {
             Object.defineProperty(_obj, _key, {
-                get: function () { return _value; }
+                get: function () {
+                    return _value;
+                }
             });
         }(obj, key, value));
     }
@@ -1033,7 +1032,7 @@
      * @returns {*} - Found or set value in the object to search.
      * @private
      */
-    function namespace (ns_string, objToSearch, valueToSet) {
+    function namespace(ns_string, objToSearch, valueToSet) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
             shouldSetValue = typeof valueToSet !== 'undefined',
@@ -1055,17 +1054,47 @@
     }
 
     /**
-     * Returns a property from sjl packages.
-     * @note If `nsString` is undefined returns the protected packages object itself.
-     * @function module:sjl.package
-     * @param propName {String}
-     * @param value {*}
-     * @returns {*}
+     * Package factory method.  Allows object to have a `package` method
+     * which acts like java like namespace except it allows you to set
+     * it's members (once) and then protects it's members.
+     * @param obj {Object|*} - Object to set the `package` method on.
+     * @return {Object|*} - Returns passed in `obj`.
      */
-    context.sjl.package = function (nsString, value) {
-        return typeof nsString === 'undefined' ? packages
-            : namespace(nsString, packages, value);
+    sjl.createTopLevelPackage = function (obj) {
+        return (function () {
+            /**
+             * Private package object.
+             * @type {{}}
+             */
+            var packages = {};
+
+            /**
+             * Returns a property from sjl packages.
+             * @note If `nsString` is undefined returns the protected packages object itself.
+             * @function module:sjl.package
+             * @param propName {String}
+             * @param value {*}
+             * @returns {*}
+             */
+            obj.package = function (nsString, value) {
+                return typeof nsString === 'undefined' ? packages
+                    : namespace(nsString, packages, value);
+            };
+
+            // Return passed in obj
+            return obj;
+        }());
     };
+
+}(typeof window === 'undefined' ? global : window));
+/**
+ * Created by Ely on 8/15/2015.
+ */
+(function (context) {
+
+    'use strict';
+
+    context.sjl.createTopLevelPackage(context.sjl);
 
 }(typeof window === 'undefined' ? global : window));
 /**

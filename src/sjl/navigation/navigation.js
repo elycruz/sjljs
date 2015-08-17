@@ -2,6 +2,7 @@
  * Created by Ely on 8/15/2015.
  */
 (function () {
+
     /**
      * BaseContainer constructor
      * @type {Object|void|*}
@@ -11,4 +12,5 @@
 
     // Set Navigation Constructor as gettable only
     return sjl.package('navigation.Navigation', Navigation);
+
 }());

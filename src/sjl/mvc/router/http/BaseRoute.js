@@ -3,11 +3,21 @@
  */
 (function () {
 
-    var Constructor = function BaseRoute () {},
-        BaseRoute = sjl.Extendable.extend(Constructor, {
-           getAssembledParams: function () { return []; }
-        });
+    /**
+     * Base Http Route constructor.
+     * @constructor
+     */
+    var BaseRoute = function BaseRoute () {};
 
+    /**
+     * Base Http Route statics and prototype
+     * @type {router.http.BaseRoute}
+     */
+    BaseRoute = sjl.Extendable.extend(BaseRoute, {
+       getAssembledParams: function () { return []; }
+    });
+
+    // Set `BaseRoute` on package path
     sjl.package('router.http.BaseRoute', BaseRoute);
 
 }());

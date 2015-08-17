@@ -3,6 +3,8 @@
  */
 (function (context) {
 
+    'use strict';
+
     var sjl = context.sjl,
         BaseContainer = function BaseContainer (pages) {
             sjl.SjlMap.call(this);
@@ -10,16 +12,37 @@
         };
 
     return sjl.package('navigation.BaseContainer',
+
         sjl.SjlMap.extend(BaseContainer, {
-            addPage: function (page) {},
-            addPages: function (pages) {},
+            addPage: function (page) {
+                return this.set(page.name, page);
+            },
+            addPages: function (pages) {
+                var self = this;
+                pages.forEach(function (page) {
+                    self.addPage(page);
+                });
+                return self;
+            },
             findAllBy: function (params) {},
             findBy: function (params) {},
             findFirstBy: function (params) {},
             children: function () {},
-            removePage: function (params) {},
-            removePages: function (params) {},
-            setPages: function (pages) {}
+            removePage: function (name) {
+                return this.delete(sjl.classOfIs(name, 'String')
+                    ? name : name.name);
+            },
+            removePages: function (pages) {
+                var self = this;
+                sjl.forEach(pages, function (page) {
+                    self.removePage(page);
+                });
+                return self;
+            },
+            setPages: function (pages) {
+                return this.clear()
+                    .addPages(pages);
+            }
         }));
 
 }(typeof window === 'undefined' ? global : window));
