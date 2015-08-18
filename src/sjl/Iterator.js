@@ -14,13 +14,24 @@
      * @param pointer {Number|undefined}
      * @returns {*}
      */
-    sjl.iterable = function (array, pointer) {
-        if (array) {
-            array[iteratorKey] = function () {
-                return sjl.Iterator(array, pointer);
+    sjl.iterable = function (arrayOrObj, pointer) {
+        var classOfArrayOrObj = sjl.classOf(arrayOrObj),
+            keys, values;
+        if (classOfArrayOrObj === 'Array') {
+            arrayOrObj[iteratorKey] = function () {
+                return sjl.Iterator(arrayOrObj, pointer);
             };
         }
-        return array;
+        else if (classOfArrayOrObj === 'Object') {
+            keys = sjl.keys(arrayOrObj);
+            values = keys.map(function (key) {
+                return arrayOrObj[key];
+            });
+            arrayOrObj[iteratorKey] = function () {
+                return sjl.ObjectIterator(keys, values, pointer);
+            }
+        }
+        return arrayOrObj;
     };
 
     /**
