@@ -500,6 +500,7 @@
     };
 
     /**
+     * Ensures passed in value is a usable number (a number which is also not NaN).
      * @function module:sjl.isUsableNumber
      * Sugar for checking for 'Number' type and that the passed in value is not NaN.
      * @param value {*}
@@ -507,6 +508,29 @@
      */
     sjl.isUsableNumber = function (value) {
         return sjl.classOfIs(value, 'Number') && !isNaN(value);
+    };
+
+    /**
+     * Implodes a `Set`, `Array` or `SjlSet` passed in.
+     * @function module:sjl.implode
+     * @param separator {String} - Separator to join members with.
+     * @param list {Array|Set|SjlSet} - Members to join.
+     * @returns {string} - Imploded string.  *Returns empty string if no members, to join, are found.
+     */
+    sjl.implode = function (separator, list) {
+        var retVal = '',
+            out;
+        if (sjl.classOfIs(list, 'Array')) {
+            retVal = list.join(separator);
+        }
+        else if (list.constructor.name === 'Set' || list.constructor.name === 'SjlSet') {
+            out = [];
+            list.forEach(function (value) {
+                out.push(value);
+            });
+            retVal = out.join(separator);
+        }
+        return retVal;
     };
 
 })(typeof window === 'undefined' ? global : window);

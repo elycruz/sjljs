@@ -112,6 +112,8 @@ gulp.task('minimal', function () {
         .pipe(gulp.dest('./'));
 });
 
+
+
 // Builds './sjl-minimal.min.js'
 gulp.task('minimal-min', ['minimal'], function () {
     gulp.src([

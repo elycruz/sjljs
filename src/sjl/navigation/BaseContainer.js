@@ -15,7 +15,7 @@
 
         sjl.SjlMap.extend(BaseContainer, {
             addPage: function (page) {
-                return this.set(page.name, page);
+                return this.set(page.alias, page);
             },
             addPages: function (pages) {
                 var self = this;
@@ -27,7 +27,6 @@
             findAllBy: function (params) {},
             findBy: function (params) {},
             findFirstBy: function (params) {},
-            children: function () {},
             removePage: function (name) {
                 return this.delete(sjl.classOfIs(name, 'String')
                     ? name : name.name);
@@ -39,9 +38,17 @@
                 });
                 return self;
             },
-            setPages: function (pages) {
-                return this.clear()
-                    .addPages(pages);
+            pages: function (pages) {
+                var self = this,
+                    isGetterCall = typeof pages === 'undefined',
+                    retVal = self;
+                if (isGetterCall) {
+                    retVal = self._values;
+                }
+                else {
+                    self.addPages(pages);
+                }
+                return retVal;
             }
         }));
 

@@ -120,7 +120,17 @@
 
             iterator: function () {
                 return this.entries();
+            },
+
+            toJSON: function () {
+                var self = this,
+                    out = {};
+                sjl.forEach(this._keys, function (key, i) {
+                    out[key] = self._values[i];
+                });
+                return out;
             }
+
         });
 
 })(typeof window === 'undefined' ? global : window);

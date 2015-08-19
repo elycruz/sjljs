@@ -323,11 +323,13 @@ See './tests/for-browser'.
 
 ### MVP for 0.5.0:
 - [ ] - Write docs for all validator classes.
-- [ ] - Write tests for all validator classes:
-    - [ ] - `sjl.NumberValidator`.
-    - [ ] - `sjl.AlphaNumValidator`.
+- [ ] - Write tests for:
     - [X] - `sjl.SjlMap`.
     - [X] - `sjl.SjlSet`.
+    - [ ] - `sjl.package`
+    - [ ] - Write tests for all validator classes:
+        - [ ] - `sjl.NumberValidator`.
+        - [ ] - `sjl.AlphaNumValidator`.
 - [ ] - Write a filter chain class.
 - [ ] - Change interface check to check for 'isValid' and 'message'
     properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
@@ -347,6 +349,8 @@ See './tests/for-browser'.
 - [ ] - Remove use of eval option for `defineSubClass` (now `defineClass`).
 - [ ] - Create docs for `sjl.package`.
 - [ ] - Shim `sjl.forEach` and `sjl.indexOf`.
+- [ ] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class 
+instead of requiring global require).
 
 ### MVP for 0.5.1+
 - [X] - Add changelog.md in main readme.

@@ -102,6 +102,10 @@
 
         iterator: function () {
             return this._values[sjl.Symbol.iterator]();
+        },
+
+        toJSON: function () {
+            return this._values;
         }
     });
 
