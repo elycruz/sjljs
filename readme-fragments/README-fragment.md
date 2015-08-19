@@ -318,8 +318,8 @@ See './tests/for-browser'.
     - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
     - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
 - [X] - ~~Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)~~ Moved to version 0.5.0.
-- [X] - ~~Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
- right now it is not apparent to people that this is the default behaviour).~~  Moved to version 0.5.0.
+- [X] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+ right now it is not apparent to people that this is the default behaviour).  Moved to version 0.5.0.
 
 ### MVP for 0.5.0:
 - [ ] - Write docs for all validator classes.
@@ -346,9 +346,9 @@ See './tests/for-browser'.
 - [ ] - Change the library from being a global for nodejs to being an exported package.
 - [ ] - Set all components (constructors) of sjl to be exported when being used in nodejs.
 - [ ] - Support for AMD if it is available when used on the frontend.
-- [ ] - Remove use of eval option for `defineSubClass` (now `defineClass`).
+- [X] - Remove use of eval option for `defineSubClass`.
 - [ ] - Create docs for `sjl.package`.
-- [ ] - Shim `sjl.forEach` and `sjl.indexOf`.
+- [X] - Shim `sjl.forEach` and `sjl.indexOf`.
 - [ ] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class 
 instead of requiring global require).
 

@@ -44,10 +44,15 @@
      * @returns {Array}
      */
     sjl.forEach = function (array, callback, context) {
-        for (var i in array) {
-            if (array.hasOwnProperty(i)) {
-                i = parseInt(i, 10);
-                callback.call(context, array[i], i, array);
+        if (Array.prototype.hasOwnProperty('forEach')) {
+            Array.prototype.forEach.call(array, callback, context);
+        }
+        else {
+            for (var i in array) {
+                if (array.hasOwnProperty(i)) {
+                    i = parseInt(i, 10);
+                    callback.call(context, array[i], i, array);
+                }
             }
         }
         return array;
@@ -60,6 +65,9 @@
      * @returns {number}
      */
     sjl.indexOf = function (array, value) {
+        if (Array.prototype.hasOwnProperty('indexOf')) {
+            return Array.prototype.indexOf.call(array, value);
+        }
         var classOfValue = sjl.classOf(value),
             _index = -1;
         sjl.forEach(array, function (_value, i) {

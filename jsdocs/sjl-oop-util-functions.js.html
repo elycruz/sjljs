@@ -53,91 +53,47 @@
     };
 
     /**
-     * Helper function which creates a constructor using `val` as a string
-     * or just returns the constructor if `val` is a constructor.
-     * @param value {*} - Value to resolve to constructor.
-     * @returns {*}
-     * @throws {Error} - If can't resolve constructor from `value`
-     */
-    function resolveConstructor (value) {
-        // Check if is string and hold original string
-        // Check if is string and hold original string
-        var isString = sjl.classOfIs(value, 'String'),
-            originalString = value,
-            _val = value;
-
-        // If constructor is a string, create it from string
-        if (isString) {
-
-            // Make sure constructor has uppercased first letter
-            _val = sjl.camelCase(_val, true);
-
-            try {
-                // Evaluate string as constructor
-                eval('_val = function ' + _val + '(){}');
-            }
-            catch (e) {
-                // Else throw error
-                throw new Error('An error occurred while trying to define a ' +
-                    'sub class using: "' + originalString + '" as a sub class in `sjl.defineClass`.  ' +
-                    'In unminified source: "./src/sjl/sjl-oop-util-functions.js"');
-            }
-        }
-
-        // If not a constructor and is original string
-        if (!sjl.classOfIs(_val, 'Function') &amp;&amp; isString) {
-            throw new Error ('Could not create constructor from string: "' + originalString + '".');
-        }
-
-        // If not a constructor and not a string
-        else if (!sjl.classOfIs(_val, 'Function') &amp;&amp; !isString) {
-            throw new Error ('`sjl.defineClass` requires constructor ' +
-                'or string to create a subclass of "' +
-                '.  In unminified source "./src/sjl/sjl-oop-util-functions.js"');
-        }
-
-        return _val;
-    }
-
-    /**
-     * Defines a subclass using a `superclass`, `constructor`, methods and/or static methods
-     * @function module:sjl.defineClass
-     * @param superclass {Constructor} - SuperClass's constructor.  Required.
+     * Defines a class using a `superclass`, `constructor`, methods and/or static methods
+     * @function module:sjl.defineSubClass
+     * @param superclass {Constructor} - SuperClass's constructor.  Optional.
      * @param constructor {Constructor} -  Constructor.  Required.
      * @param methods {Object} - Optional.
      * @param statics {Object} - Static methods. Optional.
      * @returns {Constructor}
      */
-    sjl.defineClass = function (superclass, // Constructor of the superclass
-                                   constructor, // The constructor for the new subclass
-                                   methods, // Instance methods: copied to prototype
-                                   statics) // Class properties: copied to constructor
+    sjl.defineSubClass = function (superclass,  // Constructor of the superclass
+                                constructor, // The constructor for the new subclass
+                                methods,     // Instance methods: copied to prototype
+                                statics)     // Class properties: copied to constructor
     {
         // Resolve superclass
         superclass = superclass || sjl.copyOfProto(Object.prototype);
 
-        // Resolve constructor
-        var _constructor = resolveConstructor(constructor);
+        // If `constructor` is a string give deprecation notice to user
+        if (sjl.classOfIs(constructor, 'String')) {
+            throw new Error('`sjl.defineSubClass` no longer allows a string value in the `constructor` param position.  ' +
+                'This functionality is now deprecated.  Please pass in an actual constructor instead.');
+        }
 
         // Set up the prototype object of the subclass
-        _constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
+        constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
 
         // Make the constructor extendable
-        _constructor.extend = function (constructor_, methods_, statics_) {
-                return sjl.defineClass(this, constructor_, methods_, statics_);
+        constructor.extend = function (constructor_, methods_, statics_) {
+                return sjl.defineSubClass(this, constructor_, methods_, statics_);
             };
 
         // Define constructor's constructor
-        _constructor.prototype.constructor = constructor;
+        constructor.prototype.constructor = constructor;
 
         // Copy the methods and statics as we would for a regular class
-        if (methods) sjl.extend(_constructor.prototype, methods);
+        if (methods) sjl.extend(constructor.prototype, methods);
 
         // If static functions set them
-        if (statics) sjl.extend(_constructor, statics);
+        if (statics) sjl.extend(constructor, statics);
 
         // Return the class
-        return _constructor;
+        return constructor;
     };
 
     /**
@@ -172,7 +128,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Aug 19 2015 03:46:43 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Aug 19 2015 04:29:19 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

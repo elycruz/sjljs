@@ -72,7 +72,7 @@
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
         args = args || null;
-        raw = raw || false;
+        raw = raw || true;
         noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;
 
         // Get qualified getter function names

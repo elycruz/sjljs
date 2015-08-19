@@ -44,11 +44,4 @@ describe('Sjl Extendable', function () {
         expect(newNewIterator instanceof NewNewIterator).to.equal(true);
     });
 
-    // Classes from string name
-    it ('should be able to create a subclass from a string name', function () {
-        var HelloWorld = sjl.Extendable.extend('HelloWorld',
-            {sayHello: function () {}});
-        expect(sjl.classOfIs(HelloWorld, 'Function')).to.equal(true);
-    });
-
 });

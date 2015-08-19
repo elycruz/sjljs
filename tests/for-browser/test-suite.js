@@ -575,13 +575,6 @@ describe('Sjl Extendable', function () {
         expect(newNewIterator instanceof NewNewIterator).to.equal(true);
     });
 
-    // Classes from string name
-    it ('should be able to create a subclass from a string name', function () {
-        var HelloWorld = sjl.Extendable.extend('HelloWorld',
-            {sayHello: function () {}});
-        expect(sjl.classOfIs(HelloWorld, 'Function')).to.equal(true);
-    });
-
 });
 
 /**
@@ -810,6 +803,28 @@ describe('sjl.Iterator', function () {
 });
 
 /**
+ * Created by Ely on 8/19/2015.
+ */
+
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    require('./../../sjl.js');
+    require('./../../src/sjl/navigation/BaseContainer');
+    require('./../../src/sjl/navigation/BasePage');
+}
+
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
+
+describe('sjl.package().navigation', function () {
+
+    'use strict';
+
+});
+/**
  * Created by Ely on 12/17/2014.
  */
 
@@ -987,6 +1002,10 @@ describe('Sjl Optionable', function () {
     });
 
 }); // end of Test Suite
+
+/**
+ * Created by Ely on 8/19/2015.
+ */
 
 /**
  * Created by edelacruz on 7/28/2014.
