@@ -106,7 +106,8 @@ function someFunction (arg1, arg2, arg3) {
     var otherArgs = sjl.restArgs(arguments, 2); // Will give us everything after `arg2`
 }
 
-// This function will call will give us the array ['value3', 'value4', 'value5'] within `otherArgs`
+// This function will call will give us the array
+// ['value3', 'value4', 'value5'] within `otherArgs`
 someFunction ('value1', 'value2', 'valu3', 'value4', 'value5'); 
 ```
 
@@ -114,9 +115,9 @@ someFunction ('value1', 'value2', 'valu3', 'value4', 'value5');
 Checks whether an `obj` has the given method/function defined on it.  E.g.,
 ```
 var obj = {hello: function () {}, someNonFunctionValueKey: 'hello world'};
-sjl.hasMethod(obj, 'hello');  // true.  Found key is of type 'Function'.
-sjl.hasMethod(obj, 'someNonFunctionValueKey');  // false.  Found key is not of type 'Function'.
-sjl.hasMethod(obj, 'someNonExistentMethod');    // false.
+sjl.hasMethod(obj, 'hello'); // true.  Found key is of type 'Function'.
+sjl.hasMethod(obj, 'nonFunctionKey'); // false.  Found key is not of type 'Function'.
+sjl.hasMethod(obj, 'nonExistentMethod'); // false.
 ```
 
 ##### sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}) :String
@@ -169,10 +170,17 @@ sjl.isset(null, 1, someUndefinedValue)  // true.   '1' is a non empty value.
 ##### sjl.issetAndOfType(value {*}, type {String|Array<String>}, ...type {String}) :Boolean
 Checks to see if a value is set and is of given type(s).  E.g.,
 ```
-sjl.issetAndOfType(someFunctionValue, 'Function')   // true.  Value is set and is of type of function.
-sjl.issetAndOfType(someUndefinedValue, 'Function')  // false.  Value is not set.
-sjl.issetAndOfType(someNumberValue, 'Function', 'String', 'Number')  // true.  Matches type 'Number'.
-sjl.issetAndOfType(someNumberValue, ['String', 'Number', 'Function']) // true.  Matches type 'Number'.
+sjl.issetAndOfType(someFunctionValue, 'Function')
+// true.  Value is set and is of type of function.
+ 
+sjl.issetAndOfType(someUndefinedValue, 'Function')
+// false.  Value is not set.
+
+sjl.issetAndOfType(someNumberValue, 'Function', 'String', 'Number')
+// true.  Matches type 'Number'.
+
+sjl.issetAndOfType(someNumberValue, ['String', 'Number', 'Function'])
+// true.  Matches type 'Number'.
 ```
 
 ##### sjl.issetObjKey (obj {*}, key {String}) :Boolean
@@ -190,9 +198,14 @@ Does the same thing as `sjl.issetObjKey` but also checks if the found `key` matc
 ```
 var someObj = {someNum: 100, someNullValue: null, someStringValue: 'hello world'};
 // Check keys on `someObj`
-sjl.issetObjKeyAndOfType(someObj, 'someNum', 'String', 'Number')  // true.  Key is set and matches the type 'Number'.
-sjl.issetObjKey(someObj, 'someNullValue', 'String', 'Array')      // false.  Key exists on object but is null.
-sjl.issetObjKey(someObj, 'nonExistentProperty')                   // false.  Key does not exists on object.
+sjl.issetObjKeyAndOfType(someObj, 'someNum', 'String', 'Number')  
+// true.  Key is set and matches the type 'Number'.
+
+sjl.issetObjKey(someObj, 'someNullValue', 'String', 'Array')      
+// false.  Key exists on object but is null.
+
+sjl.issetObjKey(someObj, 'nonExistentProperty')                   
+// false.  Key does not exists on object.
 ```
 
 ##### sjl.lcaseFirst(str {String}) :String
@@ -219,10 +232,17 @@ For checking whther a key on an object is empty and is of type use `sjl.isEmptyO
 Does everything `sjl.issetObjKey` does.  In addition checks whether `obj[key]`'s value is empty ([0, null, undefined, [], {}, false]) or not.
 and whether `obj[key]` is of one of the class strings passed in (`...type`).
 ```
-sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello');   // false.  Found key is not empty.
-sjl.isEmptyObjKeyOrNotOfType({hello: 100}, 'hello');       // false.  Found key is not empty.
-sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', 'Number');            // true.  Found key is not empty but is not of given type(s). 
-sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', 'Number', 'String');  // false.  Found key is not empty and is of given type.
+sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello');   
+// false.  Found key is not empty.
+
+sjl.isEmptyObjKeyOrNotOfType({hello: 100}, 'hello');       
+// false.  Found key is not empty.
+
+sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', 'Number');            
+// true.  Found key is not empty but is not of given type(s). 
+
+sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', 'Number', 'String'); 
+// false.  Found key is not empty and is of given type.
 ```
 
 ##### sjl.jsonClone (obj {*}) :*
@@ -231,7 +251,9 @@ Clones an object using the JSON object.  E.g.,
 // Does this `JSON.parse(JSON.stringify(obj));`
 
 var obj = {hello: 'ola', world: 'mundo'};
-sjl.jsonClone(obj); // Returns an object with the same properties as `obj` but the object is completely unique
+sjl.jsonClone(obj); 
+// Returns an object with the same properties as
+// `obj` but the object is completely unique
 ```
 
 ##### sjl.clone (obj {*}) :*

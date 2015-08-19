@@ -131,14 +131,15 @@ but with some enhanced methods on it and without the ajax stuff (barebones objec
     var otherArgs = sjl.restArgs(arguments, 2); // Will give us everything after `arg2`
 }
 
-// This function will call will give us the array [&#39;value3&#39;, &#39;value4&#39;, &#39;value5&#39;] within `otherArgs`
+// This function will call will give us the array
+// [&#39;value3&#39;, &#39;value4&#39;, &#39;value5&#39;] within `otherArgs`
 someFunction (&#39;value1&#39;, &#39;value2&#39;, &#39;valu3&#39;, &#39;value4&#39;, &#39;value5&#39;);
 </code></pre><h5 id="sjl-hasmethod-obj-methodname-boolean">sjl.hasMethod (obj, methodName) :Boolean</h5>
 <p>Checks whether an <code>obj</code> has the given method/function defined on it.  E.g.,</p>
 <pre><code>var obj = {hello: function () {}, someNonFunctionValueKey: &#39;hello world&#39;};
-sjl.hasMethod(obj, &#39;hello&#39;);  // true.  Found key is of type &#39;Function&#39;.
-sjl.hasMethod(obj, &#39;someNonFunctionValueKey&#39;);  // false.  Found key is not of type &#39;Function&#39;.
-sjl.hasMethod(obj, &#39;someNonExistentMethod&#39;);    // false.
+sjl.hasMethod(obj, &#39;hello&#39;); // true.  Found key is of type &#39;Function&#39;.
+sjl.hasMethod(obj, &#39;nonFunctionKey&#39;); // false.  Found key is not of type &#39;Function&#39;.
+sjl.hasMethod(obj, &#39;nonExistentMethod&#39;); // false.
 </code></pre><h5 id="sjl-camelcase-str-string-ucasefirst-boolean-undefined-string">sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}) :String</h5>
 <p>Camel Cases a string;<br><code>sjl.camelCase(&#39;hello-world&#39;, boolean);</code> -&gt; returns &quot;helloWorld&quot; if <code>boolean</code> is <code>false</code>
  else returns &quot;HelloWorld&quot; if <code>boolean</code> is <code>true</code></p>
@@ -170,10 +171,17 @@ sjl.isset(null, someUndefinedValue)     // false.  None of the values is set.
 sjl.isset(null, 1, someUndefinedValue)  // true.   &#39;1&#39; is a non empty value.
 </code></pre><h5 id="sjl-issetandoftype-value-type-string-array-string-type-string-boolean">sjl.issetAndOfType(value {*}, type {String|Array<String>}, ...type {String}) :Boolean</h5>
 <p>Checks to see if a value is set and is of given type(s).  E.g.,</p>
-<pre><code>sjl.issetAndOfType(someFunctionValue, &#39;Function&#39;)   // true.  Value is set and is of type of function.
-sjl.issetAndOfType(someUndefinedValue, &#39;Function&#39;)  // false.  Value is not set.
-sjl.issetAndOfType(someNumberValue, &#39;Function&#39;, &#39;String&#39;, &#39;Number&#39;)  // true.  Matches type &#39;Number&#39;.
-sjl.issetAndOfType(someNumberValue, [&#39;String&#39;, &#39;Number&#39;, &#39;Function&#39;]) // true.  Matches type &#39;Number&#39;.
+<pre><code>sjl.issetAndOfType(someFunctionValue, &#39;Function&#39;)
+// true.  Value is set and is of type of function.
+
+sjl.issetAndOfType(someUndefinedValue, &#39;Function&#39;)
+// false.  Value is not set.
+
+sjl.issetAndOfType(someNumberValue, &#39;Function&#39;, &#39;String&#39;, &#39;Number&#39;)
+// true.  Matches type &#39;Number&#39;.
+
+sjl.issetAndOfType(someNumberValue, [&#39;String&#39;, &#39;Number&#39;, &#39;Function&#39;])
+// true.  Matches type &#39;Number&#39;.
 </code></pre><h5 id="sjl-issetobjkey-obj-key-string-boolean">sjl.issetObjKey (obj {*}, key {String}) :Boolean</h5>
 <p>Checks whether an object has own <code>key</code> and whether the value of found <code>key</code> is not <code>undefined</code> or not <code>null</code>.</p>
 <pre><code>var someObj = {hello: &#39;world&#39;, myNameIs: null};
@@ -185,9 +193,14 @@ sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)    // false.  Key does n
 <p>Does the same thing as <code>sjl.issetObjKey</code> but also checks if the found <code>key</code> matches one of the passed in types.</p>
 <pre><code>var someObj = {someNum: 100, someNullValue: null, someStringValue: &#39;hello world&#39;};
 // Check keys on `someObj`
-sjl.issetObjKeyAndOfType(someObj, &#39;someNum&#39;, &#39;String&#39;, &#39;Number&#39;)  // true.  Key is set and matches the type &#39;Number&#39;.
-sjl.issetObjKey(someObj, &#39;someNullValue&#39;, &#39;String&#39;, &#39;Array&#39;)      // false.  Key exists on object but is null.
-sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)                   // false.  Key does not exists on object.
+sjl.issetObjKeyAndOfType(someObj, &#39;someNum&#39;, &#39;String&#39;, &#39;Number&#39;)  
+// true.  Key is set and matches the type &#39;Number&#39;.
+
+sjl.issetObjKey(someObj, &#39;someNullValue&#39;, &#39;String&#39;, &#39;Array&#39;)      
+// false.  Key exists on object but is null.
+
+sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)                   
+// false.  Key does not exists on object.
 </code></pre><h5 id="sjl-lcasefirst-str-string-string">sjl.lcaseFirst(str {String}) :String</h5>
 <p>Lowercases the first character of a string;  E.g., 
 <code>sjl.lcaseFirst (&#39;Hello&#39;)</code> returns &#39;hello&#39;.</p>
@@ -206,16 +219,25 @@ For checking whther a key on an object is empty and is of type use <code>sjl.isE
 <h5 id="sjl-isemptyobjkeyornotoftype-obj-object-key-string-type-string-undefined-boolean">sjl.isEmptyObjKeyOrNotOfType(obj {Object}, key {String}, ...type {String|undefined}) :Boolean</h5>
 <p>Does everything <code>sjl.issetObjKey</code> does.  In addition checks whether <code>obj[key]</code>&#39;s value is empty ([0, null, undefined, [], {}, false]) or not.
 and whether <code>obj[key]</code> is of one of the class strings passed in (<code>...type</code>).</p>
-<pre><code>sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;);   // false.  Found key is not empty.
-sjl.isEmptyObjKeyOrNotOfType({hello: 100}, &#39;hello&#39;);       // false.  Found key is not empty.
-sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;);            // true.  Found key is not empty but is not of given type(s). 
-sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;, &#39;String&#39;);  // false.  Found key is not empty and is of given type.
+<pre><code>sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;);   
+// false.  Found key is not empty.
+
+sjl.isEmptyObjKeyOrNotOfType({hello: 100}, &#39;hello&#39;);       
+// false.  Found key is not empty.
+
+sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;);            
+// true.  Found key is not empty but is not of given type(s). 
+
+sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;, &#39;String&#39;); 
+// false.  Found key is not empty and is of given type.
 </code></pre><h5 id="sjl-jsonclone-obj-">sjl.jsonClone (obj {<em>}) :</em></h5>
 <p>Clones an object using the JSON object.  E.g.,</p>
 <pre><code>// Does this `JSON.parse(JSON.stringify(obj));`
 
 var obj = {hello: &#39;ola&#39;, world: &#39;mundo&#39;};
-sjl.jsonClone(obj); // Returns an object with the same properties as `obj` but the object is completely unique
+sjl.jsonClone(obj); 
+// Returns an object with the same properties as
+// `obj` but the object is completely unique
 </code></pre><h5 id="sjl-clone-obj-">sjl.clone (obj {<em>}) :</em></h5>
 <p>Returns a new object with the properties from <code>obj</code>.</p>
 <h5 id="sjl-ucasefirst-str-string-string">sjl.ucaseFirst(str {String}) :String</h5>
@@ -435,7 +457,7 @@ instead of requiring global require).</li>
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Aug 19 2015 04:29:19 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Aug 19 2015 04:46:30 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
