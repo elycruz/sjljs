@@ -121,22 +121,7 @@
              * @returns {Boolean}
              */
             has: function (nsString) {
-                var parts = nsString.split('.'),
-                    i, nsStr, retVal = false;
-                if (parts.length > 1) {
-                    nsStr = parts.shift();
-                    for (i = 0; i <= parts.length; i += 1) {
-                        retVal = !sjl.empty(sjl.namespace(nsStr, this.options));
-                        if (!retVal) {
-                            break;
-                        }
-                        nsStr += '.' + parts[i];
-                    }
-                }
-                else {
-                    retVal = !sjl.empty(sjl.namespace(nsString, this.options));
-                }
-                return retVal;
+                return sjl.isset(sjl.searchObj(nsString, this.options));
             },
 
             /**

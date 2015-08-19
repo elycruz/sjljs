@@ -521,11 +521,11 @@
     /**
      * Implodes a `Set`, `Array` or `SjlSet` passed in.
      * @function module:sjl.implode
-     * @param separator {String} - Separator to join members with.
      * @param list {Array|Set|SjlSet} - Members to join.
+     * @param separator {String} - Separator to join members with.
      * @returns {string} - Imploded string.  *Returns empty string if no members, to join, are found.
      */
-    sjl.implode = function (separator, list) {
+    sjl.implode = function (list, separator) {
         var retVal = '',
             out;
         if (sjl.classOfIs(list, 'Array')) {
@@ -539,6 +539,26 @@
             retVal = out.join(separator);
         }
         return retVal;
+    };
+
+    /**
+     * Searches an object for namespace string.
+     * @param ns_string {String} - Namespace string;  E.g., 'all.your.base'
+     * @param objToSearch {*}
+     * @returns {*} - If property chain is not found then returns `null`.
+     */
+    sjl.searchObj = function (ns_string, objToSearch) {
+        var parts = ns_string.split('.'),
+            parent = objToSearch,
+            i;
+        for (i = 0; i < parts.length; i += 1) {
+            if (sjl.classOfIs(parent[parts[i]], 'Undefined')) {
+                parent = null;
+                break;
+            }
+            parent = parent[parts[i]];
+        }
+        return parent;
     };
 
 })(typeof window === 'undefined' ? global : window);

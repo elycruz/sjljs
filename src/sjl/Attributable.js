@@ -36,7 +36,7 @@
 
                 // If is an 'object' then is a setter
                 case 'Object':
-                    sjl.extend(true, self, attrs);
+                    sjl.extend(true, self, attrs, true);
                     break;
 
                 // If is a 'string' then is a getter

@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Wed Aug 19 2015 04:28:26 GMT-0400 (Eastern Daylight Time)
+ * sjl-minimal.js Wed Aug 19 2015 17:16:29 GMT-0400 (Eastern Daylight Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -549,11 +549,11 @@
     /**
      * Implodes a `Set`, `Array` or `SjlSet` passed in.
      * @function module:sjl.implode
-     * @param separator {String} - Separator to join members with.
      * @param list {Array|Set|SjlSet} - Members to join.
+     * @param separator {String} - Separator to join members with.
      * @returns {string} - Imploded string.  *Returns empty string if no members, to join, are found.
      */
-    sjl.implode = function (separator, list) {
+    sjl.implode = function (list, separator) {
         var retVal = '',
             out;
         if (sjl.classOfIs(list, 'Array')) {
@@ -567,6 +567,26 @@
             retVal = out.join(separator);
         }
         return retVal;
+    };
+
+    /**
+     * Searches an object for namespace string.
+     * @param ns_string {String} - Namespace string;  E.g., 'all.your.base'
+     * @param objToSearch {*}
+     * @returns {*} - If property chain is not found then returns `null`.
+     */
+    sjl.searchObj = function (ns_string, objToSearch) {
+        var parts = ns_string.split('.'),
+            parent = objToSearch,
+            i;
+        for (i = 0; i < parts.length; i += 1) {
+            if (sjl.classOfIs(parent[parts[i]], 'Undefined')) {
+                parent = null;
+                break;
+            }
+            parent = parent[parts[i]];
+        }
+        return parent;
     };
 
 })(typeof window === 'undefined' ? global : window);
@@ -644,6 +664,11 @@
      * @returns {*}
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
+        // Warn user(s) of new update to this function where `raw` is not being passed in.
+        if (typeof raw === 'undefined') {
+            console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
+                'This warning will be removed in the next library update.');
+        }
         args = args || null;
         raw = raw || true;
         noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;
@@ -1170,7 +1195,7 @@
 
                 // If is an 'object' then is a setter
                 case 'Object':
-                    sjl.extend(true, self, attrs);
+                    sjl.extend(true, self, attrs, true);
                     break;
 
                 // If is a 'string' then is a getter
@@ -1351,22 +1376,7 @@
              * @returns {Boolean}
              */
             has: function (nsString) {
-                var parts = nsString.split('.'),
-                    i, nsStr, retVal = false;
-                if (parts.length > 1) {
-                    nsStr = parts.shift();
-                    for (i = 0; i <= parts.length; i += 1) {
-                        retVal = !sjl.empty(sjl.namespace(nsStr, this.options));
-                        if (!retVal) {
-                            break;
-                        }
-                        nsStr += '.' + parts[i];
-                    }
-                }
-                else {
-                    retVal = !sjl.empty(sjl.namespace(nsString, this.options));
-                }
-                return retVal;
+                return sjl.isset(sjl.searchObj(nsString, this.options));
             },
 
             /**

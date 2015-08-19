@@ -1,5 +1,10 @@
 /**
  * Created by Ely on 8/19/2015.
+ * @idea Maybe allow auto calling of functions found when traversing namespace string
+ * 'hello.world.how.are.you' if `are` and lets say `how` are methods we should call them and expect the
+ * proceeding property in the ns_string to exist in the return value.
+ * @idea Allow calling of `has` methods via boolean in `has` method;  E.g., any objects encountered when searching
+ * a namespace string that has a `has` method would have said method automatically called.
  */
 
 (function (context) {

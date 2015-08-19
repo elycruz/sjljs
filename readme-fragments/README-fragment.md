@@ -262,6 +262,15 @@ Returns a new object with the properties from `obj`.
 ##### sjl.ucaseFirst(str {String}) :String
 Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
 
+##### sjl.implode(list {Array|Set|SjlSet}, separator {String}) :String
+Implodes an `Array`, `Set`, or `SjlSet` into a string using `separator`.
+calls `join` with `separator` on value if it is an array.
+
+##### sjl.searchObj(nsString {String}, objToSearch {*}) :{Null|*}
+Searches object using a namespace string and if final property in namespace
+string chain is found then returns that properties value else 
+it returns null.
+
 ### Set Functions:
 
 ##### sjl.extend(obj {Object|Boolean}, ...obj {Object|undefined}, useLegacyGettersAndSetters {Boolean|undefined}) : Object
@@ -371,8 +380,9 @@ See './tests/for-browser'.
 - [X] - Remove use of eval option for `defineSubClass`.
 - [ ] - Create docs for `sjl.package`.
 - [X] - Shim `sjl.forEach` and `sjl.indexOf`.
-- [ ] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class 
+- [ ] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
 instead of requiring global require).
+- [ ] - Include all sub items for components included as sub nav in components nav in readme.
 
 ### MVP for 0.5.1+
 - [X] - Add changelog.md in main readme.
