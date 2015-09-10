@@ -72,10 +72,10 @@
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
         // Warn user(s) of new update to this function where `raw` is not being passed in.
-        if (typeof raw === 'undefined') {
-            console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
-                'This warning will be removed in the next library update.');
-        }
+        //if (typeof raw === 'undefined') {
+        //    console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
+        //        'This warning will be removed in the next library update.');
+        //}
         args = args || null;
         raw = raw || true;
         noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;

@@ -58,3 +58,6 @@
 - Added some scaffolding for 'sjl/mvc/router' and added scaffolding for 'sjl/navigation'.
 - Rebuilt jsdocs.
 - Rebuilt README.md.
+
+### Changelog for 09/10/2015:
+- Removed depracation warning for `sjl.getValueFromObj` default `raw` param being set to `true`.

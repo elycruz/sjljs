@@ -243,7 +243,11 @@
 
     
     <div class="description">
-        Make a string code friendly. Camel cases a dirty string intoa valid javascript variable/constructor name;  Uses `replaceStrRegex`to replace unwanted characters with a '-' and then splits and mergesthe parts with the proper casing, pass in `true` for lcaseFirstto lower case the first character.
+        Make a string code friendly. Camel cases a dirty string into
+a valid javascript variable/constructor name;  Uses `replaceStrRegex`
+to replace unwanted characters with a '-' and then splits and merges
+the parts with the proper casing, pass in `true` for lcaseFirst
+to lower case the first character.
     </div>
     
 
@@ -426,7 +430,8 @@
 
     
     <div class="description">
-        Returns the class name of an object from it's class string.**Note** - Returns 'NaN' if type is 'Number' and isNaN as of version 0.4.85.
+        Returns the class name of an object from it's class string.
+**Note** - Returns 'NaN' if type is 'Number' and isNaN as of version 0.4.85.
     </div>
     
 
@@ -643,7 +648,9 @@
 
             
 
-            <td class="description last">Class string to check for or Array of class strings to check for. Can also just be ...rest params of class strings which will be parsed internally as an array of class strings; I.e., "Number", "Object", etc.</td>
+            <td class="description last">Class string to check for or Array of class strings to check for.
+ Can also just be ...rest params of class strings which will be parsed internally as an array of class strings;
+ I.e., "Number", "Object", etc.</td>
         </tr>
 
     
@@ -1317,7 +1324,10 @@
 
     
     <div class="description">
-        Extends first object passed in with all other object passed in after.First param could be a boolean indicating whether or not to perform a deep extend.Last param could also be a boolean indicating whether to use legacy setters if they are availablewhen extending one object with another.
+        Extends first object passed in with all other object passed in after.
+First param could be a boolean indicating whether or not to perform a deep extend.
+Last param could also be a boolean indicating whether to use legacy setters if they are available
+when extending one object with another.
     </div>
     
 
@@ -1528,7 +1538,11 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>var o = {setGreeting: v => this.greeting = 'Hello ' + v},    otherObject = {greeting: 'Junior'};// Calls o.setGreeting when merging otherObject because `true` was passed in// as the last parametersjl.extend(o, otherObject, true);</code></pre>
+    <pre class="prettyprint"><code>var o = {setGreeting: v => this.greeting = 'Hello ' + v},
+    otherObject = {greeting: 'Junior'};
+// Calls o.setGreeting when merging otherObject because `true` was passed in
+// as the last parameter
+sjl.extend(o, otherObject, true);</code></pre>
 
     
 </dd>
@@ -2004,7 +2018,9 @@
 
     
     <div class="description">
-        Searches obj for key and returns it's value.  If value is a functioncalls function, with optional `args`, and returns it's return value.If `raw` is true returns the actual function if value found is a function.
+        Searches obj for key and returns it's value.  If value is a function
+calls function, with optional `args`, and returns it's return value.
+If `raw` is true returns the actual function if value found is a function.
     </div>
     
 
@@ -2146,7 +2162,8 @@
 
             
 
-            <td class="description last">Default false (use legacy getters). Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )</td>
+            <td class="description last">Default false (use legacy getters).
+ Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )</td>
         </tr>
 
     
@@ -2934,7 +2951,10 @@
 
     
     <div class="description">
-        Checks to see if any of the arguments passed in areset (not undefined and not null).Returns false on the first argument encountered thatis null or undefined.
+        Checks to see if any of the arguments passed in are
+set (not undefined and not null).
+Returns false on the first argument encountered that
+is null or undefined.
     </div>
     
 
@@ -3822,7 +3842,9 @@
 
     
     <div class="description">
-        Takes a namespace string and fetches that location out froman object/Map.  If the namespace doesn't exists it is created thenreturned.
+        Takes a namespace string and fetches that location out from
+an object/Map.  If the namespace doesn't exists it is created then
+returned.
     </div>
     
 
@@ -3994,7 +4016,8 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>// will create/fetch within `obj`: hello: { world: { how: { are: { you: { doing: {} } } } } }namespace('hello.world.how.are.you.doing', obj)</code></pre>
+    <pre class="prettyprint"><code>// will create/fetch within `obj`: hello: { world: { how: { are: { you: { doing: {} } } } } }
+namespace('hello.world.how.are.you.doing', obj)</code></pre>
 
     
 </dd>
@@ -4412,7 +4435,8 @@
 
             
 
-            <td class="description last">Key to search for (can be a dotseparated string 'all.your.base' will traverse {all: {your: {base: {...}}})</td>
+            <td class="description last">Key to search for (can be a dot
+separated string 'all.your.base' will traverse {all: {your: {base: {...}}})</td>
         </tr>
 
     
@@ -4516,7 +4540,8 @@
     
             
 <div class="param-desc">
-    returns result of setting key to value on obj or objif no value resulting from set operation
+    returns result of setting key to value on obj or obj
+if no value resulting from set operation
 </div>
 
 
@@ -4552,7 +4577,8 @@
 
     
     <div class="description">
-        Throws an error using a formatted string that reports the function name,the expected parameter type, and the value recieved.
+        Throws an error using a formatted string that reports the function name,
+the expected parameter type, and the value recieved.
     </div>
     
 
@@ -4883,7 +4909,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Aug 19 2015 17:16:31 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Sep 10 2015 15:44:19 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>

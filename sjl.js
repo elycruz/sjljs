@@ -1,4 +1,4 @@
-/**! sjl.js Wed Aug 19 2015 17:16:30 GMT-0400 (Eastern Daylight Time) **//**
+/**! sjl.js Thu Sep 10 2015 15:44:18 GMT-0400 (EDT) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
@@ -662,10 +662,10 @@
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
         // Warn user(s) of new update to this function where `raw` is not being passed in.
-        if (typeof raw === 'undefined') {
-            console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
-                'This warning will be removed in the next library update.');
-        }
+        //if (typeof raw === 'undefined') {
+        //    console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
+        //        'This warning will be removed in the next library update.');
+        //}
         args = args || null;
         raw = raw || true;
         noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;
