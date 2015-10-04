@@ -58,16 +58,17 @@
 
     /**
      * Searches obj for key and returns it's value.  If value is a function
-     * calls function, with optional `args`, and returns it's return value.
+     * calls function if `raw` is set to `false`, with optional `args`, and returns it's return value.
      * If `raw` is true returns the actual function if value found is a function.
      * @function module:sjl.getValueFromObj
      * @param key {String} The hash key to search for
      * @param obj {Object} the hash to search within
      * @param args {Array} optional the array to pass to value if it is a function
-     * @param raw {Boolean} optional whether to return value even if it is a function
+     * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
      * @todo allow this function to use getter function for key if it exists
      * @param noLegacyGetters {Boolean} - Default false (use legacy getters).
      *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
+     *
      * @returns {*}
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
