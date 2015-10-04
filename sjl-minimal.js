@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Sep 10 2015 15:44:17 GMT-0400 (EDT)
+ * sjl-minimal.js Sun Oct 04 2015 17:51:25 GMT-0400 (EDT)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -72,7 +72,7 @@
      * @returns {Array}
      */
     sjl.forEach = function (array, callback, context) {
-        if (Array.prototype.hasOwnProperty('forEach')) {
+        if ('forEach' in Array.prototype) {
             Array.prototype.forEach.call(array, callback, context);
         }
         else {
@@ -93,7 +93,7 @@
      * @returns {number}
      */
     sjl.indexOf = function (array, value) {
-        if (Array.prototype.hasOwnProperty('indexOf')) {
+        if ('indexOf' in Array.prototype) {
             return Array.prototype.indexOf.call(array, value);
         }
         var classOfValue = sjl.classOf(value),
@@ -168,7 +168,7 @@
      * @returns {Boolean}
      */
     sjl.issetObjKey = function (obj, key) {
-        return obj.hasOwnProperty(key) && isSet(obj[key]);
+        return key in obj && isSet(obj[key]);
     };
 
     /**
@@ -181,7 +181,7 @@
      */
     sjl.issetObjKeyAndOfType = function (obj, key, type) {
         return sjl.issetObjKey(obj, key)
-            && sjl.issetAndOfType.apply(sjl, [obj[key]].concat(sjl.restArgs(arguments, 2)));
+            && sjl.classOfIs(obj[key], sjl.restArgs(arguments, 2));
     };
 
     /**
@@ -373,7 +373,7 @@
             i;
 
         for (i = 0; i < parts.length; i += 1) {
-            if (sjl.classOfIs(parent[parts[i]], 'Undefined')) {
+            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'Undefined')) {
                 parent[parts[i]] = {};
             }
             if (i === parts.length - 1 && shouldSetValue) {
@@ -554,17 +554,16 @@
      * @returns {string} - Imploded string.  *Returns empty string if no members, to join, are found.
      */
     sjl.implode = function (list, separator) {
-        var retVal = '',
-            out;
+        var retVal = '';
         if (sjl.classOfIs(list, 'Array')) {
             retVal = list.join(separator);
         }
         else if (list.constructor.name === 'Set' || list.constructor.name === 'SjlSet') {
-            out = [];
+            retVal = [];
             list.forEach(function (value) {
-                out.push(value);
+                retVal.push(value);
             });
-            retVal = out.join(separator);
+            retVal = retVal.join(separator);
         }
         return retVal;
     };
@@ -580,7 +579,7 @@
             parent = objToSearch,
             i;
         for (i = 0; i < parts.length; i += 1) {
-            if (sjl.classOfIs(parent[parts[i]], 'Undefined')) {
+            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'Undefined')) {
                 parent = null;
                 break;
             }
@@ -651,16 +650,17 @@
 
     /**
      * Searches obj for key and returns it's value.  If value is a function
-     * calls function, with optional `args`, and returns it's return value.
+     * calls function if `raw` is set to `false`, with optional `args`, and returns it's return value.
      * If `raw` is true returns the actual function if value found is a function.
      * @function module:sjl.getValueFromObj
      * @param key {String} The hash key to search for
      * @param obj {Object} the hash to search within
      * @param args {Array} optional the array to pass to value if it is a function
-     * @param raw {Boolean} optional whether to return value even if it is a function
+     * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
      * @todo allow this function to use getter function for key if it exists
      * @param noLegacyGetters {Boolean} - Default false (use legacy getters).
      *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
+     *
      * @returns {*}
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
