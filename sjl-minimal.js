@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Sun Oct 04 2015 17:51:25 GMT-0400 (EDT)
+ * sjl-minimal.js Sat Oct 24 2015 18:19:51 GMT-0400 (EDT)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -203,7 +203,9 @@
         else {
             valueType = Object.prototype.toString.call(value);
             retVal = valueType.substring(8, valueType.length - 1);
-            retVal = retVal === 'Number' && isNaN(value) ? 'NaN' : retVal;
+            if (retVal === 'Number' && isNaN(value)) {
+                retVal = 'NaN';
+            }
         }
         return retVal;
     };
@@ -221,7 +223,20 @@
         // If `humanString` is of type Array then use it.  Else assume it is of type String and that there are possibly
         // more type strings passed in after it.
         var args = sjl.classOf(humanString) === 'Array' ? humanString : sjl.restArgs(arguments, 1),
-            retVal = false;
+            retVal = false,
+            otherArgs = [];
+
+        for (var i = 0; i < args.length; i += 1) {
+            if (sjl.classOf(args[i]) === 'Array') {
+                otherArgs = otherArgs.concat(args[i]);
+            }
+            else {
+                otherArgs.push(args[i]);
+            }
+        }
+
+        args = otherArgs;
+
         for (var i = 0; i < args.length; i += 1) {
             humanString = args[i];
             retVal = sjl.classOf(obj) === humanString;
@@ -978,6 +993,12 @@
 
         // Set up the prototype object of the subclass
         constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
+
+        if (!constructor.prototype.hasOwnProperty('super')) {
+            constructor.prototype.super = function (_super_) {
+                console.log(_super_);
+            };
+        }
 
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {

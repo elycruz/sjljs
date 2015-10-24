@@ -232,7 +232,7 @@ describe('Sjl Utils', function () {
 
             // Remove not set values for truthy tests
             truthyKeys = keys.filter(function (key) {
-                return evaledObj[key] !== null && evaledObj[key] !== undefined;
+                return evaledObj[key] !== null && typeof evaledObj[key] !== 'undefined';
             }),
 
             // Falsy keys to test

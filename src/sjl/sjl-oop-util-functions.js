@@ -51,6 +51,12 @@
         // Set up the prototype object of the subclass
         constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
 
+        if (!constructor.prototype.hasOwnProperty('super')) {
+            constructor.prototype.super = function (_super_) {
+                console.log(_super_);
+            };
+        }
+
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {
                 return sjl.defineSubClass(this, constructor_, methods_, statics_);

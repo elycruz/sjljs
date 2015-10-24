@@ -175,7 +175,9 @@
         else {
             valueType = Object.prototype.toString.call(value);
             retVal = valueType.substring(8, valueType.length - 1);
-            retVal = retVal === 'Number' && isNaN(value) ? 'NaN' : retVal;
+            if (retVal === 'Number' && isNaN(value)) {
+                retVal = 'NaN';
+            }
         }
         return retVal;
     };
@@ -193,7 +195,20 @@
         // If `humanString` is of type Array then use it.  Else assume it is of type String and that there are possibly
         // more type strings passed in after it.
         var args = sjl.classOf(humanString) === 'Array' ? humanString : sjl.restArgs(arguments, 1),
-            retVal = false;
+            retVal = false,
+            otherArgs = [];
+
+        for (var i = 0; i < args.length; i += 1) {
+            if (sjl.classOf(args[i]) === 'Array') {
+                otherArgs = otherArgs.concat(args[i]);
+            }
+            else {
+                otherArgs.push(args[i]);
+            }
+        }
+
+        args = otherArgs;
+
         for (var i = 0; i < args.length; i += 1) {
             humanString = args[i];
             retVal = sjl.classOf(obj) === humanString;
