@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Sat Oct 24 2015 18:19:51 GMT-0400 (EDT)
+ * sjl-minimal.js Sun Oct 25 2015 16:16:02 GMT-0400 (EDT)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -993,12 +993,6 @@
 
         // Set up the prototype object of the subclass
         constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
-
-        if (!constructor.prototype.hasOwnProperty('super')) {
-            constructor.prototype.super = function (_super_) {
-                console.log(_super_);
-            };
-        }
 
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {

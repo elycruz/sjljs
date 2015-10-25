@@ -1,4 +1,4 @@
-/**! sjl.js Sat Oct 24 2015 18:19:52 GMT-0400 (EDT) **//**
+/**! sjl.js Sun Oct 25 2015 16:16:04 GMT-0400 (EDT) **//**
  * Created by Ely on 5/29/2015.
  */
 (function (context) {
@@ -990,12 +990,6 @@
 
         // Set up the prototype object of the subclass
         constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
-
-        if (!constructor.prototype.hasOwnProperty('super')) {
-            constructor.prototype.super = function (_super_) {
-                console.log(_super_);
-            };
-        }
 
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {
