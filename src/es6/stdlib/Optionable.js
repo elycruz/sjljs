@@ -4,11 +4,11 @@
  *  that they force the use of legacy setters if they are available;
  *  e.g., setName, setSomePropertyName, etc..
  */
-(function (isBrowser) {
+(function (isNodeEnv) {
 
     'use strict';
 
-    var sjl = require('sjl');
+    var sjl = isNodeEnv ? require('sjljs') : (window.sjl || {});
 
     /**
      * Optionable Constructor merges all objects passed in to it's `options` hash.
@@ -106,9 +106,10 @@
             sjl.extend(true, this.options, ...arguments);
             return this;
         }
+
     }
 
-    if (!isBrowser) {
+    if (isNodeEnv) {
         module.exports = Optionable;
     }
     else {

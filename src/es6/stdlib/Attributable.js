@@ -1,11 +1,11 @@
 /**
  * Created by Ely on 6/21/2014.
  */
-(function (isBrowser) {
+(function (isNodeEnv) {
 
     'use strict';
 
-    var sjl = require('sjl');
+    var sjl = isNodeEnv ? require('sjljs') : (window.sjl || {});
 
     /**
      * @class sjl.Attributable
@@ -93,7 +93,7 @@
         }
     }
 
-    if (!isBrowser) {
+    if (isNodeEnv) {
         modules.export = Attributable;
     }
     else {

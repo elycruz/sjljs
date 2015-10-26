@@ -1,15 +1,13 @@
 /**
  * Created by elydelacruz on 10/25/15.
- * File: src/es6/sjl.js
- * Description:  This file consists of all the utils of the sjl library.
+ * @file: ./src/es6/sjl.js
+ * @description:  This file consists of all the utils of the sjl library.
  * @module sjl
  */
 
-(function () {
+(function (isNodeEnv) {
 
-    var isBrowser = typeof window === 'undefined',
-
-        sjl = {
+    var  sjl = {
 
         /**
          * Checks to see value passed in is not set (not undefined and not null).
@@ -96,20 +94,9 @@
             // If `humanString` is of type Array then use it.  Else assume it is of type String and that there are possibly
             // more type strings passed in after it.
             var args = sjl.classOf(humanString) === 'Array' ? humanString : sjl.restArgs(arguments, 1),
-                retVal = false,
-                otherArgs = [];
+                retVal = false;
 
-            // Flatten ...humanString if length > 1
-            for (var i = 0; i < args.length; i += 1) {
-                if (sjl.classOf(args[i]) === 'Array') {
-                    otherArgs = otherArgs.concat(args[i]);
-                }
-                else {
-                    otherArgs.push(args[i]);
-                }
-            }
-
-            args = otherArgs;
+            args = sjl.flattenArray(args);
 
             for (var i = 0; i < args.length; i += 1) {
                 humanString = args[i];
@@ -190,7 +177,9 @@
          *  facility in this function as that functionality will be removed in a later version.
          * @returns {Boolean}
          */
-        isEmptyObjKey: sjl.isEmptyObjKeyOrNotOfType,
+        isEmptyObjKey: function () {
+            sjl.isEmptyObjKeyOrNotOfType(...arguments);
+        },
 
         /**
          * Takes a namespace string and fetches that location out from
@@ -524,10 +513,12 @@
          * Package factory method.  Allows object to have a `package` method
          * which acts like java like namespace except it allows you to set
          * it's members (once) and then protects it's members.
+         * @function module:sjl.createTopLevelPackage
          * @param obj {Object|*} - Object to set the `package` method on.
          * @return {Object|*} - Returns passed in `obj`.
          */
-        createTopLevelPackage: function (obj, funcKey = 'package') {
+        createTopLevelPackage: function (obj, funcKey) {
+            funcKey = funcKey || 'package';
             return (function () {
                 /**
                  * Private package object.
@@ -551,6 +542,64 @@
                 // Return passed in obj
                 return obj;
             }());
+        },
+
+        //filterWhereType: function (obj, type) {},
+
+
+        /**
+         * Flattens passed in array.
+         * @function module:sjl.flattenArray
+         * @param array {Array}
+         * @returns {Array}
+         */
+        flattenArray: function (array) {
+            var newArray = [];
+            // Flatten ...humanString if length > 1
+            for (var i = 0; i < array.length; i += 1) {
+                if (sjl.classOf(array[i]) === 'Array') {
+                    newArray = sjl.flattenArray(array[i]).concat(newArray);
+                }
+                else {
+                    newArray.push(array[i]);
+                }
+            }
+            return newArray;
+        },
+
+        //primitives: new Set('Array', 'Object', 'Boolean', 'String', 'Map', 'Set', 'WeakMap', 'Function'),
+
+        /**
+         * Creates a new primitive based on passed in string representation of type.  E.g., sjl.newPrimitive('Map')
+         * @note Used internally when needing to flatten an object of a particular type (@see sjl.flatten)
+         * @param type
+         */
+        newPrimitive: function (type) {
+            var retVal = {};
+            switch(type) {
+                case 'Array':
+                    retVal = [];
+                    break;
+                case 'String':
+                    retVal = '';
+                    break;
+                case 'Map':
+                    retVal = new Map();
+                    break;
+                case 'Set':
+                    retVal = new Set();
+                    break;
+                case 'WeakMap':
+                    retVal = new WeakMap();
+                    break;
+                case 'Function':
+                    retVal = function () {};
+                    break;
+                case 'Object':
+                default:
+                    retVal = {};
+                    break;
+            }
         }
     };
 
@@ -728,10 +777,10 @@
     }
 
     // If is server environment
-    if (!isBrowser) {
+    if (isNodeEnv) {
 
         // Make top level namespace object
-        sjl.package = require('../../sjl-nodejs/Namespace')(__dirname)
+        sjl.package = require('../sjl-nodejs/Namespace')(__dirname)
 
         // Export sjl
         module.exports = sjl;
@@ -749,4 +798,4 @@
         sjl.createTopLevelPackage(sjl);
     }
 
-})();
+})(typeof window === 'undefined');
