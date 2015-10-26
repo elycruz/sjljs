@@ -1,12 +1,9 @@
 /**
  * Created by Ely on 8/17/2015.
  */
-(function (context) {
+module.exports = function (sjl) {
 
     'use strict';
-
-    // Get `sjl` variable
-    var sjl = context.sjl;
 
     /**
      * Makes a property non settable on `obj` and sets `value` as the returnable property.
@@ -86,4 +83,4 @@
         }());
     };
 
-}(typeof window === 'undefined' ? global : window));
+};

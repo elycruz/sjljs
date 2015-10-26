@@ -31,32 +31,6 @@
     };
 
     /**
-     * Returns whether `obj` has a getter method for key passed in.
-     * Method formats searched for: getKeyName or keyName
-     * @param obj {Object|*} - Object to search on.
-     * @param key - Key to normalize to method name to search for.
-     * @returns {Boolean}
-     */
-    //sjl.hasGetterMethodForKey = function (obj, key) {
-    //    // Camel case and uppercase first letter
-    //    key = sjl.camelCase(key, true);
-    //    return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'get' + key);
-    //};
-
-    /**
-     * Returns whether `obj` has a setter method for key passed in.
-     * Method formats searched for: setKeyName or keyName
-     * @param obj {Object|*} - Object to search on.
-     * @param key - Key to normalize to method name to search for.
-     * @returns {Boolean}
-     */
-    //sjl.hasSetterMethodForKey = function (obj, key) {
-    //    // Camel case and uppercase first letter
-    //    key = sjl.camelCase(key, true);
-    //    return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'set' + key);
-    //};
-
-    /**
      * Searches obj for key and returns it's value.  If value is a function
      * calls function if `raw` is set to `false`, with optional `args`, and returns it's return value.
      * If `raw` is true returns the actual function if value found is a function.
