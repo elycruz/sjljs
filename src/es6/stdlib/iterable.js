@@ -49,4 +49,9 @@
         return arrayOrObj;
     };
 
+    if (isNodeEnv) {
+        module.exports = sjl.iterable;
+    }
+    // Else do nothing since function is already set on `sjl`
+
 }(typeof window === 'undefined'));

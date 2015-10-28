@@ -5,7 +5,17 @@
 
     'use strict';
 
-    var sjl = isNodeEnv ? require('sjljs') : (window.sjl || {});
+    var sjl,
+        makeIterable;
+
+    if (isNodeEnv) {
+        sjl = require('sjljs');
+        makeIterable = require('iterable');
+    }
+    else {
+        sjl = window.sjl || {};
+        makeIterable = sjl.iterable;
+    }
 
     /**
      * SjlSet constructor.  This object has the same interface as the es6 `Set`
@@ -35,7 +45,7 @@
             }
 
             // Make our `_values` array inherit our special iterator
-            sjl.iterable(self._values, 0);
+            makeIterable(self._values, 0);
 
             // Set custom iterator function on `this`
             self[Symbol.iterator] = function () {
@@ -99,7 +109,7 @@
 
         addFromArray(value) {
             // Iterate through the passed in iterable and add all values to `_values`
-            var iterator = sjl.iterable(value, 0)[Symbol.iterator]();
+            var iterator = makeIterable(value, 0)[Symbol.iterator]();
 
             // Loop through values and add them
             while (iterator.valid()) {

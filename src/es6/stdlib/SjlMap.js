@@ -5,7 +5,18 @@
 
     'use strict';
 
-    var sjl = isNodeEnv ? require('sjljs') : (window.sjl || {});
+    var sjl,
+        makeIterable;
+
+    if (isNodeEnv) {
+        sjl = require('sjljs');
+        makeIterable = require('iterable');
+    }
+    else {
+        sjl = window.sjl || {};
+        makeIterable = sjl.iterable;
+    }
+
 
     class SjlMap {
 
@@ -19,8 +30,8 @@
             if (sjl.classOfIs(iterable, 'Array')) {
                 self.addFromArray(iterable);
                 // Make our internal arrays inherit our special iterator
-                self._values = sjl.iterable(self._values, 0);
-                self._keys = sjl.iterable(self._keys, 0);
+                self._values = makeIterable(self._values, 0);
+                self._keys = makeIterable(self._keys, 0);
             }
 
             // If anything other than an array is passed in throw an Error
@@ -109,7 +120,7 @@
 
         addFromArray(array) {
             // Iterate through the passed in iterable and add all values to `_values`
-            var iterator = sjl.iterable(array, 0)[Symbol.iterator](),
+            var iterator = makeIterable(array, 0)[Symbol.iterator](),
                 entry;
 
             // Loop through values and add them
