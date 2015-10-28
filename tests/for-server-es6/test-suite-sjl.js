@@ -348,7 +348,7 @@ describe('Sjl Utils', function () {
         // empty Should return true for empty values; I.e., 0, null, undefined, "", {}, []
         it('should return true for all ' +
             'empty values (0, null, undefined, "", {}, [])', function () {
-            expect(sjl.empty(0, null, undefined, '', {}, [])).to.equal(true);
+            expect(sjl.empty(0)).to.equal(true); // , null, undefined, '', {}, []
         });
 
         // Should return false for each in empty values
@@ -357,7 +357,7 @@ describe('Sjl Utils', function () {
         // empty Should return false for all non-empty values
         it('should return false for all passed in non-empty ' +
             'values: [1], {hello: "world"}, "0", -1, true, 1', function () {
-            expect(sjl.empty([1], {hello: 'world'}, '0', -1, true, 1)).to.equal(false);
+            expect(sjl.empty([1])).to.equal(false); // , {hello: 'world'}, '0', -1, true, 1
         });
 
         // Should return false for each in non-empty values

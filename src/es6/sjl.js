@@ -520,11 +520,6 @@
         createTopLevelPackage: function (obj, funcKey) {
             funcKey = funcKey || 'package';
             return (function () {
-                /**
-                 * Private package object.
-                 * @type {{}}
-                 */
-                var packages = {};
 
                 /**
                  * Returns a property from sjl packages.
@@ -535,8 +530,8 @@
                  * @returns {*}
                  */
                 obj[funcKey] = function (nsString, value) {
-                    return typeof nsString === 'undefined' ? packages
-                        : namespace(nsString, packages, value);
+                    return typeof nsString === 'undefined' ? obj[funcKey]
+                        : namespace(nsString, obj[funcKey], value);
                 };
 
                 // Return passed in obj
@@ -545,7 +540,6 @@
         },
 
         //filterWhereType: function (obj, type) {},
-
 
         /**
          * Flattens passed in array.
