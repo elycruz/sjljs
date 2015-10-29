@@ -21,8 +21,8 @@
      */
     class Optionable {
 
-        constructor (options = null) {
-            this.options = new sjl.Attributable();
+        constructor (options) {
+            this.options = new sjl.package.stdlib.Attributable();
             this.merge.apply(this, arguments);
         }
 
