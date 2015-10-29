@@ -94,7 +94,7 @@
     }
 
     if (isNodeEnv) {
-        modules.export = Attributable;
+        module.exports = Attributable;
     }
     else {
         sjl.package('stdlib.Attributable', Attributable);

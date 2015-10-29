@@ -467,19 +467,18 @@
          * @param [, Boolean] {Boolean} - Optional.
          * @returns {Object} - Returns first object passed in.
          */
-        extend: function () {
+        extend: function (...args) {
             // Return if no arguments
-            if (arguments.length === 0) {
+            if (args.length === 0) {
                 return;
             }
 
-            var args = sjl.argsToArray(arguments),
-                deep = sjl.extractBoolFromArrayStart(args),
+            var deep = sjl.extractBoolFromArrayStart(args),
                 useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),// Can't remove this until version 0.5 cause it may cause breaking changes in dependant projects
                 arg0 = args.shift();
 
             // Extend object `0` with other objects
-            sjl.forEach(args, function (arg) {
+            args.forEach(function (arg) {
                 // Extend `arg0` if `arg` is an object
                 if (sjl.classOfIs(arg, 'Object')) {
                     extend(arg0, arg, deep, useLegacyGettersAndSetters);
@@ -627,7 +626,7 @@
             shouldSetValue = typeof valueToSet !== 'undefined',
             hasOwnProperty;
 
-        sjl.forEach(parts, function (key, i) {
+       parts.forEach(function (key, i) {
             hasOwnProperty = parent.hasOwnProperty(key);
             if (i === parts.length - 1
                 && shouldSetValue && !hasOwnProperty) {
@@ -672,8 +671,8 @@
             classOf_o_prop = sjl.issetObjKey(o, prop) ? sjl.classOf(o[prop]) : 'Empty';
 
             // If property is present on target (o) and is not writable, skip iteration
-            if (getOwnPropertyDescriptor) {
-                propDescription = getOwnPropertyDescriptor(o, prop);
+            if (Object.getOwnPropertyDescriptor) {
+                propDescription = Object.getOwnPropertyDescriptor(o, prop);
                 if (propDescription && !propDescription.writable) {
                     continue;
                 }
