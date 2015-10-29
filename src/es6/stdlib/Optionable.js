@@ -8,7 +8,7 @@
 
     'use strict';
 
-    var sjl = isNodeEnv ? require('sjljs') : (window.sjl || {});
+    var sjl = isNodeEnv ? require('../sjl.js') : (window.sjl || {});
 
     /**
      * Optionable Constructor merges all objects passed in to it's `options` hash.
@@ -82,6 +82,37 @@
                 retVal = this.options.attrs(options);
             }
             return retVal;
+        }
+
+        /**
+         * Gets one or many option values.
+         * @method sjl.Optionable#get
+         * @param keyOrArray
+         * @returns {*}
+         */
+        get (keyOrArray) {
+            return this.getOptions(keyOrArray);
+        }
+
+        /**
+         * Sets an option (key, value) or multiple options (Object)
+         * based on what's passed in.
+         * @method sjl.Optionable#set
+         * @param0 {String|Object}
+         * @param1 {*}
+         * @returns {sjl.Optionable}
+         */
+        set () {
+            var self = this,
+                args = arguments,
+                typeOfArgs0 = sjl.classOf(args[0]);
+            if (typeOfArgs0 === 'String') {
+                self.setOption(args[0], args[1]);
+            }
+            else if (typeOfArgs0 === 'Object') {
+                self.setOptions(args[0]);
+            }
+            return self;
         }
 
         /**

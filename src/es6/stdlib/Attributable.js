@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var sjl = isNodeEnv ? require('sjljs') : (window.sjl || {});
+    var sjl = isNodeEnv ? require('../sjl.js') : (window.sjl || {});
 
     /**
      * @class sjl.Attributable

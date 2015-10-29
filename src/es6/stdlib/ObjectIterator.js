@@ -9,15 +9,14 @@
         ObjectIterator;
 
     if (isNodeEnv) {
-        sjl = require('sjljs');
-        Iterator = require('Iterator');
-        ObjectIterator = require('ObjectIterator');
+        sjl = require('../sjl.js');
     }
     else {
         sjl = window.sjl || {};
-        Iterator = sjl.package.Iterator;
-        ObjectIterator = sjl.package.ObjectIterator;
     }
+
+    Iterator = sjl.package.Iterator;
+    ObjectIterator = sjl.package.ObjectIterator;
 
     /**
      * @class sjl.ObjectIterator
@@ -26,10 +25,6 @@
      */
     class ObjectIterator extends Iterator {
         constructor(keys, values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof ObjectIterator)) {
-                return new ObjectIterator(keys, values, pointer);
-            }
             super(this, values, pointer);
             this.__internal.keys = keys;
         }

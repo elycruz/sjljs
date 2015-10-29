@@ -9,7 +9,7 @@
         makeIterable;
 
     if (isNodeEnv) {
-        sjl = require('sjljs');
+        sjl = require('../sjl.js');
         makeIterable = require('iterable');
     }
     else {

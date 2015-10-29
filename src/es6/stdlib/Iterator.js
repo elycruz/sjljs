@@ -5,7 +5,7 @@
 
     'use strict';
 
-    var sjl = isNodeEnv ? require('sjljs') : (window.sjl || {}),
+    var sjl = isNodeEnv ? require('../sjl.js') : (window.sjl || {}),
         iteratorKey = Symbol.iterator;
 
     /**
@@ -16,11 +16,6 @@
     class Iterator {
 
         constructor(values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof Iterator)) {
-                return new Iterator(values, pointer);
-            }
-
             // Internalize the `values` collection and pointer here
             // to make this class more functional.
             this.__internal = {

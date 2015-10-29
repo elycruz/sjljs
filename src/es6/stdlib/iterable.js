@@ -9,7 +9,7 @@
         ObjectIterator;
 
     if (isNodeEnv) {
-        sjl = require('sjljs');
+        sjl = require('../sjl.js');
         Iterator = require('Iterator');
         ObjectIterator = require('ObjectIterator');
     }
