@@ -6,17 +6,19 @@
     'use strict';
 
     var sjl,
-        makeIterable;
+        makeIterable,
+        ObjectIterator;
 
     if (isNodeEnv) {
         sjl = require('../sjl.js');
-        makeIterable = require('iterable');
+        makeIterable = require('./iterable.js');
     }
     else {
         sjl = window.sjl || {};
         makeIterable = sjl.iterable;
     }
 
+    ObjectIterator = sjl.package.stdlib.ObjectIterator;
 
     class SjlMap {
 
@@ -42,7 +44,7 @@
 
             // Set custom iterator function on `this`
             self[Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._keys, self._values, 0);
+                return new ObjectIterator(self._keys, self._values, 0);
             };
 
             // Set flag to remember that original iterator was overridden
@@ -61,7 +63,7 @@
         }
 
         delete(key) {
-            var _index = sjl.indexOf(this._keys, key);
+            var _index = this._keys.indexOf(key);
             if (this.has(key)) {
                 delete this._values[_index];
                 delete this._keys[_index];
@@ -71,7 +73,7 @@
         }
 
         entries() {
-            return sjl.ObjectIterator(this._keys, this._values, 0);
+            return new ObjectIterator(this._keys, this._values, 0);
         }
 
         forEach(callback, context) {
@@ -82,7 +84,7 @@
         }
 
         has(key) {
-            return sjl.indexOf(this._keys, key) > -1 ? true : false;
+            return this._keys.indexOf(key) > -1 ? true : false;
         }
 
         keys() {
@@ -94,12 +96,12 @@
         }
 
         get(key) {
-            var index = sjl.indexOf(this._keys, key);
+            var index = this._keys.indexOf(key);
             return index > -1 ? this._values[index] : undefined;
         }
 
         set(key, value) {
-            var index = sjl.indexOf(this._keys, key);
+            var index = this._keys.indexOf(key);
             if (index > -1) {
                 this._keys[index] = key;
                 this._values[index] = value;

@@ -4,9 +4,10 @@
 
 (function (isNodeEnv) {
 
+    'use strict';
+
     var sjl,
-        Iterator,
-        ObjectIterator;
+        Iterator;
 
     if (isNodeEnv) {
         sjl = require('../sjl.js');
@@ -15,8 +16,7 @@
         sjl = window.sjl || {};
     }
 
-    Iterator = sjl.package.Iterator;
-    ObjectIterator = sjl.package.ObjectIterator;
+    Iterator = sjl.package.stdlib.Iterator;
 
     /**
      * @class sjl.ObjectIterator
@@ -25,7 +25,7 @@
      */
     class ObjectIterator extends Iterator {
         constructor(keys, values, pointer) {
-            super(this, values, pointer);
+            super(values, pointer);
             this.__internal.keys = keys;
         }
 
@@ -91,6 +91,13 @@
             }
             return retVal;
         }
+    }
+
+    if (isNodeEnv) {
+        module.exports = ObjectIterator;
+    }
+    else {
+        sjl.package('stdlib.ObjectIterator', ObjectIterator);
     }
 
 }(typeof window === 'undefined'));

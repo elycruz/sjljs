@@ -6,16 +6,19 @@
     'use strict';
 
     var sjl,
-        makeIterable;
+        makeIterable,
+        ObjectIterator;
 
     if (isNodeEnv) {
         sjl = require('../sjl.js');
-        makeIterable = require('iterable');
+        makeIterable = require('./iterable.js');
     }
     else {
         sjl = window.sjl || {};
         makeIterable = sjl.iterable;
     }
+
+    ObjectIterator = sjl.package.stdlib.ObjectIterator;
 
     /**
      * SjlSet constructor.  This object has the same interface as the es6 `Set`
@@ -49,7 +52,7 @@
 
             // Set custom iterator function on `this`
             self[Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._values, self._values, 0);
+                return new ObjectIterator(self._values, self._values, 0);
             };
 
             // Set flag to remember that original iterator was overridden
@@ -73,7 +76,7 @@
         }
 
         delete(value) {
-            var _index = sjl.indexOf(value, this._values);
+            var _index = value.indexOf(this._values);
             if (_index > -1) {
                 delete this._values[_index];
                 this.size -= 1;
@@ -83,16 +86,16 @@
         }
 
         entries() {
-            return sjl.ObjectIterator(this._values, this._values, 0);
+            return new ObjectIterator(this._values, this._values, 0);
         }
 
         forEach(callback, context) {
-            sjl.forEach(this._values, callback, context);
+            this._values.forEach(callback, context);
             return this;
         }
 
         has(value) {
-            return sjl.indexOf(this._values, value) > -1 ? true : false;
+            return this._values.indexOf(value) > -1 ? true : false;
         }
 
         keys() {
@@ -129,7 +132,7 @@
     }
 
     if (isNodeEnv) {
-        modules.export = SjlSet;
+        module.exports = SjlSet;
     }
     else {
         sjl.package('stdlib.SjlSet', SjlSet);
