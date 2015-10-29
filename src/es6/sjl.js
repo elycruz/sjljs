@@ -93,7 +93,7 @@
         classOfIs: function (obj, ...humanString) {
             // If `humanString` is of type Array then use it.  Else assume it is of type String and that there are possibly
             // more type strings passed in after it.
-            var args = sjl.classOf(humanString) === 'Array' ? humanString : sjl.restArgs(arguments, 1),
+            var args = humanString,
                 retVal = false;
 
             args = sjl.flattenArray(args);
@@ -118,14 +118,15 @@
             var classOfValue = sjl.classOf(value),
                 retVal;
 
-            // If value is an array or a string
-            if (classOfValue === 'Array'
-                || classOfValue === 'String') {
+            if (!sjl.isset(value) || value === 0) {
+                retVal = true;
+            }
+
+            else if (classOfValue === 'Array' || classOfValue === 'String') {
                 retVal = value.length === 0;
             }
 
-            else if (classOfValue === 'Set' || classOfValue === 'Map'
-                || classOfValue === 'WeakMap') {
+            else if (classOfValue === 'Set' || classOfValue === 'Map' || classOfValue === 'WeakMap') {
                 retVal = value.size === 0;
             }
 
@@ -133,12 +134,12 @@
                 retVal = false;
             }
 
-            // If value is not number and is not equal to zero or if value is not a function
-            // then check for other empty values
-            else {
-                retVal = (value === 0 || value === false
-                || !sjl.isset(value)
-                || sjl.isEmptyObj(value));
+            else if (classOfValue === 'Object') {
+                retVal = sjl.isEmptyObj(value);
+            }
+
+            else if (classOfValue === 'Boolean') {
+                retVal = !value;
             }
 
             return retVal;
@@ -150,7 +151,7 @@
          * @returns {Boolean}
          */
         isEmptyObj: function (obj) {
-            return Object.keys(obj).length > 0;
+            return Object.keys(obj).length ===  0;
         },
 
         /**
@@ -161,9 +162,9 @@
          * @param type {String} - Optional. {...type} one or more types to search on.
          * @returns {Boolean}
          */
-        isEmptyObjKeyOrNotOfType: function (obj, key, type) {
+        isEmptyObjKeyOrNotOfType: function (obj, key, ...type) {
             var issetObjKey = arguments.length > 2
-                ? sjl.issetObjKeyAndOfType(...arguments) : sjl.issetObjKey(obj, key);
+                ? sjl.issetObjKeyAndOfType(obj, key, ...type) : sjl.issetObjKey(obj, key);
             return !issetObjKey || sjl.empty(obj[key]);
         },
 
@@ -177,8 +178,8 @@
          *  facility in this function as that functionality will be removed in a later version.
          * @returns {Boolean}
          */
-        isEmptyObjKey: function () {
-            sjl.isEmptyObjKeyOrNotOfType(...arguments);
+        isEmptyObjKey: function (obj, key) {
+            sjl.isEmptyObjKeyOrNotOfType(obj, key);
         },
 
         /**
