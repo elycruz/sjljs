@@ -1,28 +1,38 @@
 /**
  * Created by Ely on 6/21/2014.
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    var sjl = context.sjl;
+    var sjl,
+        Attributable,
+        Constructor = function Attributable (attributes) {
+            this.attrs(attributes);
+        },
+        isNodeEnv = typeof window === 'undefined';
+
+    if (isNodeEnv) {
+        sjl = require('../sjl.js');
+    }
+    else {
+        sjl = window.sjl || {};
+    }
 
     /**
-     * @class sjl.Attributable
-     * @extends sjl.Extendable
+     * @class sjl.package.stdlib.Attributable
+     * @extends sjl.package.stdlib.Extendable
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @type {void|Object|*}
      */
-    sjl.Attributable = sjl.Extendable.extend(function Attributable (attributes) {
-        this.attrs(attributes);
-    },{
+    Attributable = sjl.package.stdlib.Extendable.extend(Constructor,{
 
         /**
          * Gets or sets a collection of attributes.
-         * @method sjl.Attributable#attrs
+         * @method sjl.package.stdlib.Attributable#attrs
          * @param attrs {mixed|Array|Object} - Attributes to set or get from object
          * @todo add an `attr` function to this class
-         * @returns {sjl.Attributable}
+         * @returns {sjl.package.stdlib.Attributable}
          */
         attrs: function (attrs) {
             var self = this,
@@ -62,7 +72,7 @@
          * Setter and getter for attributes on self {Optionable}.
          * @param 0 {Object|String} - Key or object to set on self.
          * @param 1 {*} - Value to set when using function as a setter.
-         * @returns {*|sjl.Attributable} - If setter returns self else returned mixed.
+         * @returns {*|sjl.package.stdlib.Attributable} - If setter returns self else returned mixed.
          */
         attr: function () {
             return this.attrs.apply(this, arguments);
@@ -70,7 +80,7 @@
 
         /**
          * Gets a set of attributes hash for queried attributes.
-         * @method sjl.Attributable#_getAttribs
+         * @method sjl.package.stdlib.Attributable#_getAttribs
          * @param attribsList {Array} - Attributes list to return
          * @returns {*}
          * @private
@@ -92,4 +102,12 @@
         }
 
     });
-})(typeof window === 'undefined' ? global : window);
+
+    if (isNodeEnv) {
+        module.exports = Attributable;
+    }
+    else {
+        sjl.package('stdlib.Attributable', Attributable);
+    }
+
+})();
