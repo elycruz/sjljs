@@ -1,39 +1,12 @@
-/**! sjl.js Sun Oct 25 2015 16:16:04 GMT-0400 (EDT) **//**
+/**! sjl.js Mon Nov 02 2015 00:52:03 GMT-0500 (EST) **//**
  * Created by Ely on 5/29/2015.
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    // Singleton instance
-    var sjl = {};
-
-    /**
-     * @module sjl
-     * @description Sjl object.
-     * @type {Object}
-     */
-    Object.defineProperty(context, 'sjl', {
-        get: function () {
-            return sjl;
-        }
-    });
-
-    context.sjl.defineProperty = typeof Object.defineProperty === 'function' ? Object.defineProperty : null;
-
-}(typeof window === 'undefined' ? global : window));
-
-/**
- * Created by Ely on 5/24/2014.
- * Defines argsToArray, classOfIs, classOf, empty,
- *  isset, keys, and namespace, on the passed in context.
- */
-
-'use strict';
-
-(function (context) {
-
-    var sjl = context.sjl,
+    var sjl = {},
+        isNodeEnv = typeof window === 'undefined',
         slice = Array.prototype.slice;
 
     /**
@@ -283,8 +256,8 @@
         // then check for other empty values
         else {
             retVal = (value === 0 || value === false
-                || value === undefined || value === null
-                || isEmptyObj(value));
+            || value === undefined || value === null
+            || isEmptyObj(value));
         }
 
         return retVal;
@@ -586,6 +559,7 @@
      * @param objToSearch {*}
      * @returns {*} - If property chain is not found then returns `null`.
      */
+
     sjl.searchObj = function (ns_string, objToSearch) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
@@ -599,20 +573,6 @@
         }
         return parent;
     };
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 5/24/2014.
- * Cartesian functions copied from "Javascript the definitive guide"
- * getValueFromObj and setValueOnObj are not from "Javascript ..."
- * @note using legacy getters and setters from within `extend` method requires a refactor
- * as it does not work with the deep option and should.
- */
-
-'use strict';
-
-(function (context) {
 
     /**
      * Used by sjl.extend definition
@@ -633,32 +593,6 @@
     sjl.hasMethod = function (obj, method) {
         return !sjl.isEmptyObjKeyOrNotOfType(obj, method, 'Function');
     };
-
-    /**
-     * Returns whether `obj` has a getter method for key passed in.
-     * Method formats searched for: getKeyName or keyName
-     * @param obj {Object|*} - Object to search on.
-     * @param key - Key to normalize to method name to search for.
-     * @returns {Boolean}
-     */
-    //sjl.hasGetterMethodForKey = function (obj, key) {
-    //    // Camel case and uppercase first letter
-    //    key = sjl.camelCase(key, true);
-    //    return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'get' + key);
-    //};
-
-    /**
-     * Returns whether `obj` has a setter method for key passed in.
-     * Method formats searched for: setKeyName or keyName
-     * @param obj {Object|*} - Object to search on.
-     * @param key - Key to normalize to method name to search for.
-     * @returns {Boolean}
-     */
-    //sjl.hasSetterMethodForKey = function (obj, key) {
-    //    // Camel case and uppercase first letter
-    //    key = sjl.camelCase(key, true);
-    //    return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'set' + key);
-    //};
 
     /**
      * Searches obj for key and returns it's value.  If value is a function
@@ -761,7 +695,7 @@
      * @param useLegacyGettersAndSetters {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
      * @returns {*} - returns o
      */
-     function extend (o, p, deep, useLegacyGettersAndSetters) {
+    function extend (o, p, deep, useLegacyGettersAndSetters) {
         deep = deep || false;
         useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
@@ -870,83 +804,6 @@
         return JSON.parse(JSON.stringify(obj));
     };
 
-//    if (typeof sjl.merge === 'undefined') {
-        /**
-         * Copy the enumerable properties of p to o, and return o.
-         * If o and p have a property by the same name, o's property is left alone.
-         * This function does not handle getters and setters or copy attributes.
-         * @param o {mixed} - *object to merge to
-         * @param p {mixed} - *object to merge from
-         * @returns {*} - returns o
-         */
-//        sjl.merge = function (o, p) {
-//            for (prop in p) { // For all props in p.
-//                if (o.hasOwnProperty[prop]) continue; // Except those already in o.
-//                o[prop] = p[prop]; // Add the property to o.
-//            }
-//            return o;
-//        };
-//    }
-
-//    if (typeof sjl.subtract === 'undefined') {
-        /**
-         * For each property of p, delete the property with the same name from o.
-         * Return o.
-         */
-//        sjl.subtract = function (o, p) {
-//            for (prop in p) { // For all props in p
-//                delete o[prop]; // Delete from o (deleting a
-//                // nonexistent prop is harmless)
-//            }
-//            return o;
-//        };
-//    }
-
-//    if (typeof sjl.restrict === 'undefined') {
-        /**
-         * Remove properties from o if there is not a property with the same name in p.
-         * Return o.
-         */
-//        sjl.restrict = function (o, p) {
-//            for (prop in o) { // For all props in o
-//                if (!(prop in p)) delete o[prop]; // Delete if not in p
-//            }
-//            return o;
-//        };
-//    }
-
-//    if (typeof sjl.union === 'undefined') {
-        /**
-         * Return a new object that holds the properties of both o and p.
-         * If o and p have properties by the same name, the values from p are used.
-         */
-//        sjl.union = function (o, p, deep, useLegacyGettersAndSetters) {
-//            return sjl.extend(deep, sjl.clone(o), p, useLegacyGettersAndSetters);
-//        };
-//    }
-
-//    if (typeof sjl.intersection === 'undefined') {
-        /**
-         * Return a new object that holds only the properties of o that also appear
-         * in p. This is something like the intersection of o and p, but the values of
-         * the properties in p are discarded
-         */
-//        sjl.intersection = function (o, p) {
-//            return sjl.restrict(sjl.clone(o), p);
-//        };
-//    }
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 5/24/2014.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl;
-
     /**
      * Creates a copy of a prototype to use for inheritance.
      * @function module:sjl.copyOfProto
@@ -975,9 +832,9 @@
      * @returns {Constructor}
      */
     sjl.defineSubClass = function (superclass,  // Constructor of the superclass
-                                constructor, // The constructor for the new subclass
-                                methods,     // Instance methods: copied to prototype
-                                statics)     // Class properties: copied to constructor
+                                   constructor, // The constructor for the new subclass
+                                   methods,     // Instance methods: copied to prototype
+                                   statics)     // Class properties: copied to constructor
     {
         // Resolve superclass
         superclass = superclass || sjl.copyOfProto(Object.prototype);
@@ -993,8 +850,8 @@
 
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {
-                return sjl.defineSubClass(this, constructor_, methods_, statics_);
-            };
+            return sjl.defineSubClass(this, constructor_, methods_, statics_);
+        };
 
         // Define constructor's constructor
         constructor.prototype.constructor = constructor;
@@ -1023,18 +880,6 @@
         throw Error(funcName + ' expects ' + paramName +
             ' to be of type "' + expectedType + '".  Value received: ' + value);
     };
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 8/17/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    // Get `sjl` variable
-    var sjl = context.sjl;
 
     /**
      * Makes a property non settable on `obj` and sets `value` as the returnable property.
@@ -1114,26 +959,7 @@
         }());
     };
 
-}(typeof window === 'undefined' ? global : window));
-/**
- * Created by Ely on 8/15/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    context.sjl.createTopLevelPackage(context.sjl);
-
-}(typeof window === 'undefined' ? global : window));
-/**
- * Created by Ely on 7/17/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl;
-
+    // Ensure we have access to the `Symbol`
     if (typeof Symbol === 'undefined') {
         sjl.Symbol = {
             iterator: '@@iterator'
@@ -1143,7 +969,31 @@
         sjl.Symbol = Symbol;
     }
 
-})(typeof window === 'undefined' ? global : window);
+    // If nodejs environment
+    if (isNodeEnv) {
+        // Make top level namespace object
+        sjl.package = require('../sjl-nodejs/Namespace')(__dirname)
+
+        // Export sjl
+        module.exports = sjl;
+    }
+
+    // Else assume browser
+    else {
+
+        // Make sjl un-overwrittable from the frontend
+        Object.defineProperty(window, 'sjl', {
+            get: function () {
+                return sjl;
+            }
+        });
+
+        // Create top level frontend package
+        sjl.createTopLevelPackage(sjl);
+    }
+
+}());
+
 /**
  * Created by Ely on 4/12/2014.
  * Code copy pasted from "Javascript the definitive guide"
@@ -1407,6 +1257,493 @@
 
 })(typeof window === 'undefined' ? global : window);
 
+/**
+ * Created by Ely on 4/12/2014.
+ */
+(function (context) {
+
+    'use strict';
+
+    var sjl = context.sjl,
+        iteratorKey = sjl.Symbol.iterator;
+
+    /**
+     * Turns an array into an iterable.
+     * @param array {Array}
+     * @param pointer {Number|undefined}
+     * @returns {*}
+     */
+    sjl.iterable = function (arrayOrObj, pointer) {
+        var classOfArrayOrObj = sjl.classOf(arrayOrObj),
+            keys, values;
+        if (classOfArrayOrObj === 'Array') {
+            arrayOrObj[iteratorKey] = function () {
+                return sjl.Iterator(arrayOrObj, pointer);
+            };
+        }
+        else if (classOfArrayOrObj === 'Object') {
+            keys = sjl.keys(arrayOrObj);
+            values = keys.map(function (key) {
+                return arrayOrObj[key];
+            });
+            arrayOrObj[iteratorKey] = function () {
+                return sjl.ObjectIterator(keys, values, pointer);
+            }
+        }
+        return arrayOrObj;
+    };
+
+    /**
+     * @class sjl.Iterator
+     * @extends sjl.Extendable
+     * @type {void|Object|*}
+     */
+    sjl.Iterator = sjl.Extendable.extend(
+        function Iterator(values, pointer) {
+            // Allow Iterator to be called as a function
+            if (!(this instanceof sjl.Iterator)) {
+                return new sjl.Iterator(values, pointer);
+            }
+
+            // Internalize the `values` collection and pointer here
+            // to make this class more functional.
+            this.__internal = {
+                values: values || [],
+                pointer: sjl.classOfIs(pointer, 'Number') ? pointer : 0
+            };
+        },
+        {
+            /**
+             * Returns the current value that `pointer()` is pointing to.
+             * @method sjl.Iterator#current
+             * @returns {{done: boolean, value: *}}
+             */
+            current: function () {
+                var self = this;
+                return self.valid() ? {
+                    done: false,
+                    value: self.values()[self.pointer()]
+                } : {
+                    done: true
+                };
+            },
+
+            /**
+             * Method which returns the current position in the iterator based on where the pointer is.
+             * This method also increases the pointer after it is done fetching the value to return.
+             * @method sjl.Iterator#next
+             * @returns {{done: boolean, value: *}}
+             */
+            next: function () {
+                var self = this,
+                    pointer = self.pointer(),
+                    retVal = self.valid() ? {
+                        done: false,
+                        value: self.values()[pointer]
+                    } : {
+                        done: true
+                    };
+                self.pointer(pointer + 1);
+                return retVal;
+            },
+
+            /**
+             * Rewinds the iterator.
+             * @method sjl.Iterator#rewind
+             * @returns {sjl.Iterator}
+             */
+            rewind: function () {
+                return this.pointer(0);
+            },
+
+            /**
+             * Returns whether the iterator has reached it's end.
+             * @method sjl.Iterator#valid
+             * @returns {boolean}
+             */
+            valid: function () {
+                return this.pointer() < this.values().length;
+            },
+
+            /**
+             * Overloaded method for fetching or setting the internal pointer value.
+             * @method sjl.Iterator#pointer
+             * @param pointer {Number|undefined}
+             * @returns {sjl.Iterator|Number}
+             */
+            pointer: function (pointer) {
+                var self = this,
+                    isGetterCall = typeof pointer === 'undefined',
+                    defaultNum = sjl.classOfIs(self.__internal.pointer, 'Number')
+                            ? self.__internal.pointer : 0,
+                    retVal = self;
+                if (isGetterCall) {
+                    retVal = defaultNum;
+                }
+                // Else set pointer
+                else {
+                    self.__internal.pointer = sjl.classOfIs(pointer, 'Number') ? pointer : defaultNum;
+                }
+                return retVal;
+            },
+
+            /**
+             * Overloaded method for fetching or setting the internal values array.
+             * @method sjl.Itertator#values
+             * @param values {Array|undefined}
+             * @returns {sjl.Iterator|Array}
+             */
+            values: function (values) {
+                var isGetterCall = typeof values === 'undefined',
+                    retVal = this,
+                    selfCollectionIsArray;
+                if (isGetterCall) {
+                    retVal = this.__internal.values;
+                }
+                else {
+                    selfCollectionIsArray = sjl.classOfIs(this.__internal.values, 'Array');
+                    // Set the internal values collection to `values` if `values` is an array
+                    // else if self internal values is an array leave as is
+                    // else set internal values to an empty array
+                    this.__internal.values =
+                        sjl.classOfIs(values, 'Array') ? values :
+                            (selfCollectionIsArray ? this.__internal.values : []);
+                }
+                return retVal;
+            }
+        });
+
+    /**
+     * @class sjl.ObjectIterator
+     * @extends sjl.Iterator
+     * @type {Object|void|*}
+     */
+    sjl.ObjectIterator = sjl.Iterator.extend(
+        function ObjectIterator (keys, values, pointer) {
+            // Allow Iterator to be called as a function
+            if (!(this instanceof sjl.ObjectIterator)) {
+                return new sjl.ObjectIterator(keys, values, pointer);
+            }
+            sjl.Iterator.call(this, values, pointer);
+            this.__internal.keys = keys;
+        },
+        {
+        /**
+         * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
+         * @method sjl.Iterator#current
+         * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
+         */
+        current: function () {
+            var self = this,
+                pointer = self.pointer();
+            return self.valid() ? {
+                done: false,
+                value: [self.keys()[pointer], self.values()[pointer]]
+            } : {
+                done: true
+            };
+        },
+
+        /**
+         * Method which returns the current position in the iterator based on where the pointer is.
+         * This method also increases the pointer after it is done fetching the value to return.
+         * @method sjl.Iterator#next
+         * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
+         */
+        next: function () {
+            var self = this,
+                pointer = self.pointer(),
+                retVal = self.valid() ? {
+                    done: false,
+                    value: [self.keys()[pointer], self.values()[pointer]]
+                } : {
+                    done: true
+                };
+            self.pointer(pointer + 1);
+            return retVal;
+        },
+
+        valid: function () {
+            var pointer = this.pointer();
+            return pointer < this.values().length && pointer < this.keys().length;
+        },
+
+        /**
+         * Overloaded getter/setter method for internal `keys` property.
+         * @returns {sjl.ObjectIterator|Array<*>}
+         */
+        keys: function (keys) {
+            var isGetterCall = typeof keys === 'undefined',
+                retVal = this,
+                selfCollectionIsArray;
+            if (isGetterCall) {
+                retVal = this.__internal.keys;
+            }
+            else {
+                selfCollectionIsArray = sjl.classOfIs(this.__internal.keys, 'Array');
+                // Set the internal keys collection to `keys` if `keys` is an array
+                // else if self internal keys is an array leave as is
+                // else set internal keys to an empty array
+                this.__internal.keys =
+                    sjl.classOfIs(keys, 'Array') ? keys :
+                        (selfCollectionIsArray ? this.__internal.keys : []);
+            }
+            return retVal;
+        }
+
+    });
+
+})(typeof window === 'undefined' ? global : window);
+
+/**
+ * Created by Ely on 7/17/2015.
+ */
+(function (context) {
+
+    'use strict';
+
+    var sjl = context.sjl;
+
+    /**
+     * SjlSet constructor.  This object has the same interface as the es6 `Set`
+     * object.  The only difference is this one uses a more sugery iterator which
+     * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
+     * `valid` methods (@see sjl.Iterator)
+     * @class sjl.SjlSet
+     * @extends sjl.Extendable
+     * @param iterable {Array}
+     */
+    sjl.SjlSet = sjl.Extendable.extend(function SjlSet (iterable) {
+        var self = this;
+        self._values = [];
+        self.size = 0;
+
+        // If an array was passed in inject values
+        if (sjl.classOfIs(iterable, 'Array')) {
+            self.addFromArray(iterable);
+        }
+
+        // If anything other than an array is passed in throw an Error
+        else if (typeof iterable !== 'undefined') {
+            throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
+            ' Parameter received: ', iterable);
+        }
+
+        // Make our `_values` array inherit our special iterator
+        sjl.iterable(self._values, 0);
+
+        // Set custom iterator function on `this`
+        self[sjl.Symbol.iterator] = function () {
+            return sjl.ObjectIterator(self._values, self._values, 0);
+        };
+
+        // Set flag to remember that original iterator was overridden
+        self._iteratorOverridden = true;
+    },
+    {
+        add: function (value) {
+            if (!this.has(value)) {
+                this._values.push(value);
+                this.size += 1;
+            }
+            return this;
+        },
+        clear: function () {
+            while (this._values.length > 0) {
+                this._values.pop();
+            }
+            this.size = 0;
+            return this;
+        },
+        delete: function (value) {
+            var _index = sjl.indexOf(value, this._values);
+            if (_index > -1) {
+                delete this._values[_index];
+                this.size -= 1;
+                this.size = this.size < 0 ? 1 : 0;
+            }
+            return this;
+        },
+        entries: function () {
+            return sjl.ObjectIterator(this._values, this._values, 0);
+        },
+        forEach: function (callback, context) {
+            sjl.forEach(this._values, callback, context);
+            return this;
+        },
+        has: function (value) {
+            return sjl.indexOf(this._values, value) > -1 ? true : false;
+        },
+        keys: function () {
+            return this._values[sjl.Symbol.iterator]();
+        },
+        values: function () {
+            return this._values[sjl.Symbol.iterator]();
+        },
+
+        /**************************************************
+         * METHODS NOT PART OF THE `Set` spec for ES6:
+         **************************************************/
+
+        addFromArray: function (value) {
+            // Iterate through the passed in iterable and add all values to `_values`
+            var iterator = sjl.iterable(value, 0)[sjl.Symbol.iterator]();
+
+            // Loop through values and add them
+            while (iterator.valid()) {
+                this.add(iterator.next().value);
+            }
+            iterator = null;
+            return this;
+        },
+
+        iterator: function () {
+            return this._values[sjl.Symbol.iterator]();
+        },
+
+        toJSON: function () {
+            return this._values;
+        }
+    });
+
+})(typeof window === 'undefined' ? global : window);
+
+/**
+ * Created by Ely on 7/17/2015.
+ */
+(function (context) {
+
+    'use strict';
+
+    var sjl = context.sjl,
+
+        /**
+         * SjlMap Constructor.
+         * @param iterable
+         * @constructor
+         */
+        SjlMap = function SjlMap (iterable) {
+            var self = this;
+            self.size = 0;
+            self._keys = [];
+            self._values = [];
+
+            // If an array was passed in inject values
+            if (sjl.classOfIs(iterable, 'Array')) {
+                self.addFromArray(iterable);
+                // Make our internal arrays inherit our special iterator
+                self._values = sjl.iterable(self._values, 0);
+                self._keys = sjl.iterable(self._keys, 0);
+            }
+
+            // If anything other than an array is passed in throw an Error
+            else if (typeof iterable !== 'undefined') {
+                throw new Error ('Type Error: sjl.SjlMap takes only iterable objects as it\'s first parameter. ' +
+                ' Parameter received: ', iterable);
+            }
+
+            // Set custom iterator function on `this`
+            self[sjl.Symbol.iterator] = function () {
+                return sjl.ObjectIterator(self._keys, self._values, 0);
+            };
+
+            // Set flag to remember that original iterator was overridden
+            self._iteratorOverridden = true;
+        };
+
+    sjl.SjlMap = sjl.Extendable.extend(SjlMap, {
+            clear: function () {
+                while (this._values.length > 0) {
+                    this._values.pop();
+                }
+                while (this._keys.length > 0) {
+                    this._keys.pop();
+                }
+                this.size = 0;
+                return this;
+            },
+            delete: function (key) {
+                var _index = sjl.indexOf(this._keys, key);
+                if (this.has(key)) {
+                    delete this._values[_index];
+                    delete this._keys[_index];
+                    this.size -= sjl.classOfIs(this.size, 'Number') && this.size > 0 ? 1 : 0;
+                }
+                return this;
+            },
+            entries: function () {
+                return sjl.ObjectIterator(this._keys, this._values, 0);
+            },
+            forEach: function (callback, context) {
+                for (var i = 0; i < this._keys.length - 1; i += 1) {
+                    callback.call(context, this._keys[i], this._values[i]);
+                }
+                return this;
+            },
+            has: function (key) {
+                return sjl.indexOf(this._keys, key) > -1 ? true : false;
+            },
+            keys: function () {
+                return this._keys[sjl.Symbol.iterator]();
+            },
+            values: function () {
+                return this._values[sjl.Symbol.iterator]();
+            },
+            get: function (key) {
+                var index = sjl.indexOf(this._keys, key);
+                return index > -1 ? this._values[index] : undefined;
+            },
+            set: function (key, value) {
+                var index = sjl.indexOf(this._keys, key);
+                if (index > -1) {
+                    this._keys[index] = key;
+                    this._values[index] = value;
+                    this.size += 1;
+                }
+                else {
+                    this._keys.push(key);
+                    this._values.push(value);
+                    this.size += 1;
+                }
+                index = null;
+                return this;
+            },
+
+            /**************************************************
+             * METHODS NOT PART OF THE `Set` spec for ES6:
+             **************************************************/
+
+            addFromArray: function (array) {
+                // Iterate through the passed in iterable and add all values to `_values`
+                var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
+                    entry;
+
+                // Loop through values and add them
+                while (iterator.valid()) {
+                    entry = iterator.next();
+                    this.set(entry.value[0], entry.value[1]);
+                }
+                iterator = null;
+                entry = null;
+                return this;
+            },
+
+            iterator: function () {
+                return this.entries();
+            },
+
+            toJSON: function () {
+                var self = this,
+                    out = {};
+                sjl.forEach(this._keys, function (key, i) {
+                    out[key] = self._values[i];
+                });
+                return out;
+            }
+
+        });
+
+})(typeof window === 'undefined' ? global : window);
 /**
  * Created by Ely on 7/21/2014.
  * Initial idea borrowed from Zend Framework 2's Zend/Validator
@@ -3156,494 +3493,6 @@
             },
 
             VALIDATE_ALL: 0
-
-        });
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 4/12/2014.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl,
-        iteratorKey = sjl.Symbol.iterator;
-
-    /**
-     * Turns an array into an iterable.
-     * @param array {Array}
-     * @param pointer {Number|undefined}
-     * @returns {*}
-     */
-    sjl.iterable = function (arrayOrObj, pointer) {
-        var classOfArrayOrObj = sjl.classOf(arrayOrObj),
-            keys, values;
-        if (classOfArrayOrObj === 'Array') {
-            arrayOrObj[iteratorKey] = function () {
-                return sjl.Iterator(arrayOrObj, pointer);
-            };
-        }
-        else if (classOfArrayOrObj === 'Object') {
-            keys = sjl.keys(arrayOrObj);
-            values = keys.map(function (key) {
-                return arrayOrObj[key];
-            });
-            arrayOrObj[iteratorKey] = function () {
-                return sjl.ObjectIterator(keys, values, pointer);
-            }
-        }
-        return arrayOrObj;
-    };
-
-    /**
-     * @class sjl.Iterator
-     * @extends sjl.Extendable
-     * @type {void|Object|*}
-     */
-    sjl.Iterator = sjl.Extendable.extend(
-        function Iterator(values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof sjl.Iterator)) {
-                return new sjl.Iterator(values, pointer);
-            }
-
-            // Internalize the `values` collection and pointer here
-            // to make this class more functional.
-            this.__internal = {
-                values: values || [],
-                pointer: sjl.classOfIs(pointer, 'Number') ? pointer : 0
-            };
-        },
-        {
-            /**
-             * Returns the current value that `pointer()` is pointing to.
-             * @method sjl.Iterator#current
-             * @returns {{done: boolean, value: *}}
-             */
-            current: function () {
-                var self = this;
-                return self.valid() ? {
-                    done: false,
-                    value: self.values()[self.pointer()]
-                } : {
-                    done: true
-                };
-            },
-
-            /**
-             * Method which returns the current position in the iterator based on where the pointer is.
-             * This method also increases the pointer after it is done fetching the value to return.
-             * @method sjl.Iterator#next
-             * @returns {{done: boolean, value: *}}
-             */
-            next: function () {
-                var self = this,
-                    pointer = self.pointer(),
-                    retVal = self.valid() ? {
-                        done: false,
-                        value: self.values()[pointer]
-                    } : {
-                        done: true
-                    };
-                self.pointer(pointer + 1);
-                return retVal;
-            },
-
-            /**
-             * Rewinds the iterator.
-             * @method sjl.Iterator#rewind
-             * @returns {sjl.Iterator}
-             */
-            rewind: function () {
-                return this.pointer(0);
-            },
-
-            /**
-             * Returns whether the iterator has reached it's end.
-             * @method sjl.Iterator#valid
-             * @returns {boolean}
-             */
-            valid: function () {
-                return this.pointer() < this.values().length;
-            },
-
-            /**
-             * Overloaded method for fetching or setting the internal pointer value.
-             * @method sjl.Iterator#pointer
-             * @param pointer {Number|undefined}
-             * @returns {sjl.Iterator|Number}
-             */
-            pointer: function (pointer) {
-                var self = this,
-                    isGetterCall = typeof pointer === 'undefined',
-                    defaultNum = sjl.classOfIs(self.__internal.pointer, 'Number')
-                            ? self.__internal.pointer : 0,
-                    retVal = self;
-                if (isGetterCall) {
-                    retVal = defaultNum;
-                }
-                // Else set pointer
-                else {
-                    self.__internal.pointer = sjl.classOfIs(pointer, 'Number') ? pointer : defaultNum;
-                }
-                return retVal;
-            },
-
-            /**
-             * Overloaded method for fetching or setting the internal values array.
-             * @method sjl.Itertator#values
-             * @param values {Array|undefined}
-             * @returns {sjl.Iterator|Array}
-             */
-            values: function (values) {
-                var isGetterCall = typeof values === 'undefined',
-                    retVal = this,
-                    selfCollectionIsArray;
-                if (isGetterCall) {
-                    retVal = this.__internal.values;
-                }
-                else {
-                    selfCollectionIsArray = sjl.classOfIs(this.__internal.values, 'Array');
-                    // Set the internal values collection to `values` if `values` is an array
-                    // else if self internal values is an array leave as is
-                    // else set internal values to an empty array
-                    this.__internal.values =
-                        sjl.classOfIs(values, 'Array') ? values :
-                            (selfCollectionIsArray ? this.__internal.values : []);
-                }
-                return retVal;
-            }
-        });
-
-    /**
-     * @class sjl.ObjectIterator
-     * @extends sjl.Iterator
-     * @type {Object|void|*}
-     */
-    sjl.ObjectIterator = sjl.Iterator.extend(
-        function ObjectIterator (keys, values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof sjl.ObjectIterator)) {
-                return new sjl.ObjectIterator(keys, values, pointer);
-            }
-            sjl.Iterator.call(this, values, pointer);
-            this.__internal.keys = keys;
-        },
-        {
-        /**
-         * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.Iterator#current
-         * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
-        current: function () {
-            var self = this,
-                pointer = self.pointer();
-            return self.valid() ? {
-                done: false,
-                value: [self.keys()[pointer], self.values()[pointer]]
-            } : {
-                done: true
-            };
-        },
-
-        /**
-         * Method which returns the current position in the iterator based on where the pointer is.
-         * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.Iterator#next
-         * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
-        next: function () {
-            var self = this,
-                pointer = self.pointer(),
-                retVal = self.valid() ? {
-                    done: false,
-                    value: [self.keys()[pointer], self.values()[pointer]]
-                } : {
-                    done: true
-                };
-            self.pointer(pointer + 1);
-            return retVal;
-        },
-
-        valid: function () {
-            var pointer = this.pointer();
-            return pointer < this.values().length && pointer < this.keys().length;
-        },
-
-        /**
-         * Overloaded getter/setter method for internal `keys` property.
-         * @returns {sjl.ObjectIterator|Array<*>}
-         */
-        keys: function (keys) {
-            var isGetterCall = typeof keys === 'undefined',
-                retVal = this,
-                selfCollectionIsArray;
-            if (isGetterCall) {
-                retVal = this.__internal.keys;
-            }
-            else {
-                selfCollectionIsArray = sjl.classOfIs(this.__internal.keys, 'Array');
-                // Set the internal keys collection to `keys` if `keys` is an array
-                // else if self internal keys is an array leave as is
-                // else set internal keys to an empty array
-                this.__internal.keys =
-                    sjl.classOfIs(keys, 'Array') ? keys :
-                        (selfCollectionIsArray ? this.__internal.keys : []);
-            }
-            return retVal;
-        }
-
-    });
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 7/17/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl;
-
-    /**
-     * SjlSet constructor.  This object has the same interface as the es6 `Set`
-     * object.  The only difference is this one uses a more sugery iterator which
-     * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
-     * `valid` methods (@see sjl.Iterator)
-     * @class sjl.SjlSet
-     * @extends sjl.Extendable
-     * @param iterable {Array}
-     */
-    sjl.SjlSet = sjl.Extendable.extend(function SjlSet (iterable) {
-        var self = this;
-        self._values = [];
-        self.size = 0;
-
-        // If an array was passed in inject values
-        if (sjl.classOfIs(iterable, 'Array')) {
-            self.addFromArray(iterable);
-        }
-
-        // If anything other than an array is passed in throw an Error
-        else if (typeof iterable !== 'undefined') {
-            throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
-            ' Parameter received: ', iterable);
-        }
-
-        // Make our `_values` array inherit our special iterator
-        sjl.iterable(self._values, 0);
-
-        // Set custom iterator function on `this`
-        self[sjl.Symbol.iterator] = function () {
-            return sjl.ObjectIterator(self._values, self._values, 0);
-        };
-
-        // Set flag to remember that original iterator was overridden
-        self._iteratorOverridden = true;
-    },
-    {
-        add: function (value) {
-            if (!this.has(value)) {
-                this._values.push(value);
-                this.size += 1;
-            }
-            return this;
-        },
-        clear: function () {
-            while (this._values.length > 0) {
-                this._values.pop();
-            }
-            this.size = 0;
-            return this;
-        },
-        delete: function (value) {
-            var _index = sjl.indexOf(value, this._values);
-            if (_index > -1) {
-                delete this._values[_index];
-                this.size -= 1;
-                this.size = this.size < 0 ? 1 : 0;
-            }
-            return this;
-        },
-        entries: function () {
-            return sjl.ObjectIterator(this._values, this._values, 0);
-        },
-        forEach: function (callback, context) {
-            sjl.forEach(this._values, callback, context);
-            return this;
-        },
-        has: function (value) {
-            return sjl.indexOf(this._values, value) > -1 ? true : false;
-        },
-        keys: function () {
-            return this._values[sjl.Symbol.iterator]();
-        },
-        values: function () {
-            return this._values[sjl.Symbol.iterator]();
-        },
-
-        /**************************************************
-         * METHODS NOT PART OF THE `Set` spec for ES6:
-         **************************************************/
-
-        addFromArray: function (value) {
-            // Iterate through the passed in iterable and add all values to `_values`
-            var iterator = sjl.iterable(value, 0)[sjl.Symbol.iterator]();
-
-            // Loop through values and add them
-            while (iterator.valid()) {
-                this.add(iterator.next().value);
-            }
-            iterator = null;
-            return this;
-        },
-
-        iterator: function () {
-            return this._values[sjl.Symbol.iterator]();
-        },
-
-        toJSON: function () {
-            return this._values;
-        }
-    });
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 7/17/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl,
-
-        /**
-         * SjlMap Constructor.
-         * @param iterable
-         * @constructor
-         */
-        SjlMap = function SjlMap (iterable) {
-            var self = this;
-            self.size = 0;
-            self._keys = [];
-            self._values = [];
-
-            // If an array was passed in inject values
-            if (sjl.classOfIs(iterable, 'Array')) {
-                self.addFromArray(iterable);
-                // Make our internal arrays inherit our special iterator
-                self._values = sjl.iterable(self._values, 0);
-                self._keys = sjl.iterable(self._keys, 0);
-            }
-
-            // If anything other than an array is passed in throw an Error
-            else if (typeof iterable !== 'undefined') {
-                throw new Error ('Type Error: sjl.SjlMap takes only iterable objects as it\'s first parameter. ' +
-                ' Parameter received: ', iterable);
-            }
-
-            // Set custom iterator function on `this`
-            self[sjl.Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._keys, self._values, 0);
-            };
-
-            // Set flag to remember that original iterator was overridden
-            self._iteratorOverridden = true;
-        };
-
-    sjl.SjlMap = sjl.Extendable.extend(SjlMap, {
-            clear: function () {
-                while (this._values.length > 0) {
-                    this._values.pop();
-                }
-                while (this._keys.length > 0) {
-                    this._keys.pop();
-                }
-                this.size = 0;
-                return this;
-            },
-            delete: function (key) {
-                var _index = sjl.indexOf(this._keys, key);
-                if (this.has(key)) {
-                    delete this._values[_index];
-                    delete this._keys[_index];
-                    this.size -= sjl.classOfIs(this.size, 'Number') && this.size > 0 ? 1 : 0;
-                }
-                return this;
-            },
-            entries: function () {
-                return sjl.ObjectIterator(this._keys, this._values, 0);
-            },
-            forEach: function (callback, context) {
-                for (var i = 0; i < this._keys.length - 1; i += 1) {
-                    callback.call(context, this._keys[i], this._values[i]);
-                }
-                return this;
-            },
-            has: function (key) {
-                return sjl.indexOf(this._keys, key) > -1 ? true : false;
-            },
-            keys: function () {
-                return this._keys[sjl.Symbol.iterator]();
-            },
-            values: function () {
-                return this._values[sjl.Symbol.iterator]();
-            },
-            get: function (key) {
-                var index = sjl.indexOf(this._keys, key);
-                return index > -1 ? this._values[index] : undefined;
-            },
-            set: function (key, value) {
-                var index = sjl.indexOf(this._keys, key);
-                if (index > -1) {
-                    this._keys[index] = key;
-                    this._values[index] = value;
-                    this.size += 1;
-                }
-                else {
-                    this._keys.push(key);
-                    this._values.push(value);
-                    this.size += 1;
-                }
-                index = null;
-                return this;
-            },
-
-            /**************************************************
-             * METHODS NOT PART OF THE `Set` spec for ES6:
-             **************************************************/
-
-            addFromArray: function (array) {
-                // Iterate through the passed in iterable and add all values to `_values`
-                var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
-                    entry;
-
-                // Loop through values and add them
-                while (iterator.valid()) {
-                    entry = iterator.next();
-                    this.set(entry.value[0], entry.value[1]);
-                }
-                iterator = null;
-                entry = null;
-                return this;
-            },
-
-            iterator: function () {
-                return this.entries();
-            },
-
-            toJSON: function () {
-                var self = this,
-                    out = {};
-                sjl.forEach(this._keys, function (key, i) {
-                    out[key] = self._values[i];
-                });
-                return out;
-            }
 
         });
 

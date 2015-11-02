@@ -48,16 +48,13 @@ gulp.task('tests', function () {
 // Builds './sjl.js'
 gulp.task('concat', function () {
     gulp.src([
-        'src/sjl/Sjl.js',
-        'src/sjl/sjl-util-functions.js',
-        'src/sjl/sjl-set-functions.js',
-        'src/sjl/sjl-oop-util-functions.js',
-        'src/sjl/sjl-createTopLevelPackage.js',
-        'src/sjl/sjl-package.js',
-        'src/sjl/Symbol.js',
-        'src/sjl/Extendable.js',
-        'src/sjl/Attributable.js',
-        'src/sjl/Optionable.js',
+        'src/sjl/sjl.js',
+        'src/sjl/stdlib/Extendable.js',
+        'src/sjl/stdlib/Attributable.js',
+        'src/sjl/stdlib/Optionable.js',
+        'src/sjl/stdlib/Iterator.js',
+        'src/sjl/stdlib/SjlSet.js',
+        'src/sjl/stdlib/SjlMap.js',
         'src/sjl/validator/AbstractValidator.js',
         'src/sjl/validator/ValidatorChain.js',
         'src/sjl/validator/AlphaNumValidator.js',
@@ -68,10 +65,7 @@ gulp.task('concat', function () {
         'src/sjl/validator/NumberValidator.js',
         'src/sjl/validator/PostCodeValidator.js',
         'src/sjl/input/Input.js',
-        'src/sjl/input/InputFilter.js',
-        'src/sjl/Iterator.js',
-        'src/sjl/SjlSet.js',
-        'src/sjl/SjlMap.js'
+        'src/sjl/input/InputFilter.js'
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
@@ -92,17 +86,7 @@ gulp.task('uglify', ['concat'], function () {
 // Builds './sjl-minimal.js'
 gulp.task('minimal', function () {
     gulp.src([
-        'src/sjl/Sjl.js',
-        'src/sjl/sjl-util-functions.js',
-        'src/sjl/sjl-set-functions.js',
-        'src/sjl/sjl-oop-util-functions.js',
-        'src/sjl/sjl-createTopLevelPackage.js',
-        'src/sjl/sjl-package.js',
-        'src/sjl/Symbol.js',
-        'src/sjl/Extendable.js',
-        'src/sjl/Attributable.js',
-        'src/sjl/Optionable.js',
-        'src/sjl/Iterator.js'
+        'src/sjl/sjl.js'
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.js'))

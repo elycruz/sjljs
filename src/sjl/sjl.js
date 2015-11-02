@@ -1,14 +1,12 @@
 /**
- * Created by Ely on 5/24/2014.
- * Defines argsToArray, classOfIs, classOf, empty,
- *  isset, keys, and namespace, on the passed in context.
+ * Created by Ely on 5/29/2015.
  */
+(function () {
 
-'use strict';
+    'use strict';
 
-(function (context) {
-
-    var sjl = context.sjl,
+    var sjl = {},
+        isNodeEnv = typeof window === 'undefined',
         slice = Array.prototype.slice;
 
     /**
@@ -258,8 +256,8 @@
         // then check for other empty values
         else {
             retVal = (value === 0 || value === false
-                || value === undefined || value === null
-                || isEmptyObj(value));
+            || value === undefined || value === null
+            || isEmptyObj(value));
         }
 
         return retVal;
@@ -561,6 +559,7 @@
      * @param objToSearch {*}
      * @returns {*} - If property chain is not found then returns `null`.
      */
+
     sjl.searchObj = function (ns_string, objToSearch) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
@@ -575,4 +574,422 @@
         return parent;
     };
 
-})(typeof window === 'undefined' ? global : window);
+    /**
+     * Used by sjl.extend definition
+     * @type {Function}
+     */
+    var getOwnPropertyDescriptor =
+            typeof Object.getOwnPropertyDescriptor === 'function'
+                ? Object.getOwnPropertyDescriptor : null,
+        sjl = context.sjl;
+
+    /**
+     * Checks if object has method key passed.
+     * @function module:sjl.hasMethod
+     * @param obj {Object|*} - Object to search on.
+     * @param method - Method name to search for.
+     * @returns {Boolean}
+     */
+    sjl.hasMethod = function (obj, method) {
+        return !sjl.isEmptyObjKeyOrNotOfType(obj, method, 'Function');
+    };
+
+    /**
+     * Searches obj for key and returns it's value.  If value is a function
+     * calls function if `raw` is set to `false`, with optional `args`, and returns it's return value.
+     * If `raw` is true returns the actual function if value found is a function.
+     * @function module:sjl.getValueFromObj
+     * @param key {String} The hash key to search for
+     * @param obj {Object} the hash to search within
+     * @param args {Array} optional the array to pass to value if it is a function
+     * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
+     * @todo allow this function to use getter function for key if it exists
+     * @param noLegacyGetters {Boolean} - Default false (use legacy getters).
+     *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
+     *
+     * @returns {*}
+     */
+    sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
+        // Warn user(s) of new update to this function where `raw` is not being passed in.
+        //if (typeof raw === 'undefined') {
+        //    console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
+        //        'This warning will be removed in the next library update.');
+        //}
+        args = args || null;
+        raw = raw || true;
+        noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;
+
+        // Get qualified getter function names
+        var overloadedGetterFunc = sjl.camelCase(key, false),
+            getterFunc = 'get' + sjl.camelCase(key, true),
+            retVal = null;
+
+        // Resolve return value
+        if (key.indexOf('.') !== -1) {
+            retVal = sjl.namespace(key, obj);
+        }
+        // If obj has a getter function for key, call it
+        else if (!noLegacyGetters && sjl.hasMethod(obj, getterFunc)) {
+            retVal = obj[getterFunc]();
+        }
+        else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
+            retVal = obj[overloadedGetterFunc]();
+        }
+        else if (typeof obj[key] !== 'undefined') {
+            retVal = obj[key];
+        }
+
+        // Decide what to do if return value is a function
+        if (sjl.classOfIs(retVal, 'Function') && sjl.empty(raw)) {
+            retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
+        }
+
+        // Return result of setting value on obj, else return obj
+        return retVal;
+    };
+
+    /**
+     * Sets a key to value on obj.
+     * @function module:sjl.setValueOnObj
+     * @param key {String} - Key to search for (can be a dot
+     * separated string 'all.your.base' will traverse {all: {your: {base: {...}}})
+     * @param value {*} - Value to set on obj
+     * @param obj {Object} - Object to set key to value on
+     * @returns {*|Object} returns result of setting key to value on obj or obj
+     * if no value resulting from set operation
+     */
+    sjl.setValueOnObj = function (key, value, obj) {
+        // Get qualified setter function name
+        var overloadedSetterFunc = sjl.camelCase(key, false),
+            setterFunc = 'set' + sjl.camelCase(key, true),
+            retVal = obj;
+
+        // Else set the value on the obj
+        if (key.indexOf('.') !== -1) {
+            retVal = sjl.namespace(key, obj, value);
+        }
+        // If obj has a setter function for key, call it
+        else if (sjl.hasMethod(obj, setterFunc)) {
+            retVal = obj[setterFunc](value);
+        }
+        else if (sjl.hasMethod(obj, overloadedSetterFunc)) {
+            retVal = obj[overloadedSetterFunc](value);
+        }
+        else {
+            obj[key] = typeof value !== 'undefined' ? value : null;
+        }
+
+        // Return result of setting value on obj, else return obj
+        return retVal;
+    };
+
+    /**
+     * Copy the enumerable properties of p to o, and return o.
+     * If o and p have a property by the same name, o's property is overwritten.
+     * This function does not handle getters and setters or copy attributes but
+     * does search for setter methods in the format "setPropertyName" and uses them
+     * if they are available for property `useLegacyGettersAndSetters` is set to true.
+     * @param o {mixed} - *object to extend
+     * @param p {mixed} - *object to extend from
+     * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @param useLegacyGettersAndSetters {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @returns {*} - returns o
+     */
+    function extend (o, p, deep, useLegacyGettersAndSetters) {
+        deep = deep || false;
+        useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
+
+        var prop, propDescription,
+            classOf_p_prop,
+            classOf_o_prop;
+
+        // If `o` or `p` are not set bail
+        if (!sjl.isset(o) || !sjl.isset(p)) {
+            return o;
+        }
+
+        for (prop in p) { // For all props in p.
+            classOf_p_prop = sjl.issetObjKey(p, prop) ? sjl.classOf(p[prop]) : 'Empty';
+            classOf_o_prop = sjl.issetObjKey(o, prop) ? sjl.classOf(o[prop]) : 'Empty';
+
+            // If property is present on target (o) and is not writable, skip iteration
+            if (getOwnPropertyDescriptor) {
+                propDescription = getOwnPropertyDescriptor(o, prop);
+                if (propDescription && !propDescription.writable) {
+                    continue;
+                }
+            }
+
+            if (deep) {
+                if (classOf_o_prop === 'Object'
+                    && classOf_p_prop === 'Object'
+                    && !sjl.isEmptyObj(p[prop])) {
+                    extend(o[prop], p[prop], deep);
+                }
+                else if (useLegacyGettersAndSetters) {
+                    sjl.setValueOnObj(prop, sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters), o);
+                }
+                else {
+                    o[prop] = p[prop];
+                }
+            }
+
+            // Else set
+            else {
+                o[prop] = p[prop];
+            }
+        }
+
+        return o;
+    }
+
+    /**
+     * Extends first object passed in with all other object passed in after.
+     * First param could be a boolean indicating whether or not to perform a deep extend.
+     * Last param could also be a boolean indicating whether to use legacy setters if they are available
+     * when extending one object with another.
+     *
+     * @example
+     *  var o = {setGreeting: v => this.greeting = 'Hello ' + v},
+     *      otherObject = {greeting: 'Junior'};
+     *  // Calls o.setGreeting when merging otherObject because `true` was passed in
+     *  // as the last parameter
+     *  sjl.extend(o, otherObject, true);
+     *
+     * @function module:sjl.extend
+     * @param [, Boolean, obj] {Object|Boolean} - If boolean, causes `extend` to perform a deep extend.  Optional.
+     * @param [, obj, obj] {Object} - Objects to hierarchically extend.
+     * @param [, Boolean] {Boolean} - Optional.
+     * @returns {Object} - Returns first object passed in.
+     */
+    sjl.extend = function () {
+        // Return if no arguments
+        if (arguments.length === 0) {
+            return;
+        }
+
+        var args = sjl.argsToArray(arguments),
+            deep = sjl.extractBoolFromArrayStart(args),
+            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),// Can't remove this until version 0.5 cause it may cause breaking changes in dependant projects
+            arg0 = args.shift();
+
+        // Extend object `0` with other objects
+        sjl.forEach(args, function (arg) {
+            // Extend `arg0` if `arg` is an object
+            if (sjl.classOfIs(arg, 'Object')) {
+                extend(arg0, arg, deep, useLegacyGettersAndSetters);
+            }
+        });
+
+        return arg0;
+    };
+
+    /**
+     * Returns copy of object.
+     * @function module:sjl.clone
+     * @param obj {Object}
+     * @returns {*} - Cloned object.
+     */
+    sjl.clone = function (obj) {
+        return  sjl.extend(true, {}, obj);
+    };
+
+    /**
+     * Returns copy of object using JSON stringify/parse.
+     * @function module:sjl.jsonClone
+     * @param obj {Object} - Object to clone.
+     * @returns {*} - Cloned object.
+     */
+    sjl.jsonClone = function (obj) {
+        return JSON.parse(JSON.stringify(obj));
+    };
+
+    /**
+     * Creates a copy of a prototype to use for inheritance.
+     * @function module:sjl.copyOfProto
+     * @param proto {Prototype|Object} - Prototype to make a copy of.
+     * @returns {*}
+     */
+    sjl.copyOfProto = function (proto) {
+        if (proto === null) throw new TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // proto must be a non-null object
+        if (Object.create) // If Object.create() is defined...
+            return Object.create(proto); // then just use it.
+        var type = typeof proto; // Otherwise do some more type checking
+        if (type !== 'object' && type !== 'function') throw new TypeError('`copyOfProto` function expects param1 ' +
+            'to be of type "Object" or of type "Function".');
+        function Func() {} // Define a dummy constructor function.
+        Func.prototype = proto; // Set its prototype property to p.
+        return new Func();
+    };
+
+    /**
+     * Defines a class using a `superclass`, `constructor`, methods and/or static methods
+     * @function module:sjl.defineSubClass
+     * @param superclass {Constructor} - SuperClass's constructor.  Optional.
+     * @param constructor {Constructor} -  Constructor.  Required.
+     * @param methods {Object} - Optional.
+     * @param statics {Object} - Static methods. Optional.
+     * @returns {Constructor}
+     */
+    sjl.defineSubClass = function (superclass,  // Constructor of the superclass
+                                   constructor, // The constructor for the new subclass
+                                   methods,     // Instance methods: copied to prototype
+                                   statics)     // Class properties: copied to constructor
+    {
+        // Resolve superclass
+        superclass = superclass || sjl.copyOfProto(Object.prototype);
+
+        // If `constructor` is a string give deprecation notice to user
+        if (sjl.classOfIs(constructor, 'String')) {
+            throw new Error('`sjl.defineSubClass` no longer allows a string value in the `constructor` param position.  ' +
+                'This functionality is now deprecated.  Please pass in an actual constructor instead.');
+        }
+
+        // Set up the prototype object of the subclass
+        constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
+
+        // Make the constructor extendable
+        constructor.extend = function (constructor_, methods_, statics_) {
+            return sjl.defineSubClass(this, constructor_, methods_, statics_);
+        };
+
+        // Define constructor's constructor
+        constructor.prototype.constructor = constructor;
+
+        // Copy the methods and statics as we would for a regular class
+        if (methods) sjl.extend(constructor.prototype, methods);
+
+        // If static functions set them
+        if (statics) sjl.extend(constructor, statics);
+
+        // Return the class
+        return constructor;
+    };
+
+    /**
+     * Throws an error using a formatted string that reports the function name,
+     * the expected parameter type, and the value recieved.
+     * @function module:sjl.throwNotOfTypeError
+     * @param value
+     * @param paramName
+     * @param funcName
+     * @param expectedType
+     * @throws {Error}
+     */
+    sjl.throwNotOfTypeError = function (value, paramName, funcName, expectedType) {
+        throw Error(funcName + ' expects ' + paramName +
+            ' to be of type "' + expectedType + '".  Value received: ' + value);
+    };
+
+    /**
+     * Makes a property non settable on `obj` and sets `value` as the returnable property.
+     * @param obj {Object}
+     * @param key {String}
+     * @param value {*}
+     */
+    function makeNotSettableProp(obj, key, value) {
+        (function (_obj, _key, _value) {
+            Object.defineProperty(_obj, _key, {
+                get: function () {
+                    return _value;
+                }
+            });
+        }(obj, key, value));
+    }
+
+    /**
+     * Sets properties on obj passed in and makes those properties unsettable.
+     * @param ns_string {String} - Namespace string; E.g., 'all.your.base'
+     * @param objToSearch {Object}
+     * @param valueToSet {*|undefined}
+     * @returns {*} - Found or set value in the object to search.
+     * @private
+     */
+    function namespace(ns_string, objToSearch, valueToSet) {
+        var parts = ns_string.split('.'),
+            parent = objToSearch,
+            shouldSetValue = typeof valueToSet !== 'undefined',
+            hasOwnProperty;
+
+        sjl.forEach(parts, function (key, i) {
+            hasOwnProperty = parent.hasOwnProperty(key);
+            if (i === parts.length - 1
+                && shouldSetValue && !hasOwnProperty) {
+                makeNotSettableProp(parent, key, valueToSet);
+            }
+            else if (typeof parent[key] === 'undefined' && !hasOwnProperty) {
+                makeNotSettableProp(parent, key, {});
+            }
+            parent = parent[key];
+        });
+
+        return parent;
+    }
+
+    /**
+     * Package factory method.  Allows object to have a `package` method
+     * which acts like java like namespace except it allows you to set
+     * it's members (once) and then protects it's members.
+     * @param obj {Object|*} - Object to set the `package` method on.
+     * @return {Object|*} - Returns passed in `obj`.
+     */
+    sjl.createTopLevelPackage = function (obj) {
+        return (function () {
+            /**
+             * Private package object.
+             * @type {{}}
+             */
+            var packages = {};
+
+            /**
+             * Returns a property from sjl packages.
+             * @note If `nsString` is undefined returns the protected packages object itself.
+             * @function module:sjl.package
+             * @param propName {String}
+             * @param value {*}
+             * @returns {*}
+             */
+            obj.package = function (nsString, value) {
+                return typeof nsString === 'undefined' ? packages
+                    : namespace(nsString, packages, value);
+            };
+
+            // Return passed in obj
+            return obj;
+        }());
+    };
+
+    // Ensure we have access to the `Symbol`
+    if (typeof Symbol === 'undefined') {
+        sjl.Symbol = {
+            iterator: '@@iterator'
+        };
+    }
+    else {
+        sjl.Symbol = Symbol;
+    }
+
+    // If nodejs environment
+    if (isNodeEnv) {
+        // Make top level namespace object
+        sjl.package = require('../sjl-nodejs/Namespace')(__dirname)
+
+        // Export sjl
+        module.exports = sjl;
+    }
+
+    // Else assume browser
+    else {
+
+        // Make sjl un-overwrittable from the frontend
+        Object.defineProperty(window, 'sjl', {
+            get: function () {
+                return sjl;
+            }
+        });
+
+        // Create top level frontend package
+        sjl.createTopLevelPackage(sjl);
+    }
+
+}());
