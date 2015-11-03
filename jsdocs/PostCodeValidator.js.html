@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: sjl/validator/PostCodeValidator.js</title>
+    <title>JSDoc: Source: validator/PostCodeValidator.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: sjl/validator/PostCodeValidator.js</h1>
+    <h1 class="page-title">Source: validator/PostCodeValidator.js</h1>
 
     
 
@@ -34,13 +34,14 @@
 
 'use strict';
 
-(function (context) {
+(function () {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        PostCodeValidator = function PostCodeValidator(options) {
 
-    context.sjl.PostCodeValidator = context.sjl.AbstractValidator.extend(
-        function PostCodeValidator(options) {
-
-            // Set defaults and extend with abstract validator
-            context.sjl.AbstractValidator.call(this, {
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
                 region: 'US',
                 format: null,
                 service: null,
@@ -232,102 +233,111 @@
             // Set options passed, if any
             this.setOptions(options);
 
-        }, {
-            isValid: function (value) {
-                var self = this,
-                    retVal = false,
-                    classOfValue,
-                    countryCode = self.region().toUpperCase(),
-                    postCodeRegexes,
-                    format;
+        };
 
-                // Clear any existing messages
-                self.clearMessages();
+    PostCodeValidator = BaseValidator.extend(PostCodeValidator, {
+        isValid: function (value) {
+            var self = this,
+                retVal = false,
+                classOfValue,
+                countryCode = self.region().toUpperCase(),
+                postCodeRegexes,
+                format;
 
-                // Set and get
-                value = value || self.value();
+            // Clear any existing messages
+            self.clearMessages();
 
-                classOfValue = sjl.classOf(value);
+            // Set and get
+            value = value || self.value();
 
-                // If value is not a String or is empty (0, false, '', {}, [], null, undefined);,
-                // set 'invalid type' error
-                if (classOfValue !== 'String' || sjl.empty(value)) {
-                    self.addErrorByKey('INVALID_VALUE_TYPE');
-                }
+            classOfValue = sjl.classOf(value);
 
-                // Get regexes
-                postCodeRegexes = this.get('postCodeRegexes');
-
-                if (!postCodeRegexes.hasOwnProperty(countryCode)) {
-                    self.addErrorByKey('REGION_NOT_FOUND');
-                }
-
-                // Get format regex
-                format = this.format(postCodeRegexes[countryCode]).format();
-
-                // Run the test
-                retVal = format.test(value);
-
-                // If test failed
-                if (retVal === false) {
-                    self.addErrorByKey('INVALID_VALUE');
-                }
-
-                return retVal;
-            },
-
-            region: function (region) {
-                var classOfLocale = sjl.classOf(region),
-                    retVal = this.get('region');
-                if (classOfLocale !== 'String' &amp;&amp; classOfLocale !== 'Undefined') {
-                    throw new Error('');
-                }
-                if (classOfLocale !== 'Undefined') {
-                    this.set('region', region.toUpperCase());
-                    retVal = this;
-                }
-
-                return retVal;
-            },
-
-            format: function (format) {
-                var classOfFormat = sjl.classOf(format),
-                    retVal = this.get('format');
-                if (classOfFormat !== 'String'
-                        &amp;&amp; classOfFormat !== 'RegExp'
-                        &amp;&amp; classOfFormat !== 'Undefined') {
-                    throw new Error('`sjl.PostCodeValidator.format` method only accepts a `format` parameter of type' +
-                        ' "String", "RegExp", or "Undefined".  `format` parameter value received: "' + format + '".');
-                }
-                if (classOfFormat !== 'Undefined') {
-                    // Normalize regex
-                    if (classOfFormat === 'String') {
-                        format = (format.indexOf('^') !== 0 ? '^' : '') + format;
-                        format = format + (format.indexOf('$') !== format.length -1 ? '$' : '');
-                        format = new RegExp(format);
-                    }
-                    this.set('format', format);
-                    retVal = this;
-                }
-                return retVal;
-            },
-
-            service: function (service) {
-                var classOfService = sjl.classOf(service),
-                    retVal = this.get('service');
-                if (classOfService !== 'Function' &amp;&amp; classOfService !== 'Undefined') {
-                    throw new Error('');
-                }
-                if (classOfService !== 'Undefined') {
-                    this.set('service', service);
-                    retVal = this;
-                }
-                return retVal;
+            // If value is not a String or is empty (0, false, '', {}, [], null, undefined);,
+            // set 'invalid type' error
+            if (classOfValue !== 'String' || sjl.empty(value)) {
+                self.addErrorByKey('INVALID_VALUE_TYPE');
             }
 
-        });
+            // Get regexes
+            postCodeRegexes = this.get('postCodeRegexes');
 
-})(typeof window === 'undefined' ? global : window);
+            if (!postCodeRegexes.hasOwnProperty(countryCode)) {
+                self.addErrorByKey('REGION_NOT_FOUND');
+            }
+
+            // Get format regex
+            format = this.format(postCodeRegexes[countryCode]).format();
+
+            // Run the test
+            retVal = format.test(value);
+
+            // If test failed
+            if (retVal === false) {
+                self.addErrorByKey('INVALID_VALUE');
+            }
+
+            return retVal;
+        },
+
+        region: function (region) {
+            var classOfLocale = sjl.classOf(region),
+                retVal = this.get('region');
+            if (classOfLocale !== 'String' &amp;&amp; classOfLocale !== 'Undefined') {
+                throw new Error('');
+            }
+            if (classOfLocale !== 'Undefined') {
+                this.set('region', region.toUpperCase());
+                retVal = this;
+            }
+
+            return retVal;
+        },
+
+        format: function (format) {
+            var classOfFormat = sjl.classOf(format),
+                retVal = this.get('format');
+            if (classOfFormat !== 'String'
+                &amp;&amp; classOfFormat !== 'RegExp'
+                &amp;&amp; classOfFormat !== 'Undefined') {
+                throw new Error('`PostCodeValidator.format` method only accepts a `format` parameter of type' +
+                    ' "String", "RegExp", or "Undefined".  `format` parameter value received: "' + format + '".');
+            }
+            if (classOfFormat !== 'Undefined') {
+                // Normalize regex
+                if (classOfFormat === 'String') {
+                    format = (format.indexOf('^') !== 0 ? '^' : '') + format;
+                    format = format + (format.indexOf('$') !== format.length - 1 ? '$' : '');
+                    format = new RegExp(format);
+                }
+                this.set('format', format);
+                retVal = this;
+            }
+            return retVal;
+        },
+
+        service: function (service) {
+            var classOfService = sjl.classOf(service),
+                retVal = this.get('service');
+            if (classOfService !== 'Function' &amp;&amp; classOfService !== 'Undefined') {
+                throw new Error('');
+            }
+            if (classOfService !== 'Undefined') {
+                this.set('service', service);
+                retVal = this;
+            }
+            return retVal;
+        }
+
+    });
+
+    if (isNodeEnv) {
+        module.exports = PostCodeValidator;
+    }
+    else {
+        sjl.package('validator.PostCodeValidator', PostCodeValidator);
+    }
+
+})();
 </code></pre>
         </article>
     </section>
@@ -344,7 +354,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Nov 02 2015 20:37:03 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Nov 02 2015 21:56:57 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

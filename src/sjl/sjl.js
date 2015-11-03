@@ -1018,6 +1018,11 @@
         // Make top level namespace object
         sjl.package = require('../sjl-nodejs/Namespace.js')(__dirname);
 
+        // Store globally for now @todo (keeping sjl stored globally will be deprecated later)
+        Object.defineProperty(global, 'sjl', {
+            value: sjl
+        });
+
         // Export sjl
         module.exports = sjl;
     }

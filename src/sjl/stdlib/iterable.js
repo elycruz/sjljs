@@ -34,7 +34,7 @@
             });
             arrayOrObj[sjl.Symbol.iterator] = function () {
                 return new ObjectIterator(keys, values, pointer);
-            }
+            };
         }
         else {
             throw new Error('sjl.iterable only takes objects or arrays.  ' +

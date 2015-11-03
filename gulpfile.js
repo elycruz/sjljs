@@ -56,18 +56,18 @@ gulp.task('concat', function () {
         'src/sjl/stdlib/ObjectIterator.js',
         'src/sjl/stdlib/iterable.js',
         'src/sjl/stdlib/SjlSet.js',
-        'src/sjl/stdlib/SjlMap.js'
-        //'src/sjl/validator/AbstractValidator.js',
-        //'src/sjl/validator/ValidatorChain.js',
-        //'src/sjl/validator/AlphaNumValidator.js',
-        //'src/sjl/validator/EmptyValidator.js',
-        //'src/sjl/validator/InRangeValidator.js',
-        //'src/sjl/validator/RegexValidator.js',
-        //'src/sjl/validator/EmailValidator.js',
-        //'src/sjl/validator/NumberValidator.js',
-        //'src/sjl/validator/PostCodeValidator.js',
-        //'src/sjl/input/Input.js',
-        //'src/sjl/input/InputFilter.js'
+        'src/sjl/stdlib/SjlMap.js',
+        'src/sjl/validator/AbstractValidator.js',
+        'src/sjl/validator/ValidatorChain.js',
+        'src/sjl/validator/AlphaNumValidator.js',
+        'src/sjl/validator/EmptyValidator.js',
+        'src/sjl/validator/InRangeValidator.js',
+        'src/sjl/validator/RegexValidator.js',
+        'src/sjl/validator/EmailValidator.js',
+        'src/sjl/validator/NumberValidator.js',
+        'src/sjl/validator/PostCodeValidator.js',
+        'src/sjl/input/Input.js',
+        'src/sjl/input/InputFilter.js'
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))

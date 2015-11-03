@@ -1,7 +1,7 @@
-./.bower_components
-./node_modules
-./src/sjl/mvc
-./src/sjl/navigation
-./tests/for-browser/**/*
-./tests/for-server-es6/**/*
-./*.js
+bower_components
+node_modules
+src/sjl/mvc
+src/sjl/navigation
+tests/for-browser/**/*
+tests/for-server-es6/**/*
+*.js

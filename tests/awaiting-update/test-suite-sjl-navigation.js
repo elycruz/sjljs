@@ -6,8 +6,6 @@
 if (typeof window === 'undefined') {
     var chai = require('chai');
     var sjl = require('./../../src/sjl/sjl.js');
-    require('./../../src/sjl/navigation/BaseContainer');
-    require('./../../src/sjl/navigation/BasePage');
 }
 
 // Get chai.expect
@@ -15,7 +13,7 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-describe('sjl.package().navigation', function () {
+describe('sjl.package.navigation', function () {
 
     'use strict';
 

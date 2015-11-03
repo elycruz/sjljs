@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Mon Nov 02 2015 20:36:58 GMT-0500 (EST)
+ * sjl-minimal.js Mon Nov 02 2015 21:56:51 GMT-0500 (EST)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -1020,6 +1020,11 @@
     if (isNodeEnv) {
         // Make top level namespace object
         sjl.package = require('../sjl-nodejs/Namespace.js')(__dirname);
+
+        // Store globally for now @todo (keeping sjl stored globally will be deprecated later)
+        Object.defineProperty(global, 'sjl', {
+            value: sjl
+        });
 
         // Export sjl
         module.exports = sjl;
