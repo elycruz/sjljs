@@ -6,23 +6,16 @@
 
     'use strict';
 
-    var sjl,
-        Extendable,
-        isNodeEnv = typeof window === 'undefined';
-
-    if (isNodeEnv) {
-        sjl = require('../sjl.js');
-    }
-    else {
-        sjl = window.sjl || {};
-    }
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Extendable = function Extendable () {};
 
     /**
      * The `sjl.package.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
      * @class module:sjl.package.stdlib.Extendable
      * @name sjl.package.stdlib.Extendable
      */
-    Extendable = sjl.defineSubClass(Function, function Extendable() {});
+    Extendable = sjl.defineSubClass(Function, Extendable);
 
     /**
      * Extends a new copy of self with passed in parameters.

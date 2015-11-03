@@ -29,12 +29,11 @@ function processFiles(files, dir, allowedFileExts, self) {
                 get: function () {
                     return require(path.join(dir, file))
                 },
-                set: function () {
-                }
+                set: function () {}
             });
         }
         else {
-            throw new Error('The file representing the requested alias is not of ' +
+            throw new Error('The file representing the requested alias "' + file + '" is not of ' +
                 'the allowed type(s): "[' + (allowedFileExts.join('", "')) + ']');
         }
     });

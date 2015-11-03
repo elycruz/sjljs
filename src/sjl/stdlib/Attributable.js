@@ -5,19 +5,11 @@
 
     'use strict';
 
-    var sjl,
-        Attributable,
-        Constructor = function Attributable (attributes) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Attributable = function Attributable(attributes) {
             this.attrs(attributes);
-        },
-        isNodeEnv = typeof window === 'undefined';
-
-    if (isNodeEnv) {
-        sjl = require('../sjl.js');
-    }
-    else {
-        sjl = window.sjl || {};
-    }
+        };
 
     /**
      * @class sjl.package.stdlib.Attributable
@@ -25,7 +17,7 @@
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @type {void|Object|*}
      */
-    Attributable = sjl.package.stdlib.Extendable.extend(Constructor,{
+    Attributable = sjl.package.stdlib.Extendable.extend(Attributable, {
 
         /**
          * Gets or sets a collection of attributes.
@@ -38,7 +30,7 @@
             var self = this,
                 retVal = self;
 
-            switch(sjl.classOf(attrs)) {
+            switch (sjl.classOf(attrs)) {
                 // If is 'array' then is a getter
                 case 'Array':
                     retVal = self._getAttribs(attrs);

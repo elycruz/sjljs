@@ -7,20 +7,10 @@
 
     'use strict';
 
-    var sjl,
-        Iterator,
-        ObjectIterator,
-        isNodeEnv = typeof window === 'undefined';
-
-    if (isNodeEnv) {
-        sjl = require('../sjl.js');
-    }
-    else {
-        sjl = window.sjl || {};
-    }
-
-    Iterator = sjl.package.stdlib.Iterator;
-    ObjectIterator = sjl.package.stdlib.ObjectIterator;
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Iterator = sjl.package.stdlib.Iterator,
+        ObjectIterator = sjl.package.stdlib.ObjectIterator;
 
     /**
      * Turns an array into an iterable.
@@ -56,6 +46,8 @@
     if (isNodeEnv) {
         module.exports = sjl.iterable;
     }
-    // Else do nothing since function is already set on `sjl`
+    else {
+        sjl.package('stdlib.iterable', sjl.iterable);
+    }
 
 }());

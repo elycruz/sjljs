@@ -1,11 +1,16 @@
 /**
  * Created by Ely on 7/17/2015.
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    var sjl = context.sjl,
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        stdlib = sjl.package.stdlib,
+        Extendable = stdlib.Extendable,
+        ObjectIterator = stdlib.ObjectIterator,
+        makeIterable = stdlib.iterable,
 
         /**
          * SjlMap Constructor.
@@ -22,8 +27,8 @@
             if (sjl.classOfIs(iterable, 'Array')) {
                 self.addFromArray(iterable);
                 // Make our internal arrays inherit our special iterator
-                self._values = sjl.iterable(self._values, 0);
-                self._keys = sjl.iterable(self._keys, 0);
+                self._values = makeIterable(self._values, 0);
+                self._keys = makeIterable(self._keys, 0);
             }
 
             // If anything other than an array is passed in throw an Error
@@ -34,14 +39,14 @@
 
             // Set custom iterator function on `this`
             self[sjl.Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._keys, self._values, 0);
+                return new ObjectIterator(self._keys, self._values, 0);
             };
 
             // Set flag to remember that original iterator was overridden
             self._iteratorOverridden = true;
         };
 
-    sjl.SjlMap = sjl.Extendable.extend(SjlMap, {
+    SjlMap = Extendable.extend(SjlMap, {
             clear: function () {
                 while (this._values.length > 0) {
                     this._values.pop();
@@ -62,7 +67,7 @@
                 return this;
             },
             entries: function () {
-                return sjl.ObjectIterator(this._keys, this._values, 0);
+                return new ObjectIterator(this._keys, this._values, 0);
             },
             forEach: function (callback, context) {
                 for (var i = 0; i < this._keys.length - 1; i += 1) {
@@ -130,7 +135,13 @@
                 });
                 return out;
             }
-
         });
 
-})(typeof window === 'undefined' ? global : window);
+    if (isNodeEnv) {
+        module.exports = SjlMap;
+    }
+    else {
+        sjl.package('stdlib.SjlMap', SjlMap);
+    }
+
+})();

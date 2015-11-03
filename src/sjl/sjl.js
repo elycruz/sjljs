@@ -194,9 +194,7 @@
         // If `humanString` is of type Array then use it.  Else assume it is of type String and that there are possibly
         // more type strings passed in after it.
         var args = sjl.classOf(humanString) === 'Array' ? humanString : sjl.restArgs(arguments, 1),
-            retVal = false,
-            otherArgs = [];
-
+            retVal = false;
 
         args = sjl.flattenArray(args);
 
@@ -573,8 +571,7 @@
      */
     var getOwnPropertyDescriptor =
             typeof Object.getOwnPropertyDescriptor === 'function'
-                ? Object.getOwnPropertyDescriptor : null,
-        sjl = context.sjl;
+                ? Object.getOwnPropertyDescriptor : null;
 
     /**
      * Checks if object has method key passed.
@@ -1019,7 +1016,7 @@
     // If nodejs environment
     if (isNodeEnv) {
         // Make top level namespace object
-        sjl.package = require('../sjl-nodejs/Namespace')(__dirname)
+        sjl.package = require('../sjl-nodejs/Namespace.js')(__dirname);
 
         // Export sjl
         module.exports = sjl;

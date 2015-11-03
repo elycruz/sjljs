@@ -5,7 +5,39 @@
 
     'use strict';
 
-    var sjl = context.sjl;
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        stdlib = sjl.package.stdlib,
+        Extendable = stdlib.Extendable,
+        ObjectIterator = stdlib.ObjectIterator,
+        makeIterable = stdlib.iterable,
+        SjlSet = function SjlSet (iterable) {
+            var self = this;
+            self._values = [];
+            self.size = 0;
+
+            // If an array was passed in inject values
+            if (sjl.classOfIs(iterable, 'Array')) {
+                self.addFromArray(iterable);
+            }
+
+            // If anything other than an array is passed in throw an Error
+            else if (typeof iterable !== 'undefined') {
+                throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
+                    ' Parameter received: ', iterable);
+            }
+
+            // Make our `_values` array inherit our special iterator
+            makeIterable(self._values, 0);
+
+            // Set custom iterator function on `this`
+            self[sjl.Symbol.iterator] = function () {
+                return new ObjectIterator(self._values, self._values, 0);
+            };
+
+            // Set flag to remember that original iterator was overridden
+            self._iteratorOverridden = true;
+        };
 
     /**
      * SjlSet constructor.  This object has the same interface as the es6 `Set`
@@ -16,34 +48,7 @@
      * @extends sjl.Extendable
      * @param iterable {Array}
      */
-    sjl.SjlSet = sjl.Extendable.extend(function SjlSet (iterable) {
-        var self = this;
-        self._values = [];
-        self.size = 0;
-
-        // If an array was passed in inject values
-        if (sjl.classOfIs(iterable, 'Array')) {
-            self.addFromArray(iterable);
-        }
-
-        // If anything other than an array is passed in throw an Error
-        else if (typeof iterable !== 'undefined') {
-            throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
-            ' Parameter received: ', iterable);
-        }
-
-        // Make our `_values` array inherit our special iterator
-        sjl.iterable(self._values, 0);
-
-        // Set custom iterator function on `this`
-        self[sjl.Symbol.iterator] = function () {
-            return sjl.ObjectIterator(self._values, self._values, 0);
-        };
-
-        // Set flag to remember that original iterator was overridden
-        self._iteratorOverridden = true;
-    },
-    {
+    SjlSet = Extendable.extend(SjlSet, {
         add: function (value) {
             if (!this.has(value)) {
                 this._values.push(value);
@@ -68,7 +73,7 @@
             return this;
         },
         entries: function () {
-            return sjl.ObjectIterator(this._values, this._values, 0);
+            return new ObjectIterator(this._values, this._values, 0);
         },
         forEach: function (callback, context) {
             sjl.forEach(this._values, callback, context);
@@ -90,7 +95,7 @@
 
         addFromArray: function (value) {
             // Iterate through the passed in iterable and add all values to `_values`
-            var iterator = sjl.iterable(value, 0)[sjl.Symbol.iterator]();
+            var iterator =makeIterable(value, 0)[sjl.Symbol.iterator]();
 
             // Loop through values and add them
             while (iterator.valid()) {
@@ -109,4 +114,11 @@
         }
     });
 
-})(typeof window === 'undefined' ? global : window);
+    if (isNodeEnv) {
+        module.exports = SjlSet;
+    }
+    else {
+        sjl.package('stdlib.SjlSet', SjlSet);
+    }
+
+})();
