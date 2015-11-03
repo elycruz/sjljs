@@ -924,8 +924,15 @@
      * @param obj {Object|*} - Object to set the `package` method on.
      * @return {Object|*} - Returns passed in `obj`.
      */
-    sjl.createTopLevelPackage = function (obj, funcKey) {
+    sjl.createTopLevelPackage = function (obj, funcKey, altFuncKey, dirPath) {
         funcKey = funcKey || 'package';
+        altFuncKey = altFuncKey || 'ns';
+        if (isNodeEnv) {
+            dirPath = dirPath || __dirname;
+            obj[altFuncKey] = obj[funcKey] =
+                require('../sjl-nodejs/Namespace.js')(dirPath);
+            return obj[altFuncKey];
+        }
         return (function () {
 
             /**
@@ -936,7 +943,8 @@
              * @param value {*}
              * @returns {*}
              */
-            obj[funcKey] = function (nsString, value) {
+            obj[altFuncKey] =
+                obj[funcKey] = function (nsString, value) {
                 return typeof nsString === 'undefined' ? obj[funcKey]
                     : namespace(nsString, obj[funcKey], value);
             };
@@ -1013,32 +1021,17 @@
         sjl.Symbol = Symbol;
     }
 
-    // If nodejs environment
+    // If nodejs environment export `sjl`
     if (isNodeEnv) {
-        // Make top level namespace object
-        sjl.package = require('../sjl-nodejs/Namespace.js')(__dirname);
-
-        // Store globally for now @todo (keeping sjl stored globally will be deprecated later)
-        Object.defineProperty(global, 'sjl', {
-            value: sjl
-        });
-
-        // Export sjl
         module.exports = sjl;
     }
 
-    // Else assume browser
-    else {
+    // Export sjl globally (the node global export will be deprecated at a later version)
+    Object.defineProperty(isNodeEnv ? global : window, 'sjl', {
+        value: sjl
+    });
 
-        // Make sjl un-overwrittable from the frontend
-        Object.defineProperty(window, 'sjl', {
-            get: function () {
-                return sjl;
-            }
-        });
-
-        // Create top level frontend package
-        sjl.createTopLevelPackage(sjl);
-    }
+    // Create top level frontend package
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', __dirname);
 
 }());
