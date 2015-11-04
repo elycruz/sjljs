@@ -8,7 +8,7 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Attributable = function Attributable(attributes) {
-            this.attrs(attributes);
+            this.attr(attributes);
         };
 
     /**
@@ -21,53 +21,43 @@
 
         /**
          * Gets or sets a collection of attributes.
-         * @method sjl.package.stdlib.Attributable#attrs
-         * @param attrs {mixed|Array|Object} - Attributes to set or get from object
+         * @method sjl.package.stdlib.Attributable#attr
+         * @param attr {mixed|Array|Object} - Attributes to set or get from object
          * @todo add an `attr` function to this class
          * @returns {sjl.package.stdlib.Attributable}
          */
-        attrs: function (attrs) {
+        attr: function (attr) {
             var self = this,
                 retVal = self;
 
-            switch (sjl.classOf(attrs)) {
+            switch (sjl.classOf(attr)) {
                 // If is 'array' then is a getter
                 case 'Array':
-                    retVal = self._getAttribs(attrs);
+                    retVal = self._getAttribs(attr);
                     break;
 
                 // If is an 'object' then is a setter
                 case 'Object':
-                    sjl.extend(true, self, attrs, true);
+                    sjl.extend(true, self, attr, true);
                     break;
 
                 // If is a 'string' then is a getter
                 case 'String':
                     // Is setter
                     if (arguments.length >= 2) {
-                        sjl.setValueOnObj(attrs, arguments[1], self);
+                        sjl.setValueOnObj(attr, arguments[1], self);
                     }
                     // Is getter
                     else {
-                        retVal = sjl.getValueFromObj(attrs, self);
+                        retVal = sjl.getValueFromObj(attr, self);
                     }
                     break;
                 default:
-                    sjl.extend(true, self, attrs);
+                    sjl.extend(true, self, attr);
                     break;
             }
 
             return retVal;
-        },
-
-        /**
-         * Setter and getter for attributes on self {Optionable}.
-         * @param 0 {Object|String} - Key or object to set on self.
-         * @param 1 {*} - Value to set when using function as a setter.
-         * @returns {*|sjl.package.stdlib.Attributable} - If setter returns self else returned mixed.
-         */
-        attr: function () {
-            return this.attrs.apply(this, arguments);
         },
 
         /**
@@ -77,14 +67,14 @@
          * @returns {*}
          * @private
          */
-        _getAttribs: function (attrsList) {
+        _getAttribs: function (attrList) {
             var attrib,
                 out = {},
                 self = this;
 
             // Loop through attributes to get and set them for return
-            for (attrib in attrsList) {
-                attrib = attrsList[attrib];
+            for (attrib in attrList) {
+                attrib = attrList[attrib];
                 out[attrib] = typeof self[attrib] !== 'undefined'
                     ? sjl.getValueFromObj(attrib, self) : null;
             }

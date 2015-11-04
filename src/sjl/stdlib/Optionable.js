@@ -41,8 +41,8 @@
 
         /**
          * Sets each key value pair to  Optionable's `options` using
-         *  `sjl.Attributable`'s `attrs` function;
-         *  E.g., `optionable.options.attrs(Object);
+         *  `sjl.Attributable`'s `attr` function;
+         *  E.g., `optionable.options.attr(Object);
          * @deprecated - Will be removed in version 1.0.0
          * @method sjl.package.stdlib.Optionable#setOptions
          * @param key {String}
@@ -51,7 +51,7 @@
          */
         setOptions: function (options) {
             if (sjl.classOfIs(options, 'Object')) {
-                this.options.attrs(options);
+                this.options.attr(options);
             }
             return this;
         },
@@ -78,7 +78,7 @@
             var classOfOptions = sjl.classOf(options),
                 retVal = this.options;
             if (classOfOptions === 'Array' || classOfOptions === 'String') {
-                retVal = this.options.attrs(options);
+                retVal = this.options.attr(options);
             }
             return retVal;
         },
