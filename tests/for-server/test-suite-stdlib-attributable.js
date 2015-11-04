@@ -33,7 +33,7 @@ describe('Sjl Attributable', function () {
             nonEmptyArrayValue:  [1]
         });
 
-    describe('#`attr` and #`attrs`', function () {
+    describe('#`attr` and #`attr`', function () {
 
         it ('should be able to set and/or get one attribute value.', function () {
             // Set attrib to not `null`

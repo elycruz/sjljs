@@ -368,19 +368,19 @@ See './tests/for-browser'.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
 - [ ] - `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0).
-- [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+- [X] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
  right now it is not apparent to people that this is the default behaviour).
-- [ ] - Remove `attrs` method from `sjl.Attributable`.
+- [X] - Remove `attrs` method from `sjl.Attributable`.
 - [X] - Update readme to a more readable format.
 - [X] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
 - [X] - Changelog.
-- [ ] - Change the library from being a global for nodejs to being an exported package.
-- [ ] - Set all components (constructors) of sjl to be exported when being used in nodejs.
+- [X] - Change the library from being a global for nodejs to being an exported package.
+- [X] - Set all components (constructors) of sjl to be exported when being used in nodejs.
 - [ ] - Support for AMD if it is available when used on the frontend.
 - [X] - Remove use of eval option for `defineSubClass`.
 - [ ] - Create docs for `sjl.package`.
 - [X] - Shim `sjl.forEach` and `sjl.indexOf`.
-- [ ] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
+- [X] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
 instead of requiring global require).
 - [ ] - Include all sub items for components included as sub nav in components nav in readme.
 

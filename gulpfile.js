@@ -57,7 +57,7 @@ gulp.task('concat', function () {
         'src/sjl/stdlib/iterable.js',
         'src/sjl/stdlib/SjlSet.js',
         'src/sjl/stdlib/SjlMap.js',
-        'src/sjl/validator/AbstractValidator.js',
+        'src/sjl/validator/BaseValidator.js',
         'src/sjl/validator/ValidatorChain.js',
         'src/sjl/validator/AlphaNumValidator.js',
         'src/sjl/validator/EmptyValidator.js',
