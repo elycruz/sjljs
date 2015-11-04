@@ -9,6 +9,7 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Optionable = sjl.package.stdlib.Optionable,
+        ValidatorChain = sjl.package.validator.ValidatorChain,
         Input = function Input(options) {
             var alias = null;
 
@@ -109,7 +110,7 @@
         getValidatorChain: function () {
             var self = this;
             if (!sjl.isset(self.options.validatorChain)) {
-                self.options.validatorChain = new sjl.ValidatorChain({
+                self.options.validatorChain = new ValidatorChain({
                     breakOnFailure: self.getBreakOnFailure()
                 });
             }

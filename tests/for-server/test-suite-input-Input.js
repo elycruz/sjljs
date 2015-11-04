@@ -19,8 +19,10 @@ describe('Sjl Input', function () {
 
     "use strict";
 
+    var Input = sjl.ns.input.Input;
+
     describe('Should have the appropriate interface', function () {
-        var input = new sjl.Input(),
+        var input = new Input(),
             propNames = [
                 'allowEmpty',
                 'breakOnFailure',

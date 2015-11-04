@@ -9,6 +9,7 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Optionable = sjl.package.stdlib.Optionable,
+        Input = sjl.package.input.Input,
         InputFilter = function InputFilter(options) {
 
             // Set defaults as options on this class
@@ -29,7 +30,7 @@
 
         // @todo beef up add, get, and has methods (do param type checking before using param)
         add: function (value) {
-            if (value instanceof sjl.Input) {
+            if (value instanceof Input) {
                 this.getInputs()[value.getAlias()] = value;
             }
 
@@ -183,7 +184,7 @@
                 }
 
                 // Create input
-                input = new sjl.Input(inputs[input]);
+                input = new Input(inputs[input]);
 
                 // Set input's validators
                 input.getValidatorChain().addValidators(validators);
@@ -352,7 +353,7 @@
                 || !sjl.isset(inputSpec.inputs)) {
                 throw new Error('InputFilter class expects param 1 to be of type "Object".');
             }
-            var inputFilter = new sjl.InputFilter();
+            var inputFilter = new InputFilter();
             inputFilter.setInputs(inputSpec.inputs);
             return inputFilter;
         },
