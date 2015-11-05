@@ -64,8 +64,10 @@
 
 ### Changelog for 11/04/2015 version 0.5.1:
 
-- New function: `createTopLevelPackage` -  Used for new packaging functionality (view readme for more information on it).
 - `sjl.empty` and `sjl.isset` no longer operate on more than one value (improves performance).
+- './sjl-minimal.js and sjl-minimal.min.js now don't include any of the stdlib classes like 
+before (makes for a smaller footprint when classes aren't needed).
+- New function: `createTopLevelPackage` -  Used for new packaging functionality (view readme for more information on it).
 - All classes that were available on the root level ('./src/sjl') are now available 
 at `sjl.package.stdlib` (alias `sjl.ns.stdlib`)).
 - All classes that were in the root level that were accessible directly on the `sjl` object (`sjl.{class-name}`)
