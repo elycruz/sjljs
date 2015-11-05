@@ -440,12 +440,12 @@ See './tests/for-browser'.
         - [ ] - `sjl.NumberValidator`.
         - [ ] - `sjl.AlphaNumValidator`.
 - [ ] - Write a filter chain class.
-- [ ] - Change interface check to check for 'isValid' and 'message'
+- [ ] - Change interface check to check for 'isValid' and 'messages'
     properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
-- [ ] - Review entirety of library and look fgit or places that could be refactored.
+- [ ] - Review entirety of library and look for places that could be refactored.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
-- [ ] - `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0).
+- [ ] - `sjl.empty` to `sjl.isempty` (maybe for version 0.5.50).
 - [X] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
  right now it is not apparent to people that this is the default behaviour).
 - [X] - Remove `attrs` method from `sjl.Attributable`.
@@ -460,7 +460,7 @@ See './tests/for-browser'.
 - [X] - Shim `sjl.forEach` and `sjl.indexOf`.
 - [X] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
 instead of requiring global require).
-- [ ] - Include all sub items for components included as sub nav in components nav in readme.
+- [ ] - Include all sub items for components included as sub nav in readme.
 - [X] - Remove checking against multiple values for util functions (isset, classOfIs, etc. (maybe not classOfIs (have to evaluate common use cases further))).
 - [X] - Change `value !== undefined` check to use typeof instead (safe way for browsers (current check fails in browsers)).
 
