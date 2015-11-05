@@ -1,0 +1,20 @@
+Overloaded getters/setters:
+-----------
+inputFilter
+filterChain
+validatorChain
+alias
+rawValue
+value
+fallbackValue
+required
+allowEmpty
+breakOnFailure
+continueIfEmpty
+messages
+
+other methods:
+--------------
+hasFallbackValue
+clearMessages
+isValid

@@ -1,39 +1,13 @@
-/**! sjl.js Sun Oct 25 2015 16:16:04 GMT-0400 (EDT) **//**
+/**! sjl.js Wed Nov 04 2015 19:35:18 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
+ * @todo Make frontend only functionality defined conditionally on whether we are in a browser environment or not.
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    // Singleton instance
-    var sjl = {};
-
-    /**
-     * @module sjl
-     * @description Sjl object.
-     * @type {Object}
-     */
-    Object.defineProperty(context, 'sjl', {
-        get: function () {
-            return sjl;
-        }
-    });
-
-    context.sjl.defineProperty = typeof Object.defineProperty === 'function' ? Object.defineProperty : null;
-
-}(typeof window === 'undefined' ? global : window));
-
-/**
- * Created by Ely on 5/24/2014.
- * Defines argsToArray, classOfIs, classOf, empty,
- *  isset, keys, and namespace, on the passed in context.
- */
-
-'use strict';
-
-(function (context) {
-
-    var sjl = context.sjl,
+    var sjl = {},
+        isNodeEnv = typeof window === 'undefined',
         slice = Array.prototype.slice;
 
     /**
@@ -220,19 +194,9 @@
         // If `humanString` is of type Array then use it.  Else assume it is of type String and that there are possibly
         // more type strings passed in after it.
         var args = sjl.classOf(humanString) === 'Array' ? humanString : sjl.restArgs(arguments, 1),
-            retVal = false,
-            otherArgs = [];
+            retVal = false;
 
-        for (var i = 0; i < args.length; i += 1) {
-            if (sjl.classOf(args[i]) === 'Array') {
-                otherArgs = otherArgs.concat(args[i]);
-            }
-            else {
-                otherArgs.push(args[i]);
-            }
-        }
-
-        args = otherArgs;
+        args = sjl.flattenArray(args);
 
         for (var i = 0; i < args.length; i += 1) {
             humanString = args[i];
@@ -283,8 +247,8 @@
         // then check for other empty values
         else {
             retVal = (value === 0 || value === false
-                || value === undefined || value === null
-                || isEmptyObj(value));
+            || value === undefined || value === null
+            || isEmptyObj(value));
         }
 
         return retVal;
@@ -586,6 +550,7 @@
      * @param objToSearch {*}
      * @returns {*} - If property chain is not found then returns `null`.
      */
+
     sjl.searchObj = function (ns_string, objToSearch) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
@@ -600,28 +565,13 @@
         return parent;
     };
 
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 5/24/2014.
- * Cartesian functions copied from "Javascript the definitive guide"
- * getValueFromObj and setValueOnObj are not from "Javascript ..."
- * @note using legacy getters and setters from within `extend` method requires a refactor
- * as it does not work with the deep option and should.
- */
-
-'use strict';
-
-(function (context) {
-
     /**
      * Used by sjl.extend definition
      * @type {Function}
      */
     var getOwnPropertyDescriptor =
             typeof Object.getOwnPropertyDescriptor === 'function'
-                ? Object.getOwnPropertyDescriptor : null,
-        sjl = context.sjl;
+                ? Object.getOwnPropertyDescriptor : null;
 
     /**
      * Checks if object has method key passed.
@@ -633,32 +583,6 @@
     sjl.hasMethod = function (obj, method) {
         return !sjl.isEmptyObjKeyOrNotOfType(obj, method, 'Function');
     };
-
-    /**
-     * Returns whether `obj` has a getter method for key passed in.
-     * Method formats searched for: getKeyName or keyName
-     * @param obj {Object|*} - Object to search on.
-     * @param key - Key to normalize to method name to search for.
-     * @returns {Boolean}
-     */
-    //sjl.hasGetterMethodForKey = function (obj, key) {
-    //    // Camel case and uppercase first letter
-    //    key = sjl.camelCase(key, true);
-    //    return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'get' + key);
-    //};
-
-    /**
-     * Returns whether `obj` has a setter method for key passed in.
-     * Method formats searched for: setKeyName or keyName
-     * @param obj {Object|*} - Object to search on.
-     * @param key - Key to normalize to method name to search for.
-     * @returns {Boolean}
-     */
-    //sjl.hasSetterMethodForKey = function (obj, key) {
-    //    // Camel case and uppercase first letter
-    //    key = sjl.camelCase(key, true);
-    //    return sjl.hasMethod(obj, key) || sjl.hasMethod(obj, 'set' + key);
-    //};
 
     /**
      * Searches obj for key and returns it's value.  If value is a function
@@ -761,7 +685,7 @@
      * @param useLegacyGettersAndSetters {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
      * @returns {*} - returns o
      */
-     function extend (o, p, deep, useLegacyGettersAndSetters) {
+    function extend (o, p, deep, useLegacyGettersAndSetters) {
         deep = deep || false;
         useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
@@ -870,83 +794,6 @@
         return JSON.parse(JSON.stringify(obj));
     };
 
-//    if (typeof sjl.merge === 'undefined') {
-        /**
-         * Copy the enumerable properties of p to o, and return o.
-         * If o and p have a property by the same name, o's property is left alone.
-         * This function does not handle getters and setters or copy attributes.
-         * @param o {mixed} - *object to merge to
-         * @param p {mixed} - *object to merge from
-         * @returns {*} - returns o
-         */
-//        sjl.merge = function (o, p) {
-//            for (prop in p) { // For all props in p.
-//                if (o.hasOwnProperty[prop]) continue; // Except those already in o.
-//                o[prop] = p[prop]; // Add the property to o.
-//            }
-//            return o;
-//        };
-//    }
-
-//    if (typeof sjl.subtract === 'undefined') {
-        /**
-         * For each property of p, delete the property with the same name from o.
-         * Return o.
-         */
-//        sjl.subtract = function (o, p) {
-//            for (prop in p) { // For all props in p
-//                delete o[prop]; // Delete from o (deleting a
-//                // nonexistent prop is harmless)
-//            }
-//            return o;
-//        };
-//    }
-
-//    if (typeof sjl.restrict === 'undefined') {
-        /**
-         * Remove properties from o if there is not a property with the same name in p.
-         * Return o.
-         */
-//        sjl.restrict = function (o, p) {
-//            for (prop in o) { // For all props in o
-//                if (!(prop in p)) delete o[prop]; // Delete if not in p
-//            }
-//            return o;
-//        };
-//    }
-
-//    if (typeof sjl.union === 'undefined') {
-        /**
-         * Return a new object that holds the properties of both o and p.
-         * If o and p have properties by the same name, the values from p are used.
-         */
-//        sjl.union = function (o, p, deep, useLegacyGettersAndSetters) {
-//            return sjl.extend(deep, sjl.clone(o), p, useLegacyGettersAndSetters);
-//        };
-//    }
-
-//    if (typeof sjl.intersection === 'undefined') {
-        /**
-         * Return a new object that holds only the properties of o that also appear
-         * in p. This is something like the intersection of o and p, but the values of
-         * the properties in p are discarded
-         */
-//        sjl.intersection = function (o, p) {
-//            return sjl.restrict(sjl.clone(o), p);
-//        };
-//    }
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 5/24/2014.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl;
-
     /**
      * Creates a copy of a prototype to use for inheritance.
      * @function module:sjl.copyOfProto
@@ -975,9 +822,9 @@
      * @returns {Constructor}
      */
     sjl.defineSubClass = function (superclass,  // Constructor of the superclass
-                                constructor, // The constructor for the new subclass
-                                methods,     // Instance methods: copied to prototype
-                                statics)     // Class properties: copied to constructor
+                                   constructor, // The constructor for the new subclass
+                                   methods,     // Instance methods: copied to prototype
+                                   statics)     // Class properties: copied to constructor
     {
         // Resolve superclass
         superclass = superclass || sjl.copyOfProto(Object.prototype);
@@ -993,8 +840,8 @@
 
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {
-                return sjl.defineSubClass(this, constructor_, methods_, statics_);
-            };
+            return sjl.defineSubClass(this, constructor_, methods_, statics_);
+        };
 
         // Define constructor's constructor
         constructor.prototype.constructor = constructor;
@@ -1023,18 +870,6 @@
         throw Error(funcName + ' expects ' + paramName +
             ' to be of type "' + expectedType + '".  Value received: ' + value);
     };
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 8/17/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    // Get `sjl` variable
-    var sjl = context.sjl;
 
     /**
      * Makes a property non settable on `obj` and sets `value` as the returnable property.
@@ -1085,16 +920,20 @@
      * Package factory method.  Allows object to have a `package` method
      * which acts like java like namespace except it allows you to set
      * it's members (once) and then protects it's members.
+     * @function module:sjl.createTopLevelPackage
      * @param obj {Object|*} - Object to set the `package` method on.
      * @return {Object|*} - Returns passed in `obj`.
      */
-    sjl.createTopLevelPackage = function (obj) {
+    sjl.createTopLevelPackage = function (obj, funcKey, altFuncKey, dirPath) {
+        funcKey = funcKey || 'package';
+        altFuncKey = altFuncKey || 'ns';
+        if (isNodeEnv) {
+            dirPath = dirPath || __dirname;
+            obj[altFuncKey] = obj[funcKey] =
+                require('../sjl-nodejs/Namespace.js')(dirPath);
+            return obj[altFuncKey];
+        }
         return (function () {
-            /**
-             * Private package object.
-             * @type {{}}
-             */
-            var packages = {};
 
             /**
              * Returns a property from sjl packages.
@@ -1104,9 +943,10 @@
              * @param value {*}
              * @returns {*}
              */
-            obj.package = function (nsString, value) {
-                return typeof nsString === 'undefined' ? packages
-                    : namespace(nsString, packages, value);
+            obj[altFuncKey] =
+                obj[funcKey] = function (nsString, value) {
+                return typeof nsString === 'undefined' ? obj[funcKey]
+                    : namespace(nsString, obj[funcKey], value);
             };
 
             // Return passed in obj
@@ -1114,26 +954,64 @@
         }());
     };
 
-}(typeof window === 'undefined' ? global : window));
-/**
- * Created by Ely on 8/15/2015.
- */
-(function (context) {
+    //filterWhereType: function (obj, type) {},
 
-    'use strict';
+    /**
+     * Flattens passed in array.
+     * @function module:sjl.flattenArray
+     * @param array {Array}
+     * @returns {Array}
+     */
+    sjl.flattenArray = function (array) {
+        var newArray = [];
+        // Flatten ...humanString if length > 1
+        for (var i = 0; i < array.length; i += 1) {
+            if (sjl.classOf(array[i]) === 'Array') {
+                newArray = sjl.flattenArray(array[i]).concat(newArray);
+            }
+            else {
+                newArray.push(array[i]);
+            }
+        }
+        return newArray;
+    };
 
-    context.sjl.createTopLevelPackage(context.sjl);
+    //primitives: new Set('Array', 'Object', 'Boolean', 'String', 'Map', 'Set', 'WeakMap', 'Function'),
 
-}(typeof window === 'undefined' ? global : window));
-/**
- * Created by Ely on 7/17/2015.
- */
-(function (context) {
+    /**
+     * Creates a new primitive based on passed in string representation of type.  E.g., sjl.newPrimitive('Map')
+     * @note Used internally when needing to flatten an object of a particular type (@see sjl.flatten)
+     * @param type
+     */
+    //sjl.newPrimitive = function (type) {
+    //    var retVal = {};
+    //    switch(type) {
+    //        case 'Array':
+    //            retVal = [];
+    //            break;
+    //        case 'String':
+    //            retVal = '';
+    //            break;
+    //        case 'Map':
+    //            retVal = new Map();
+    //            break;
+    //        case 'Set':
+    //            retVal = new Set();
+    //            break;
+    //        case 'WeakMap':
+    //            retVal = new WeakMap();
+    //            break;
+    //        case 'Function':
+    //            retVal = function () {};
+    //            break;
+    //        case 'Object':
+    //        default:
+    //            retVal = {};
+    //            break;
+    //    }
+    //};
 
-    'use strict';
-
-    var sjl = context.sjl;
-
+    // Ensure we have access to the `Symbol`
     if (typeof Symbol === 'undefined') {
         sjl.Symbol = {
             iterator: '@@iterator'
@@ -1143,86 +1021,114 @@
         sjl.Symbol = Symbol;
     }
 
-})(typeof window === 'undefined' ? global : window);
+    // If nodejs environment export `sjl`
+    if (isNodeEnv) {
+        module.exports = sjl;
+    }
+
+    // Export sjl globally (the node global export will be deprecated at a later version)
+    Object.defineProperty(isNodeEnv ? global : window, 'sjl', {
+        value: sjl
+    });
+
+    // Create top level frontend package
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', __dirname);
+
+}());
+
 /**
  * Created by Ely on 4/12/2014.
  * Code copy pasted from "Javascript the definitive guide"
  */
-(function (context) {
+(function () {
 
     'use strict';
 
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Extendable = function Extendable () {};
+
     /**
-     * The `sjl.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-     * @class module:sjl.Extendable
-     * @name sjl.Extendable
+     * The `sjl.package.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
+     * @class module:sjl.package.stdlib.Extendable
+     * @name sjl.package.stdlib.Extendable
      */
-    context.sjl.Extendable = context.sjl.defineSubClass(Function, function Extendable() {});
+    Extendable = sjl.defineSubClass(Function, Extendable);
 
     /**
      * Extends a new copy of self with passed in parameters.
-     * @method sjl.Extendable.extend
+     * @method sjl.package.stdlib.Extendable.extend
      * @param constructor {Constructor} - Required.
      * @param methods {Object} - Optional.
      * @param statics {Object} - Static methods. Optional.
      */
 
-})(typeof window === 'undefined' ? global : window);
+    // Export `Extendable`
+    if (isNodeEnv) {
+        module.exports = Extendable;
+    }
+    else {
+        sjl.package('stdlib.Extendable', Extendable);
+    }
+
+})();
 
 /**
  * Created by Ely on 6/21/2014.
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    var sjl = context.sjl;
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Attributable = function Attributable(attributes) {
+            this.attr(attributes);
+        };
 
     /**
-     * @class sjl.Attributable
-     * @extends sjl.Extendable
+     * @class sjl.package.stdlib.Attributable
+     * @extends sjl.package.stdlib.Extendable
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @type {void|Object|*}
      */
-    sjl.Attributable = sjl.Extendable.extend(function Attributable (attributes) {
-        this.attrs(attributes);
-    },{
+    Attributable = sjl.package.stdlib.Extendable.extend(Attributable, {
 
         /**
          * Gets or sets a collection of attributes.
-         * @method sjl.Attributable#attrs
-         * @param attrs {mixed|Array|Object} - Attributes to set or get from object
+         * @method sjl.package.stdlib.Attributable#attr
+         * @param attr {mixed|Array|Object} - Attributes to set or get from object
          * @todo add an `attr` function to this class
-         * @returns {sjl.Attributable}
+         * @returns {sjl.package.stdlib.Attributable}
          */
-        attrs: function (attrs) {
+        attr: function (attr) {
             var self = this,
                 retVal = self;
 
-            switch(sjl.classOf(attrs)) {
+            switch (sjl.classOf(attr)) {
                 // If is 'array' then is a getter
                 case 'Array':
-                    retVal = self._getAttribs(attrs);
+                    retVal = self._getAttribs(attr);
                     break;
 
                 // If is an 'object' then is a setter
                 case 'Object':
-                    sjl.extend(true, self, attrs, true);
+                    sjl.extend(true, self, attr, true);
                     break;
 
                 // If is a 'string' then is a getter
                 case 'String':
                     // Is setter
                     if (arguments.length >= 2) {
-                        sjl.setValueOnObj(attrs, arguments[1], self);
+                        sjl.setValueOnObj(attr, arguments[1], self);
                     }
                     // Is getter
                     else {
-                        retVal = sjl.getValueFromObj(attrs, self);
+                        retVal = sjl.getValueFromObj(attr, self);
                     }
                     break;
                 default:
-                    sjl.extend(true, self, attrs);
+                    sjl.extend(true, self, attr);
                     break;
             }
 
@@ -1230,30 +1136,20 @@
         },
 
         /**
-         * Setter and getter for attributes on self {Optionable}.
-         * @param 0 {Object|String} - Key or object to set on self.
-         * @param 1 {*} - Value to set when using function as a setter.
-         * @returns {*|sjl.Attributable} - If setter returns self else returned mixed.
-         */
-        attr: function () {
-            return this.attrs.apply(this, arguments);
-        },
-
-        /**
          * Gets a set of attributes hash for queried attributes.
-         * @method sjl.Attributable#_getAttribs
+         * @method sjl.package.stdlib.Attributable#_getAttribs
          * @param attribsList {Array} - Attributes list to return
          * @returns {*}
          * @private
          */
-        _getAttribs: function (attrsList) {
+        _getAttribs: function (attrList) {
             var attrib,
                 out = {},
                 self = this;
 
             // Loop through attributes to get and set them for return
-            for (attrib in attrsList) {
-                attrib = attrsList[attrib];
+            for (attrib in attrList) {
+                attrib = attrList[attrib];
                 out[attrib] = typeof self[attrib] !== 'undefined'
                     ? sjl.getValueFromObj(attrib, self) : null;
             }
@@ -1263,7 +1159,15 @@
         }
 
     });
-})(typeof window === 'undefined' ? global : window);
+
+    if (isNodeEnv) {
+        module.exports = Attributable;
+    }
+    else {
+        sjl.package('stdlib.Attributable', Attributable);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/21/2014.
@@ -1271,142 +1175,711 @@
  *  that they force the use of legacy setters if they are available;
  *  e.g., setName, setSomePropertyName, etc..
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    var sjl = context.sjl;
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Optionable = function Optionable(/*[, options]*/) {
+            this.options = new sjl.package.stdlib.Attributable();
+            this.merge.apply(this, arguments);
+        };
 
     /**
      * Optionable Constructor merges all objects passed in to it's `options` hash.
      * Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
      * @note when using this class you shouldn't have a nested `options` attribute directly within options
      * as this will cause adverse effects when getting and setting properties via the given methods.
-     * @class sjl.Optionable
-     * @extends sjl.Extendable
-     * @type {void|sjl.Optionable}
+     * @class sjl.package.stdlib.Optionable
+     * @extends sjl.package.stdlib.Extendable
+     * @type {void|sjl.package.stdlib.Optionable}
      */
-    sjl.Optionable = sjl.Extendable.extend(function Optionable(/*[, options]*/) {
-            this.options = new sjl.Attributable();
-            this.merge.apply(this, arguments);
+    Optionable = sjl.package.stdlib.Extendable.extend(Optionable, {
+        /**
+         * Sets an option on Optionable's `options` using `sjl.setValueOnObj`;
+         *  E.g., `optionable.options = value`;
+         * @deprecated - Will be removed in version 1.0.0
+         * @method sjl.package.stdlib.Optionable#setOption
+         * @param key
+         * @param value
+         * @returns {sjl.package.stdlib.Optionable}
+         */
+        setOption: function (key, value) {
+            sjl.setValueOnObj(key, value, this.options);
+            return this;
         },
-        {
-            /**
-             * Sets an option on Optionable's `options` using `sjl.setValueOnObj`;
-             *  E.g., `optionable.options = value`;
-             * @deprecated - Will be removed in version 1.0.0
-             * @method sjl.Optionable#setOption
-             * @param key
-             * @param value
-             * @returns {sjl.Optionable}
-             */
-            setOption: function (key, value) {
-                sjl.setValueOnObj(key, value, this.options);
-                return this;
-            },
 
-            /**
-             * Sets each key value pair to  Optionable's `options` using
-             *  `sjl.Attributable`'s `attrs` function;
-             *  E.g., `optionable.options.attrs(Object);
-             * @deprecated - Will be removed in version 1.0.0
-             * @method sjl.Optionable#setOptions
-             * @param key {String}
-             * @param value {Object}
-             * @returns {sjl.Optionable}
-             */
-            setOptions: function (options) {
-                if (sjl.classOfIs(options, 'Object')) {
-                    this.options.attrs(options);
-                }
-                return this;
-            },
+        /**
+         * Sets each key value pair to  Optionable's `options` using
+         *  `sjl.Attributable`'s `attr` function;
+         *  E.g., `optionable.options.attr(Object);
+         * @deprecated - Will be removed in version 1.0.0
+         * @method sjl.package.stdlib.Optionable#setOptions
+         * @param key {String}
+         * @param value {Object}
+         * @returns {sjl.package.stdlib.Optionable}
+         */
+        setOptions: function (options) {
+            if (sjl.classOfIs(options, 'Object')) {
+                this.options.attr(options);
+            }
+            return this;
+        },
 
-            /**
-             * Gets an options value by key.
-             * @deprecated - Slotted for removal in version 1.0.0
-             * @method sjl.Optionable#getOption
-             * @param key {String}
-             * @returns {*}
-             */
-            getOption: function (key) {
-                return sjl.getValueFromObj(key, this.options);
-            },
+        /**
+         * Gets an options value by key.
+         * @deprecated - Slotted for removal in version 1.0.0
+         * @method sjl.package.stdlib.Optionable#getOption
+         * @param key {String}
+         * @returns {*}
+         */
+        getOption: function (key) {
+            return sjl.getValueFromObj(key, this.options);
+        },
 
-            /**
-             * Gets options by either array or just by key.
-             * @deprecated - Slotted for removal in version 1.0.0
-             * @method sjl.Optionable#getOptions
-             * @param options {Array|String}
-             * @returns {*}
-             */
-            getOptions: function (options) {
-                var classOfOptions = sjl.classOf(options),
-                    retVal = this.options;
-                if (classOfOptions === 'Array' || classOfOptions === 'String') {
-                    retVal = this.options.attrs(options);
-                }
-                return retVal;
-            },
+        /**
+         * Gets options by either array or just by key.
+         * @deprecated - Slotted for removal in version 1.0.0
+         * @method sjl.package.stdlib.Optionable#getOptions
+         * @param options {Array|String}
+         * @returns {*}
+         */
+        getOptions: function (options) {
+            var classOfOptions = sjl.classOf(options),
+                retVal = this.options;
+            if (classOfOptions === 'Array' || classOfOptions === 'String') {
+                retVal = this.options.attr(options);
+            }
+            return retVal;
+        },
 
-            /**
-             * Gets one or many option values.
-             * @method sjl.Optionable#get
-             * @param keyOrArray
-             * @returns {*}
-             */
-            get: function (keyOrArray) {
-                return this.getOptions(keyOrArray);
-            },
+        /**
+         * Gets one or many option values.
+         * @method sjl.package.stdlib.Optionable#get
+         * @param keyOrArray
+         * @returns {*}
+         */
+        get: function (keyOrArray) {
+            return this.getOptions(keyOrArray);
+        },
 
-            /**
-             * Sets an option (key, value) or multiple options (Object)
-             * based on what's passed in.
-             * @method sjl.Optionable#set
-             * @param0 {String|Object}
-             * @param1 {*}
-             * @returns {sjl.Optionable}
-             */
-            set: function () {
-                var self = this,
-                    args = arguments,
-                    typeOfArgs0 = sjl.classOf(args[0]);
-                if (typeOfArgs0 === 'String') {
-                    self.setOption(args[0], args[1]);
-                }
-                else if (typeOfArgs0 === 'Object') {
-                    self.setOptions(args[0]);
-                }
-                return self;
-            },
+        /**
+         * Sets an option (key, value) or multiple options (Object)
+         * based on what's passed in.
+         * @method sjl.package.stdlib.Optionable#set
+         * @param0 {String|Object}
+         * @param1 {*}
+         * @returns {sjl.package.stdlib.Optionable}
+         */
+        set: function () {
+            var self = this,
+                args = arguments,
+                typeOfArgs0 = sjl.classOf(args[0]);
+            if (typeOfArgs0 === 'String') {
+                self.setOption(args[0], args[1]);
+            }
+            else if (typeOfArgs0 === 'Object') {
+                self.setOptions(args[0]);
+            }
+            return self;
+        },
 
-            /**
-             * Checks a key/namespace string ('a.b.c') to see if `this.options`
-             *  has a value (a non falsy value otherwise returns `false`).
-             * @method sjl.Optionable#has
-             * @param nsString - key or namespace string
-             * @returns {Boolean}
-             */
-            has: function (nsString) {
-                return sjl.isset(sjl.searchObj(nsString, this.options));
-            },
+        /**
+         * Checks a key/namespace string ('a.b.c') to see if `this.options`
+         *  has a value (a non falsy value otherwise returns `false`).
+         * @method sjl.package.stdlib.Optionable#has
+         * @param nsString - key or namespace string
+         * @returns {Boolean}
+         */
+        has: function (nsString) {
+            return sjl.isset(sjl.searchObj(nsString, this.options));
+        },
 
-            /**
-             * Merges all objects passed in to `options`.
-             * @method sjl.Optionable#merge
-             * @param ...options {Object} - Any number of `Object`s passed in.
-             * @param useLegacyGettersAndSetters {Object|Boolean|undefined}
-             * @returns {sjl.Optionable}
-             */
-            merge: function (options) {
-                sjl.extend.apply(sjl, [true, this.options].concat(sjl.argsToArray(arguments)));
-                return this;
+        /**
+         * Merges all objects passed in to `options`.
+         * @method sjl.package.stdlib.Optionable#merge
+         * @param ...options {Object} - Any number of `Object`s passed in.
+         * @param useLegacyGettersAndSetters {Object|Boolean|undefined}
+         * @returns {sjl.package.stdlib.Optionable}
+         */
+        merge: function (options) {
+            sjl.extend.apply(sjl, [true, this.options].concat(sjl.argsToArray(arguments)));
+            return this;
+        }
+    });
+
+    if (isNodeEnv) {
+        module.exports = Optionable;
+    }
+    else {
+        sjl.package('stdlib.Optionable', Optionable);
+    }
+
+})();
+
+/**
+ * Created by Ely on 4/12/2014.
+ */
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Iterator = function Iterator(values, pointer) {
+            // Allow Iterator to be called as a function
+            if (!(this instanceof Iterator)) {
+                return new Iterator(values, pointer);
             }
 
+            // Internalize the `values` collection and pointer here
+            // to make this class more functional.
+            this.__internal = {
+                values: values || [],
+                pointer: sjl.classOfIs(pointer, 'Number') ? pointer : 0
+            };
+        };
+
+    /**
+     * @class sjl.package.stdlib.Iterator
+     * @extends sjl.package.stdlib.Extendable
+     * @type {void|Object|*}
+     */
+    Iterator = sjl.package.stdlib.Extendable.extend(Iterator, {
+        /**
+         * Returns the current value that `pointer()` is pointing to.
+         * @method sjl.package.stdlib.Iterator#current
+         * @returns {{done: boolean, value: *}}
+         */
+        current: function () {
+            var self = this;
+            return self.valid() ? {
+                done: false,
+                value: self.values()[self.pointer()]
+            } : {
+                done: true
+            };
+        },
+
+        /**
+         * Method which returns the current position in the iterator based on where the pointer is.
+         * This method also increases the pointer after it is done fetching the value to return.
+         * @method sjl.package.stdlib.Iterator#next
+         * @returns {{done: boolean, value: *}}
+         */
+        next: function () {
+            var self = this,
+                pointer = self.pointer(),
+                retVal = self.valid() ? {
+                    done: false,
+                    value: self.values()[pointer]
+                } : {
+                    done: true
+                };
+            self.pointer(pointer + 1);
+            return retVal;
+        },
+
+        /**
+         * Rewinds the iterator.
+         * @method sjl.package.stdlib.Iterator#rewind
+         * @returns {sjl.package.stdlib.Iterator}
+         */
+        rewind: function () {
+            return this.pointer(0);
+        },
+
+        /**
+         * Returns whether the iterator has reached it's end.
+         * @method sjl.package.stdlib.Iterator#valid
+         * @returns {boolean}
+         */
+        valid: function () {
+            return this.pointer() < this.values().length;
+        },
+
+        /**
+         * Overloaded method for fetching or setting the internal pointer value.
+         * @method sjl.package.stdlib.Iterator#pointer
+         * @param pointer {Number|undefined}
+         * @returns {sjl.package.stdlib.Iterator|Number}
+         */
+        pointer: function (pointer) {
+            var self = this,
+                isGetterCall = typeof pointer === 'undefined',
+                defaultNum = sjl.classOfIs(self.__internal.pointer, 'Number')
+                    ? self.__internal.pointer : 0,
+                retVal = self;
+            if (isGetterCall) {
+                retVal = defaultNum;
+            }
+            // Else set pointer
+            else {
+                self.__internal.pointer = sjl.classOfIs(pointer, 'Number') ? pointer : defaultNum;
+            }
+            return retVal;
+        },
+
+        /**
+         * Overloaded method for fetching or setting the internal values array.
+         * @method sjl.Itertator#values
+         * @param values {Array|undefined}
+         * @returns {sjl.package.stdlib.Iterator|Array}
+         */
+        values: function (values) {
+            var isGetterCall = typeof values === 'undefined',
+                retVal = this,
+                selfCollectionIsArray;
+            if (isGetterCall) {
+                retVal = this.__internal.values;
+            }
+            else {
+                selfCollectionIsArray = sjl.classOfIs(this.__internal.values, 'Array');
+                // Set the internal values collection to `values` if `values` is an array
+                // else if self internal values is an array leave as is
+                // else set internal values to an empty array
+                this.__internal.values =
+                    sjl.classOfIs(values, 'Array') ? values :
+                        (selfCollectionIsArray ? this.__internal.values : []);
+            }
+            return retVal;
+        }
+    });
+
+    if (isNodeEnv) {
+        module.exports = Iterator;
+    }
+    else {
+        sjl.package('stdlib.Iterator', Iterator);
+    }
+
+}());
+
+/**
+ * Created by elydelacruz on 11/2/15.
+ */
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Iterator = sjl.package.stdlib.Iterator,
+        ObjectIterator = function ObjectIterator(keys, values, pointer) {
+            // Allow Iterator to be called as a function
+            if (!(this instanceof ObjectIterator)) {
+                return new ObjectIterator(keys, values, pointer);
+            }
+            Iterator.call(this, values, pointer);
+            this.__internal.keys = keys;
+        };
+
+    /**
+     * @class sjl.package.stdlib.ObjectIterator
+     * @extends sjl.package.stdlib.Iterator
+     * @type {Object|void|*}
+     */
+    ObjectIterator = Iterator.extend(ObjectIterator, {
+        /**
+         * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
+         * @method sjl.package.stdlib.Iterator#current
+         * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
+         */
+        current: function () {
+            var self = this,
+                pointer = self.pointer();
+            return self.valid() ? {
+                done: false,
+                value: [self.keys()[pointer], self.values()[pointer]]
+            } : {
+                done: true
+            };
+        },
+
+        /**
+         * Method which returns the current position in the iterator based on where the pointer is.
+         * This method also increases the pointer after it is done fetching the value to return.
+         * @method sjl.package.stdlib.Iterator#next
+         * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
+         */
+        next: function () {
+            var self = this,
+                pointer = self.pointer(),
+                retVal = self.valid() ? {
+                    done: false,
+                    value: [self.keys()[pointer], self.values()[pointer]]
+                } : {
+                    done: true
+                };
+            self.pointer(pointer + 1);
+            return retVal;
+        },
+
+        valid: function () {
+            var pointer = this.pointer();
+            return pointer < this.values().length && pointer < this.keys().length;
+        },
+
+        /**
+         * Overloaded getter/setter method for internal `keys` property.
+         * @returns {sjl.package.stdlib.ObjectIterator|Array<*>}
+         */
+        keys: function (keys) {
+            var isGetterCall = typeof keys === 'undefined',
+                retVal = this,
+                selfCollectionIsArray;
+            if (isGetterCall) {
+                retVal = this.__internal.keys;
+            }
+            else {
+                selfCollectionIsArray = sjl.classOfIs(this.__internal.keys, 'Array');
+                // Set the internal keys collection to `keys` if `keys` is an array
+                // else if self internal keys is an array leave as is
+                // else set internal keys to an empty array
+                this.__internal.keys =
+                    sjl.classOfIs(keys, 'Array') ? keys :
+                        (selfCollectionIsArray ? this.__internal.keys : []);
+            }
+            return retVal;
+        }
+
+    });
+
+    if (isNodeEnv) {
+        module.exports = ObjectIterator;
+    }
+    else {
+        sjl.package('stdlib.ObjectIterator', ObjectIterator);
+    }
+
+}());
+/**
+ * Created by elydelacruz on 11/2/15.
+ */
+
+(function () {
+
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Iterator = sjl.package.stdlib.Iterator,
+        ObjectIterator = sjl.package.stdlib.ObjectIterator;
+
+    /**
+     * Turns an array into an iterable.
+     * @param array {Array}
+     * @param pointer {Number|undefined}
+     * @function module:sjl.iterable
+     * @returns {*}
+     */
+    sjl.iterable = function (arrayOrObj, pointer) {
+        var classOfArrayOrObj = sjl.classOf(arrayOrObj),
+            keys, values;
+        if (classOfArrayOrObj === 'Array') {
+            arrayOrObj[sjl.Symbol.iterator] = function () {
+                return new Iterator(arrayOrObj, pointer);
+            };
+        }
+        else if (classOfArrayOrObj === 'Object') {
+            keys = sjl.keys(arrayOrObj);
+            values = keys.map(function (key) {
+                return arrayOrObj[key];
+            });
+            arrayOrObj[sjl.Symbol.iterator] = function () {
+                return new ObjectIterator(keys, values, pointer);
+            };
+        }
+        else {
+            throw new Error('sjl.iterable only takes objects or arrays.  ' +
+                'arrayOrObj param recieved type is "' + classOfArrayOrObj + '".  Value recieved: ' + arrayOrObj);
+        }
+        return arrayOrObj;
+    };
+
+    if (isNodeEnv) {
+        module.exports = sjl.iterable;
+    }
+    else {
+        sjl.package('stdlib.iterable', sjl.iterable);
+    }
+
+}());
+
+/**
+ * Created by Ely on 7/17/2015.
+ */
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        stdlib = sjl.package.stdlib,
+        Extendable = stdlib.Extendable,
+        ObjectIterator = stdlib.ObjectIterator,
+        makeIterable = stdlib.iterable,
+        SjlSet = function SjlSet (iterable) {
+            var self = this;
+            self._values = [];
+            self.size = 0;
+
+            // If an array was passed in inject values
+            if (sjl.classOfIs(iterable, 'Array')) {
+                self.addFromArray(iterable);
+            }
+
+            // If anything other than an array is passed in throw an Error
+            else if (typeof iterable !== 'undefined') {
+                throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
+                    ' Parameter received: ', iterable);
+            }
+
+            // Make our `_values` array inherit our special iterator
+            makeIterable(self._values, 0);
+
+            // Set custom iterator function on `this`
+            self[sjl.Symbol.iterator] = function () {
+                return new ObjectIterator(self._values, self._values, 0);
+            };
+
+            // Set flag to remember that original iterator was overridden
+            self._iteratorOverridden = true;
+        };
+
+    /**
+     * SjlSet constructor.  This object has the same interface as the es6 `Set`
+     * object.  The only difference is this one uses a more sugery iterator which
+     * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
+     * `valid` methods (@see sjl.Iterator)
+     * @class sjl.SjlSet
+     * @extends sjl.Extendable
+     * @param iterable {Array}
+     */
+    SjlSet = Extendable.extend(SjlSet, {
+        add: function (value) {
+            if (!this.has(value)) {
+                this._values.push(value);
+                this.size += 1;
+            }
+            return this;
+        },
+        clear: function () {
+            while (this._values.length > 0) {
+                this._values.pop();
+            }
+            this.size = 0;
+            return this;
+        },
+        delete: function (value) {
+            var _index = sjl.indexOf(value, this._values);
+            if (_index > -1) {
+                delete this._values[_index];
+                this.size -= 1;
+                this.size = this.size < 0 ? 1 : 0;
+            }
+            return this;
+        },
+        entries: function () {
+            return new ObjectIterator(this._values, this._values, 0);
+        },
+        forEach: function (callback, context) {
+            sjl.forEach(this._values, callback, context);
+            return this;
+        },
+        has: function (value) {
+            return sjl.indexOf(this._values, value) > -1 ? true : false;
+        },
+        keys: function () {
+            return this._values[sjl.Symbol.iterator]();
+        },
+        values: function () {
+            return this._values[sjl.Symbol.iterator]();
+        },
+
+        /**************************************************
+         * METHODS NOT PART OF THE `Set` spec for ES6:
+         **************************************************/
+
+        addFromArray: function (value) {
+            // Iterate through the passed in iterable and add all values to `_values`
+            var iterator =makeIterable(value, 0)[sjl.Symbol.iterator]();
+
+            // Loop through values and add them
+            while (iterator.valid()) {
+                this.add(iterator.next().value);
+            }
+            iterator = null;
+            return this;
+        },
+
+        iterator: function () {
+            return this._values[sjl.Symbol.iterator]();
+        },
+
+        toJSON: function () {
+            return this._values;
+        }
+    });
+
+    if (isNodeEnv) {
+        module.exports = SjlSet;
+    }
+    else {
+        sjl.package('stdlib.SjlSet', SjlSet);
+    }
+
+})();
+
+/**
+ * Created by Ely on 7/17/2015.
+ */
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        stdlib = sjl.package.stdlib,
+        Extendable = stdlib.Extendable,
+        ObjectIterator = stdlib.ObjectIterator,
+        makeIterable = stdlib.iterable,
+
+        /**
+         * SjlMap Constructor.
+         * @param iterable
+         * @constructor
+         */
+        SjlMap = function SjlMap (iterable) {
+            var self = this;
+            self.size = 0;
+            self._keys = [];
+            self._values = [];
+
+            // If an array was passed in inject values
+            if (sjl.classOfIs(iterable, 'Array')) {
+                self.addFromArray(iterable);
+                // Make our internal arrays inherit our special iterator
+                self._values = makeIterable(self._values, 0);
+                self._keys = makeIterable(self._keys, 0);
+            }
+
+            // If anything other than an array is passed in throw an Error
+            else if (typeof iterable !== 'undefined') {
+                throw new Error ('Type Error: sjl.SjlMap takes only iterable objects as it\'s first parameter. ' +
+                ' Parameter received: ', iterable);
+            }
+
+            // Set custom iterator function on `this`
+            self[sjl.Symbol.iterator] = function () {
+                return new ObjectIterator(self._keys, self._values, 0);
+            };
+
+            // Set flag to remember that original iterator was overridden
+            self._iteratorOverridden = true;
+        };
+
+    SjlMap = Extendable.extend(SjlMap, {
+            clear: function () {
+                while (this._values.length > 0) {
+                    this._values.pop();
+                }
+                while (this._keys.length > 0) {
+                    this._keys.pop();
+                }
+                this.size = 0;
+                return this;
+            },
+            delete: function (key) {
+                var _index = sjl.indexOf(this._keys, key);
+                if (this.has(key)) {
+                    delete this._values[_index];
+                    delete this._keys[_index];
+                    this.size -= sjl.classOfIs(this.size, 'Number') && this.size > 0 ? 1 : 0;
+                }
+                return this;
+            },
+            entries: function () {
+                return new ObjectIterator(this._keys, this._values, 0);
+            },
+            forEach: function (callback, context) {
+                for (var i = 0; i < this._keys.length - 1; i += 1) {
+                    callback.call(context, this._keys[i], this._values[i]);
+                }
+                return this;
+            },
+            has: function (key) {
+                return sjl.indexOf(this._keys, key) > -1 ? true : false;
+            },
+            keys: function () {
+                return this._keys[sjl.Symbol.iterator]();
+            },
+            values: function () {
+                return this._values[sjl.Symbol.iterator]();
+            },
+            get: function (key) {
+                var index = sjl.indexOf(this._keys, key);
+                return index > -1 ? this._values[index] : undefined;
+            },
+            set: function (key, value) {
+                var index = sjl.indexOf(this._keys, key);
+                if (index > -1) {
+                    this._keys[index] = key;
+                    this._values[index] = value;
+                    this.size += 1;
+                }
+                else {
+                    this._keys.push(key);
+                    this._values.push(value);
+                    this.size += 1;
+                }
+                index = null;
+                return this;
+            },
+
+            /**************************************************
+             * METHODS NOT PART OF THE `Set` spec for ES6:
+             **************************************************/
+
+            addFromArray: function (array) {
+                // Iterate through the passed in iterable and add all values to `_values`
+                var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
+                    entry;
+
+                // Loop through values and add them
+                while (iterator.valid()) {
+                    entry = iterator.next();
+                    this.set(entry.value[0], entry.value[1]);
+                }
+                iterator = null;
+                entry = null;
+                return this;
+            },
+
+            iterator: function () {
+                return this.entries();
+            },
+
+            toJSON: function () {
+                var self = this,
+                    out = {};
+                sjl.forEach(this._keys, function (key, i) {
+                    out[key] = self._values[i];
+                });
+                return out;
+            }
         });
 
-})(typeof window === 'undefined' ? global : window);
+    if (isNodeEnv) {
+        module.exports = SjlMap;
+    }
+    else {
+        sjl.package('stdlib.SjlMap', SjlMap);
+    }
 
+})();
 /**
  * Created by Ely on 7/21/2014.
  * Initial idea borrowed from Zend Framework 2's Zend/Validator
@@ -1414,145 +1887,151 @@
 
 'use strict';
 
-(function (context) {
+(function () {
 
-    context.sjl.validator = context.sjl.isset(context.sjl.validator) ? context.sjl.validator : {};
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Optionable = sjl.package.stdlib.Optionable,
+        BaseValidator = function BaseValidator(options) {
+            var self = this,
+                customTemplates;
 
-    context.sjl.AbstractValidator =
-
-        context.sjl.Optionable.extend(function AbstractValidator(options) {
-                var self = this,
-                    customTemplates;
-
-                // Extend with optionable and set preliminary defaults
-                context.sjl.Optionable.call(self, {
-                    messages: [],
-                    messageTemplates: {},
-                    messageVariables: {},
-                    messagesMaxLength: 100,
-                    valueObscured: false,
-                    value: null
-                });
-
-                // Merge custom templates in if they are set
-                if (context.sjl.isset(options.customMessageTemplates)) {
-                    customTemplates = options.customMessageTemplates;
-                    options.customeMessageTemplates = null;
-                    delete options.customeMessageTemplates;
-                    self.setCustomMessageTemplates(customTemplates);
-                }
-
-                // Set passed in options if (any)
-                self.setOptions(options);
-
-            },
-            {
-                getMessagesMaxLength: function () {
-                    var self = this,
-                        maxMessageLen = self.getOption('maxMessagesLength');
-                    return context.sjl.classOfIs(maxMessageLen, 'Number') ? maxMessageLen: -1;
-                },
-
-                getMessages: function () {
-                    var self = this,
-                        messages = self.getOption('messages');
-                    return context.sjl.classOfIs(messages, 'Array') ? messages : [];
-                },
-
-                setMessages: function (messages) {
-                    this.options.messages = context.sjl.classOfIs(messages, 'Array') ? messages : [];
-                    return this;
-                },
-
-                clearMessages: function () {
-                    this.options.messages = [];
-                },
-
-                isValid: function (value) {
-                    throw Error('Can not instantiate `AbstractValidator` directly, all class named with ' +
-                        'a prefixed "Abstract" should not be instantiated.');
-                },
-
-                isValueObscured: function () {
-                    var self = this,
-                        valObscured = self.getOption('valueObscured');
-                    return context.sjl.classOfIs(valObscured, 'Boolean') ? valObscured : false;
-                },
-
-                setValue: function (value) {
-                    this.options.value = value;
-                    this.options.messages = [];
-                    return this;
-                },
-
-                getValue: function (value) {
-                    var self = this;
-                    return !context.sjl.classOfIs(value, 'Undefined') ? (function () {
-                        self.setValue(value);
-                        return value;
-                    })() : this.getOption('value');
-                },
-
-                value: function (value) {
-                    var classOfValue = sjl.classOf(value),
-                        retVal = this.get('value');
-                    if (classOfValue !== 'Undefined') {
-                        this.options.value = value;
-                        retVal = this;
-                    }
-                    return retVal;
-                },
-
-                addErrorByKey: function (key) {
-                    var self = this,
-                        messageTemplate = self.getOption('messageTemplates'),
-                        messages = self.getOption('messages');
-
-                    // If key is string
-                    if (context.sjl.classOfIs(key, 'String') &&
-                        context.sjl.isset(messageTemplate[key])) {
-                        if (typeof messageTemplate[key] === 'function') {
-                            messages.push(messageTemplate[key].apply(self));
-                        }
-                        else if (context.sjl.classOfIs(messageTemplate[key], 'String')) {
-                            messages.push(messageTemplate[key]);
-                        }
-                    }
-                    else if (context.sjl.classOfIs(key, 'function')) {
-                        messages.push(key.apply(self));
-                    }
-                    else {
-                        messages.push(key);
-                    }
-                    return self;
-                },
-
-                getMessageTemplates: function () {
-                    return this.options.messageTemplates;
-                },
-
-                setMessageTemplates: function (templates) {
-                    if (!sjl.classOfIs(templates, 'Object')) {
-                        throw new Error('`AddToBagModel.setMessageTemplates` ' +
-                            'expects parameter 1 to be of type "Object".');
-                    }
-                    this.options.messagesTemplates = templates;
-                    return this;
-                },
-
-                updateMessageTemplates: function (templates) {
-                    var self = this;
-                    if (!sjl.classOfIs(templates, 'Object')) {
-                        throw new Error('`AddToBagModel.updateMessageTemplates` ' +
-                            'expects parameter 1 to be of type "Object".');
-                    }
-                    self.options.messageTemplates = sjl.extend(true, self.getMessageTemplates(), templates);
-                    return self;
-                }
-
+            // Extend with optionable and set preliminary defaults
+            Optionable.call(self, {
+                messages: [],
+                messageTemplates: {},
+                messageVariables: {},
+                messagesMaxLength: 100,
+                valueObscured: false,
+                value: null
             });
 
-})(typeof window === 'undefined' ? global : window);
+            // Merge custom templates in if they are set
+            if (sjl.isset(options.customMessageTemplates)) {
+                customTemplates = options.customMessageTemplates;
+                options.customeMessageTemplates = null;
+                delete options.customeMessageTemplates;
+                self.setCustomMessageTemplates(customTemplates);
+            }
+
+            // Set passed in options if (any)
+            self.setOptions(options);
+        };
+
+    BaseValidator = Optionable.extend(BaseValidator, {
+        getMessagesMaxLength: function () {
+            var self = this,
+                maxMessageLen = self.getOption('maxMessagesLength');
+            return sjl.classOfIs(maxMessageLen, 'Number') ? maxMessageLen : -1;
+        },
+
+        getMessages: function () {
+            var self = this,
+                messages = self.getOption('messages');
+            return sjl.classOfIs(messages, 'Array') ? messages : [];
+        },
+
+        setMessages: function (messages) {
+            this.options.messages = sjl.classOfIs(messages, 'Array') ? messages : [];
+            return this;
+        },
+
+        clearMessages: function () {
+            this.options.messages = [];
+        },
+
+        isValid: function (value) {
+            throw Error('Can not instantiate `BaseValidator` directly, all class named with ' +
+                'a prefixed "Base" should not be instantiated.');
+        },
+
+        isValueObscured: function () {
+            var self = this,
+                valObscured = self.getOption('valueObscured');
+            return sjl.classOfIs(valObscured, 'Boolean') ? valObscured : false;
+        },
+
+        setValue: function (value) {
+            this.options.value = value;
+            this.options.messages = [];
+            return this;
+        },
+
+        getValue: function (value) {
+            var self = this;
+            return !sjl.classOfIs(value, 'Undefined') ? (function () {
+                self.setValue(value);
+                return value;
+            })() : this.getOption('value');
+        },
+
+        value: function (value) {
+            var classOfValue = sjl.classOf(value),
+                retVal = this.get('value');
+            if (classOfValue !== 'Undefined') {
+                this.options.value = value;
+                retVal = this;
+            }
+            return retVal;
+        },
+
+        addErrorByKey: function (key) {
+            var self = this,
+                messageTemplate = self.getOption('messageTemplates'),
+                messages = self.getOption('messages');
+
+            // If key is string
+            if (sjl.classOfIs(key, 'String') &&
+                sjl.isset(messageTemplate[key])) {
+                if (typeof messageTemplate[key] === 'function') {
+                    messages.push(messageTemplate[key].apply(self));
+                }
+                else if (sjl.classOfIs(messageTemplate[key], 'String')) {
+                    messages.push(messageTemplate[key]);
+                }
+            }
+            else if (sjl.classOfIs(key, 'function')) {
+                messages.push(key.apply(self));
+            }
+            else {
+                messages.push(key);
+            }
+            return self;
+        },
+
+        getMessageTemplates: function () {
+            return this.options.messageTemplates;
+        },
+
+        setMessageTemplates: function (templates) {
+            if (!sjl.classOfIs(templates, 'Object')) {
+                throw new Error('`AddToBagModel.setMessageTemplates` ' +
+                    'expects parameter 1 to be of type "Object".');
+            }
+            this.options.messagesTemplates = templates;
+            return this;
+        },
+
+        updateMessageTemplates: function (templates) {
+            var self = this;
+            if (!sjl.classOfIs(templates, 'Object')) {
+                throw new Error('`AddToBagModel.updateMessageTemplates` ' +
+                    'expects parameter 1 to be of type "Object".');
+            }
+            self.options.messageTemplates = sjl.extend(true, self.getMessageTemplates(), templates);
+            return self;
+        }
+
+    });
+
+    if (isNodeEnv) {
+        module.exports = BaseValidator;
+    }
+    else {
+        sjl.package('validator.BaseValidator', BaseValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/21/2014.
@@ -1560,173 +2039,181 @@
 
 'use strict';
 
-(function (context) {
+(function () {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        ValidatorChain = function ValidatorChain(options) {
 
-    context.sjl.ValidatorChain = context.sjl.AbstractValidator.extend(
-        function ValidatorChain(options) {
-
-            // Call AbstractValidator's constructor on this with some default options
-            context.sjl.AbstractValidator.call(this, {
+            // Call BaseValidator's constructor on this with some default options
+            BaseValidator.call(this, {
                 breakChainOnFailure: false
             });
 
             // Set options passed, if any
             this.setOptions(options);
 
-        }, {
-            isValid: function (value) {
-                var self = this,
-                    retVal = true,
-                    validators,
-                    validator;
+        };
 
-                // Set value internally and return it or get it
-                value = self.getValue(value);
+    ValidatorChain = BaseValidator.extend(ValidatorChain, {
+        isValid: function (value) {
+            var self = this,
+                retVal = true,
+                validators,
+                validator;
 
-                // If an incorrectly implemented validator is found in chain
-                // throws an error.
-                self.verifyValidatorsInChain();
+            // Set value internally and return it or get it
+            value = self.getValue(value);
 
-                // Clear any existing messages
-                self.clearMessages();
+            // If an incorrectly implemented validator is found in chain
+            // throws an error.
+            self.verifyValidatorsInChain();
 
-                // Get validators
-                validators = self.getValidators();
+            // Clear any existing messages
+            self.clearMessages();
 
-                // If we've made it this far validators are good proceed
-                for (validator in validators) {
-                    if (!validators.hasOwnProperty(validator)) {
-                        continue;
-                    }
-                    validator = validators[validator];
-                    if (validator.isValid(value)) {
-                        continue;
-                    }
+            // Get validators
+            validators = self.getValidators();
 
-                    // Else invalid validator found
-                    retVal = false;
-                    self.appendMessages(validator.getMessages());
-                    if (self.getOption('breakChainOnFailure')) {
-                        break;
-                    }
+            // If we've made it this far validators are good proceed
+            for (validator in validators) {
+                if (!validators.hasOwnProperty(validator)) {
+                    continue;
+                }
+                validator = validators[validator];
+                if (validator.isValid(value)) {
+                    continue;
                 }
 
-                return retVal;
-            },
-
-            addValidator: function (validator) {
-                var self = this;
-                if (self.verifyHasValidatorInterface(validator)) {
-                    self.getValidators().push(validator);
+                // Else invalid validator found
+                retVal = false;
+                self.appendMessages(validator.getMessages());
+                if (self.getOption('breakChainOnFailure')) {
+                    break;
                 }
-                else {
-                    throw new Error('addValidator of ValidatorChain only ' +
-                        'accepts validators that have the validator ' +
-                        'interface ([\'isValid\', \'getMessages\'])');
-                }
-                return self;
-            },
-
-            addValidators: function (validators) {
-                if (context.sjl.classOfIs(validators, 'Array')) {
-                    for (var i = 0; i < validators.length; i += 1) {
-                        this.addValidator(validators[i]);
-                    }
-                }
-                else if (context.sjl.classOfIs(validators, 'Object')) {
-                    for (var validator in validators) {
-                        if (validator.hasOwnProperty(validator)) {
-                            this.addValidator(validators[validator]);
-                        }
-                    }
-                }
-            },
-
-            addByName: function (value) {
-                // @todo flesh this method out
-            },
-
-            prependByName: function (value) {
-                // @todo flesh this method out
-            },
-
-            mergeValidatorChain: function (validatorChain) {
-                // @todo flesh this method out
-            },
-
-            appendMessages: function (messages) {
-                var self = this;
-                self.setMessages(self.getMessages().concat(messages));
-                return self;
-            },
-
-            getValidators: function () {
-                var self = this;
-                if (!context.sjl.isset(self.options.validators)) {
-                    self.options.validators = [];
-                }
-                return self.options.validators;
-            },
-
-            setValidators: function (validators) {
-                if (context.sjl.classOfIs(validators, 'Array')) {
-                    this.addValidators(validators);
-                }
-                else {
-                    throw new Error('`setValidators` of `ValidatorChain` expects ' +
-                        '`param1` to be of type "Array".');
-                }
-                return this;
-            },
-
-            verifyHasValidatorInterface: function (validator) {
-                var _interface = ['isValid', 'getMessages'],
-                    retVal = true,
-                    value;
-                for (value in _interface) {
-                    if (!_interface.hasOwnProperty(value)) {
-                        continue;
-                    }
-                    value = _interface[value];
-                    if (!context.sjl.isset(validator[value]) ||
-                        typeof validator[value] !== 'function') {
-                        retVal = false;
-                        break;
-                    }
-                }
-                return retVal;
-            },
-
-            verifyValidatorsInChain: function (validatorChain) {
-
-                var self = this,
-                    validators,
-                    validator;
-
-                // Get validtor chain
-                validatorChain = validatorChain || self;
-
-                // Get validators
-                validators = validatorChain.getValidators();
-
-                for (validator in validators) {
-                    if (!validators.hasOwnProperty(validator)) {
-                        continue;
-                    }
-                    validator = validators[validator];
-                    if (!self.verifyHasValidatorInterface(validator)) {
-                        throw new Error('A validator with out the validator interface' +
-                        'was found in ValidatorChain.  Please check the validators you are passing ' +
-                        'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
-                    }
-                }
-
-                return self;
             }
 
-        });
+            return retVal;
+        },
 
-})(typeof window === 'undefined' ? global : window);
+        addValidator: function (validator) {
+            var self = this;
+            if (self.verifyHasValidatorInterface(validator)) {
+                self.getValidators().push(validator);
+            }
+            else {
+                throw new Error('addValidator of ValidatorChain only ' +
+                    'accepts validators that have the validator ' +
+                    'interface ([\'isValid\', \'getMessages\'])');
+            }
+            return self;
+        },
+
+        addValidators: function (validators) {
+            if (sjl.classOfIs(validators, 'Array')) {
+                for (var i = 0; i < validators.length; i += 1) {
+                    this.addValidator(validators[i]);
+                }
+            }
+            else if (sjl.classOfIs(validators, 'Object')) {
+                for (var validator in validators) {
+                    if (validator.hasOwnProperty(validator)) {
+                        this.addValidator(validators[validator]);
+                    }
+                }
+            }
+        },
+
+        addByName: function (value) {
+            // @todo flesh this method out
+        },
+
+        prependByName: function (value) {
+            // @todo flesh this method out
+        },
+
+        mergeValidatorChain: function (validatorChain) {
+            // @todo flesh this method out
+        },
+
+        appendMessages: function (messages) {
+            var self = this;
+            self.setMessages(self.getMessages().concat(messages));
+            return self;
+        },
+
+        getValidators: function () {
+            var self = this;
+            if (!sjl.isset(self.options.validators)) {
+                self.options.validators = [];
+            }
+            return self.options.validators;
+        },
+
+        setValidators: function (validators) {
+            if (sjl.classOfIs(validators, 'Array')) {
+                this.addValidators(validators);
+            }
+            else {
+                throw new Error('`setValidators` of `ValidatorChain` expects ' +
+                    '`param1` to be of type "Array".');
+            }
+            return this;
+        },
+
+        verifyHasValidatorInterface: function (validator) {
+            var _interface = ['isValid', 'getMessages'],
+                retVal = true,
+                value;
+            for (value in _interface) {
+                if (!_interface.hasOwnProperty(value)) {
+                    continue;
+                }
+                value = _interface[value];
+                if (!sjl.isset(validator[value]) ||
+                    typeof validator[value] !== 'function') {
+                    retVal = false;
+                    break;
+                }
+            }
+            return retVal;
+        },
+
+        verifyValidatorsInChain: function (validatorChain) {
+
+            var self = this,
+                validators,
+                validator;
+
+            // Get validtor chain
+            validatorChain = validatorChain || self;
+
+            // Get validators
+            validators = validatorChain.getValidators();
+
+            for (validator in validators) {
+                if (!validators.hasOwnProperty(validator)) {
+                    continue;
+                }
+                validator = validators[validator];
+                if (!self.verifyHasValidatorInterface(validator)) {
+                    throw new Error('A validator with out the validator interface' +
+                        'was found in ValidatorChain.  Please check the validators you are passing ' +
+                        'in and make sure that they have the validator interface (["isValid", "getMessages"]).');
+                }
+            }
+            return self;
+        }
+    });
+
+    if (isNodeEnv) {
+        module.exports = ValidatorChain;
+    }
+    else {
+        sjl.package('validator.ValidatorChain', ValidatorChain);
+    }
+
+})();
 
 
 /**
@@ -1739,30 +2226,35 @@
 
 'use strict';
 
-(function (context) {
+(function () {
 
-    context.sjl.AlphaNumValidator = context.sjl.AbstractValidator.extend(function AlphaNumValidator (options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        AlphaNumValidator = function AlphaNumValidator (options) {
 
-        // Set defaults and extend with abstract validator
-        context.sjl.AbstractValidator.call(this, {
-            messageTemplates: {
-                NOT_ALPHA_NUMERIC: function () {
-                    return 'The input value is not alpha-numeric.  Value received: "' + this.getMin() + '" and "' + this.getMax() + '".';
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
+                messageTemplates: {
+                    NOT_ALPHA_NUMERIC: function () {
+                        return 'The input value is not alpha-numeric.  Value received: "' + this.getMin() + '" and "' + this.getMax() + '".';
+                    }
                 }
-            }
-        });
+            });
 
-        // Set options passed, if any
-        this.setOptions(options);
+            // Set options passed, if any
+            this.setOptions(options);
 
-    }, {
+        };
+
+    AlphaNumValidator = BaseValidator.extend(AlphaNumValidator, {
         isValid: function (value) {
             var self = this,
                 retVal = false;
 
-            value = context.sjl.isset(value) ? value : self.getValue();
+            value = sjl.isset(value) ? value : self.getValue();
 
-            if (!context.sjl.isset(value)) {
+            if (!sjl.isset(value)) {
                 self.addErrorByKey('NOT_ALPHA_NUMERIC');
                 return retVal;
             }
@@ -1778,7 +2270,14 @@
 
     });
 
-})(typeof window === 'undefined' ? global : window);
+    if (isNodeEnv) {
+        module.exports = AlphaNumValidator;
+    }
+    else {
+        sjl.package('validator.AlphaNumValidator', AlphaNumValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/21/2014.
@@ -1786,13 +2285,14 @@
 
 'use strict';
 
-(function (context) {
+(function () {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        EmptyValidator = function EmptyValidator(options) {
 
-    context.sjl.EmptyValidator = context.sjl.AbstractValidator.extend(
-        function EmptyValidator(options) {
-
-            // Set defaults and extend with abstract validator
-            context.sjl.AbstractValidator.call(this, {
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
                 messageTemplates: {
                     EMPTY_NOT_ALLOWED: function () {
                         return 'Empty values are not allowed.';
@@ -1802,33 +2302,41 @@
 
             // Set options passed, if any
             this.setOptions(options);
+        };
 
-        }, {
+    EmptyValidator = BaseValidator.extend(EmptyValidator, {
 
-            isValid: function (value) {
-                var self = this,
-                    retVal = false;
+        isValid: function (value) {
+            var self = this,
+                retVal = false;
 
-                // Clear any existing messages
-                self.clearMessages();
+            // Clear any existing messages
+            self.clearMessages();
 
-                // Set and get or get value (gets the set value if value is undefined
-                value = self.getValue(value);
+            // Set and get or get value (gets the set value if value is undefined
+            value = self.getValue(value);
 
-                // Run the test
-                retVal = !context.sjl.empty(value);
+            // Run the test
+            retVal = !sjl.empty(value);
 
-                // If test failed
-                if (retVal === false) {
-                    self.addErrorByKey('EMPTY_NOT_ALLOWED');
-                }
-
-                return retVal;
+            // If test failed
+            if (retVal === false) {
+                self.addErrorByKey('EMPTY_NOT_ALLOWED');
             }
 
-        });
+            return retVal;
+        }
 
-})(typeof window === 'undefined' ? global : window);
+    });
+
+    if (isNodeEnv) {
+        module.exports = EmptyValidator;
+    }
+    else {
+        sjl.package('validator.EmptyValidator', EmptyValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/21/2014.
@@ -1837,44 +2345,49 @@
 
 'use strict';
 
-(function (context) {
+(function () {
 
     function throwNotIntError (value, paramName, funcName, expectedType) {
         throw Error(funcName + ' expects ' + paramName +
             ' to be of type "' + expectedType + '".  Value received: ' + value);
     }
 
-    context.sjl.InRangeValidator = context.sjl.AbstractValidator.extend(function InRangeValidator (options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        InRangeValidator = function InRangeValidator (options) {
 
-        // Set defaults and extend with abstract validator
-        context.sjl.AbstractValidator.call(this, {
-            min: 0,
-            messageTemplates: {
-                NOT_IN_RANGE_EXCLUSIVE: function () {
-                    return 'The input value is not exclusively between "' + this.getMin() + '" and "' + this.getMax() + '".';
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
+                min: 0,
+                messageTemplates: {
+                    NOT_IN_RANGE_EXCLUSIVE: function () {
+                        return 'The input value is not exclusively between "' + this.getMin() + '" and "' + this.getMax() + '".';
+                    },
+                    NOT_IN_RANGE_INCLUSVE: function () {
+                        return 'The input value is not inclusively between "' + this.getMin() + '" and "' + this.getMax() + '".';
+                    },
+                    INVALID_TYPE: function () {
+                        return 'The value "' + this.getValue() + '" is expected to be of type "Number".';
+                    }
                 },
-                NOT_IN_RANGE_INCLUSVE: function () {
-                    return 'The input value is not inclusively between "' + this.getMin() + '" and "' + this.getMax() + '".';
-                },
-                INVALID_TYPE: function () {
-                    return 'The value "' + this.getValue() + '" is expected to be of type "Number".';
-                }
-            },
-            inclusive: true,
-            max: 9999
-        });
+                inclusive: true,
+                max: 9999
+            });
 
-        // Set options passed, if any
-        this.setOptions(options);
+            // Set options passed, if any
+            this.setOptions(options);
 
-    }, {
+        };
+
+    InRangeValidator = BaseValidator.extend(InRangeValidator, {
         isValid: function (value) {
             var self = this,
                 retVal = false;
 
-            value = context.sjl.isset(value) ? value : self.getValue();
+            value = sjl.isset(value) ? value : self.getValue();
 
-            if (!context.sjl.classOfIs(value, 'Number')) {
+            if (!sjl.classOfIs(value, 'Number')) {
                 self.addErrorByKey('INVALID_TYPE');
                 return retVal;
             }
@@ -1907,21 +2420,21 @@
         },
 
         setMin: function (min) {
-            if (context.sjl.classOfIs(min, 'Number')) {
+            if (sjl.classOfIs(min, 'Number')) {
                 return this.setOption('min', min);
             }
             throwNotIntError(min, 'min', 'InRangeValidator.setMin', 'Number');
         },
 
         setMax: function (max) {
-            if (context.sjl.classOfIs(max, 'Number')) {
+            if (sjl.classOfIs(max, 'Number')) {
                 return this.setOption('max', max);
             }
             throwNotIntError(max, 'max', 'InRangeValidator.setMax', 'Number');
         },
 
         setInclusive: function (value) {
-            if (context.sjl.classOfIs(value, 'Boolean')) {
+            if (sjl.classOfIs(value, 'Boolean')) {
                 return this.setOption('inclusive', value);
             }
             throwNotIntError(value, 'parameter 1', 'InRangeValidator.setInclusive', 'Boolean');
@@ -1929,7 +2442,14 @@
 
     });
 
-})(typeof window === 'undefined' ? global : window);
+    if (isNodeEnv) {
+        module.exports = InRangeValidator;
+    }
+    else {
+        sjl.package('validator.InRangeValidator', InRangeValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/21/2014.
@@ -1937,13 +2457,15 @@
 
 'use strict';
 
-(function (context) {
+(function () {
 
-    context.sjl.RegexValidator = context.sjl.AbstractValidator.extend(
-        function RegexValidator(options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        RegexValidator = function RegexValidator(options) {
 
-            // Set defaults and extend with abstract validator
-            context.sjl.AbstractValidator.call(this, {
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
                 pattern: /./,
                 messageTemplates: {
                     DOES_NOT_MATCH_PATTERN: function () {
@@ -1957,51 +2479,60 @@
             // Set options passed, if any
             this.setOptions(options);
 
-        }, {
-            isValid: function (value) {
-                var self = this,
-                    retVal = false;
+        };
 
-                // Clear any existing messages
+    RegexValidator = BaseValidator.extend(RegexValidator, {
+        isValid: function (value) {
+            var self = this,
+                retVal = false;
+
+            // Clear any existing messages
+            self.clearMessages();
+
+            // Set and get or get value (gets the set value if value is undefined
+            value = self.getValue(value);
+
+            // Run the test
+            retVal = self.getPattern().test(value);
+
+            // Clear messages before checking validity
+            if (self.getMessages().length > 0) {
                 self.clearMessages();
-
-                // Set and get or get value (gets the set value if value is undefined
-                value = self.getValue(value);
-
-                // Run the test
-                retVal = self.getPattern().test(value);
-
-                // Clear messages before checking validity
-                if (self.getMessages().length > 0) {
-                    self.clearMessages();
-                }
-
-                // If test failed
-                if (retVal === false) {
-                    self.addErrorByKey('DOES_NOT_MATCH_PATTERN');
-                }
-
-                return retVal;
-            },
-
-            getPattern: function () {
-                return this.options.pattern;
-            },
-
-            setPattern: function (pattern) {
-                if (context.sjl.classOfIs(pattern, 'RegExp')) {
-                    this.clearMessages();
-                    this.options.pattern = pattern;
-                    return pattern;
-                }
-                throw new Error('RegexValidator.setPattern expects `pattern` ' +
-                    'to be of type "RegExp".  Type and value recieved: type: "' +
-                    context.sjl.classOf(pattern) + '"; value: "' + pattern + '"');
             }
 
-        });
+            // If test failed
+            if (retVal === false) {
+                self.addErrorByKey('DOES_NOT_MATCH_PATTERN');
+            }
 
-})(typeof window === 'undefined' ? global : window);
+            return retVal;
+        },
+
+        getPattern: function () {
+            return this.options.pattern;
+        },
+
+        setPattern: function (pattern) {
+            if (sjl.classOfIs(pattern, 'RegExp')) {
+                this.clearMessages();
+                this.options.pattern = pattern;
+                return pattern;
+            }
+            throw new Error('RegexValidator.setPattern expects `pattern` ' +
+                'to be of type "RegExp".  Type and value recieved: type: "' +
+                sjl.classOf(pattern) + '"; value: "' + pattern + '"');
+        }
+
+    });
+
+    if (isNodeEnv) {
+        module.exports = RegexValidator;
+    }
+    else {
+        sjl.package('validator.RegexValidator', RegexValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/21/2014.
@@ -2009,13 +2540,15 @@
 
 'use strict';
 
-(function (context) {
+(function () {
 
-    context.sjl.EmailValidator = context.sjl.RegexValidator.extend(
-        function EmailValidator(options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        RegexValidator = sjl.package.validator.RegexValidator,
+        EmailValidator = function EmailValidator(options) {
 
-            // Set defaults and extend with abstract validator
-            context.sjl.RegexValidator.call(this, {
+            // Set defaults and extend with Base validator
+            RegexValidator.call(this, {
                 /**
                  * Pulled Directly from the php 5.5 source
                  * ------------------------------------------------------------------------
@@ -2055,122 +2588,136 @@
             // Set options passed, if any
             this.setOptions(options);
 
-        }, {
+        };
 
-            isValid: function (value) {
-                var self = this,
-                    retVal = false;
+    EmailValidator = RegexValidator.extend(EmailValidator, {
 
-                // Clear any existing messages
-                self.clearMessages();
+        isValid: function (value) {
+            var self = this,
+                retVal = false;
 
-                // Set and get or get value (gets the set value if value is undefined
-                value = self.getValue(value);
+            // Clear any existing messages
+            self.clearMessages();
 
-                // Run the test
-                retVal = self.getPattern().test(value);
+            // Set and get or get value (gets the set value if value is undefined
+            value = self.getValue(value);
 
-                // If test failed
-                if (retVal === false) {
-                    self.addErrorByKey('INVALID_EMAIL');
-                }
+            // Run the test
+            retVal = self.getPattern().test(value);
 
-                return retVal;
+            // If test failed
+            if (retVal === false) {
+                self.addErrorByKey('INVALID_EMAIL');
             }
 
-        });
+            return retVal;
+        }
 
-})(typeof window === 'undefined' ? global : window);
+    });
+
+    if (isNodeEnv) {
+        module.exports = EmailValidator;
+    }
+    else {
+        sjl.package('validator.EmailValidator', EmailValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 1/21/2015.
  * Initial idea copied from the Zend Framework 2's Between Validator
  * @todo add `allowSigned` check(s).
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    context.sjl.NumberValidator = context.sjl.AbstractValidator.extend(function NumberValidator (options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        NumberValidator = function NumberValidator(options) {
 
-        // Set defaults and extend with abstract validator
-        context.sjl.AbstractValidator.call(this, {
-            messageTemplates: {
-                NOT_A_NUMBER: function () {
-                    return 'The input value is not a number.  Value received: "' + this.getValue() + '".';
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
+                messageTemplates: {
+                    NOT_A_NUMBER: function () {
+                        return 'The input value is not a number.  Value received: "' + this.getValue() + '".';
+                    },
+                    NOT_IN_RANGE: function () {
+                        return 'The number passed in is not within the specified '
+                            + (this.get('inclusive') ? 'inclusive' : '') + ' range. ' +
+                            ' Value received: "' + this.getValue() + '".';
+                    },
+                    NO_FLOATS_ALLOWED: function () {
+                        return 'No floats allowed.  ' +
+                            'Value received: "' + this.getValue() + '".';
+                    },
+                    NO_COMMAS_ALLOWED: function () {
+                        return 'No commas allowed.  ' +
+                            'Value received: "' + this.getValue() + '".';
+                    }
                 },
-                NOT_IN_RANGE: function () {
-                    return 'The number passed in is not within the specified '
-                        + (this.get('inclusive') ? 'inclusive' : '') + ' range. ' +
-                        ' Value received: "' + this.getValue() + '".';
+                regexForHex: /^(?:(?:\dx)|(?:\#))[\da-z]+$/i,
+                regexForOctal: /^0\d+?$/,
+                regexForBinary: /^\db\d+$/i,
+                regexForScientific: /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+(?:\.\d+)?)?$/i,
+                allowFloat: true,
+                allowCommas: false,
+                allowSigned: false,
+                allowBinary: false,
+                allowHex: false,
+                allowOctal: false,
+                allowScientific: false,
+                checkRange: false,
+                defaultRangeSettings: {
+                    min: Number.NEGATIVE_INFINITY,
+                    max: Number.POSITIVE_INFINITY,
+                    inclusive: true
                 },
-                NO_FLOATS_ALLOWED: function () {
-                    return 'No floats allowed.  ' +
-                        'Value received: "' + this.getValue() + '".';
-                },
-                NO_COMMAS_ALLOWED: function () {
-                    return 'No commas allowed.  ' +
-                        'Value received: "' + this.getValue() + '".';
-                }
-            },
-            regexForHex:  /^(?:(?:\dx)|(?:\#))[\da-z]+$/i,
-            regexForOctal: /^0\d+?$/,
-            regexForBinary: /^\db\d+$/i,
-            regexForScientific: /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+(?:\.\d+)?)?$/i,
-            allowFloat: true,
-            allowCommas: false,
-            allowSigned: false,
-            allowBinary: false,
-            allowHex: false,
-            allowOctal: false,
-            allowScientific: false,
-            checkRange: false,
-            defaultRangeSettings: {
                 min: Number.NEGATIVE_INFINITY,
                 max: Number.POSITIVE_INFINITY,
                 inclusive: true
-            },
-            min: Number.NEGATIVE_INFINITY,
-            max: Number.POSITIVE_INFINITY,
-            inclusive: true
-        });
+            });
 
-        // Set options passed, if any
-        this.setOptions(options);
+            // Set options passed, if any
+            this.setOptions(options);
 
-    }, {
+        };
+
+    NumberValidator = BaseValidator.extend(NumberValidator, {
         isValid: function (value) {
             var self = this,
                 retVal = false,
 
                 originalValue = value,
 
-                // Booleans
-                allowFloat =  self.get('allowFloat'),
-                allowCommas =  self.get('allowCommas'),
-                //allowSigned =  self.get('allowSigned'),
-                allowBinary =  self.get('allowBinary'),
-                allowHex =  self.get('allowHex'),
-                allowOctal =  self.get('allowOctal'),
+            // Booleans
+                allowFloat = self.get('allowFloat'),
+                allowCommas = self.get('allowCommas'),
+            //allowSigned =  self.get('allowSigned'),
+                allowBinary = self.get('allowBinary'),
+                allowHex = self.get('allowHex'),
+                allowOctal = self.get('allowOctal'),
                 allowScientific = self.get('allowScientific'),
 
-                // Regexes'
+            // Regexes'
                 regexForHex = self.get('regexForHex'),
-                regexForOctal =  self.get('regexForOctal'),
-                regexForBinary =  self.get('regexForBinary'),
-                regexForScientific =  self.get('regexForScientific'),
+                regexForOctal = self.get('regexForOctal'),
+                regexForBinary = self.get('regexForBinary'),
+                regexForScientific = self.get('regexForScientific'),
 
-                // Class of initial value
-                classOfValue = context.sjl.classOf(value),
+            // Class of initial value
+                classOfValue = sjl.classOf(value),
 
-                // Check range `Boolean`
+            // Check range `Boolean`
                 checkRange = self.get('checkRange'),
 
-                // Used if `checkRange` is true
+            // Used if `checkRange` is true
                 inRangeValidator;
 
             // Get value
-            value = context.sjl.isset(value) ? value : self.getValue();
+            value = sjl.isset(value) ? value : self.getValue();
 
             // If number return true
             if (classOfValue === 'Number') {
@@ -2242,7 +2789,7 @@
                 }
 
                 // Run validator
-                inRangeValidator = new sjl.NumberValidator(self.get(['min', 'max', 'inclusive']));
+                inRangeValidator = new NumberValidator(self.get(['min', 'max', 'inclusive']));
                 inRangeValidator.setValue(value);
                 retVal = inRangeValidator.isValid();
 
@@ -2267,9 +2814,16 @@
 
         } // End of `isValid` function
 
-    }); // End of `sjl.NumberValidator` declaration
+    }); // End of `NumberValidator` declaration
 
-})(typeof window === 'undefined' ? global : window);
+    if (isNodeEnv) {
+        module.exports = NumberValidator;
+    }
+    else {
+        sjl.package('validator.NumberValidator', NumberValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 4/22/2015.
@@ -2280,13 +2834,14 @@
 
 'use strict';
 
-(function (context) {
+(function () {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        PostCodeValidator = function PostCodeValidator(options) {
 
-    context.sjl.PostCodeValidator = context.sjl.AbstractValidator.extend(
-        function PostCodeValidator(options) {
-
-            // Set defaults and extend with abstract validator
-            context.sjl.AbstractValidator.call(this, {
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
                 region: 'US',
                 format: null,
                 service: null,
@@ -2478,124 +3033,133 @@
             // Set options passed, if any
             this.setOptions(options);
 
-        }, {
-            isValid: function (value) {
-                var self = this,
-                    retVal = false,
-                    classOfValue,
-                    countryCode = self.region().toUpperCase(),
-                    postCodeRegexes,
-                    format;
+        };
 
-                // Clear any existing messages
-                self.clearMessages();
+    PostCodeValidator = BaseValidator.extend(PostCodeValidator, {
+        isValid: function (value) {
+            var self = this,
+                retVal = false,
+                classOfValue,
+                countryCode = self.region().toUpperCase(),
+                postCodeRegexes,
+                format;
 
-                // Set and get
-                value = value || self.value();
+            // Clear any existing messages
+            self.clearMessages();
 
-                classOfValue = sjl.classOf(value);
+            // Set and get
+            value = value || self.value();
 
-                // If value is not a String or is empty (0, false, '', {}, [], null, undefined);,
-                // set 'invalid type' error
-                if (classOfValue !== 'String' || sjl.empty(value)) {
-                    self.addErrorByKey('INVALID_VALUE_TYPE');
-                }
+            classOfValue = sjl.classOf(value);
 
-                // Get regexes
-                postCodeRegexes = this.get('postCodeRegexes');
-
-                if (!postCodeRegexes.hasOwnProperty(countryCode)) {
-                    self.addErrorByKey('REGION_NOT_FOUND');
-                }
-
-                // Get format regex
-                format = this.format(postCodeRegexes[countryCode]).format();
-
-                // Run the test
-                retVal = format.test(value);
-
-                // If test failed
-                if (retVal === false) {
-                    self.addErrorByKey('INVALID_VALUE');
-                }
-
-                return retVal;
-            },
-
-            region: function (region) {
-                var classOfLocale = sjl.classOf(region),
-                    retVal = this.get('region');
-                if (classOfLocale !== 'String' && classOfLocale !== 'Undefined') {
-                    throw new Error('');
-                }
-                if (classOfLocale !== 'Undefined') {
-                    this.set('region', region.toUpperCase());
-                    retVal = this;
-                }
-
-                return retVal;
-            },
-
-            format: function (format) {
-                var classOfFormat = sjl.classOf(format),
-                    retVal = this.get('format');
-                if (classOfFormat !== 'String'
-                        && classOfFormat !== 'RegExp'
-                        && classOfFormat !== 'Undefined') {
-                    throw new Error('`sjl.PostCodeValidator.format` method only accepts a `format` parameter of type' +
-                        ' "String", "RegExp", or "Undefined".  `format` parameter value received: "' + format + '".');
-                }
-                if (classOfFormat !== 'Undefined') {
-                    // Normalize regex
-                    if (classOfFormat === 'String') {
-                        format = (format.indexOf('^') !== 0 ? '^' : '') + format;
-                        format = format + (format.indexOf('$') !== format.length -1 ? '$' : '');
-                        format = new RegExp(format);
-                    }
-                    this.set('format', format);
-                    retVal = this;
-                }
-                return retVal;
-            },
-
-            service: function (service) {
-                var classOfService = sjl.classOf(service),
-                    retVal = this.get('service');
-                if (classOfService !== 'Function' && classOfService !== 'Undefined') {
-                    throw new Error('');
-                }
-                if (classOfService !== 'Undefined') {
-                    this.set('service', service);
-                    retVal = this;
-                }
-                return retVal;
+            // If value is not a String or is empty (0, false, '', {}, [], null, undefined);,
+            // set 'invalid type' error
+            if (classOfValue !== 'String' || sjl.empty(value)) {
+                self.addErrorByKey('INVALID_VALUE_TYPE');
             }
 
-        });
+            // Get regexes
+            postCodeRegexes = this.get('postCodeRegexes');
 
-})(typeof window === 'undefined' ? global : window);
+            if (!postCodeRegexes.hasOwnProperty(countryCode)) {
+                self.addErrorByKey('REGION_NOT_FOUND');
+            }
+
+            // Get format regex
+            format = this.format(postCodeRegexes[countryCode]).format();
+
+            // Run the test
+            retVal = format.test(value);
+
+            // If test failed
+            if (retVal === false) {
+                self.addErrorByKey('INVALID_VALUE');
+            }
+
+            return retVal;
+        },
+
+        region: function (region) {
+            var classOfLocale = sjl.classOf(region),
+                retVal = this.get('region');
+            if (classOfLocale !== 'String' && classOfLocale !== 'Undefined') {
+                throw new Error('');
+            }
+            if (classOfLocale !== 'Undefined') {
+                this.set('region', region.toUpperCase());
+                retVal = this;
+            }
+
+            return retVal;
+        },
+
+        format: function (format) {
+            var classOfFormat = sjl.classOf(format),
+                retVal = this.get('format');
+            if (classOfFormat !== 'String'
+                && classOfFormat !== 'RegExp'
+                && classOfFormat !== 'Undefined') {
+                throw new Error('`PostCodeValidator.format` method only accepts a `format` parameter of type' +
+                    ' "String", "RegExp", or "Undefined".  `format` parameter value received: "' + format + '".');
+            }
+            if (classOfFormat !== 'Undefined') {
+                // Normalize regex
+                if (classOfFormat === 'String') {
+                    format = (format.indexOf('^') !== 0 ? '^' : '') + format;
+                    format = format + (format.indexOf('$') !== format.length - 1 ? '$' : '');
+                    format = new RegExp(format);
+                }
+                this.set('format', format);
+                retVal = this;
+            }
+            return retVal;
+        },
+
+        service: function (service) {
+            var classOfService = sjl.classOf(service),
+                retVal = this.get('service');
+            if (classOfService !== 'Function' && classOfService !== 'Undefined') {
+                throw new Error('');
+            }
+            if (classOfService !== 'Undefined') {
+                this.set('service', service);
+                retVal = this;
+            }
+            return retVal;
+        }
+
+    });
+
+    if (isNodeEnv) {
+        module.exports = PostCodeValidator;
+    }
+    else {
+        sjl.package('validator.PostCodeValidator', PostCodeValidator);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/24/2014.
  */
-/**
- * Created by Ely on 7/21/2014.
- */
 
-'use strict';
+(function () {
 
-(function (context) {
+    'use strict';
 
-    context.sjl.Input = context.sjl.Optionable.extend(
-        function Input(options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Optionable = sjl.package.stdlib.Optionable,
+        ValidatorChain = sjl.package.validator.ValidatorChain,
+        Input = function Input(options) {
             var alias = null;
 
-            if (context.sjl.classOfIs(options, 'String')) {
+            if (sjl.classOfIs(options, 'String')) {
                 alias = options;
             }
 
             // Set defaults as options on this class
-            context.sjl.Optionable.call(this, {
+            Optionable.call(this, {
                 allowEmpty: false,
                 continueIfEmpty: true,
                 breakOnFailure: false,
@@ -2608,7 +3172,7 @@
                 messages: []
             });
 
-            if (!context.sjl.empty(options)) {
+            if (!sjl.empty(options)) {
                 this.setOptions(options);
             }
 
@@ -2617,202 +3181,212 @@
 
             // Only functions on objects;  Will
             // ignore options if it is a string
-            //if (context.sjl.classOfIs(options, 'Object')) {
+            //if (sjl.classOfIs(options, 'Object')) {
             //    sjl.extend(true, this.options, options, true);
             //}
 
-        }, {
+        };
 
-            /**
-             * This is a crude implementation
-             * @todo review if we really want to have fallback value
-             *      functionality for javascript
-             * @returns {Boolean}
-             */
-            isValid: function (value) {
+    Input = Optionable.extend(Input, {
 
-                var self = this,
+        /**
+         * This is a crude implementation
+         * @todo review if we really want to have fallback value
+         *      functionality for javascript
+         * @returns {Boolean}
+         */
+        isValid: function (value) {
 
-                    // Get the validator chain, value and validate
-                    validatorChain = self.getValidatorChain(),
+            var self = this,
 
-                    retVal = false;
+            // Get the validator chain, value and validate
+                validatorChain = self.getValidatorChain(),
 
-                // Clear messages
-                self.clearMessages();
+                retVal = false;
 
-                // Check whether we need to add an empty validator
-                if (!self.options.isValidHasRun && !self.getContinueIfEmpty()) {
-                    validatorChain.addValidator(new context.sjl.EmptyValidator());
-                }
+            // Clear messages
+            self.clearMessages();
 
-                value = value || self.getValue();
-                retVal = validatorChain.isValid(value);
-
-                // Fallback value
-                if (retVal === false && self.hasFallbackValue()) {
-                    self.setValue(self.getFallbackValue());
-                    retVal = true;
-                }
-
-                // Set messages internally
-                self.setMessages();
-
-                // Protect from adding programmatic validators more than once..
-                if (!self.options.isValidHasRun) {
-                    self.options.isValidHasRun= true;
-                }
-
-                return retVal;
-            },
-
-            getInputFilter: function () {
-                return this.options.inputFilter;
-            },
-
-            setInputFilter: function (value) {
-                this.options.inputFilter = value;
-            },
-
-            getFilterChain: function () {
-                return this.options.filterChain;
-            },
-
-            setFilterChain: function (value) {
-                this.options.filterChain = value;
-            },
-
-            getValidatorChain: function () {
-                var self = this;
-                if (!context.sjl.isset(self.options.validatorChain)) {
-                    self.options.validatorChain = new context.sjl.ValidatorChain({
-                        breakOnFailure: self.getBreakOnFailure()
-                    });
-                }
-                return self.options.validatorChain;
-            },
-
-            setValidatorChain: function (value) {
-                if (context.sjl.classOfIs(value, 'Object')
-                    && context.sjl.isset(value.validators)) {
-                    this.getValidatorChain().setOption('validators', value.validators);
-                }
-                else {
-                    this.options.validatorChain = value;
-                }
-                return this;
-            },
-
-            getAlias: function () {
-                return this.options.alias;
-            },
-
-            setAlias: function (value) {
-                this.options.alias = value;
-            },
-
-            getRawValue: function () {
-                return this.options.rawValue;
-            },
-
-            setRawValue: function (value) {
-                this.options.rawValue = value;
-            },
-
-            getValue: function (value) {
-                return this.options.value;
-            },
-
-            setValue: function (value) {
-                this.options.value =
-                    this.options.rawValue = value;
-            },
-
-            getFallbackValue: function () {
-                return this.options.fallbackValue;
-            },
-
-            setFallbackValue: function (value) {
-                this.options.fallbackValue = value;
-            },
-
-            hasFallbackValue: function () {
-                return !context.sjl.classOfIs(this.getFallbackValue(), 'Undefined') &&
-                    !context.sjl.classOfIs(this.getFallbackValue(), 'Null');
-            },
-
-            getRequired: function () {
-                return this.options.required;
-            },
-
-            setRequired: function (value) {
-                this.options.required = value;
-            },
-
-            getAllowEmpty: function () {
-                return this.options.allowEmpty;
-            },
-
-            setAllowEmpty: function (value) {
-                this.options.allowEmpty = value;
-            },
-
-            getBreakOnFailure: function () {
-                return this.options.breakOnFailure;
-            },
-
-            setBreakOnFailure: function (value) {
-                this.options.breakOnFailure = value;
-            },
-
-            getContinueIfEmpty: function () {
-                return this.options.continueIfEmpty;
-            },
-
-            setContinueIfEmpty: function (value) {
-                this.options.continueIfEmpty = value;
-            },
-
-            clearMessages: function () {
-                this.options.messages = [];
-            },
-
-            setMessages: function (messages) {
-                var self = this;
-                if (context.sjl.classOfIs(messages, 'Array')) {
-                    self.options.messages = messages;
-                }
-                else {
-                    self.options.messages = self.getValidatorChain().getMessages();
-                }
-                return self;
-            },
-
-            getMessages: function () {
-                var self = this;
-                if (!context.sjl.isset(self.options.messages)) {
-                    self.options.messages = [];
-                }
-                return self.options.messages;
+            // Check whether we need to add an empty validator
+            if (!self.options.isValidHasRun && !self.getContinueIfEmpty()) {
+                validatorChain.addValidator(new sjl.EmptyValidator());
             }
-        });
 
-})(typeof window === 'undefined' ? global : window);
+            value = value || self.getValue();
+            retVal = validatorChain.isValid(value);
+
+            // Fallback value
+            if (retVal === false && self.hasFallbackValue()) {
+                self.setValue(self.getFallbackValue());
+                retVal = true;
+            }
+
+            // Set messages internally
+            self.setMessages();
+
+            // Protect from adding programmatic validators more than once..
+            if (!self.options.isValidHasRun) {
+                self.options.isValidHasRun = true;
+            }
+
+            return retVal;
+        },
+
+        getInputFilter: function () {
+            return this.options.inputFilter;
+        },
+
+        setInputFilter: function (value) {
+            this.options.inputFilter = value;
+        },
+
+        getFilterChain: function () {
+            return this.options.filterChain;
+        },
+
+        setFilterChain: function (value) {
+            this.options.filterChain = value;
+        },
+
+        getValidatorChain: function () {
+            var self = this;
+            if (!sjl.isset(self.options.validatorChain)) {
+                self.options.validatorChain = new ValidatorChain({
+                    breakOnFailure: self.getBreakOnFailure()
+                });
+            }
+            return self.options.validatorChain;
+        },
+
+        setValidatorChain: function (value) {
+            if (sjl.classOfIs(value, 'Object')
+                && sjl.isset(value.validators)) {
+                this.getValidatorChain().setOption('validators', value.validators);
+            }
+            else {
+                this.options.validatorChain = value;
+            }
+            return this;
+        },
+
+        getAlias: function () {
+            return this.options.alias;
+        },
+
+        setAlias: function (value) {
+            this.options.alias = value;
+        },
+
+        getRawValue: function () {
+            return this.options.rawValue;
+        },
+
+        setRawValue: function (value) {
+            this.options.rawValue = value;
+        },
+
+        getValue: function (value) {
+            return this.options.value;
+        },
+
+        setValue: function (value) {
+            this.options.value =
+                this.options.rawValue = value;
+        },
+
+        getFallbackValue: function () {
+            return this.options.fallbackValue;
+        },
+
+        setFallbackValue: function (value) {
+            this.options.fallbackValue = value;
+        },
+
+        hasFallbackValue: function () {
+            return !sjl.classOfIs(this.getFallbackValue(), 'Undefined') && !sjl.classOfIs(this.getFallbackValue(), 'Null');
+        },
+
+        getRequired: function () {
+            return this.options.required;
+        },
+
+        setRequired: function (value) {
+            this.options.required = value;
+        },
+
+        getAllowEmpty: function () {
+            return this.options.allowEmpty;
+        },
+
+        setAllowEmpty: function (value) {
+            this.options.allowEmpty = value;
+        },
+
+        getBreakOnFailure: function () {
+            return this.options.breakOnFailure;
+        },
+
+        setBreakOnFailure: function (value) {
+            this.options.breakOnFailure = value;
+        },
+
+        getContinueIfEmpty: function () {
+            return this.options.continueIfEmpty;
+        },
+
+        setContinueIfEmpty: function (value) {
+            this.options.continueIfEmpty = value;
+        },
+
+        clearMessages: function () {
+            this.options.messages = [];
+        },
+
+        setMessages: function (messages) {
+            var self = this;
+            if (sjl.classOfIs(messages, 'Array')) {
+                self.options.messages = messages;
+            }
+            else {
+                self.options.messages = self.getValidatorChain().getMessages();
+            }
+            return self;
+        },
+
+        getMessages: function () {
+            var self = this;
+            if (!sjl.isset(self.options.messages)) {
+                self.options.messages = [];
+            }
+            return self.options.messages;
+        }
+    });
+
+    if (isNodeEnv) {
+        module.exports = Input;
+    }
+    else {
+        sjl.package('input.Input', Input);
+    }
+
+})();
 
 /**
  * Created by Ely on 7/24/2014.
  */
 
-'use strict';
+(function () {
 
-(function (context) {
+    'use strict';
 
-    context.sjl.InputFilter = context.sjl.Optionable.extend(
-
-        function InputFilter(options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Optionable = sjl.package.stdlib.Optionable,
+        Input = sjl.package.input.Input,
+        InputFilter = function InputFilter(options) {
 
             // Set defaults as options on this class
-            context.sjl.Optionable.call(this, {
+            Optionable.call(this, {
                 data: [],
                 inputs: {},
                 invalidInputs: [],
@@ -2823,828 +3397,349 @@
 
             sjl.extend(true, this.options, options);
 
-        }, {
-
-            // @todo beef up add, get, and has methods (do param type checking before using param)
-            add: function (value) {
-                if (value instanceof context.sjl.Input) {
-                    this.getInputs()[value.getAlias()] = value;
-                }
-
-                return this;
-            },
-
-            get: function (value) {
-                return this.getInputs()[value];
-            },
-
-            has: function (value) {
-                return this.getInputs().hasOwnProperty(value);
-            },
-
-            isValid: function () {
-                var self = this,
-                    inputs = self.getInputs(),
-                    data = self.getData();
-
-                self.clearInvalidInputs()
-                    .clearValidInputs()
-                    .clearMessages();
-
-                // Populate inputs with data
-                self.setDataOnInputs();
-
-
-                // If no data bail and throw an error
-                if (context.sjl.empty(data)) {
-                    throw new Error('InputFilter->isValid could\'nt ' +
-                        'find any data for validation.');
-                }
-
-                return self.validateInputs(inputs, data);
-            },
-
-            validateInput: function (input, dataMap) {
-                var name = input.getAlias(),
-                    dataExists = context.sjl.isset(dataMap[name]),
-                    data = dataExists ? dataMap[name] : null,
-                    required = input.getRequired(),
-                    allowEmpty = input.getAllowEmpty(),
-                    continueIfEmpty = input.getContinueIfEmpty(),
-                    retVal = true;
-
-                // If data doesn't exists and input is not required
-                if (!dataExists && !required) {
-                    retVal = true;
-                }
-
-                // If data doesn't exist, input is required, and input allows empty value,
-                // then input is valid only if continueIfEmpty is false;
-                else if (!dataExists && required && allowEmpty && !continueIfEmpty) {
-                    retVal = true;
-                }
-
-                // If data exists, is empty, and not required
-                else if (dataExists && context.sjl.empty(data) && !required) {
-                    retVal = true;
-                }
-
-                // If data exists, is empty, is required, and allows empty,
-                // then input is valid if continue if empty is false
-                else if (dataExists && context.sjl.empty(data) && required
-                    && allowEmpty && !continueIfEmpty) {
-                    retVal = true;
-                }
-
-                else if (!input.isValid()) {
-                    retVal = false;
-                }
-
-                return retVal;
-            },
-
-            validateInputs: function (inputs, data) {
-                var self = this,
-                    validInputs = {},
-                    invalidInputs = {},
-                    retVal = true,
-
-                    // Input vars
-                    input, name;
-
-                // Get inputs
-                inputs = inputs || self.getInputs();
-
-                // Get data
-                data = data || self.getRawValues();
-
-                // Validate inputs
-                for (input in inputs) {
-                    if (!inputs.hasOwnProperty(input)) {
-                        continue;
-                    }
-                    name = input;
-                    input = inputs[input];
-
-                    // @todo Check that input has the required interface(?)
-                    if (self.validateInput(input, data)) {
-                        validInputs[name] = input;
-                    }
-                    else {
-                        invalidInputs[name] = input;
-                    }
-                }
-
-                // If no invalid inputs then validation passed
-                if (context.sjl.empty(invalidInputs)) {
-                    retVal = true;
-                }
-                // else validation failed
-                else {
-                    retVal = false;
-                }
-
-                // Set valid inputs
-                self.setOption('validInputs', validInputs);
-
-                // Set invalid inputs
-                self.setOption('invalidInputs', invalidInputs);
-
-                return retVal;
-            },
-
-            setInputs: function (inputs) {
-                var self = this,
-                    input, name,
-                    validators;
-
-                // Set default inputs value if inputs is not of type 'Object'
-                if (!context.sjl.classOfIs(inputs, 'Object')) {
-                    self.options.inputs = inputs = {};
-                }
-
-                // Populate inputs
-                for (input in inputs) {
-                    if (!inputs.hasOwnProperty(input)) {
-                        continue;
-                    }
-
-                    name = input;
-
-                    validators = self._getValidatorsFromInputHash(inputs[input]);
-                    inputs[input].validators = null;
-                    delete inputs[input].validators;
-
-                    // Set name if it is not set
-                    if (!context.sjl.isset(inputs[input].alias)) {
-                      inputs[input].alias = name;
-                    }
-
-                    // Create input
-                    input = new context.sjl.Input(inputs[input]);
-
-                    // Set input's validators
-                    input.getValidatorChain().addValidators(validators);
-
-                    // Save input
-                    self.options.inputs[input.getAlias()] = input;
-                }
-
-                return self;
-            },
-
-            getInputs: function () {
-                var self = this;
-                if (!context.sjl.classOfIs(self.options.inputs, 'Object')) {
-                    self.options.inputs = {};
-                }
-                return self.options.inputs;
-            },
-
-            remove: function (value) {
-                var self = this,
-                    inputs = self.options.inputs;
-                if (inputs.hasOwnProperty(value)) {
-                    inputs[value] = null;
-                    delete self.options.inputs[value];
-                }
-                return self;
-            },
-
-            setData: function (data) {
-                var self = this;
-                self.options.data = data;
-                return self;
-            },
-
-            getData: function () {
-                return this.options.data;
-            },
-
-            setValidationGroup: function () {
-            },
-
-            getInvalidInputs: function () {
-                if (!context.sjl.classOfIs(this.options.invalidInputs, 'Object')) {
-                    this.options.invalidInputs = {};
-                }
-                return this.options.invalidInputs;
-            },
-
-            getValidInputs: function () {
-                if (!context.sjl.classOfIs(this.options.validInputs, 'Object')) {
-                    this.options.validInputs = {};
-                }
-                return this.options.validInputs;
-            },
-
-            getRawValues: function () {
-                var self = this,
-                    rawValues = {},
-                    input,
-                    invalidInputs = self.getInvalidInputs();
-
-                for (input in invalidInputs) {
-                    if (!invalidInputs.hasOwnProperty(input)) {
-                        continue;
-                    }
-                    input = invalidInputs[input];
-                    rawValues[input.getAlias()] = input.getRawValue();
-                }
-                return rawValues;
-            },
-
-            getValues: function () {
-                var self = this,
-                    values = {},
-                    input,
-                    invalidInputs = self.getInvalidInputs();
-
-                for (input in invalidInputs) {
-                    if (!invalidInputs.hasOwnProperty(input)) {
-                        continue;
-                    }
-                    input = invalidInputs[input];
-                    values[input.getAlias()] = input.getValue();
-                }
-                return values;
-            },
-
-            getMessages: function () {
-                var self = this,
-                    messages = self.options.messages,
-                    input, key,
-                    invalidInputs = self.getInvalidInputs(),
-                    messageItem;
-
-                for (key in invalidInputs) {
-                    if (!invalidInputs.hasOwnProperty(key)) {
-                        continue;
-                    }
-                    input = invalidInputs[key];
-                    if (sjl.empty())
-                    messageItem = messages[input.getAlias()];
-                    if (sjl.classOfIs(messageItem, 'Array')) {
-                        messages[input.getAlias()] = messageItem.concat(input.getMessages());
-                    }
-                    else {
-                        messages[input.getAlias()] = input.getMessages();
-                    }
-                }
-                return messages;
-            },
-
-            mergeMessages: function (messages) {
-                if (!messages) {
-                    throw new Error('`InputFilter.mergeMessages` requires a "messages" hash parameter.');
-                }
-                var currentMessages = this.options.messages,
-                    key;
-                for (key in messages) {
-                    if (messages.hasOwnProperty(key)) {
-                        currentMessages[key] = messages[key].concat(currentMessages.hasOwnProperty(key) ? currentMessages[key] : []);
-                    }
-                }
-                return this;
-            },
-
-            clearMessages: function () {
-                this.options.messages = {};
-            },
-
-            setDataOnInputs: function (data) {
-                var self = this,
-                    inputs = self.getInputs(),
-                    key;
-
-                data = data || self.getData();
-
-                for (key in data) {
-                    if (!data.hasOwnProperty(key)
-                         || !context.sjl.isset(inputs[key])
-                         || !context.sjl.isset(data[key])) {
-                        continue;
-                    }
-                    inputs[key].setValue(data[key]);
-                }
-            },
-
-            clearValidInputs: function () {
-                this.setOption('validInputs', {});
-                return this;
-            },
-
-            clearInvalidInputs: function () {
-                this.setOption('invalidInputs', {});
-                return this;
-            },
-
-            _getValidatorsFromInputHash: function (inputHash) {
-                return context.sjl.isset(inputHash.validators) ? inputHash.validators : null;
-            }
-
-        }, {
-
-            factory: function (inputSpec) {
-                if (!context.sjl.classOfIs(inputSpec, 'Object')
-                    || !context.sjl.isset(inputSpec.inputs)) {
-                    throw new Error('InputFilter class expects param 1 to be of type "Object".');
-                }
-                var inputFilter = new context.sjl.InputFilter();
-                inputFilter.setInputs(inputSpec.inputs);
-                return inputFilter;
-            },
-
-            VALIDATE_ALL: 0
-
-        });
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 4/12/2014.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl,
-        iteratorKey = sjl.Symbol.iterator;
-
-    /**
-     * Turns an array into an iterable.
-     * @param array {Array}
-     * @param pointer {Number|undefined}
-     * @returns {*}
-     */
-    sjl.iterable = function (arrayOrObj, pointer) {
-        var classOfArrayOrObj = sjl.classOf(arrayOrObj),
-            keys, values;
-        if (classOfArrayOrObj === 'Array') {
-            arrayOrObj[iteratorKey] = function () {
-                return sjl.Iterator(arrayOrObj, pointer);
-            };
-        }
-        else if (classOfArrayOrObj === 'Object') {
-            keys = sjl.keys(arrayOrObj);
-            values = keys.map(function (key) {
-                return arrayOrObj[key];
-            });
-            arrayOrObj[iteratorKey] = function () {
-                return sjl.ObjectIterator(keys, values, pointer);
-            }
-        }
-        return arrayOrObj;
-    };
-
-    /**
-     * @class sjl.Iterator
-     * @extends sjl.Extendable
-     * @type {void|Object|*}
-     */
-    sjl.Iterator = sjl.Extendable.extend(
-        function Iterator(values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof sjl.Iterator)) {
-                return new sjl.Iterator(values, pointer);
-            }
-
-            // Internalize the `values` collection and pointer here
-            // to make this class more functional.
-            this.__internal = {
-                values: values || [],
-                pointer: sjl.classOfIs(pointer, 'Number') ? pointer : 0
-            };
-        },
-        {
-            /**
-             * Returns the current value that `pointer()` is pointing to.
-             * @method sjl.Iterator#current
-             * @returns {{done: boolean, value: *}}
-             */
-            current: function () {
-                var self = this;
-                return self.valid() ? {
-                    done: false,
-                    value: self.values()[self.pointer()]
-                } : {
-                    done: true
-                };
-            },
-
-            /**
-             * Method which returns the current position in the iterator based on where the pointer is.
-             * This method also increases the pointer after it is done fetching the value to return.
-             * @method sjl.Iterator#next
-             * @returns {{done: boolean, value: *}}
-             */
-            next: function () {
-                var self = this,
-                    pointer = self.pointer(),
-                    retVal = self.valid() ? {
-                        done: false,
-                        value: self.values()[pointer]
-                    } : {
-                        done: true
-                    };
-                self.pointer(pointer + 1);
-                return retVal;
-            },
-
-            /**
-             * Rewinds the iterator.
-             * @method sjl.Iterator#rewind
-             * @returns {sjl.Iterator}
-             */
-            rewind: function () {
-                return this.pointer(0);
-            },
-
-            /**
-             * Returns whether the iterator has reached it's end.
-             * @method sjl.Iterator#valid
-             * @returns {boolean}
-             */
-            valid: function () {
-                return this.pointer() < this.values().length;
-            },
-
-            /**
-             * Overloaded method for fetching or setting the internal pointer value.
-             * @method sjl.Iterator#pointer
-             * @param pointer {Number|undefined}
-             * @returns {sjl.Iterator|Number}
-             */
-            pointer: function (pointer) {
-                var self = this,
-                    isGetterCall = typeof pointer === 'undefined',
-                    defaultNum = sjl.classOfIs(self.__internal.pointer, 'Number')
-                            ? self.__internal.pointer : 0,
-                    retVal = self;
-                if (isGetterCall) {
-                    retVal = defaultNum;
-                }
-                // Else set pointer
-                else {
-                    self.__internal.pointer = sjl.classOfIs(pointer, 'Number') ? pointer : defaultNum;
-                }
-                return retVal;
-            },
-
-            /**
-             * Overloaded method for fetching or setting the internal values array.
-             * @method sjl.Itertator#values
-             * @param values {Array|undefined}
-             * @returns {sjl.Iterator|Array}
-             */
-            values: function (values) {
-                var isGetterCall = typeof values === 'undefined',
-                    retVal = this,
-                    selfCollectionIsArray;
-                if (isGetterCall) {
-                    retVal = this.__internal.values;
-                }
-                else {
-                    selfCollectionIsArray = sjl.classOfIs(this.__internal.values, 'Array');
-                    // Set the internal values collection to `values` if `values` is an array
-                    // else if self internal values is an array leave as is
-                    // else set internal values to an empty array
-                    this.__internal.values =
-                        sjl.classOfIs(values, 'Array') ? values :
-                            (selfCollectionIsArray ? this.__internal.values : []);
-                }
-                return retVal;
-            }
-        });
-
-    /**
-     * @class sjl.ObjectIterator
-     * @extends sjl.Iterator
-     * @type {Object|void|*}
-     */
-    sjl.ObjectIterator = sjl.Iterator.extend(
-        function ObjectIterator (keys, values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof sjl.ObjectIterator)) {
-                return new sjl.ObjectIterator(keys, values, pointer);
-            }
-            sjl.Iterator.call(this, values, pointer);
-            this.__internal.keys = keys;
-        },
-        {
-        /**
-         * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.Iterator#current
-         * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
-        current: function () {
-            var self = this,
-                pointer = self.pointer();
-            return self.valid() ? {
-                done: false,
-                value: [self.keys()[pointer], self.values()[pointer]]
-            } : {
-                done: true
-            };
-        },
-
-        /**
-         * Method which returns the current position in the iterator based on where the pointer is.
-         * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.Iterator#next
-         * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
-        next: function () {
-            var self = this,
-                pointer = self.pointer(),
-                retVal = self.valid() ? {
-                    done: false,
-                    value: [self.keys()[pointer], self.values()[pointer]]
-                } : {
-                    done: true
-                };
-            self.pointer(pointer + 1);
-            return retVal;
-        },
-
-        valid: function () {
-            var pointer = this.pointer();
-            return pointer < this.values().length && pointer < this.keys().length;
-        },
-
-        /**
-         * Overloaded getter/setter method for internal `keys` property.
-         * @returns {sjl.ObjectIterator|Array<*>}
-         */
-        keys: function (keys) {
-            var isGetterCall = typeof keys === 'undefined',
-                retVal = this,
-                selfCollectionIsArray;
-            if (isGetterCall) {
-                retVal = this.__internal.keys;
-            }
-            else {
-                selfCollectionIsArray = sjl.classOfIs(this.__internal.keys, 'Array');
-                // Set the internal keys collection to `keys` if `keys` is an array
-                // else if self internal keys is an array leave as is
-                // else set internal keys to an empty array
-                this.__internal.keys =
-                    sjl.classOfIs(keys, 'Array') ? keys :
-                        (selfCollectionIsArray ? this.__internal.keys : []);
-            }
-            return retVal;
-        }
-
-    });
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 7/17/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl;
-
-    /**
-     * SjlSet constructor.  This object has the same interface as the es6 `Set`
-     * object.  The only difference is this one uses a more sugery iterator which
-     * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
-     * `valid` methods (@see sjl.Iterator)
-     * @class sjl.SjlSet
-     * @extends sjl.Extendable
-     * @param iterable {Array}
-     */
-    sjl.SjlSet = sjl.Extendable.extend(function SjlSet (iterable) {
-        var self = this;
-        self._values = [];
-        self.size = 0;
-
-        // If an array was passed in inject values
-        if (sjl.classOfIs(iterable, 'Array')) {
-            self.addFromArray(iterable);
-        }
-
-        // If anything other than an array is passed in throw an Error
-        else if (typeof iterable !== 'undefined') {
-            throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
-            ' Parameter received: ', iterable);
-        }
-
-        // Make our `_values` array inherit our special iterator
-        sjl.iterable(self._values, 0);
-
-        // Set custom iterator function on `this`
-        self[sjl.Symbol.iterator] = function () {
-            return sjl.ObjectIterator(self._values, self._values, 0);
         };
 
-        // Set flag to remember that original iterator was overridden
-        self._iteratorOverridden = true;
-    },
-    {
+    InputFilter = Optionable.extend(InputFilter, {
+
+        // @todo beef up add, get, and has methods (do param type checking before using param)
         add: function (value) {
-            if (!this.has(value)) {
-                this._values.push(value);
-                this.size += 1;
+            if (value instanceof Input) {
+                this.getInputs()[value.getAlias()] = value;
             }
+
             return this;
         },
-        clear: function () {
-            while (this._values.length > 0) {
-                this._values.pop();
-            }
-            this.size = 0;
-            return this;
+
+        get: function (value) {
+            return this.getInputs()[value];
         },
-        delete: function (value) {
-            var _index = sjl.indexOf(value, this._values);
-            if (_index > -1) {
-                delete this._values[_index];
-                this.size -= 1;
-                this.size = this.size < 0 ? 1 : 0;
-            }
-            return this;
-        },
-        entries: function () {
-            return sjl.ObjectIterator(this._values, this._values, 0);
-        },
-        forEach: function (callback, context) {
-            sjl.forEach(this._values, callback, context);
-            return this;
-        },
+
         has: function (value) {
-            return sjl.indexOf(this._values, value) > -1 ? true : false;
-        },
-        keys: function () {
-            return this._values[sjl.Symbol.iterator]();
-        },
-        values: function () {
-            return this._values[sjl.Symbol.iterator]();
+            return this.getInputs().hasOwnProperty(value);
         },
 
-        /**************************************************
-         * METHODS NOT PART OF THE `Set` spec for ES6:
-         **************************************************/
+        isValid: function () {
+            var self = this,
+                inputs = self.getInputs(),
+                data = self.getData();
 
-        addFromArray: function (value) {
-            // Iterate through the passed in iterable and add all values to `_values`
-            var iterator = sjl.iterable(value, 0)[sjl.Symbol.iterator]();
+            self.clearInvalidInputs()
+                .clearValidInputs()
+                .clearMessages();
 
-            // Loop through values and add them
-            while (iterator.valid()) {
-                this.add(iterator.next().value);
-            }
-            iterator = null;
-            return this;
-        },
+            // Populate inputs with data
+            self.setDataOnInputs();
 
-        iterator: function () {
-            return this._values[sjl.Symbol.iterator]();
-        },
 
-        toJSON: function () {
-            return this._values;
-        }
-    });
-
-})(typeof window === 'undefined' ? global : window);
-
-/**
- * Created by Ely on 7/17/2015.
- */
-(function (context) {
-
-    'use strict';
-
-    var sjl = context.sjl,
-
-        /**
-         * SjlMap Constructor.
-         * @param iterable
-         * @constructor
-         */
-        SjlMap = function SjlMap (iterable) {
-            var self = this;
-            self.size = 0;
-            self._keys = [];
-            self._values = [];
-
-            // If an array was passed in inject values
-            if (sjl.classOfIs(iterable, 'Array')) {
-                self.addFromArray(iterable);
-                // Make our internal arrays inherit our special iterator
-                self._values = sjl.iterable(self._values, 0);
-                self._keys = sjl.iterable(self._keys, 0);
+            // If no data bail and throw an error
+            if (sjl.empty(data)) {
+                throw new Error('InputFilter->isValid could\'nt ' +
+                    'find any data for validation.');
             }
 
-            // If anything other than an array is passed in throw an Error
-            else if (typeof iterable !== 'undefined') {
-                throw new Error ('Type Error: sjl.SjlMap takes only iterable objects as it\'s first parameter. ' +
-                ' Parameter received: ', iterable);
+            return self.validateInputs(inputs, data);
+        },
+
+        validateInput: function (input, dataMap) {
+            var name = input.getAlias(),
+                dataExists = sjl.isset(dataMap[name]),
+                data = dataExists ? dataMap[name] : null,
+                required = input.getRequired(),
+                allowEmpty = input.getAllowEmpty(),
+                continueIfEmpty = input.getContinueIfEmpty(),
+                retVal = true;
+
+            // If data doesn't exists and input is not required
+            if (!dataExists && !required) {
+                retVal = true;
             }
 
-            // Set custom iterator function on `this`
-            self[sjl.Symbol.iterator] = function () {
-                return sjl.ObjectIterator(self._keys, self._values, 0);
-            };
+            // If data doesn't exist, input is required, and input allows empty value,
+            // then input is valid only if continueIfEmpty is false;
+            else if (!dataExists && required && allowEmpty && !continueIfEmpty) {
+                retVal = true;
+            }
 
-            // Set flag to remember that original iterator was overridden
-            self._iteratorOverridden = true;
-        };
+            // If data exists, is empty, and not required
+            else if (dataExists && sjl.empty(data) && !required) {
+                retVal = true;
+            }
 
-    sjl.SjlMap = sjl.Extendable.extend(SjlMap, {
-            clear: function () {
-                while (this._values.length > 0) {
-                    this._values.pop();
+            // If data exists, is empty, is required, and allows empty,
+            // then input is valid if continue if empty is false
+            else if (dataExists && sjl.empty(data) && required
+                && allowEmpty && !continueIfEmpty) {
+                retVal = true;
+            }
+
+            else if (!input.isValid()) {
+                retVal = false;
+            }
+
+            return retVal;
+        },
+
+        validateInputs: function (inputs, data) {
+            var self = this,
+                validInputs = {},
+                invalidInputs = {},
+                retVal = true,
+
+            // Input vars
+                input, name;
+
+            // Get inputs
+            inputs = inputs || self.getInputs();
+
+            // Get data
+            data = data || self.getRawValues();
+
+            // Validate inputs
+            for (input in inputs) {
+                if (!inputs.hasOwnProperty(input)) {
+                    continue;
                 }
-                while (this._keys.length > 0) {
-                    this._keys.pop();
-                }
-                this.size = 0;
-                return this;
-            },
-            delete: function (key) {
-                var _index = sjl.indexOf(this._keys, key);
-                if (this.has(key)) {
-                    delete this._values[_index];
-                    delete this._keys[_index];
-                    this.size -= sjl.classOfIs(this.size, 'Number') && this.size > 0 ? 1 : 0;
-                }
-                return this;
-            },
-            entries: function () {
-                return sjl.ObjectIterator(this._keys, this._values, 0);
-            },
-            forEach: function (callback, context) {
-                for (var i = 0; i < this._keys.length - 1; i += 1) {
-                    callback.call(context, this._keys[i], this._values[i]);
-                }
-                return this;
-            },
-            has: function (key) {
-                return sjl.indexOf(this._keys, key) > -1 ? true : false;
-            },
-            keys: function () {
-                return this._keys[sjl.Symbol.iterator]();
-            },
-            values: function () {
-                return this._values[sjl.Symbol.iterator]();
-            },
-            get: function (key) {
-                var index = sjl.indexOf(this._keys, key);
-                return index > -1 ? this._values[index] : undefined;
-            },
-            set: function (key, value) {
-                var index = sjl.indexOf(this._keys, key);
-                if (index > -1) {
-                    this._keys[index] = key;
-                    this._values[index] = value;
-                    this.size += 1;
+                name = input;
+                input = inputs[input];
+
+                // @todo Check that input has the required interface(?)
+                if (self.validateInput(input, data)) {
+                    validInputs[name] = input;
                 }
                 else {
-                    this._keys.push(key);
-                    this._values.push(value);
-                    this.size += 1;
+                    invalidInputs[name] = input;
                 }
-                index = null;
-                return this;
-            },
-
-            /**************************************************
-             * METHODS NOT PART OF THE `Set` spec for ES6:
-             **************************************************/
-
-            addFromArray: function (array) {
-                // Iterate through the passed in iterable and add all values to `_values`
-                var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
-                    entry;
-
-                // Loop through values and add them
-                while (iterator.valid()) {
-                    entry = iterator.next();
-                    this.set(entry.value[0], entry.value[1]);
-                }
-                iterator = null;
-                entry = null;
-                return this;
-            },
-
-            iterator: function () {
-                return this.entries();
-            },
-
-            toJSON: function () {
-                var self = this,
-                    out = {};
-                sjl.forEach(this._keys, function (key, i) {
-                    out[key] = self._values[i];
-                });
-                return out;
             }
 
-        });
+            // If no invalid inputs then validation passed
+            if (sjl.empty(invalidInputs)) {
+                retVal = true;
+            }
+            // else validation failed
+            else {
+                retVal = false;
+            }
 
-})(typeof window === 'undefined' ? global : window);
+            // Set valid inputs
+            self.setOption('validInputs', validInputs);
+
+            // Set invalid inputs
+            self.setOption('invalidInputs', invalidInputs);
+
+            return retVal;
+        },
+
+        setInputs: function (inputs) {
+            var self = this,
+                input, name,
+                validators;
+
+            // Set default inputs value if inputs is not of type 'Object'
+            if (!sjl.classOfIs(inputs, 'Object')) {
+                self.options.inputs = inputs = {};
+            }
+
+            // Populate inputs
+            for (input in inputs) {
+                if (!inputs.hasOwnProperty(input)) {
+                    continue;
+                }
+
+                name = input;
+
+                validators = self._getValidatorsFromInputHash(inputs[input]);
+                inputs[input].validators = null;
+                delete inputs[input].validators;
+
+                // Set name if it is not set
+                if (!sjl.isset(inputs[input].alias)) {
+                    inputs[input].alias = name;
+                }
+
+                // Create input
+                input = new Input(inputs[input]);
+
+                // Set input's validators
+                input.getValidatorChain().addValidators(validators);
+
+                // Save input
+                self.options.inputs[input.getAlias()] = input;
+            }
+
+            return self;
+        },
+
+        getInputs: function () {
+            var self = this;
+            if (!sjl.classOfIs(self.options.inputs, 'Object')) {
+                self.options.inputs = {};
+            }
+            return self.options.inputs;
+        },
+
+        remove: function (value) {
+            var self = this,
+                inputs = self.options.inputs;
+            if (inputs.hasOwnProperty(value)) {
+                inputs[value] = null;
+                delete self.options.inputs[value];
+            }
+            return self;
+        },
+
+        setData: function (data) {
+            var self = this;
+            self.options.data = data;
+            return self;
+        },
+
+        getData: function () {
+            return this.options.data;
+        },
+
+        setValidationGroup: function () {
+        },
+
+        getInvalidInputs: function () {
+            if (!sjl.classOfIs(this.options.invalidInputs, 'Object')) {
+                this.options.invalidInputs = {};
+            }
+            return this.options.invalidInputs;
+        },
+
+        getValidInputs: function () {
+            if (!sjl.classOfIs(this.options.validInputs, 'Object')) {
+                this.options.validInputs = {};
+            }
+            return this.options.validInputs;
+        },
+
+        getRawValues: function () {
+            var self = this,
+                rawValues = {},
+                input,
+                invalidInputs = self.getInvalidInputs();
+
+            for (input in invalidInputs) {
+                if (!invalidInputs.hasOwnProperty(input)) {
+                    continue;
+                }
+                input = invalidInputs[input];
+                rawValues[input.getAlias()] = input.getRawValue();
+            }
+            return rawValues;
+        },
+
+        getValues: function () {
+            var self = this,
+                values = {},
+                input,
+                invalidInputs = self.getInvalidInputs();
+
+            for (input in invalidInputs) {
+                if (!invalidInputs.hasOwnProperty(input)) {
+                    continue;
+                }
+                input = invalidInputs[input];
+                values[input.getAlias()] = input.getValue();
+            }
+            return values;
+        },
+
+        getMessages: function () {
+            var self = this,
+                messages = self.options.messages,
+                input, key,
+                invalidInputs = self.getInvalidInputs(),
+                messageItem;
+
+            for (key in invalidInputs) {
+                if (!invalidInputs.hasOwnProperty(key)) {
+                    continue;
+                }
+                input = invalidInputs[key];
+                if (sjl.empty())
+                    messageItem = messages[input.getAlias()];
+                if (sjl.classOfIs(messageItem, 'Array')) {
+                    messages[input.getAlias()] = messageItem.concat(input.getMessages());
+                }
+                else {
+                    messages[input.getAlias()] = input.getMessages();
+                }
+            }
+            return messages;
+        },
+
+        mergeMessages: function (messages) {
+            if (!messages) {
+                throw new Error('`InputFilter.mergeMessages` requires a "messages" hash parameter.');
+            }
+            var currentMessages = this.options.messages,
+                key;
+            for (key in messages) {
+                if (messages.hasOwnProperty(key)) {
+                    currentMessages[key] = messages[key].concat(currentMessages.hasOwnProperty(key) ? currentMessages[key] : []);
+                }
+            }
+            return this;
+        },
+
+        clearMessages: function () {
+            this.options.messages = {};
+        },
+
+        setDataOnInputs: function (data) {
+            var self = this,
+                inputs = self.getInputs(),
+                key;
+
+            data = data || self.getData();
+
+            for (key in data) {
+                if (!data.hasOwnProperty(key)
+                    || !sjl.isset(inputs[key])
+                    || !sjl.isset(data[key])) {
+                    continue;
+                }
+                inputs[key].setValue(data[key]);
+            }
+        },
+
+        clearValidInputs: function () {
+            this.setOption('validInputs', {});
+            return this;
+        },
+
+        clearInvalidInputs: function () {
+            this.setOption('invalidInputs', {});
+            return this;
+        },
+
+        _getValidatorsFromInputHash: function (inputHash) {
+            return sjl.isset(inputHash.validators) ? inputHash.validators : null;
+        }
+
+    }, {
+
+        factory: function (inputSpec) {
+            if (!sjl.classOfIs(inputSpec, 'Object')
+                || !sjl.isset(inputSpec.inputs)) {
+                throw new Error('InputFilter class expects param 1 to be of type "Object".');
+            }
+            var inputFilter = new InputFilter();
+            inputFilter.setInputs(inputSpec.inputs);
+            return inputFilter;
+        },
+
+        VALIDATE_ALL: 0
+
+    });
+
+    if (isNodeEnv) {
+        module.exports = InputFilter;
+    }
+    else {
+        sjl.package('input.InputFilter', InputFilter);
+    }
+
+})();

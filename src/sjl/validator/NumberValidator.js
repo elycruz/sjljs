@@ -3,90 +3,95 @@
  * Initial idea copied from the Zend Framework 2's Between Validator
  * @todo add `allowSigned` check(s).
  */
-(function (context) {
+(function () {
 
     'use strict';
 
-    context.sjl.NumberValidator = context.sjl.AbstractValidator.extend(function NumberValidator (options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        BaseValidator = sjl.package.validator.BaseValidator,
+        NumberValidator = function NumberValidator(options) {
 
-        // Set defaults and extend with abstract validator
-        context.sjl.AbstractValidator.call(this, {
-            messageTemplates: {
-                NOT_A_NUMBER: function () {
-                    return 'The input value is not a number.  Value received: "' + this.getValue() + '".';
+            // Set defaults and extend with Base validator
+            BaseValidator.call(this, {
+                messageTemplates: {
+                    NOT_A_NUMBER: function () {
+                        return 'The input value is not a number.  Value received: "' + this.getValue() + '".';
+                    },
+                    NOT_IN_RANGE: function () {
+                        return 'The number passed in is not within the specified '
+                            + (this.get('inclusive') ? 'inclusive' : '') + ' range. ' +
+                            ' Value received: "' + this.getValue() + '".';
+                    },
+                    NO_FLOATS_ALLOWED: function () {
+                        return 'No floats allowed.  ' +
+                            'Value received: "' + this.getValue() + '".';
+                    },
+                    NO_COMMAS_ALLOWED: function () {
+                        return 'No commas allowed.  ' +
+                            'Value received: "' + this.getValue() + '".';
+                    }
                 },
-                NOT_IN_RANGE: function () {
-                    return 'The number passed in is not within the specified '
-                        + (this.get('inclusive') ? 'inclusive' : '') + ' range. ' +
-                        ' Value received: "' + this.getValue() + '".';
+                regexForHex: /^(?:(?:\dx)|(?:\#))[\da-z]+$/i,
+                regexForOctal: /^0\d+?$/,
+                regexForBinary: /^\db\d+$/i,
+                regexForScientific: /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+(?:\.\d+)?)?$/i,
+                allowFloat: true,
+                allowCommas: false,
+                allowSigned: false,
+                allowBinary: false,
+                allowHex: false,
+                allowOctal: false,
+                allowScientific: false,
+                checkRange: false,
+                defaultRangeSettings: {
+                    min: Number.NEGATIVE_INFINITY,
+                    max: Number.POSITIVE_INFINITY,
+                    inclusive: true
                 },
-                NO_FLOATS_ALLOWED: function () {
-                    return 'No floats allowed.  ' +
-                        'Value received: "' + this.getValue() + '".';
-                },
-                NO_COMMAS_ALLOWED: function () {
-                    return 'No commas allowed.  ' +
-                        'Value received: "' + this.getValue() + '".';
-                }
-            },
-            regexForHex:  /^(?:(?:\dx)|(?:\#))[\da-z]+$/i,
-            regexForOctal: /^0\d+?$/,
-            regexForBinary: /^\db\d+$/i,
-            regexForScientific: /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+(?:\.\d+)?)?$/i,
-            allowFloat: true,
-            allowCommas: false,
-            allowSigned: false,
-            allowBinary: false,
-            allowHex: false,
-            allowOctal: false,
-            allowScientific: false,
-            checkRange: false,
-            defaultRangeSettings: {
                 min: Number.NEGATIVE_INFINITY,
                 max: Number.POSITIVE_INFINITY,
                 inclusive: true
-            },
-            min: Number.NEGATIVE_INFINITY,
-            max: Number.POSITIVE_INFINITY,
-            inclusive: true
-        });
+            });
 
-        // Set options passed, if any
-        this.setOptions(options);
+            // Set options passed, if any
+            this.setOptions(options);
 
-    }, {
+        };
+
+    NumberValidator = BaseValidator.extend(NumberValidator, {
         isValid: function (value) {
             var self = this,
                 retVal = false,
 
                 originalValue = value,
 
-                // Booleans
-                allowFloat =  self.get('allowFloat'),
-                allowCommas =  self.get('allowCommas'),
-                //allowSigned =  self.get('allowSigned'),
-                allowBinary =  self.get('allowBinary'),
-                allowHex =  self.get('allowHex'),
-                allowOctal =  self.get('allowOctal'),
+            // Booleans
+                allowFloat = self.get('allowFloat'),
+                allowCommas = self.get('allowCommas'),
+            //allowSigned =  self.get('allowSigned'),
+                allowBinary = self.get('allowBinary'),
+                allowHex = self.get('allowHex'),
+                allowOctal = self.get('allowOctal'),
                 allowScientific = self.get('allowScientific'),
 
-                // Regexes'
+            // Regexes'
                 regexForHex = self.get('regexForHex'),
-                regexForOctal =  self.get('regexForOctal'),
-                regexForBinary =  self.get('regexForBinary'),
-                regexForScientific =  self.get('regexForScientific'),
+                regexForOctal = self.get('regexForOctal'),
+                regexForBinary = self.get('regexForBinary'),
+                regexForScientific = self.get('regexForScientific'),
 
-                // Class of initial value
-                classOfValue = context.sjl.classOf(value),
+            // Class of initial value
+                classOfValue = sjl.classOf(value),
 
-                // Check range `Boolean`
+            // Check range `Boolean`
                 checkRange = self.get('checkRange'),
 
-                // Used if `checkRange` is true
+            // Used if `checkRange` is true
                 inRangeValidator;
 
             // Get value
-            value = context.sjl.isset(value) ? value : self.getValue();
+            value = sjl.isset(value) ? value : self.getValue();
 
             // If number return true
             if (classOfValue === 'Number') {
@@ -158,7 +163,7 @@
                 }
 
                 // Run validator
-                inRangeValidator = new sjl.NumberValidator(self.get(['min', 'max', 'inclusive']));
+                inRangeValidator = new NumberValidator(self.get(['min', 'max', 'inclusive']));
                 inRangeValidator.setValue(value);
                 retVal = inRangeValidator.isValid();
 
@@ -183,6 +188,13 @@
 
         } // End of `isValid` function
 
-    }); // End of `sjl.NumberValidator` declaration
+    }); // End of `NumberValidator` declaration
 
-})(typeof window === 'undefined' ? global : window);
+    if (isNodeEnv) {
+        module.exports = NumberValidator;
+    }
+    else {
+        sjl.package('validator.NumberValidator', NumberValidator);
+    }
+
+})();

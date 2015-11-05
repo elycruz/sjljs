@@ -4,13 +4,15 @@
 
 'use strict';
 
-(function (context) {
+(function () {
 
-    context.sjl.EmailValidator = context.sjl.RegexValidator.extend(
-        function EmailValidator(options) {
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        RegexValidator = sjl.package.validator.RegexValidator,
+        EmailValidator = function EmailValidator(options) {
 
-            // Set defaults and extend with abstract validator
-            context.sjl.RegexValidator.call(this, {
+            // Set defaults and extend with Base validator
+            RegexValidator.call(this, {
                 /**
                  * Pulled Directly from the php 5.5 source
                  * ------------------------------------------------------------------------
@@ -50,29 +52,38 @@
             // Set options passed, if any
             this.setOptions(options);
 
-        }, {
+        };
 
-            isValid: function (value) {
-                var self = this,
-                    retVal = false;
+    EmailValidator = RegexValidator.extend(EmailValidator, {
 
-                // Clear any existing messages
-                self.clearMessages();
+        isValid: function (value) {
+            var self = this,
+                retVal = false;
 
-                // Set and get or get value (gets the set value if value is undefined
-                value = self.getValue(value);
+            // Clear any existing messages
+            self.clearMessages();
 
-                // Run the test
-                retVal = self.getPattern().test(value);
+            // Set and get or get value (gets the set value if value is undefined
+            value = self.getValue(value);
 
-                // If test failed
-                if (retVal === false) {
-                    self.addErrorByKey('INVALID_EMAIL');
-                }
+            // Run the test
+            retVal = self.getPattern().test(value);
 
-                return retVal;
+            // If test failed
+            if (retVal === false) {
+                self.addErrorByKey('INVALID_EMAIL');
             }
 
-        });
+            return retVal;
+        }
 
-})(typeof window === 'undefined' ? global : window);
+    });
+
+    if (isNodeEnv) {
+        module.exports = EmailValidator;
+    }
+    else {
+        sjl.package('validator.EmailValidator', EmailValidator);
+    }
+
+})();

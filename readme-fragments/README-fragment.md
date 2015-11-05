@@ -10,6 +10,16 @@ A library for building applications and building libraries from the ground up.
 Not meant to replace popular libraries (Backbone, Underscore, Jquery etc.)
 only meant as a supplement to them.
 
+**Note** 
+Version 0.5+ removes some backward compatability.  Namely 
+all classes that were included on `sjl` before our now included 
+via a `sjl.package` and it's alias `sjl.ns`;  E.g.,
+`sjl.Extendable` is now accessible via `sjl.ns.Extendable`
+ Also all classes that were available in the root level are 
+now available in the `sjl.ns.stdlib` package.
+
+See release notes for release 0.5.0.
+
 ## Sections in Readme:
 - [Components Included](#components-included)
 - [Tests](#tests)
@@ -29,23 +39,29 @@ only meant as a supplement to them.
 
 ### Classes/Constructors
 
-##### sjl.Attributable(attributes {Object|undefined}) :sjl.Attributable
+##### sjl.ns.stdlib.Attributable(attributes {Object|undefined}) :sjl.ns.stdlib.Attributable
 A base attributable constructor which has two methods `attr` and `attrs` (for setting and getting multiple attributes 
 jquery style).
 
-##### sjl.Iterator(values {Array|undefined}, pointer {Number|undefined}) :sjl.Iterator (@deprecated)
-A simple iterator constructor which mimicks the es6 iterator and the php `Iterator` class.
-Can be called as a method and acts as a factory method in this case.
+##### sjl.ns.stdlib.Iterator(values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.Iterator
+A simple iterator constructor which implements the es6 iterator and the php `Iterator` classes.
 
-##### sjl.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable
-A base extendable constructor with a static `extend` method that allows you to easily extend constructors; E.g.,
+##### sjl.ns.stdlib.ObjectIterator(keys{Array<*>, values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
+An object iterator;  Iterates similarly to Iterator but takes a set of keys and values on construction.
+Implements the es6 iterator and the php `Iterator` classes.
+
+##### sjl.ns.stdlib.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable
+A base extendable constructor with a static `extend` method that allows you to easily extend constructors/classes; E.g.,
 
 ```
 // SomeConstructor.js
-// Using node, requirejs, browserify or some other AMD/UMD helper (here we'll use nodejs)
+// Using node, requirejs, browserify or some 
+// other AMD/UMD helper (here we'll use nodejs)
+
+var SomeConstructor = function SomeConstructor () {};
 
 // Make `SomeConstructor` extendable
-module.exports = sjl.Extendable.extend(function SomeConstructor () {}, {
+module.exports = sjl.ns.stdlib.Extendable.extend(SomeConstructor, {
      someMethod: function () {
          // Do something here
      }
@@ -56,22 +72,32 @@ module.exports = sjl.Extendable.extend(function SomeConstructor () {}, {
      }
  });
 
-
-// SomeSuperOtherConstructor.js
+// SomeOtherSubClass.js
 
 // Bring in 'SomeOtherConstructor'
-var SomeOtherConstructor = require('SomeOtherConstructor');
+var SomeOtherConstructor = require('SomeOtherConstructor'),
+    SomeOtherSubClass = function SomeOtherSubClass () {
+        SomeOtherConstructor.apply(this, arguments);
+    };
 
 // Inherits statics and prototype of SomeOtherConstructor and 
 // is also extendable via the static method `extend` 
-module.exports = SomeOtherConstructor.extend(function SomeSuperOtherConstructor () {
-        SomeOtherConstructor.apply(this, arguments);
-    }, {
+module.exports = SomeOtherConstructor.extend(SomeOtherSubClass, {
         // methods
     });
 ```
 
-##### sjl.Optionable(...obj {Object|undefined}) :sjl.Optionable
+##### sjl.ns.stdlib.SjlSet(Array<*>) :sjl.ns.stdlib.SjlSet
+A set object that acts just like the es6 `Set` object with two additional convenience methods.
+- `addFromArray(Array<*>) :sjl.ns.stdlib.SjlSet`
+- `iterator() :iterable`
+
+##### sjl.ns.stdlib.SjlMap(Array<Array>) :sjl.ns.stdlib.SjlMap
+A map that acts just like the es6 `Map` object with two additional convenience methods:
+- `addFromArray(Array<*>) :sjl.ns.stdlib.SjlMap`
+- `iterator() :iterable`
+
+##### sjl.ns.stdlib.Optionable(...obj {Object|undefined}) :sjl.Optionable
 A simple Optionable class with `set`, `get`, `merge`, and `has` methods meant to be similiar to Backbone's Model constructor
 but with some enhanced methods on it and without the ajax stuff (barebones object).
 
@@ -271,6 +297,58 @@ Searches object using a namespace string and if final property in namespace
 string chain is found then returns that properties value else 
 it returns null.
 
+##### sjl.createTopLevelPackage (obj {Object}, packageKey {String|undefined}, altFuncKey {String|undefined}, dirPath {String|undefined}) :obj
+Creates a top level `package` on an object that allows you to set members on it which become un-overwrittable (members can be edited but not overwritten)
+ when working on the frontend and when the library is being used within nodejs, this function creates a lazy loader 
+ for loading class member *.js and *.json files;  E.g., 
+
+```
+// FRONTEND and NODEJS USAGE
+// -------------------------------------------------
+
+// -------------------------------------------------
+// somePackage/myObject.js
+// -------------------------------------------------
+// Create top level frontend package
+var myObject = Object.defineProperty(window, 'myObject', {});
+
+// Create top level package functionality on `myObject` (note this method also returns passed in object
+sjl.createTopLevelPackage(myObject, 'package', 'ns', typeof window === 'undefined' ? __dirname : null);
+
+// -------------------------------------------------
+// somePackage/someClass.js
+// -------------------------------------------------
+(function () {
+    // Declare some class
+    function SomeClass () {};
+    
+    // NOTE: this part is only necessary for the frontend.  In nodejs environments you just have to make 
+    // sure that you export your class etc via module.exports unless the file is a json file.
+    
+    // Export some class
+    window.myObject.package('somePackage.SomeClass', SomeClass);
+    
+}());
+
+// -------------------------------------------------
+// somePackage/someProcess.js 
+// -------------------------------------------------
+var SomeClass = myObject.package.somePackage.SomeClass;  // you case use the alias for package 
+// here as well, in this case it is `ns`
+
+```
+
+**Note**:
+- This is called on the `sjl` object to allow to access its class members easily in nodejs and on the frontend.
+- For frontend end you have to include the file for the class you want to access via the `package` and `ns` methods.
+
+##### sjl.package
+Created using `sjl.createTopLevelPackage` and is available for accessing sjl package members (for, current, packages 'stdlib', 'input', and 'validator').
+The package key is `package` and the alias for it is `ns`.
+
+##### sjl.ns 
+Same as `sjl.package`.
+
 ### Set Functions:
 
 ##### sjl.extend(obj {Object|Boolean}, ...obj {Object|undefined}, useLegacyGettersAndSetters {Boolean|undefined}) : Object
@@ -368,19 +446,19 @@ See './tests/for-browser'.
 - [ ] - Refactor the `input` package
 - [ ] - Refactor the `validator` package
 - [ ] - `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0).
-- [ ] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+- [X] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
  right now it is not apparent to people that this is the default behaviour).
-- [ ] - Remove `attrs` method from `sjl.Attributable`.
+- [X] - Remove `attrs` method from `sjl.Attributable`.
 - [X] - Update readme to a more readable format.
 - [X] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
 - [X] - Changelog.
-- [ ] - Change the library from being a global for nodejs to being an exported package.
-- [ ] - Set all components (constructors) of sjl to be exported when being used in nodejs.
+- [X] - Change the library from being a global for nodejs to being an exported package.
+- [X] - Set all components (constructors) of sjl to be exported when being used in nodejs.
 - [ ] - Support for AMD if it is available when used on the frontend.
 - [X] - Remove use of eval option for `defineSubClass`.
-- [ ] - Create docs for `sjl.package`.
+- [X] - Create docs for `sjl.package`.
 - [X] - Shim `sjl.forEach` and `sjl.indexOf`.
-- [ ] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
+- [X] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
 instead of requiring global require).
 - [ ] - Include all sub items for components included as sub nav in components nav in readme.
 
