@@ -461,6 +461,8 @@ See './tests/for-browser'.
 - [X] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
 instead of requiring global require).
 - [ ] - Include all sub items for components included as sub nav in components nav in readme.
+- [ ] - Remove checking against multiple values for util functions (isset, classOfIs, etc. (maybe not classOfIs (have to evaluate common use cases further))).
+- [ ] - Change `value !== undefined` check to use typeof instead (safe way for browsers (current check fails in browsers)).
 
 ### MVP for 0.5.1+
 - [X] - Add changelog.md in main readme.
