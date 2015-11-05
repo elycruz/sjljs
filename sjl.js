@@ -1,4 +1,4 @@
-/**! sjl.js Wed Nov 04 2015 18:48:00 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Wed Nov 04 2015 19:35:18 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo Make frontend only functionality defined conditionally on whether we are in a browser environment or not.
  */
@@ -1611,7 +1611,7 @@
 /**
  * Created by Ely on 7/17/2015.
  */
-(function (context) {
+(function () {
 
     'use strict';
 

@@ -1,7 +1,7 @@
 /**
  * Created by Ely on 7/17/2015.
  */
-(function (context) {
+(function () {
 
     'use strict';
 
