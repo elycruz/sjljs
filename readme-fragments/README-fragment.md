@@ -14,8 +14,8 @@ only meant as a supplement to them.
 Version 0.5+ removes some backward compatability.  Namely 
 all classes that were included on `sjl` before our now included 
 via a `sjl.package` and it's alias `sjl.ns`;  E.g.,
-`sjl.Extendable` is now accessible via `sjl.ns.Extendable` or 
-`sjl.package.Extendable` Also all classes that were available in the root level are 
+`sjl.Extendable` is now accessible via `sjl.ns.Extendable`
+ Also all classes that were available in the root level are 
 now available in the `sjl.ns.stdlib` package.
 
 See release notes for release 0.5.0.
