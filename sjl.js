@@ -1,4 +1,4 @@
-/**! sjl.js Wed Nov 04 2015 20:27:32 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Thu Nov 05 2015 15:13:54 GMT-0500 (EST) **//**
  * Created by Ely on 5/29/2015.
  * @todo Make frontend only functionality defined conditionally on whether we are in a browser environment or not.
  */
@@ -79,42 +79,12 @@
     };
 
     /**
-     * Checks to see if value is set (not null and not undefined).
-     * @param value
-     * @returns {Boolean}
-     */
-    function isSet (value) {
-        return (value !== undefined && value !== null);
-    }
-
-    /**
-     * Checks to see if any of the arguments passed in are
-     * set (not undefined and not null).
-     * Returns false on the first argument encountered that
-     * is null or undefined.
+     * Checks to see value passed in is set (not undefined and not null).
      * @function module:sjl.isset
      * @returns {Boolean}
      */
-    sjl.isset = function () {
-        var retVal = false,
-            check;
-
-        if (arguments.length > 1) {
-            for (var i in arguments) {
-                if (arguments.hasOwnProperty(i)) {
-                    i = arguments[i];
-                    check = isSet(i);
-                    if (!check) {
-                        retVal = check;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (arguments.length === 1) {
-            retVal = isSet(arguments[0]);
-        }
-        return retVal;
+    sjl.isset = function (value) {
+        return typeof value !== 'undefined' && value !== null;
     };
 
     /**
@@ -125,10 +95,7 @@
      * @returns {Boolean}
      */
     sjl.issetAndOfType = function (value, type) {
-        // If `type` is of type array then use it else assume type is a string and possibly more
-        // type strings are passed in after it.
-        var args = sjl.classOfIs(type, 'Array') ? type : sjl.restArgs(arguments, 1);
-        return isSet(value) && sjl.classOfIs(value, args);
+        return sjl.isset(value) && sjl.classOfIs(value, type);
     };
 
     /**
@@ -139,7 +106,7 @@
      * @returns {Boolean}
      */
     sjl.issetObjKey = function (obj, key) {
-        return key in obj && isSet(obj[key]);
+        return key in obj && sjl.isset(obj[key]);
     };
 
     /**
@@ -151,8 +118,7 @@
      * @returns {Boolean}
      */
     sjl.issetObjKeyAndOfType = function (obj, key, type) {
-        return sjl.issetObjKey(obj, key)
-            && sjl.classOfIs(obj[key], sjl.restArgs(arguments, 2));
+        return sjl.issetObjKey(obj, key) && sjl.classOfIs(obj[key], type);
     };
 
     /**
@@ -185,27 +151,11 @@
      * Checks to see if an object is of type humanString (class name) .
      * @function module:sjl.classOfIs
      * @param obj {*} - Object to be checked.
-     * @param humanString {String|Array} - Class string to check for or Array of class strings to check for.
-     *  Can also just be ...rest params of class strings which will be parsed internally as an array of class strings;
-     *  I.e., "Number", "Object", etc.
-     * @returns {Boolean} - Whether object matches class string(s) or not.
+     * @param humanString {String}
+     * @returns {Boolean} - Whether object matches class string or not.
      */
     sjl.classOfIs = function (obj, humanString) {
-        // If `humanString` is of type Array then use it.  Else assume it is of type String and that there are possibly
-        // more type strings passed in after it.
-        var args = sjl.classOf(humanString) === 'Array' ? humanString : sjl.restArgs(arguments, 1),
-            retVal = false;
-
-        args = sjl.flattenArray(args);
-
-        for (var i = 0; i < args.length; i += 1) {
-            humanString = args[i];
-            retVal = sjl.classOf(obj) === humanString;
-            if (retVal) {
-                break;
-            }
-        }
-        return retVal;
+        return sjl.classOf(obj) === humanString;
     };
 
     /**
