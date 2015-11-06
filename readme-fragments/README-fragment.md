@@ -40,18 +40,21 @@ See release notes for release 0.5.0.
 ### Classes/Constructors
 
 ##### sjl.ns.stdlib.Attributable(attributes {Object|undefined}) :sjl.ns.stdlib.Attributable
-A base attributable constructor which has two methods `attr` and `attrs` (for setting and getting multiple attributes 
-jquery style).
+A base attributable constructor which has two methods `attr` and `attrs`
+(for setting and getting multiple attributes jquery style).
 
 ##### sjl.ns.stdlib.Iterator(values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.Iterator
-A simple iterator constructor which implements the es6 iterator and the php `Iterator` classes.
+A simple iterator constructor which implements the es6 iterator and
+the php `Iterator` classes.
 
 ##### sjl.ns.stdlib.ObjectIterator(keys{Array<*>, values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
-An object iterator;  Iterates similarly to Iterator but takes a set of keys and values on construction.
-Implements the es6 iterator and the php `Iterator` classes.
+An object iterator;  Iterates similarly to Iterator but takes a set of
+keys and values on construction. Implements the es6 iterator and the php
+`Iterator` classes.
 
 ##### sjl.ns.stdlib.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable
-A base extendable constructor with a static `extend` method that allows you to easily extend constructors/classes; E.g.,
+A base extendable constructor with a static `extend` method that allows
+ you to easily extend constructors/classes; E.g.,
 
 ```
 // SomeConstructor.js
@@ -129,7 +132,8 @@ Converts arguments to an array;  E.g.,
 Returns the rest of the arguments from the given `start` to `end` (optional) positions, E.g.,
 ```
 function someFunction (arg1, arg2, arg3) {
-    var otherArgs = sjl.restArgs(arguments, 2); // Will give us everything after `arg2`
+    // Will give us everything after `arg2`
+    var otherArgs = sjl.restArgs(arguments, 2);
 }
 
 // This function will call will give us the array
@@ -142,7 +146,7 @@ Checks whether an `obj` has the given method/function defined on it.  E.g.,
 ```
 var obj = {hello: function () {}, someNonFunctionValueKey: 'hello world'};
 sjl.hasMethod(obj, 'hello'); // true.  Found key is of type 'Function'.
-sjl.hasMethod(obj, 'nonFunctionKey'); // false.  Found key is not of type 'Function'.
+sjl.hasMethod(obj, 'nonFunctionKey'); // false.  Found key is not 'Function'.
 sjl.hasMethod(obj, 'nonExistentMethod'); // false.
 ```
 
@@ -168,8 +172,8 @@ sjl.classOfIs([], 'Number', 'Array') // true.  Matches 'Array'.
 ```
 
 ##### sjl.empty(...value {*}) :Boolean
-Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`, empty array, or empty object is true for one
- or one of many values.
+Opinionated `empty` check.  Checks if `false`, `0`, `null`, `undefined`,
+empty array, or empty object is true for one or one of many values.
 ```
 sjl.empty(false); // true
 sjl.empty(true);  // false
@@ -214,15 +218,16 @@ Checks whether an object has own `key` and whether the value of found `key` is n
 ```
 var someObj = {hello: 'world', myNameIs: null};
 // Check keys on `someObj`
-sjl.issetObjKey(someObj, 'hello')       // true.  Key is set and not null or undefined.
-sjl.issetObjKey(someObj, 'myNameIs')    // false.  Key exists on object but is null.
-sjl.issetObjKey(someObj, 'nonExistentProperty')    // false.  Key does not exists on object.
+sjl.issetObjKey(someObj, 'hello')       // true. Key is set.
+sjl.issetObjKey(someObj, 'myNameIs')    // false.
+sjl.issetObjKey(someObj, 'nonExistentProperty')    // false.
 ```
 
 ##### issetObjKeyAndOfType (obj {*}, key {String}, ...type {String}) :Boolean
 Does the same thing as `sjl.issetObjKey` but also checks if the found `key` matches one of the passed in types.
 ```
-var someObj = {someNum: 100, someNullValue: null, someStringValue: 'hello world'};
+var someObj =
+    {someNum: 100, someNullValue: null, someStringValue: 'hello world'};
 // Check keys on `someObj`
 sjl.issetObjKeyAndOfType(someObj, 'someNum', 'String', 'Number')  
 // true.  Key is set and matches the type 'Number'.
@@ -300,10 +305,13 @@ it returns null.
 ##### sjl.createTopLevelPackage (obj {Object}, packageKey {String|undefined}, altFuncKey {String|undefined}, dirPath {String|undefined}) :obj
 Creates a top level `package` on an object that allows you to set members on it which become un-overwrittable (members can be edited but not overwritten)
  when working on the frontend and when the library is being used within nodejs, this function creates a lazy loader 
- for loading class member *.js and *.json files;  E.g., 
+ for loading class member *.js and *.json files;  E.g.,
+
+(ignore whitespace formatting for examples (trying to make examples fit without
+  having the browsers generate scrollbars on github))
 
 ```
-// FRONTEND and NODEJS USAGE
+// FRONTEND USAGE
 // -------------------------------------------------
 
 // -------------------------------------------------
@@ -312,8 +320,9 @@ Creates a top level `package` on an object that allows you to set members on it 
 // Create top level frontend package
 var myObject = Object.defineProperty(window, 'myObject', {});
 
-// Create top level package functionality on `myObject` (note this method also returns passed in object
-sjl.createTopLevelPackage(myObject, 'package', 'ns', typeof window === 'undefined' ? __dirname : null);
+// Create top level package functionality on `myObject`
+// (note this method also returns passed in object
+sjl.createTopLevelPackage(myObject, 'package', 'ns');
 
 // -------------------------------------------------
 // somePackage/someClass.js
@@ -322,21 +331,124 @@ sjl.createTopLevelPackage(myObject, 'package', 'ns', typeof window === 'undefine
     // Declare some class
     function SomeClass () {};
     
-    // NOTE: this part is only necessary for the frontend.  In nodejs environments you just have to make 
-    // sure that you export your class etc via module.exports unless the file is a json file.
-    
     // Export some class
     window.myObject.package('somePackage.SomeClass', SomeClass);
-    
 }());
 
 // -------------------------------------------------
 // somePackage/someProcess.js 
 // -------------------------------------------------
-var SomeClass = myObject.package.somePackage.SomeClass;  // you case use the alias for package 
+var SomeClass = myObject.package.somePackage.SomeClass;
+// you case use the alias for package
 // here as well, in this case it is `ns`
 
 ```
+
+```
+// NODEJS USAGE
+// -------------------------------------------------
+
+// -------------------------------------------------
+// somePackage/myObject.js
+// -------------------------------------------------
+// Create top level frontend package
+var myObject = Object.defineProperty(window, 'myObject', {});
+
+// Create top level package functionality on `myObject`
+// (note this method also returns passed in object)
+sjl.createTopLevelPackage(myObject, 'package', 'ns', __dirname);
+
+// -------------------------------------------------
+// somePackage/someClass.js
+// -------------------------------------------------
+(function () {
+    // Include your object
+    var myObject = require('somePackage/myObject.js');
+
+    // Declare some class
+    function SomeClass () {};
+
+    // Export some class
+    module.exports = SomeClass;
+}());
+
+// -------------------------------------------------
+// somePackage/someProcess.js
+// -------------------------------------------------
+// Fetch your exported class using namespaces:
+var SomeClass = myObject.package.somePackage.SomeClass;
+// you case use the alias for package
+// here as well, in this case it is `ns`
+
+```
+
+
+```
+// FRONTEND AND NODEJS USAGE TOGETHER "EXAMPLE"
+// -------------------------------------------------
+
+// -------------------------------------------------
+// somePackage/myObject.js
+// -------------------------------------------------
+(function () {
+    var isNodeEnv = typeof window === 'undefined';
+
+    // Create top level frontend package
+    var myObject = {};
+
+    if (isNodeEnv) {
+        module.exports = myObject;
+    }
+    else {
+        Object.defineProperty(window, 'myObject', {});
+    }
+
+    // Create top level package functionality on `myObject`
+    // (note this method also returns passed in object
+    sjl.createTopLevelPackage(
+        myObject, 'package', 'ns', isNodeEnv ? __dirname : null);
+
+}()):
+
+// -------------------------------------------------
+// somePackage/someClass.js
+// -------------------------------------------------
+(function () {
+
+    var isNodeEnv = typeof window === 'undefined',
+        myObject = isNodeEnv ? require('somePackage/myObject.js')
+            : window.myObject || {};
+
+    // Declare some class
+    function SomeClass () {};
+
+    // Export some class
+    if (isNodeEnv) {
+        module.exports = SomeClass;
+    }
+    else {
+        myObject.package('somePackage.SomeClass', SomeClass);
+    }
+
+}());
+
+// -------------------------------------------------
+// somePackage/someProcess.js
+// -------------------------------------------------
+// Use your exported class via namespaces
+(function () {
+
+    var isNodeEnv = typeof window === 'undefined',
+        myObject = isNodeEnv ? require('somePackage/myObject.js')
+            : window.myObject || {},
+        SomeClass = myObject.package.somePackage.SomeClass;
+        // you case use the alias for package
+        // here as well, in this case it is `ns`
+
+}());
+
+```
+
 
 **Note**:
 - This is called on the `sjl` object to allow to access its class members easily in nodejs and on the frontend.
