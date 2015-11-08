@@ -78,15 +78,18 @@ now available in the <code>sjl.ns.stdlib</code> package.</p>
 </ul>
 <h3 id="classes-constructors">Classes/Constructors</h3>
 <h5 id="sjl-ns-stdlib-attributable-attributes-object-undefined-sjl-ns-stdlib-attributable">sjl.ns.stdlib.Attributable(attributes {Object|undefined}) :sjl.ns.stdlib.Attributable</h5>
-<p>A base attributable constructor which has two methods <code>attr</code> and <code>attrs</code> (for setting and getting multiple attributes 
-jquery style).</p>
+<p>A base attributable constructor which has two methods <code>attr</code> and <code>attrs</code>
+(for setting and getting multiple attributes jquery style).</p>
 <h5 id="sjl-ns-stdlib-iterator-values-array-undefined-pointer-number-undefined-sjl-ns-stdlib-iterator">sjl.ns.stdlib.Iterator(values {Array&lt;*&gt;|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.Iterator</h5>
-<p>A simple iterator constructor which implements the es6 iterator and the php <code>Iterator</code> classes.</p>
+<p>A simple iterator constructor which implements the es6 iterator and
+the php <code>Iterator</code> classes.</p>
 <h5 id="sjl-ns-stdlib-objectiterator-keys-array-values-array-undefined-pointer-number-undefined-sjl-ns-stdlib-objectiterator">sjl.ns.stdlib.ObjectIterator(keys{Array&lt;<em>&gt;, values {Array&lt;</em>&gt;|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator</h5>
-<p>An object iterator;  Iterates similarly to Iterator but takes a set of keys and values on construction.
-Implements the es6 iterator and the php <code>Iterator</code> classes.</p>
+<p>An object iterator;  Iterates similarly to Iterator but takes a set of
+keys and values on construction. Implements the es6 iterator and the php
+<code>Iterator</code> classes.</p>
 <h5 id="sjl-ns-stdlib-extendable-constructor-string-function-methods-object-undefined-statics-object-undefined-sjl-extendable">sjl.ns.stdlib.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable</h5>
-<p>A base extendable constructor with a static <code>extend</code> method that allows you to easily extend constructors/classes; E.g.,</p>
+<p>A base extendable constructor with a static <code>extend</code> method that allows
+ you to easily extend constructors/classes; E.g.,</p>
 <pre><code>// SomeConstructor.js
 // Using node, requirejs, browserify or some 
 // other AMD/UMD helper (here we&#39;ll use nodejs)
@@ -153,7 +156,8 @@ but with some enhanced methods on it and without the ajax stuff (barebones objec
 <h5 id="sjl-restargs-arguments-arguments-start-number-undefined-end-number-undefined-array">sjl.restArgs(arguments {Arguments}, start {Number|undefined}, end {Number|undefined}) :Array</h5>
 <p>Returns the rest of the arguments from the given <code>start</code> to <code>end</code> (optional) positions, E.g.,</p>
 <pre><code>function someFunction (arg1, arg2, arg3) {
-    var otherArgs = sjl.restArgs(arguments, 2); // Will give us everything after `arg2`
+    // Will give us everything after `arg2`
+    var otherArgs = sjl.restArgs(arguments, 2);
 }
 
 // This function will call will give us the array
@@ -163,7 +167,7 @@ someFunction (&#39;value1&#39;, &#39;value2&#39;, &#39;valu3&#39;, &#39;value4&#
 <p>Checks whether an <code>obj</code> has the given method/function defined on it.  E.g.,</p>
 <pre><code>var obj = {hello: function () {}, someNonFunctionValueKey: &#39;hello world&#39;};
 sjl.hasMethod(obj, &#39;hello&#39;); // true.  Found key is of type &#39;Function&#39;.
-sjl.hasMethod(obj, &#39;nonFunctionKey&#39;); // false.  Found key is not of type &#39;Function&#39;.
+sjl.hasMethod(obj, &#39;nonFunctionKey&#39;); // false.  Found key is not &#39;Function&#39;.
 sjl.hasMethod(obj, &#39;nonExistentMethod&#39;); // false.
 </code></pre><h5 id="sjl-camelcase-str-string-ucasefirst-boolean-undefined-string">sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}) :String</h5>
 <p>Camel Cases a string;<br><code>sjl.camelCase(&#39;hello-world&#39;, boolean);</code> -&gt; returns &quot;helloWorld&quot; if <code>boolean</code> is <code>false</code>
@@ -179,8 +183,8 @@ sjl.classOf(new Map()) === &#39;Map&#39;  // true
 sjl.classOfIs([], &#39;Array&#39;) === true  // true
 sjl.classOfIs([], &#39;Number&#39;, &#39;Array&#39;) // true.  Matches &#39;Array&#39;.
 </code></pre><h5 id="sjl-empty-value-boolean">sjl.empty(...value {*}) :Boolean</h5>
-<p>Opinionated <code>empty</code> check.  Checks if <code>false</code>, <code>0</code>, <code>null</code>, <code>undefined</code>, empty array, or empty object is true for one
- or one of many values.</p>
+<p>Opinionated <code>empty</code> check.  Checks if <code>false</code>, <code>0</code>, <code>null</code>, <code>undefined</code>,
+empty array, or empty object is true for one or one of many values.</p>
 <pre><code>sjl.empty(false); // true
 sjl.empty(true);  // false
 sjl.empty(0, false, null, undefined, [], {});    // true
@@ -211,12 +215,13 @@ sjl.issetAndOfType(someNumberValue, [&#39;String&#39;, &#39;Number&#39;, &#39;Fu
 <p>Checks whether an object has own <code>key</code> and whether the value of found <code>key</code> is not <code>undefined</code> or not <code>null</code>.</p>
 <pre><code>var someObj = {hello: &#39;world&#39;, myNameIs: null};
 // Check keys on `someObj`
-sjl.issetObjKey(someObj, &#39;hello&#39;)       // true.  Key is set and not null or undefined.
-sjl.issetObjKey(someObj, &#39;myNameIs&#39;)    // false.  Key exists on object but is null.
-sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)    // false.  Key does not exists on object.
+sjl.issetObjKey(someObj, &#39;hello&#39;)       // true. Key is set.
+sjl.issetObjKey(someObj, &#39;myNameIs&#39;)    // false.
+sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)    // false.
 </code></pre><h5 id="issetobjkeyandoftype-obj-key-string-type-string-boolean">issetObjKeyAndOfType (obj {*}, key {String}, ...type {String}) :Boolean</h5>
 <p>Does the same thing as <code>sjl.issetObjKey</code> but also checks if the found <code>key</code> matches one of the passed in types.</p>
-<pre><code>var someObj = {someNum: 100, someNullValue: null, someStringValue: &#39;hello world&#39;};
+<pre><code>var someObj =
+    {someNum: 100, someNullValue: null, someStringValue: &#39;hello world&#39;};
 // Check keys on `someObj`
 sjl.issetObjKeyAndOfType(someObj, &#39;someNum&#39;, &#39;String&#39;, &#39;Number&#39;)  
 // true.  Key is set and matches the type &#39;Number&#39;.
@@ -277,8 +282,10 @@ it returns null.</p>
 <h5 id="sjl-createtoplevelpackage-obj-object-packagekey-string-undefined-altfunckey-string-undefined-dirpath-string-undefined-obj">sjl.createTopLevelPackage (obj {Object}, packageKey {String|undefined}, altFuncKey {String|undefined}, dirPath {String|undefined}) :obj</h5>
 <p>Creates a top level <code>package</code> on an object that allows you to set members on it which become un-overwrittable (members can be edited but not overwritten)
  when working on the frontend and when the library is being used within nodejs, this function creates a lazy loader 
- for loading class member <em>.js and </em>.json files;  E.g., </p>
-<pre><code>// FRONTEND and NODEJS USAGE
+ for loading class member <em>.js and </em>.json files;  E.g.,</p>
+<p>(ignore whitespace formatting for examples (trying to make examples fit without
+  having the browsers generate scrollbars on github))</p>
+<pre><code>// FRONTEND USAGE
 // -------------------------------------------------
 
 // -------------------------------------------------
@@ -287,8 +294,9 @@ it returns null.</p>
 // Create top level frontend package
 var myObject = Object.defineProperty(window, &#39;myObject&#39;, {});
 
-// Create top level package functionality on `myObject` (note this method also returns passed in object
-sjl.createTopLevelPackage(myObject, &#39;package&#39;, &#39;ns&#39;, typeof window === &#39;undefined&#39; ? __dirname : null);
+// Create top level package functionality on `myObject`
+// (note this method also returns passed in object
+sjl.createTopLevelPackage(myObject, &#39;package&#39;, &#39;ns&#39;);
 
 // -------------------------------------------------
 // somePackage/someClass.js
@@ -297,19 +305,112 @@ sjl.createTopLevelPackage(myObject, &#39;package&#39;, &#39;ns&#39;, typeof wind
     // Declare some class
     function SomeClass () {};
 
-    // NOTE: this part is only necessary for the frontend.  In nodejs environments you just have to make 
-    // sure that you export your class etc via module.exports unless the file is a json file.
-
     // Export some class
     window.myObject.package(&#39;somePackage.SomeClass&#39;, SomeClass);
-
 }());
 
 // -------------------------------------------------
 // somePackage/someProcess.js 
 // -------------------------------------------------
-var SomeClass = myObject.package.somePackage.SomeClass;  // you case use the alias for package 
+var SomeClass = myObject.package.somePackage.SomeClass;
+// you case use the alias for package
 // here as well, in this case it is `ns`
+</code></pre><pre><code>// NODEJS USAGE
+// -------------------------------------------------
+
+// -------------------------------------------------
+// somePackage/myObject.js
+// -------------------------------------------------
+// Create top level frontend package
+var myObject = Object.defineProperty(window, &#39;myObject&#39;, {});
+
+// Create top level package functionality on `myObject`
+// (note this method also returns passed in object)
+sjl.createTopLevelPackage(myObject, &#39;package&#39;, &#39;ns&#39;, __dirname);
+
+// -------------------------------------------------
+// somePackage/someClass.js
+// -------------------------------------------------
+(function () {
+    // Include your object
+    var myObject = require(&#39;somePackage/myObject.js&#39;);
+
+    // Declare some class
+    function SomeClass () {};
+
+    // Export some class
+    module.exports = SomeClass;
+}());
+
+// -------------------------------------------------
+// somePackage/someProcess.js
+// -------------------------------------------------
+// Fetch your exported class using namespaces:
+var SomeClass = myObject.package.somePackage.SomeClass;
+// you case use the alias for package
+// here as well, in this case it is `ns`
+</code></pre><pre><code>// FRONTEND AND NODEJS USAGE TOGETHER &quot;EXAMPLE&quot;
+// -------------------------------------------------
+
+// -------------------------------------------------
+// somePackage/myObject.js
+// -------------------------------------------------
+(function () {
+    var isNodeEnv = typeof window === &#39;undefined&#39;;
+
+    // Create top level frontend package
+    var myObject = {};
+
+    if (isNodeEnv) {
+        module.exports = myObject;
+    }
+    else {
+        Object.defineProperty(window, &#39;myObject&#39;, {});
+    }
+
+    // Create top level package functionality on `myObject`
+    // (note this method also returns passed in object
+    sjl.createTopLevelPackage(
+        myObject, &#39;package&#39;, &#39;ns&#39;, isNodeEnv ? __dirname : null);
+
+}()):
+
+// -------------------------------------------------
+// somePackage/someClass.js
+// -------------------------------------------------
+(function () {
+
+    var isNodeEnv = typeof window === &#39;undefined&#39;,
+        myObject = isNodeEnv ? require(&#39;somePackage/myObject.js&#39;)
+            : window.myObject || {};
+
+    // Declare some class
+    function SomeClass () {};
+
+    // Export some class
+    if (isNodeEnv) {
+        module.exports = SomeClass;
+    }
+    else {
+        myObject.package(&#39;somePackage.SomeClass&#39;, SomeClass);
+    }
+
+}());
+
+// -------------------------------------------------
+// somePackage/someProcess.js
+// -------------------------------------------------
+// Use your exported class via namespaces
+(function () {
+
+    var isNodeEnv = typeof window === &#39;undefined&#39;,
+        myObject = isNodeEnv ? require(&#39;somePackage/myObject.js&#39;)
+            : window.myObject || {},
+        SomeClass = myObject.package.somePackage.SomeClass;
+        // you case use the alias for package
+        // here as well, in this case it is `ns`
+
+}());
 </code></pre><p><strong>Note</strong>:</p>
 <ul>
 <li>This is called on the <code>sjl</code> object to allow to access its class members easily in nodejs and on the frontend.</li>
@@ -418,12 +519,12 @@ right now it is not apparent to people that this is the default behaviour).  Mov
 </ul>
 </li>
 <li>[ ] - Write a filter chain class.</li>
-<li>[ ] - Change interface check to check for &#39;isValid&#39; and &#39;message&#39;
+<li>[ ] - Change interface check to check for &#39;isValid&#39; and &#39;messages&#39;
   properties on a &#39;AbstractValidator&#39; class passed to a &#39;ValidatorChain&#39; class.</li>
-<li>[ ] - Review entirety of library and look fgit or places that could be refactored.</li>
+<li>[ ] - Review entirety of library and look for places that could be refactored.</li>
 <li>[ ] - Refactor the <code>input</code> package</li>
 <li>[ ] - Refactor the <code>validator</code> package</li>
-<li>[ ] - <code>sjl.empty</code> to <code>sjl.isEmpty</code> (maybe for version 0.5.0).</li>
+<li>[ ] - <code>sjl.empty</code> to <code>sjl.isempty</code> (maybe for version 0.5.50).</li>
 <li>[X] - Change <code>sjl.getValueOnObj</code>&#39;s <code>raw</code> param to have a default <code>true</code> (needs to be set to true by default cause
 right now it is not apparent to people that this is the default behaviour).</li>
 <li>[X] - Remove <code>attrs</code> method from <code>sjl.Attributable</code>.</li>
@@ -438,9 +539,9 @@ right now it is not apparent to people that this is the default behaviour).</li>
 <li>[X] - Shim <code>sjl.forEach</code> and <code>sjl.indexOf</code>.</li>
 <li>[X] - Make <code>sjl.package</code> work using node (dynamically load class in for every requested namespace/class
 instead of requiring global require).</li>
-<li>[ ] - Include all sub items for components included as sub nav in components nav in readme.</li>
-<li>[ ] - Remove checking against multiple values for util functions (isset, classOfIs, etc. (maybe not classOfIs (have to evaluate common use cases further))).</li>
-<li>[ ] - Change <code>value !== undefined</code> check to use typeof instead (safe way for browsers (current check fails in browsers)).</li>
+<li>[ ] - Include all sub items for components included as sub nav in readme.</li>
+<li>[X] - Remove checking against multiple values for util functions (isset, classOfIs, etc. (maybe not classOfIs (have to evaluate common use cases further))).</li>
+<li>[X] - Change <code>value !== undefined</code> check to use typeof instead (safe way for browsers (current check fails in browsers)).</li>
 </ul>
 <h3 id="mvp-for-0-5-1-">MVP for 0.5.1+</h3>
 <ul>
@@ -566,6 +667,13 @@ sjl.package(&#39;somePackage.SomeClass&#39;, SomeClass);
 <ul>
 <li>Classes have to be exported for nodejs via it&#39;s exporting facilities;<br>I.e., <code>module.exports = SomeClass;</code></li>
 </ul>
+<h3 id="changelog-for-11-05-2015-version-0-5-3-">Changelog for 11/05/2015 version 0.5.3:</h3>
+<ul>
+<li>Removed support for multiple type checking functions (classOfIs, issetAndOfType etc.).</li>
+<li>Removed support for checking multiple values on <code>sjl.isset</code>.</li>
+<li>Also removed support for multiple type checking on functions that delegate type(s) checking to <code>sjl.classOfIs</code>,
+<code>sjl.issetAndOfType</code>, <code>sjl.notEmptyAndOfType</code>, etc..</li>
+</ul>
 </article>
     </section>
 
@@ -583,7 +691,7 @@ sjl.package(&#39;somePackage.SomeClass&#39;, SomeClass);
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Thu Nov 05 2015 15:13:56 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Nov 07 2015 22:36:19 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

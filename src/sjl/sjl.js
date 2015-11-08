@@ -982,6 +982,6 @@
     });
 
     // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', __dirname);
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', isNodeEnv ? __dirname : null);
 
 }());

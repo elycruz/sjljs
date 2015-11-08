@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Nov 05 2015 15:13:51 GMT-0500 (EST)
+ * sjl-minimal.js Sat Nov 07 2015 22:36:16 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -985,6 +985,6 @@
     });
 
     // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', __dirname);
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', isNodeEnv ? __dirname : null);
 
 }());

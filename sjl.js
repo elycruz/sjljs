@@ -1,4 +1,4 @@
-/**! sjl.js Thu Nov 05 2015 15:13:54 GMT-0500 (EST) **//**
+/**! sjl.js Sat Nov 07 2015 22:36:18 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo Make frontend only functionality defined conditionally on whether we are in a browser environment or not.
  */
@@ -982,7 +982,7 @@
     });
 
     // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', __dirname);
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', isNodeEnv ? __dirname : null);
 
 }());
 
