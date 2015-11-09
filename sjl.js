@@ -1,4 +1,4 @@
-/**! sjl.js Sat Nov 07 2015 22:36:18 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Sun Nov 08 2015 21:03:08 GMT-0500 (EST) **//**
  * Created by Ely on 5/29/2015.
  * @todo Make frontend only functionality defined conditionally on whether we are in a browser environment or not.
  */
@@ -8,7 +8,9 @@
 
     var sjl = {},
         isNodeEnv = typeof window === 'undefined',
-        slice = Array.prototype.slice;
+        slice = Array.prototype.slice,
+        globalContext = isNodeEnv ? global : window,
+        libSrcRootPath = null;
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -971,18 +973,26 @@
         sjl.Symbol = Symbol;
     }
 
-    // If nodejs environment export `sjl`
+    // Node specific code
     if (isNodeEnv) {
+        // Export `sjl`
         module.exports = sjl;
+
+        // Set lib src root path to be used in node env by `sjl.package`
+        libSrcRootPath = __dirname;
     }
 
-    // Export sjl globally (the node global export will be deprecated at a later version)
-    Object.defineProperty(isNodeEnv ? global : window, 'sjl', {
+    // Set global environment check to minimize boilerplate in
+    // library member/components.
+    globalContext.__isNodeEnv = isNodeEnv;
+
+    // Export sjl globally g(the node global export will be deprecated at a later version)
+    Object.defineProperty(globalContext, 'sjl', {
         value: sjl
     });
 
     // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', isNodeEnv ? __dirname : null);
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
 }());
 

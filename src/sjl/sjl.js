@@ -8,7 +8,9 @@
 
     var sjl = {},
         isNodeEnv = typeof window === 'undefined',
-        slice = Array.prototype.slice;
+        slice = Array.prototype.slice,
+        globalContext = isNodeEnv ? global : window,
+        libSrcRootPath = null;
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -971,17 +973,25 @@
         sjl.Symbol = Symbol;
     }
 
-    // If nodejs environment export `sjl`
+    // Node specific code
     if (isNodeEnv) {
+        // Export `sjl`
         module.exports = sjl;
+
+        // Set lib src root path to be used in node env by `sjl.package`
+        libSrcRootPath = __dirname;
     }
 
-    // Export sjl globally (the node global export will be deprecated at a later version)
-    Object.defineProperty(isNodeEnv ? global : window, 'sjl', {
+    // Set global environment check to minimize boilerplate in
+    // library member/components.
+    globalContext.__isNodeEnv = isNodeEnv;
+
+    // Export sjl globally g(the node global export will be deprecated at a later version)
+    Object.defineProperty(globalContext, 'sjl', {
         value: sjl
     });
 
     // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', isNodeEnv ? __dirname : null);
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
 }());
