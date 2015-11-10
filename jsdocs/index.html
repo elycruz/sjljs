@@ -177,14 +177,14 @@ sjl.hasMethod(obj, &#39;nonExistentMethod&#39;); // false.
 <pre><code>sjl.classOf(&quot;hello&quot;) === &#39;String&#39; // true
 sjl.classOf(new Map()) === &#39;Map&#39;  // true
 // etc.
-</code></pre><h5 id="sjl-classofis-obj-classtypestr-string-boolean">sjl.classOfIs(obj {*}, ...classTypeStr {String}) :Boolean</h5>
-<p>Checks whether <code>obj</code> is of one of the <code>classTypeStr</code>&#39;s passed in;  E.g., </p>
-<pre><code>sjl.classOfIs(0, &#39;String&#39;, &#39;Number&#39;) // true.  Matches &#39;Number&#39;.
+</code></pre><h5 id="sjl-classofis-obj-classtypestr-string-boolean">sjl.classOfIs(obj {*}, classTypeStr {String}) :Boolean</h5>
+<p>Checks whether <code>obj</code> is of <code>classTypeStr</code> passed in;  E.g.,</p>
+<pre><code>sjl.classOfIs(0, &#39;Number&#39;) // true.  Matches &#39;Number&#39;.
 sjl.classOfIs([], &#39;Array&#39;) === true  // true
-sjl.classOfIs([], &#39;Number&#39;, &#39;Array&#39;) // true.  Matches &#39;Array&#39;.
-</code></pre><h5 id="sjl-empty-value-boolean">sjl.empty(...value {*}) :Boolean</h5>
+sjl.classOfIs([], &#39;Array&#39;) // true.  Matches &#39;Array&#39;.
+</code></pre><h5 id="sjl-empty-value-boolean">sjl.empty(value {*}) :Boolean</h5>
 <p>Opinionated <code>empty</code> check.  Checks if <code>false</code>, <code>0</code>, <code>null</code>, <code>undefined</code>,
-empty array, or empty object is true for one or one of many values.</p>
+empty array, or empty object is true for passed in object.</p>
 <pre><code>sjl.empty(false); // true
 sjl.empty(true);  // false
 sjl.empty(0, false, null, undefined, [], {});    // true
@@ -193,23 +193,23 @@ sjl.empty(1, true, {prop: &#39;value&#39;}, [&#39;value&#39;]);  // false
 <p>Pops a boolean off of the end of an array and returns it.<br>If no boolean is found there returns <code>false</code>.</p>
 <h5 id="sjl-extractboolfromarraystart-list-array-boolean">sjl.extractBoolFromArrayStart(list {Array}) :Boolean</h5>
 <p>Shifts a boolean off of the beginning of an array and returns it.<br>If no boolean is found at there returns <code>false</code>.</p>
-<h5 id="sjl-isset-value-boolean">sjl.isset(...value {*}) :Boolean</h5>
-<p>Checks for a value that is not <code>null</code> or <code>undefined</code> and returns true if it finds one.  Works for one or one of many values.</p>
+<h5 id="sjl-isset-value-boolean">sjl.isset(value {*}) :Boolean</h5>
+<p>Checks to see if value is not <code>null</code> or <code>undefined</code> and returns true if it is.</p>
 <pre><code>sjl.isset(someUndefinedValue)           // false.  Value is not set.
 sjl.isset(null, someUndefinedValue)     // false.  None of the values is set.
 sjl.isset(null, 1, someUndefinedValue)  // true.   &#39;1&#39; is a non empty value.
-</code></pre><h5 id="sjl-issetandoftype-value-type-string-array-string-type-string-boolean">sjl.issetAndOfType(value {*}, type {String|Array<String>}, ...type {String}) :Boolean</h5>
-<p>Checks to see if a value is set and is of given type(s).  E.g.,</p>
+</code></pre><h5 id="sjl-issetandoftype-value-type-string-array-string-type-string-boolean">sjl.issetAndOfType(value {*}, type {String|Array<String>}, type {String}) :Boolean</h5>
+<p>Checks to see if a value is set and is of given type.  E.g.,</p>
 <pre><code>sjl.issetAndOfType(someFunctionValue, &#39;Function&#39;)
 // true.  Value is set and is of type of function.
 
 sjl.issetAndOfType(someUndefinedValue, &#39;Function&#39;)
 // false.  Value is not set.
 
-sjl.issetAndOfType(someNumberValue, &#39;Function&#39;, &#39;String&#39;, &#39;Number&#39;)
+sjl.issetAndOfType(someNumberValue, &#39;Number&#39;)
 // true.  Matches type &#39;Number&#39;.
 
-sjl.issetAndOfType(someNumberValue, [&#39;String&#39;, &#39;Number&#39;, &#39;Function&#39;])
+sjl.issetAndOfType(someNumberValue, &#39;Number&#39;])
 // true.  Matches type &#39;Number&#39;.
 </code></pre><h5 id="sjl-issetobjkey-obj-key-string-boolean">sjl.issetObjKey (obj {*}, key {String}) :Boolean</h5>
 <p>Checks whether an object has own <code>key</code> and whether the value of found <code>key</code> is not <code>undefined</code> or not <code>null</code>.</p>
@@ -218,15 +218,15 @@ sjl.issetAndOfType(someNumberValue, [&#39;String&#39;, &#39;Number&#39;, &#39;Fu
 sjl.issetObjKey(someObj, &#39;hello&#39;)       // true. Key is set.
 sjl.issetObjKey(someObj, &#39;myNameIs&#39;)    // false.
 sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)    // false.
-</code></pre><h5 id="issetobjkeyandoftype-obj-key-string-type-string-boolean">issetObjKeyAndOfType (obj {*}, key {String}, ...type {String}) :Boolean</h5>
-<p>Does the same thing as <code>sjl.issetObjKey</code> but also checks if the found <code>key</code> matches one of the passed in types.</p>
+</code></pre><h5 id="issetobjkeyandoftype-obj-key-string-type-string-boolean">issetObjKeyAndOfType (obj {*}, key {String}, type {String}) :Boolean</h5>
+<p>Does the same thing as <code>sjl.issetObjKey</code> but also checks if the found <code>key</code> matches the passed in types.</p>
 <pre><code>var someObj =
     {someNum: 100, someNullValue: null, someStringValue: &#39;hello world&#39;};
 // Check keys on `someObj`
-sjl.issetObjKeyAndOfType(someObj, &#39;someNum&#39;, &#39;String&#39;, &#39;Number&#39;)  
+sjl.issetObjKeyAndOfType(someObj, &#39;someNum&#39;, &#39;Number&#39;)
 // true.  Key is set and matches the type &#39;Number&#39;.
 
-sjl.issetObjKey(someObj, &#39;someNullValue&#39;, &#39;String&#39;, &#39;Array&#39;)      
+sjl.issetObjKey(someObj, &#39;someNullValue&#39;, &#39;Array&#39;)
 // false.  Key exists on object but is null.
 
 sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)                   
@@ -237,18 +237,18 @@ sjl.issetObjKey(someObj, &#39;nonExistentProperty&#39;)
 <h5 id="sjl-namespace-key-string-objtosearch-object-valuetoset-undefined-objtosearch">sjl.namespace(key {String}, objToSearch {Object}, valueToSet {*|undefined}) :objToSearch</h5>
 <p>For getting and setting values on hash objects (allows deep searching by namespace string (<code>&#39;all.your.base&#39;</code>
  finds or sets <code>{all: {your: {base: ...}}}</code>).</p>
-<h5 id="sjl-isemptyobjkey-obj-object-key-string-type-string-undefined-boolean">sjl.isEmptyObjKey(obj {Object}, key {String}, ...type {String|undefined}) :Boolean</h5>
+<h5 id="sjl-isemptyobjkey-obj-object-key-string-type-string-undefined-boolean">sjl.isEmptyObjKey(obj {Object}, key {String}, type {String|undefined}) :Boolean</h5>
 <p>Does everything <code>sjl.issetObjKey</code> does.  In addition checks whether <code>obj[key]</code>&#39;s value is empty ([0, null, undefined, [], {}, false]) or not.
-and whether <code>obj[key]</code> is of one of the class strings passed in (<code>...type</code>).</p>
+and whether <code>obj[key]</code> is of the class strings passed in (<code>type</code>).</p>
 <pre><code>sjl.isEmptyObjKey({hello: &#39;world&#39;}, &#39;hello&#39;);   // false
 sjl.isEmptyObjKey({hello: 100}, &#39;hello&#39;);       // false
 sjl.isEmptyObjKey({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;);  // true 
-sjl.isEmptyObjKey({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;, &#39;String&#39;);  // false
+sjl.isEmptyObjKey({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;String&#39;);  // false
 </code></pre><p><strong>Note</strong> - The use of checking types a in this method will be removed in the next major release of the library.
 For checking whther a key on an object is empty and is of type use <code>sjl.isEmptyObjKeyAndOfType</code> instead.</p>
-<h5 id="sjl-isemptyobjkeyornotoftype-obj-object-key-string-type-string-undefined-boolean">sjl.isEmptyObjKeyOrNotOfType(obj {Object}, key {String}, ...type {String|undefined}) :Boolean</h5>
+<h5 id="sjl-isemptyobjkeyornotoftype-obj-object-key-string-type-string-undefined-boolean">sjl.isEmptyObjKeyOrNotOfType(obj {Object}, key {String}, type {String|undefined}) :Boolean</h5>
 <p>Does everything <code>sjl.issetObjKey</code> does.  In addition checks whether <code>obj[key]</code>&#39;s value is empty ([0, null, undefined, [], {}, false]) or not.
-and whether <code>obj[key]</code> is of one of the class strings passed in (<code>...type</code>).</p>
+and whether <code>obj[key]</code> is of of the class strings passed in (<code>type</code>).</p>
 <pre><code>sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;);   
 // false.  Found key is not empty.
 
@@ -258,7 +258,7 @@ sjl.isEmptyObjKeyOrNotOfType({hello: 100}, &#39;hello&#39;);
 sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;);            
 // true.  Found key is not empty but is not of given type(s). 
 
-sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;, &#39;Number&#39;, &#39;String&#39;); 
+sjl.isEmptyObjKeyOrNotOfType({hello: &#39;world&#39;}, &#39;hello&#39;, String&#39;);
 // false.  Found key is not empty and is of given type.
 </code></pre><h5 id="sjl-jsonclone-obj-">sjl.jsonClone (obj {<em>}) :</em></h5>
 <p>Clones an object using the JSON object.  E.g.,</p>
@@ -691,7 +691,7 @@ sjl.package(&#39;somePackage.SomeClass&#39;, SomeClass);
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sun Nov 08 2015 21:03:10 GMT-0500 (EST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Nov 09 2015 23:07:43 GMT-0500 (EST)
 </footer>
 
 <script> prettyPrint(); </script>

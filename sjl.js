@@ -1,8 +1,27 @@
-/**! sjl.js Sun Nov 08 2015 21:03:08 GMT-0500 (EST) **//**
+/**! sjl.js Mon Nov 09 2015 23:07:40 GMT-0500 (EST) **//**
  * Created by Ely on 5/29/2015.
- * @todo Make frontend only functionality defined conditionally on whether we are in a browser environment or not.
  */
-(function () {
+(function (factory) {
+
+    // Check if is node environment
+    var isNodeEnv = typeof window === 'undefined',
+
+        // Check if amd is being used
+        isAmd = (isNodeEnv ? global : window).__isAmd =
+            typeof define === "function" && define.amd;
+
+    // If not node environment and amd is being used
+    if (!isNodeEnv && isAmd) {
+        define(factory);
+    }
+
+    // Else if no amd or not node environment
+    else {
+        factory();
+    }
+
+}(
+    function () {
 
     'use strict';
 
@@ -809,21 +828,6 @@
     };
 
     /**
-     * Throws an error using a formatted string that reports the function name,
-     * the expected parameter type, and the value recieved.
-     * @function module:sjl.throwNotOfTypeError
-     * @param value
-     * @param paramName
-     * @param funcName
-     * @param expectedType
-     * @throws {Error}
-     */
-    sjl.throwNotOfTypeError = function (value, paramName, funcName, expectedType) {
-        throw Error(funcName + ' expects ' + paramName +
-            ' to be of type "' + expectedType + '".  Value received: ' + value);
-    };
-
-    /**
      * Makes a property non settable on `obj` and sets `value` as the returnable property.
      * @param obj {Object}
      * @param key {String}
@@ -994,7 +998,12 @@
     // Create top level frontend package
     sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
-}());
+    // Return sjl if amd is being used
+    if (globalContext.__isAmd) {
+        return sjl;
+    }
+
+}));
 
 /**
  * Created by Ely on 4/12/2014.
