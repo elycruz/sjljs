@@ -57,6 +57,10 @@
     }
     else {
         sjl.package('validator.AlphaNumValidator', AlphaNumValidator);
+        if (window.__isAmd) {
+            return AlphaNumValidator;
+        }
+
     }
 
 })();

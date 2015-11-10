@@ -93,6 +93,9 @@
     }
     else {
         sjl.package('stdlib.ObjectIterator', ObjectIterator);
+        if (window.__isAmd) {
+            return ObjectIterator;
+        }
     }
 
 }());

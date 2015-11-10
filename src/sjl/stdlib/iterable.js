@@ -48,6 +48,9 @@
     }
     else {
         sjl.package('stdlib.iterable', sjl.iterable);
+        if (window.__isAmd) {
+            return sjl.iterable;
+        }
     }
 
 }());

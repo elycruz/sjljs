@@ -31,6 +31,9 @@
     }
     else {
         sjl.package('stdlib.Extendable', Extendable);
+        if (window.__isAmd) {
+            return Extendable;
+        }
     }
 
 })();

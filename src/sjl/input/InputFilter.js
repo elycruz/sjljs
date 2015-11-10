@@ -367,6 +367,9 @@
     }
     else {
         sjl.package('input.InputFilter', InputFilter);
+        if (window.__isAmd) {
+            return InputFilter;
+        }
     }
 
 })();

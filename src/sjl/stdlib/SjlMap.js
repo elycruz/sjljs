@@ -142,6 +142,9 @@
     }
     else {
         sjl.package('stdlib.SjlMap', SjlMap);
+        if (window.__isAmd) {
+            return SjlMap;
+        }
     }
 
 })();

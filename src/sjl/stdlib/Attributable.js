@@ -90,6 +90,9 @@
     }
     else {
         sjl.package('stdlib.Attributable', Attributable);
+        if (window.__isAmd) {
+            return Attributable;
+        }
     }
 
 })();

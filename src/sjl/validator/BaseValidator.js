@@ -147,6 +147,10 @@
     }
     else {
         sjl.package('validator.BaseValidator', BaseValidator);
+        if (window.__isAmd) {
+            return BaseValidator;
+        }
+
     }
 
 })();

@@ -84,6 +84,9 @@
     }
     else {
         sjl.package('validator.EmailValidator', EmailValidator);
+        if (window.__isAmd) {
+            return EmailValidator;
+        }
     }
 
 })();

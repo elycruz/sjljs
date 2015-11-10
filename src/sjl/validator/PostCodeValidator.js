@@ -308,6 +308,9 @@
     }
     else {
         sjl.package('validator.PostCodeValidator', PostCodeValidator);
+        if (window.__isAmd) {
+            return PostCodeValidator;
+        }
     }
 
 })();

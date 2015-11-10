@@ -1,27 +1,7 @@
 /**
  * Created by Ely on 5/29/2015.
  */
-(function (factory) {
-
-    // Check if is node environment
-    var isNodeEnv = typeof window === 'undefined',
-
-        // Check if amd is being used
-        isAmd = (isNodeEnv ? global : window).__isAmd =
-            typeof define === "function" && define.amd;
-
-    // If not node environment and amd is being used
-    if (!isNodeEnv && isAmd) {
-        define(factory);
-    }
-
-    // Else if no amd or not node environment
-    else {
-        factory();
-    }
-
-}(
-    function () {
+(function () {
 
     'use strict';
 
@@ -30,6 +10,10 @@
         slice = Array.prototype.slice,
         globalContext = isNodeEnv ? global : window,
         libSrcRootPath = null;
+
+    // Check if amd is being used (store this check globally to reduce
+    //  boilerplate code in other components).
+    globalContext.__isAmd = typeof define === "function" && define.amd,
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -986,10 +970,6 @@
         libSrcRootPath = __dirname;
     }
 
-    // Set global environment check to minimize boilerplate in
-    // library member/components.
-    globalContext.__isNodeEnv = isNodeEnv;
-
     // Export sjl globally g(the node global export will be deprecated at a later version)
     Object.defineProperty(globalContext, 'sjl', {
         value: sjl
@@ -999,8 +979,8 @@
     sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
     // Return sjl if amd is being used
-    if (globalContext.__isAmd) {
+    if (!isNodeEnv && globalContext.__isAmd) {
         return sjl;
     }
 
-}));
+}());

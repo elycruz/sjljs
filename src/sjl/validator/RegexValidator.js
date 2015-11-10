@@ -77,6 +77,9 @@
     }
     else {
         sjl.package('validator.RegexValidator', RegexValidator);
+        if (window.__isAmd) {
+            return RegexValidator;
+        }
     }
 
 })();

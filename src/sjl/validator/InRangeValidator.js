@@ -107,6 +107,9 @@
     }
     else {
         sjl.package('validator.InRangeValidator', InRangeValidator);
+        if (window.__isAmd) {
+            return InRangeValidator;
+        }
     }
 
 })();

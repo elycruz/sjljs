@@ -119,6 +119,9 @@
     }
     else {
         sjl.package('stdlib.SjlSet', SjlSet);
+        if (window.__isAmd) {
+            return SjlSet;
+        }
     }
 
 })();

@@ -143,6 +143,9 @@
     }
     else {
         sjl.package('stdlib.Optionable', Optionable);
+        if (window.__isAmd) {
+            return Optionable;
+        }
     }
 
 })();

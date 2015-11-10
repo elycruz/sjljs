@@ -176,6 +176,9 @@
     }
     else {
         sjl.package('validator.ValidatorChain', ValidatorChain);
+        if (window.__isAmd) {
+            return ValidatorChain;
+        }
     }
 
 })();

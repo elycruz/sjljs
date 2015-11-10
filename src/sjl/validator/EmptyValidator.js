@@ -53,6 +53,9 @@
     }
     else {
         sjl.package('validator.EmptyValidator', EmptyValidator);
+        if (window.__isAmd) {
+            return EmptyValidator;
+        }
     }
 
 })();

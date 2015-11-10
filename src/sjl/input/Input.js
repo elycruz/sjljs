@@ -226,6 +226,9 @@
     }
     else {
         sjl.package('input.Input', Input);
+        if (window.__isAmd) {
+            return Input;
+        }
     }
 
 })();

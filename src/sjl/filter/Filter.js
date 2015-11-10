@@ -15,4 +15,8 @@
         }
     });
 
+    if (window.__isAmd) {
+        return Filter;
+    }
+
 }());

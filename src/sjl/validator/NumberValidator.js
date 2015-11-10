@@ -195,6 +195,9 @@
     }
     else {
         sjl.package('validator.NumberValidator', NumberValidator);
+        if (window.__isAmd) {
+            return NumberValidator;
+        }
     }
 
 })();
