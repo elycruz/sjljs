@@ -141,14 +141,9 @@ function someFunction (arg1, arg2, arg3) {
 someFunction ('value1', 'value2', 'valu3', 'value4', 'value5'); 
 ```
 
-##### sjl.hasMethod (obj, methodName) :Boolean
-Checks whether an `obj` has the given method/function defined on it.  E.g.,
-```
-var obj = {hello: function () {}, someNonFunctionValueKey: 'hello world'};
-sjl.hasMethod(obj, 'hello'); // true.  Found key is of type 'Function'.
-sjl.hasMethod(obj, 'nonFunctionKey'); // false.  Found key is not 'Function'.
-sjl.hasMethod(obj, 'nonExistentMethod'); // false.
-```
+##### ~~sjl.hasMethod (method) :Boolean~~
+This function has been removed in sjljs-0.5.7.
+Use `sjl.issetAndOfType(obj[method], 'Function')` instead.
 
 ##### sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}) :String
 Camel Cases a string;  
@@ -192,9 +187,25 @@ If no boolean is found at there returns `false`.
 ##### sjl.isset(value {*}) :Boolean
 Checks to see if value is not `null` or `undefined` and returns true if it is.
 ```
-sjl.isset(someUndefinedValue)           // false.  Value is not set.
-sjl.isset(null, someUndefinedValue)     // false.  None of the values is set.
-sjl.isset(null, 1, someUndefinedValue)  // true.   '1' is a non empty value.
+// Note `someUndefinedValue` must be declared somewhere (E.g., as a function parameter etc.) or you'll
+// get a javascript error for trying to access a doubly undefined and undeclared variable.
+// You're allowed to check for undefined properties on objects via `sjl.isset` because objects
+// are passed in by reference and you can check for properties on them via `typeof` without causing
+// any javascript errors but when checking for a local variable that exists on it's own you will get a javascript
+// for trying to access an undefined property.
+
+function hello (someUndefinedValue) {
+    return sjl.isset(someUndefinedValue);
+}
+
+hello(); // returns `false`
+
+sjl.isset(null) // false.  `null` is not a set value.
+
+// `Error` is thrown before `sjl.isset` recieves the `helloWorld` variable because
+// `helloWorld` isn't declared anywhere.
+sjl.isset(helloWorld);
+
 ```
 
 ##### sjl.issetAndOfType(value {*}, type {String|Array<String>}, type {String}) :Boolean
@@ -214,9 +225,9 @@ sjl.issetAndOfType(someNumberValue, 'Number'])
 ```
 
 ##### ~~sjl.issetObjKey (obj {*}, key {String}) :Boolean~~
-This method was removed in version 0.5.7.  For the same functionality use
- `sjl.isset(obj[key])` or `sjl.issetAndOfType(obj.key)` where key
- is the property key want to check.
+This method was removed in sjljs-0.5.7.  For the same functionality use
+ `sjl.isset(obj[key])` or `sjl.issetAndOfType(obj.key, 'SomeTypeName')` where key
+ is the property key you want to check.
 
 ##### ~~issetObjKeyAndOfType (obj {*}, key {String}, type {String}) :Boolean~~
 This method was removed in version 0.5.7.  For the same functionality use
@@ -231,32 +242,22 @@ Lowercases the first character of a string;  E.g.,
 For getting and setting values on hash objects (allows deep searching by namespace string (`'all.your.base'`
  finds or sets `{all: {your: {base: ...}}}`).
 
-##### sjl.isEmptyObjKey(obj {Object}, key {String}, type {String|undefined}) :Boolean
-Does everything `sjl.issetObjKey` does.  In addition checks whether `obj[key]`'s value is empty ([0, null, undefined, [], {}, false]) or not.
-and whether `obj[key]` is of the class strings passed in (`type`).
-```
-sjl.isEmptyObjKey({hello: 'world'}, 'hello');   // false
-sjl.isEmptyObjKey({hello: 100}, 'hello');       // false
-sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'Number');  // true 
-sjl.isEmptyObjKey({hello: 'world'}, 'hello', 'String');  // false
-```
-**Note** - The use of checking types a in this method will be removed in the next major release of the library.
-For checking whther a key on an object is empty and is of type use `sjl.isEmptyObjKeyAndOfType` instead.
+##### ~~sjl.isEmptyObjKey(obj {Object}, key {String}, type {String|undefined}) :Boolean~~
+This method is removed in sjljs-0.5.7.
 
-##### sjl.isEmptyObjKeyOrNotOfType(obj {Object}, key {String}, type {String|undefined}) :Boolean
-Does everything `sjl.issetObjKey` does.  In addition checks whether `obj[key]`'s value is empty ([0, null, undefined, [], {}, false]) or not.
-and whether `obj[key]` is of of the class strings passed in (`type`).
+##### sjl.isEmptyOrNotOfType(value{*}, type {String|undefined}) :Boolean
+
 ```
-sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello');   
+sjl.isEmptyNotOfType(({hello: 'world'}).hello);
 // false.  Found key is not empty.
 
-sjl.isEmptyObjKeyOrNotOfType({hello: 100}, 'hello');       
+sjl.isEmptyOrNotOfType(({hello: 100}).hello);
 // false.  Found key is not empty.
 
-sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', 'Number');            
+sjl.isEmptyOrNotOfType(({hello: 'world'}).hello, 'Number');
 // true.  Found key is not empty but is not of given type(s). 
 
-sjl.isEmptyObjKeyOrNotOfType({hello: 'world'}, 'hello', String');
+sjl.isEmptyOrNotOfType(({hello: 'world'}).hello, 'String');
 // false.  Found key is not empty and is of given type.
 ```
 
