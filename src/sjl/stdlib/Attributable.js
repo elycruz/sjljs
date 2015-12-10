@@ -69,16 +69,14 @@
          * @private
          */
         _getAttribs: function (attrList) {
-            var attrib,
-                out = {},
+            var out = {},
                 self = this;
 
             // Loop through attributes to get and set them for return
-            for (attrib in attrList) {
-                attrib = attrList[attrib];
+            attrList.forEach(function (attrib) {
                 out[attrib] = typeof self[attrib] !== _undefined
                     ? sjl.getValueFromObj(attrib, self) : null;
-            }
+            });
 
             // Return queried attributes
             return out;

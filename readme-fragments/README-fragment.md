@@ -213,31 +213,15 @@ sjl.issetAndOfType(someNumberValue, 'Number'])
 // true.  Matches type 'Number'.
 ```
 
-##### sjl.issetObjKey (obj {*}, key {String}) :Boolean
-Checks whether an object has own `key` and whether the value of found `key` is not `undefined` or not `null`.
-```
-var someObj = {hello: 'world', myNameIs: null};
-// Check keys on `someObj`
-sjl.issetObjKey(someObj, 'hello')       // true. Key is set.
-sjl.issetObjKey(someObj, 'myNameIs')    // false.
-sjl.issetObjKey(someObj, 'nonExistentProperty')    // false.
-```
+##### ~~sjl.issetObjKey (obj {*}, key {String}) :Boolean~~
+This method was removed in version 0.5.7.  For the same functionality use
+ `sjl.isset(obj[key])` or `sjl.issetAndOfType(obj.key)` where key
+ is the property key want to check.
 
-##### issetObjKeyAndOfType (obj {*}, key {String}, type {String}) :Boolean
-Does the same thing as `sjl.issetObjKey` but also checks if the found `key` matches the passed in types.
-```
-var someObj =
-    {someNum: 100, someNullValue: null, someStringValue: 'hello world'};
-// Check keys on `someObj`
-sjl.issetObjKeyAndOfType(someObj, 'someNum', 'Number')
-// true.  Key is set and matches the type 'Number'.
-
-sjl.issetObjKey(someObj, 'someNullValue', 'Array')
-// false.  Key exists on object but is null.
-
-sjl.issetObjKey(someObj, 'nonExistentProperty')                   
-// false.  Key does not exists on object.
-```
+##### ~~issetObjKeyAndOfType (obj {*}, key {String}, type {String}) :Boolean~~
+This method was removed in version 0.5.7.  For the same functionality use
+ `sjl.issetAndOfType(obj[key], 'SomeTypeNameHere')` or `sjl.issetAndOfType(obj.key, 'SomeTypeNameHere')` where key
+ is the property key want to check.
 
 ##### sjl.lcaseFirst(str {String}) :String
 Lowercases the first character of a string;  E.g., 
@@ -581,6 +565,7 @@ instead of requiring global require).
 - [ ] - Remove all shimming of es5 features and support for older browsers (IE8 etc.).
 - [ ] - Update all classes to use Object.defineProperty and Object.defineProperties internally for
 their properties to eliminate alternate schemes to hide access to their internal properties.
+- [ ] - Remove all overloaded methods in exchange for Object.defineProperty and Object.defineProperties getters and setters.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") &

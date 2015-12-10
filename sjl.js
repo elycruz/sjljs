@@ -1,4 +1,4 @@
-/**! sjl.js Wed Dec 09 2015 21:09:28 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Wed Dec 09 2015 22:13:49 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  */
@@ -42,7 +42,7 @@
     };
 
     /**
-     * Checks to see value passed in is set (not undefined and not null).
+     * Checks to see if value passed in is set (not undefined and not null).
      * @function module:sjl.isset
      * @returns {Boolean}
      */
@@ -51,10 +51,10 @@
     };
 
     /**
-     * Checks whether a value isset and of one of the types passed in (**note the `type` params is actually `...type`)
+     * Checks whether a value isset and if it's type is the same as the type name passed in.
      * @function module:sjl.issetAndOfType
      * @param value {*} - Value to check on.
-     * @param type {String} - One or more type strings to match for
+     * @param type {String} - Type name to check for;  E.g., 'Number', 'Array', 'HTMLMediaElement' etc.
      * @returns {Boolean}
      */
     sjl.issetAndOfType = function (value, type) {
@@ -113,7 +113,7 @@
      * @param value
      * @returns {Boolean}
      */
-    function isEmptyValue (value) {
+    function isEmpty (value) {
         var classOfValue = sjl.classOf(value),
             retVal;
 
@@ -146,7 +146,7 @@
      * @returns {Boolean}
      */
     sjl.empty = function (value) {
-        return arguments.length > 0 ? isEmptyValue(value) : true;
+        return isEmpty(value);
     };
 
     /**
@@ -158,31 +158,14 @@
 
     /**
      * Retruns a boolean based on whether a key on an object has an empty value or is empty (not set, undefined, null)
-     * @function module:sjl.isEmptyObjKeyOrNotOfType
+     * @function module:sjl.isEmptyOrNotOfType
      * @param obj {Object} - Object to search on.
-     * @param key {String} - Key to search for one `obj`.
-     * @param type {String} - Optional. {...type} one or more types to search on.
+     * @param type {String} - Optional. Type Name to check for match for;  E.g., 'Number', 'Array', 'HTMLMediaElement' etc..
      * @returns {Boolean}
      */
-    sjl.isEmptyObjKeyOrNotOfType = function (obj, key, type) {
-        var issetObjKey = arguments.length > 2
-            ? sjl.issetAndOfType.apply(
-                sjl, [obj[key]].concat( sjl.restArgs(arguments, 2) )) :
-                    sjl.isset(obj[key]);
-        return !issetObjKey || sjl.empty(obj[key]);
+    sjl.isEmptyOrNotOfType = function (value, type) {
+        return isEmpty(value) || sjl.isset(type) ? !sjl.classOfIs(value, type) : false;
     };
-
-    /**
-     * Retruns a boolean based on whether a key on an object has an empty value or is empty (not set, undefined, null)
-     * @function module:sjl.isEmptyObjKey
-     * @param obj {Object} - Object to search on.
-     * @param key {String} - Key to search for one `obj`.
-     * @param type {String} - Optional. {...type} one or more types to search on.
-     * @note Use sjl.isEmptyObjKeyOrNotOfType when you need to ensure the type as well.  Do not use the type checking
-     *  facility in this function as that functionality will be removed in a later version.
-     * @returns {Boolean}
-     */
-    sjl.isEmptyObjKey = sjl.isEmptyObjKeyOrNotOfType;
 
     /**
      * Takes a namespace string and fetches that location out from
@@ -422,14 +405,6 @@
     };
 
     /**
-     * Used by sjl.extend definition
-     * @type {Function}
-     */
-    var getOwnPropertyDescriptor =
-            typeof Object.getOwnPropertyDescriptor === 'function'
-                ? Object.getOwnPropertyDescriptor : null;
-
-    /**
      * Checks if object has method key passed.
      * @function module:sjl.hasMethod
      * @param obj {Object|*} - Object to search on.
@@ -437,7 +412,7 @@
      * @returns {Boolean}
      */
     sjl.hasMethod = function (obj, method) {
-        return !sjl.isEmptyObjKeyOrNotOfType(obj, method, 'Function');
+        return !sjl.isEmptyOrNotOfType(obj[method], 'Function');
     };
 
     /**
@@ -479,6 +454,7 @@
             retVal = obj[getterFunc]();
         }
         else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
+            console.log(obj, overloadedGetterFunc, obj[overloadedGetterFunc]);
             retVal = obj[overloadedGetterFunc]();
         }
         else if (typeof obj[key] !== _undefined) {
@@ -486,7 +462,7 @@
         }
 
         // Decide what to do if return value is a function
-        if (sjl.classOfIs(retVal, 'Function') && sjl.empty(raw)) {
+        if (sjl.classOfIs(retVal, 'Function') && isEmpty(raw)) {
             retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
         }
 
@@ -559,11 +535,9 @@
             classOf_o_prop = sjl.isset(o[prop]) ? sjl.classOf(o[prop]) : 'Empty';
 
             // If property is present on target (o) and is not writable, skip iteration
-            if (getOwnPropertyDescriptor) {
-                propDescription = getOwnPropertyDescriptor(o, prop);
-                if (propDescription && !propDescription.writable) {
-                    continue;
-                }
+            propDescription = Object.getOwnPropertyDescriptor(o, prop);
+            if (propDescription && !propDescription.writable) {
+                continue;
             }
 
             if (deep) {
@@ -997,16 +971,14 @@
          * @private
          */
         _getAttribs: function (attrList) {
-            var attrib,
-                out = {},
+            var out = {},
                 self = this;
 
             // Loop through attributes to get and set them for return
-            for (attrib in attrList) {
-                attrib = attrList[attrib];
+            attrList.forEach(function (attrib) {
                 out[attrib] = typeof self[attrib] !== _undefined
                     ? sjl.getValueFromObj(attrib, self) : null;
-            }
+            });
 
             // Return queried attributes
             return out;
