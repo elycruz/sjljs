@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    var _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Iterator = sjl.package.stdlib.Iterator,
         ObjectIterator = function ObjectIterator(keys, values, pointer) {
@@ -68,7 +69,7 @@
          * @returns {sjl.package.stdlib.ObjectIterator|Array<*>}
          */
         keys: function (keys) {
-            var isGetterCall = typeof keys === 'undefined',
+            var isGetterCall = typeof keys === _undefined,
                 retVal = this,
                 selfCollectionIsArray;
             if (isGetterCall) {

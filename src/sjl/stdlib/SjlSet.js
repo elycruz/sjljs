@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    var _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         stdlib = sjl.package.stdlib,
         Extendable = stdlib.Extendable,
@@ -22,7 +23,7 @@
             }
 
             // If anything other than an array is passed in throw an Error
-            else if (typeof iterable !== 'undefined') {
+            else if (typeof iterable !== _undefined) {
                 throw new Error ('Type Error: sjl.SjlSet takes only iterable objects as it\'s first parameter. ' +
                     ' Parameter received: ', iterable);
             }

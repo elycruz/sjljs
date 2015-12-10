@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    var _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Iterator = function Iterator(values, pointer) {
             // Allow Iterator to be called as a function
@@ -87,7 +88,7 @@
          */
         pointer: function (pointer) {
             var self = this,
-                isGetterCall = typeof pointer === 'undefined',
+                isGetterCall = typeof pointer === _undefined,
                 defaultNum = sjl.classOfIs(self.__internal.pointer, 'Number')
                     ? self.__internal.pointer : 0,
                 retVal = self;
@@ -108,7 +109,7 @@
          * @returns {sjl.package.stdlib.Iterator|Array}
          */
         values: function (values) {
-            var isGetterCall = typeof values === 'undefined',
+            var isGetterCall = typeof values === _undefined,
                 retVal = this,
                 selfCollectionIsArray;
             if (isGetterCall) {

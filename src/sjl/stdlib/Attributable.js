@@ -5,7 +5,8 @@
 
     'use strict';
 
-    var isNodeEnv = typeof window === 'undefined',
+    var _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Attributable = function Attributable(attributes) {
             this.attr(attributes);
@@ -75,7 +76,7 @@
             // Loop through attributes to get and set them for return
             for (attrib in attrList) {
                 attrib = attrList[attrib];
-                out[attrib] = typeof self[attrib] !== 'undefined'
+                out[attrib] = typeof self[attrib] !== _undefined
                     ? sjl.getValueFromObj(attrib, self) : null;
             }
 

@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Wed Dec 09 2015 19:52:36 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Wed Dec 09 2015 20:13:15 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -10,7 +10,8 @@
     'use strict';
 
     var sjl = {},
-        isNodeEnv = typeof window === 'undefined',
+        _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
         slice = Array.prototype.slice,
         globalContext = isNodeEnv ? global : window,
         libSrcRootPath = null;
@@ -38,7 +39,7 @@
      * @returns {Array}
      */
     sjl.restArgs = function (args, start, end) {
-        start = typeof start === 'undefined' ? 0 : start;
+        start = typeof start === _undefined ? 0 : start;
         end = end || args.length;
         return slice.call(args, start, end);
     };
@@ -49,7 +50,7 @@
      * @returns {Boolean}
      */
     sjl.isset = function (value) {
-        return typeof value !== 'undefined' && value !== null;
+        return typeof value !== _undefined && value !== null;
     };
 
     /**
@@ -96,7 +97,7 @@
     sjl.classOf = function (value) {
         var retVal,
             valueType;
-        if (typeof value === 'undefined') {
+        if (typeof value === _undefined) {
             retVal = 'Undefined';
         }
         else if (value === null) {
@@ -516,13 +517,13 @@
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
         // Warn user(s) of new update to this function where `raw` is not being passed in.
-        //if (typeof raw === 'undefined') {
+        //if (typeof raw === _undefined) {
         //    console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
         //        'This warning will be removed in the next library update.');
         //}
         args = args || null;
         raw = raw || true;
-        noLegacyGetters = typeof noLegacyGetters === 'undefined' ? false : noLegacyGetters;
+        noLegacyGetters = typeof noLegacyGetters === _undefined ? false : noLegacyGetters;
 
         // Get qualified getter function names
         var overloadedGetterFunc = sjl.camelCase(key, false),
@@ -540,7 +541,7 @@
         else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
             retVal = obj[overloadedGetterFunc]();
         }
-        else if (typeof obj[key] !== 'undefined') {
+        else if (typeof obj[key] !== _undefined) {
             retVal = obj[key];
         }
 
@@ -581,7 +582,7 @@
             retVal = obj[overloadedSetterFunc](value);
         }
         else {
-            obj[key] = typeof value !== 'undefined' ? value : null;
+            obj[key] = typeof value !== _undefined ? value : null;
         }
 
         // Return result of setting value on obj, else return obj
@@ -798,7 +799,7 @@
     function namespace(ns_string, objToSearch, valueToSet) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
-            shouldSetValue = typeof valueToSet !== 'undefined',
+            shouldSetValue = typeof valueToSet !== _undefined,
             hasOwnProperty;
 
         parts.forEach(function (key, i) {
@@ -807,7 +808,7 @@
                 && shouldSetValue && !hasOwnProperty) {
                 makeNotSettableProp(parent, key, valueToSet);
             }
-            else if (typeof parent[key] === 'undefined' && !hasOwnProperty) {
+            else if (typeof parent[key] === _undefined && !hasOwnProperty) {
                 makeNotSettableProp(parent, key, {});
             }
             parent = parent[key];
@@ -845,7 +846,7 @@
              */
             obj[altFuncKey] =
                 obj[funcKey] = function (nsString, value) {
-                return typeof nsString === 'undefined' ? obj[funcKey]
+                return typeof nsString === _undefined ? obj[funcKey]
                     : namespace(nsString, obj[funcKey], value);
             };
 
@@ -912,7 +913,7 @@
     //};
 
     // Ensure we have access to the `Symbol`
-    if (typeof Symbol === 'undefined') {
+    if (typeof Symbol === _undefined) {
         sjl.Symbol = {
             iterator: '@@iterator'
         };
