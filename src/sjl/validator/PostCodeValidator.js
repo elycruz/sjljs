@@ -255,10 +255,10 @@
         region: function (region) {
             var classOfLocale = sjl.classOf(region),
                 retVal = this.get('region');
-            if (classOfLocale !== 'String' && classOfLocale !== 'Undefined') {
+            if (classOfLocale !== 'String' && classOfLocale !== 'undefined') {
                 throw new Error('');
             }
-            if (classOfLocale !== 'Undefined') {
+            if (classOfLocale !== 'undefined') {
                 this.set('region', region.toUpperCase());
                 retVal = this;
             }
@@ -271,11 +271,11 @@
                 retVal = this.get('format');
             if (classOfFormat !== 'String'
                 && classOfFormat !== 'RegExp'
-                && classOfFormat !== 'Undefined') {
+                && classOfFormat !== 'undefined') {
                 throw new Error('`PostCodeValidator.format` method only accepts a `format` parameter of type' +
                     ' "String", "RegExp", or "Undefined".  `format` parameter value received: "' + format + '".');
             }
-            if (classOfFormat !== 'Undefined') {
+            if (classOfFormat !== 'undefined') {
                 // Normalize regex
                 if (classOfFormat === 'String') {
                     format = (format.indexOf('^') !== 0 ? '^' : '') + format;
@@ -291,10 +291,10 @@
         service: function (service) {
             var classOfService = sjl.classOf(service),
                 retVal = this.get('service');
-            if (classOfService !== 'Function' && classOfService !== 'Undefined') {
+            if (classOfService !== 'Function' && classOfService !== 'undefined') {
                 throw new Error('');
             }
-            if (classOfService !== 'Undefined') {
+            if (classOfService !== 'undefined') {
                 this.set('service', service);
                 retVal = this;
             }

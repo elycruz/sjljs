@@ -77,7 +77,7 @@
 
         getValue: function (value) {
             var self = this;
-            return !sjl.classOfIs(value, 'Undefined') ? (function () {
+            return !sjl.classOfIs(value, 'undefined') ? (function () {
                 self.setValue(value);
                 return value;
             })() : this.getOption('value');
@@ -86,7 +86,7 @@
         value: function (value) {
             var classOfValue = sjl.classOf(value),
                 retVal = this.get('value');
-            if (classOfValue !== 'Undefined') {
+            if (classOfValue !== 'undefined') {
                 this.options.value = value;
                 retVal = this;
             }

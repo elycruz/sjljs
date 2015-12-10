@@ -41,7 +41,7 @@ describe('Sjl Set Functions', function () {
                     func: function otherFunc() { }, num: 456, bln: true,
                     obj: {c: 'C', d: 'D'}, str: 'unitee2'
                 },
-                expectedKeyTypeMap = { 'func': 'Function', 'nil': 'Null', 'num': 'Number',
+                expectedKeyTypeMap = { 'func': 'Function', 'nil': 'null', 'num': 'Number',
                     'bln': 'Boolean',
                     'obj': 'Object', 'str': 'String'
                 },

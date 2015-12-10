@@ -18,11 +18,11 @@ describe('Sjl Reflection', function () {
             'Array': [[], new Array()],
             'Boolean': [true, false],
             'Function': [function () {}, new Function()],
-            'Null': null,
+            'null': null,
             'Number': [1, 0, -1, 12e+3],
             'Object': [{}, new Object()],
             'String': [new String('ola'), 'hello'],
-            'Undefined': undefined
+            'undefined': undefined
         };
 
         Object.keys(valueMap).forEach(function (x) {
@@ -58,8 +58,8 @@ describe('Sjl Reflection', function () {
         },
             failForClassStrings = {
                 '([])':         'String',
-                '(true)':       'Undefined',
-                '(1)':          'Null',
+                '(true)':       'undefined',
+                '(1)':          'null',
                 '({})':         'Number',
                 '("")':         'Array',
                 '(null)':       'Set',

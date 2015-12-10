@@ -31,8 +31,8 @@ describe('Sjl Utils', function () {
             nonEmptyArrayValue:  '(function () { return [1] }())'
         },
         keyTypesForIssetAndEmptyChecks = {
-            nullValue:              'Null',
-            undefinedValue:         'Undefined',
+            nullValue:              'null',
+            undefinedValue:         'undefined',
             nonEmptyStringValue:    'String',
             emptyStringValue:       'String',
             nonEmptyNumberValue:    'Number',
@@ -46,8 +46,8 @@ describe('Sjl Utils', function () {
             nonEmptyArrayValue:     'Array'
         },
         truthyKeysForTypes = {
-            nullValue:              'Null',
-            undefinedValue:         'Undefined',
+            nullValue:              'null',
+            undefinedValue:         'undefined',
             nonEmptyStringValue:    'String',
             emptyStringValue:       'String',
             nonEmptyNumberValue:    'Number',
@@ -125,28 +125,6 @@ describe('Sjl Utils', function () {
         });
     });
 
-    describe('#`issetObjKey`', function () {
-        var obj = objForIssetAndEmptyChecks,
-            evaledObj = returnedObjWithEvaledValues(objForIssetAndEmptyChecks);
-
-        // Falsy values
-        ['nullValue', 'undefinedValue'].forEach(function (key) {
-            it('should return false for value "' + obj[key] + '" of type "'
-            + sjl.classOf(evaledObj[key]) + '".', function () {
-                expect(sjl.issetObjKey(evaledObj, key)).to.equal(false);
-            });
-        });
-
-        // Truthy values
-        Object.keys(obj).forEach(function (key) {
-            if (['nullValue', 'undefinedValue'].indexOf(key) > -1) return;
-            it('should return true for value "' + obj[key] + '" of type "'
-            + sjl.classOf(evaledObj[key]) + '".', function () {
-                expect(sjl.issetObjKey(evaledObj, key)).to.equal(true);
-            });
-        });
-    });
-
     describe('#`issetAndOfType`', function () {
         var refObj = objForIssetAndEmptyChecks,
             evaledObj = returnedObjWithEvaledValues(refObj),
@@ -219,82 +197,6 @@ describe('Sjl Utils', function () {
             it('should return false for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
             '" when value is not set or value is not of given comparison type "[' + falsyKeysForTypes[key] + ']" and passed in as separate params.', function () {
                 expect(sjl.issetAndOfType(evaledObj[key], falsyKeysForTypes[key])).to.equal(false);
-            });
-        });
-
-    });
-
-    describe('#`issetObjKeyAndOfType`', function () {
-        var refObj = objForIssetAndEmptyChecks,
-            evaledObj = returnedObjWithEvaledValues(refObj),
-            types = keyTypesForIssetAndEmptyChecks,
-            keys = Object.keys(evaledObj),
-
-            // Remove not set values for truthy tests
-            truthyKeys = keys.filter(function (key) {
-                return evaledObj[key] !== null && typeof evaledObj[key] !== 'undefined';
-            }),
-
-            // Falsy keys to test
-            falsyKeys = ['nullValue', 'undefinedValue'];
-
-        // -------------------------------------------------------------------------------------------------------
-        // Tests for key values when passing in one type value to check against
-        // -------------------------------------------------------------------------------------------------------
-
-        // Perform truthy tests
-        truthyKeys.forEach(function (key) {
-            it('should return true for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when value is set and passed in type is "' + types[key] + '".', function () {
-                expect(sjl.issetObjKeyAndOfType(evaledObj, key, types[key])).to.equal(true);
-            });
-        });
-
-        // Perform falsy tests
-        falsyKeys.forEach(function (key) {
-            it('should return false for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when value is not set or passed in type is "' + types[key] + '".', function () {
-                expect(sjl.issetObjKeyAndOfType(evaledObj, key, types[key])).to.equal(false);
-            });
-        });
-
-        // -------------------------------------------------------------------------------------------------------
-        // Tests for key values when passing in one or more types
-        // -------------------------------------------------------------------------------------------------------
-
-        // Perform truthy tests with array of types
-        truthyKeys.forEach(function (key) {
-            it('should return true for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when value is set and comparison type is "' + truthyKeysForTypes[key] + '" .', function () {
-                expect(sjl.issetObjKeyAndOfType.call(sjl, evaledObj, key, truthyKeysForTypes[key])).to.equal(true);
-            });
-        });
-
-        // Perform falsy tests for array of types
-        keys.forEach(function (key) {
-            it('should return false for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when value is not set or comparison type is "[' + falsyKeysForTypes[key] + ']" .', function () {
-                expect(sjl.issetObjKeyAndOfType.call(sjl, evaledObj, key, falsyKeysForTypes[key])).to.equal(false);
-            });
-        });
-
-        // -------------------------------------------------------------------------------------------------------
-        // Tests for key values when passing in an array of types
-        // -------------------------------------------------------------------------------------------------------
-
-        // Perform truthy tests when passing in one or more types
-        truthyKeys.forEach(function (key) {
-            it('should return true for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when value is set and of given comparison type "' + truthyKeysForTypes[key] + '" and passed in as separate params.', function () {
-                expect(sjl.issetObjKeyAndOfType(evaledObj, key, truthyKeysForTypes[key])).to.equal(true);
-            });
-        });
-
-        // Perform falsy tests when passing in one or more types
-        keys.forEach(function (key) {
-            it('should return false for value "' + refObj[key] + '" of type "' + sjl.classOf(evaledObj[key]) +
-            '" when value is not set or value is not of given comparison type "[' + falsyKeysForTypes[key] + ']" and passed in as separate params.', function () {
-                expect(sjl.issetObjKeyAndOfType(evaledObj, key, falsyKeysForTypes[key])).to.equal(false);
             });
         });
 

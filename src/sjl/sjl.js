@@ -62,29 +62,6 @@
     };
 
     /**
-     * Checks whether a key on an object is set.
-     * @function module:sjl.issetObjKey
-     * @param obj {Object} - Object to search on.
-     * @param key {String} - Key to search on `obj`.
-     * @returns {Boolean}
-     */
-    sjl.issetObjKey = function (obj, key) {
-        return key in obj && sjl.isset(obj[key]);
-    };
-
-    /**
-     * Checks whether an object's key is set and is of type (...type one of the types passed in)
-     * @function module:sjl.issetObjKeyAndOfType
-     * @param obj {Object}
-     * @param key {String}
-     * @param type {String|Array} - Optional.
-     * @returns {Boolean}
-     */
-    sjl.issetObjKeyAndOfType = function (obj, key, type) {
-        return sjl.issetObjKey(obj, key) && sjl.classOfIs(obj[key], type);
-    };
-
-    /**
      * Returns the class name of an object from it's class string.
      * **Note** - Returns 'NaN' if type is 'Number' and isNaN as of version 0.4.85.
      * @function module:sjl.classOf
@@ -95,10 +72,10 @@
         var retVal,
             valueType;
         if (typeof value === _undefined) {
-            retVal = 'Undefined';
+            retVal = _undefined;
         }
         else if (value === null) {
-            retVal = 'Null';
+            retVal = 'null';
         }
         else {
             valueType = Object.prototype.toString.call(value);
@@ -127,14 +104,7 @@
      * @returns {Boolean}
      */
     function isEmptyObj (obj) {
-        var retVal = obj !== true;
-        for (var key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                retVal = false;
-                break;
-            }
-        }
-        return retVal;
+        return Object.keys(obj).length === 0;
     }
 
     /**
@@ -156,12 +126,13 @@
             retVal = false;
         }
 
-        // If value is not number and is not equal to zero or if value is not a function
-        // then check for other empty values
+        else if (classOfValue === 'Object') {
+            retVal = isEmptyObj(value);
+        }
+
+        // If value is `0`, `false`, or is not set (!isset) then `value` is empty.
         else {
-            retVal = (value === 0 || value === false
-            || value === undefined || value === null
-            || isEmptyObj(value));
+            retVal = !sjl.isset(value) || value === 0 || value === false;
         }
 
         return retVal;
@@ -170,46 +141,16 @@
     /**
      * Checks to see if any of the arguments passed in are empty.
      * @function module:sjl.empty
+     * @param value {*} - Value to check.
      * @todo change this to isempty for later version of lib.
      * @returns {Boolean}
      */
-    sjl.empty = function () {
-        var retVal, check,
-            i, item,
-            args = arguments;
-
-        // If multiple arguments
-        if (args.length > 1) {
-
-            // No empties empties until proven otherwise
-            retVal = false;
-
-            // Loop through args and check their values
-            for (i = 0; i < args.length - 1; i += 1) {
-                item = args[i];
-                check = isEmptyValue(item);
-                if (check) {
-                    retVal = true;
-                    break;
-                }
-            }
-        }
-
-        // If one argument
-        else if (args.length === 1) {
-            retVal = isEmptyValue(args[0]);
-        }
-
-        // If no arguments
-        else {
-            retVal = true;
-        }
-
-        return retVal;
+    sjl.empty = function (value) {
+        return arguments.length > 0 ? isEmptyValue(value) : true;
     };
 
     /**
-     * Checks object's own properties to see if it is empty.
+     * Checks object's own properties to see if it is empty (Object.keys check).
      * @param obj object to be checked
      * @returns {Boolean}
      */
@@ -225,7 +166,9 @@
      */
     sjl.isEmptyObjKeyOrNotOfType = function (obj, key, type) {
         var issetObjKey = arguments.length > 2
-            ? sjl.issetObjKeyAndOfType.apply(sjl, arguments) : sjl.issetObjKey(obj, key);
+            ? sjl.issetAndOfType.apply(
+                sjl, [obj[key]].concat( sjl.restArgs(arguments, 2) )) :
+                    sjl.isset(obj[key]);
         return !issetObjKey || sjl.empty(obj[key]);
     };
 
@@ -258,11 +201,11 @@
     sjl.namespace = function (ns_string, objToSearch, valueToSet) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
-            shouldSetValue = !sjl.classOfIs(valueToSet, 'Undefined'),
+            shouldSetValue = !sjl.classOfIs(valueToSet, 'undefined'),
             i;
 
         for (i = 0; i < parts.length; i += 1) {
-            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'Undefined')) {
+            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'undefined')) {
                 parent[parts[i]] = {};
             }
             if (i === parts.length - 1 && shouldSetValue) {
@@ -392,7 +335,7 @@
         if (sjl.classOfIs(expectedBool, 'Boolean')) {
             retVal = startOrEndBln ? array.shift() : array.pop();
         }
-        else if (sjl.classOfIs(expectedBool, 'Undefined')) {
+        else if (sjl.classOfIs(expectedBool, 'undefined')) {
             if (startOrEndBln) {
                 array.shift();
             }
@@ -469,7 +412,7 @@
             parent = objToSearch,
             i;
         for (i = 0; i < parts.length; i += 1) {
-            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'Undefined')) {
+            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'undefined')) {
                 parent = null;
                 break;
             }
@@ -612,8 +555,8 @@
         }
 
         for (prop in p) { // For all props in p.
-            classOf_p_prop = sjl.issetObjKey(p, prop) ? sjl.classOf(p[prop]) : 'Empty';
-            classOf_o_prop = sjl.issetObjKey(o, prop) ? sjl.classOf(o[prop]) : 'Empty';
+            classOf_p_prop = sjl.isset(p[prop]) ? sjl.classOf(p[prop]) : 'Empty';
+            classOf_o_prop = sjl.isset(o[prop]) ? sjl.classOf(o[prop]) : 'Empty';
 
             // If property is present on target (o) and is not writable, skip iteration
             if (getOwnPropertyDescriptor) {
