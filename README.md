@@ -569,7 +569,7 @@ See './tests/for-browser'.
 - [ ] - Support for AMD if it is available when used on the frontend.
 - [X] - Remove use of eval option for `defineSubClass`.
 - [X] - Create docs for `sjl.package`.
-- [X] - Shim `sjl.forEach` and `sjl.indexOf`.
+- [X] - ~~Shim `sjl.forEach` and `sjl.indexOf`.~~  Removed in version 0.5.4.
 - [X] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
 instead of requiring global require).
 - [ ] - Include all sub items for components included as sub nav in readme.
@@ -578,6 +578,9 @@ instead of requiring global require).
 
 ### MVP for 0.5.1+
 - [X] - Add changelog.md in main readme.
+- [ ] - Remove all shimming of es5 features and support for older browsers (IE8 etc.).
+- [ ] - Update all classes to use Object.defineProperty and Object.defineProperties internally for
+their properties to eliminate alternate schemes to hide access to their internal properties.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") &

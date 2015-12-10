@@ -64,7 +64,7 @@
             return this;
         },
         delete: function (value) {
-            var _index = sjl.indexOf(value, this._values);
+            var _index = value.indexOf(this._values);
             if (_index > -1) {
                 delete this._values[_index];
                 this.size -= 1;
@@ -76,11 +76,11 @@
             return new ObjectIterator(this._values, this._values, 0);
         },
         forEach: function (callback, context) {
-            sjl.forEach(this._values, callback, context);
+            this._values.forEach(callback, context);
             return this;
         },
         has: function (value) {
-            return sjl.indexOf(this._values, value) > -1 ? true : false;
+            return this._values.indexOf(value) > -1 ? true : false;
         },
         keys: function () {
             return this._values[sjl.Symbol.iterator]();
@@ -95,7 +95,7 @@
 
         addFromArray: function (value) {
             // Iterate through the passed in iterable and add all values to `_values`
-            var iterator =makeIterable(value, 0)[sjl.Symbol.iterator]();
+            var iterator = makeIterable(value, 0)[sjl.Symbol.iterator]();
 
             // Loop through values and add them
             while (iterator.valid()) {

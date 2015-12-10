@@ -508,45 +508,6 @@ describe('Sjl Utils', function () {
 
     });
 
-    describe('#`forEach`', function () {
-        var values = [1, 2, 3, 4, 5],
-            expectedLength = 5,
-            exampleContext = {someProperty: 'someValue'},
-            indexCount = 0;
-
-        it ('should exists and be of type `Function`.', function () {
-            // Validate set has `forEach` method
-            expect(typeof sjl.forEach).to.equal('function');
-        });
-
-        it ('should work as expected when no context is passed in as the 3rd parameter.', function () {
-            // Validate `forEach` method works as expected
-            sjl.forEach(values, function (value, index, array) {
-                expect(array.length).to.equal(expectedLength);
-                expect(values[index]).to.equal(value);
-                expect(index).to.equal(indexCount);
-                expect(this).to.equal(undefined);
-                indexCount += 1;
-            });
-        });
-
-        it ('should work as expected when a context is passed in.', function () {
-            // Reset the index count
-            indexCount = 0;
-
-            // Validate `forEach` method works as expected
-            sjl.forEach(values, function (value, index, array) {
-                expect(array.length).to.equal(expectedLength);
-                expect(values[index]).to.equal(value);
-                expect(index).to.equal(indexCount);
-                expect(this).to.equal(exampleContext);
-                indexCount += 1;
-            }, exampleContext);
-        });
-    });
-
-
-
     describe('#`empty`', function () {
 
         function makeEmptyTestsForValueMap(valMap, retValString) {
@@ -1563,7 +1524,7 @@ describe('SjlSet', function () {
 
         it ('should exists and be of type `Function`.', function () {
             // Validate set has `forEach` method
-            expect(typeof sjl.forEach).to.equal('function');
+            expect(typeof sjlSet.forEach).to.equal('function');
         });
 
         it ('should work as expected when no context is passed in as the 3rd parameter.', function () {

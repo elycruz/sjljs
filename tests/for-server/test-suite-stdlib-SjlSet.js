@@ -93,7 +93,7 @@ describe('SjlSet', function () {
 
         it ('should exists and be of type `Function`.', function () {
             // Validate set has `forEach` method
-            expect(typeof sjl.forEach).to.equal('function');
+            expect(typeof sjlSet.forEach).to.equal('function');
         });
 
         it ('should work as expected when no context is passed in as the 3rd parameter.', function () {

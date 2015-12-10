@@ -58,7 +58,7 @@
                 return this;
             },
             delete: function (key) {
-                var _index = sjl.indexOf(this._keys, key);
+                var _index = this._keys.indexOf(key);
                 if (this.has(key)) {
                     delete this._values[_index];
                     delete this._keys[_index];
@@ -76,7 +76,7 @@
                 return this;
             },
             has: function (key) {
-                return sjl.indexOf(this._keys, key) > -1 ? true : false;
+                return this._keys.indexOf(key) > -1 ? true : false;
             },
             keys: function () {
                 return this._keys[sjl.Symbol.iterator]();
@@ -85,11 +85,11 @@
                 return this._values[sjl.Symbol.iterator]();
             },
             get: function (key) {
-                var index = sjl.indexOf(this._keys, key);
+                var index = this._keys.indexOf(key);
                 return index > -1 ? this._values[index] : undefined;
             },
             set: function (key, value) {
-                var index = sjl.indexOf(this._keys, key);
+                var index = this._keys.indexOf(key);
                 if (index > -1) {
                     this._keys[index] = key;
                     this._values[index] = value;
@@ -130,7 +130,7 @@
             toJSON: function () {
                 var self = this,
                     out = {};
-                sjl.forEach(this._keys, function (key, i) {
+                this._keys.forEach(function (key, i) {
                     out[key] = self._values[i];
                 });
                 return out;

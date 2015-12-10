@@ -1,5 +1,6 @@
-/**! sjl.js Mon Nov 09 2015 23:39:49 GMT-0500 (EST) **//**
+/**! sjl.js Wed Dec 09 2015 19:52:38 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
+ * @todo add extract value from array if of type (only extract at array start or end)
  */
 (function () {
 
@@ -37,50 +38,6 @@
         start = typeof start === 'undefined' ? 0 : start;
         end = end || args.length;
         return slice.call(args, start, end);
-    };
-
-    /**
-     * Foreach loop for arrays.
-     * @function module:sjl.forEach
-     * @param array {Array}
-     * @param callback {Function}
-     * @param context {undefined|*}
-     * @returns {Array}
-     */
-    sjl.forEach = function (array, callback, context) {
-        if ('forEach' in Array.prototype) {
-            Array.prototype.forEach.call(array, callback, context);
-        }
-        else {
-            for (var i in array) {
-                if (array.hasOwnProperty(i)) {
-                    i = parseInt(i, 10);
-                    callback.call(context, array[i], i, array);
-                }
-            }
-        }
-        return array;
-    };
-
-    /**
-     * Array indexOf method.
-     * @param array Array
-     * @param value
-     * @returns {number}
-     */
-    sjl.indexOf = function (array, value) {
-        if ('indexOf' in Array.prototype) {
-            return Array.prototype.indexOf.call(array, value);
-        }
-        var classOfValue = sjl.classOf(value),
-            _index = -1;
-        sjl.forEach(array, function (_value, i) {
-            if (sjl.classOf(_value) === classOfValue
-                && _value === value) {
-                _index = i;
-            }
-        });
-        return _index;
     };
 
     /**
@@ -719,7 +676,7 @@
             arg0 = args.shift();
 
         // Extend object `0` with other objects
-        sjl.forEach(args, function (arg) {
+        args.forEach(function (arg) {
             // Extend `arg0` if `arg` is an object
             if (sjl.classOfIs(arg, 'Object')) {
                 extend(arg0, arg, deep, useLegacyGettersAndSetters);
@@ -841,7 +798,7 @@
             shouldSetValue = typeof valueToSet !== 'undefined',
             hasOwnProperty;
 
-        sjl.forEach(parts, function (key, i) {
+        parts.forEach(function (key, i) {
             hasOwnProperty = parent.hasOwnProperty(key);
             if (i === parts.length - 1
                 && shouldSetValue && !hasOwnProperty) {
@@ -1641,7 +1598,7 @@
             return this;
         },
         delete: function (value) {
-            var _index = sjl.indexOf(value, this._values);
+            var _index = value.indexOf(this._values);
             if (_index > -1) {
                 delete this._values[_index];
                 this.size -= 1;
@@ -1653,11 +1610,11 @@
             return new ObjectIterator(this._values, this._values, 0);
         },
         forEach: function (callback, context) {
-            sjl.forEach(this._values, callback, context);
+            this._values.forEach(callback, context);
             return this;
         },
         has: function (value) {
-            return sjl.indexOf(this._values, value) > -1 ? true : false;
+            return this._values.indexOf(value) > -1 ? true : false;
         },
         keys: function () {
             return this._values[sjl.Symbol.iterator]();
@@ -1672,7 +1629,7 @@
 
         addFromArray: function (value) {
             // Iterate through the passed in iterable and add all values to `_values`
-            var iterator =makeIterable(value, 0)[sjl.Symbol.iterator]();
+            var iterator = makeIterable(value, 0)[sjl.Symbol.iterator]();
 
             // Loop through values and add them
             while (iterator.valid()) {
@@ -1763,7 +1720,7 @@
                 return this;
             },
             delete: function (key) {
-                var _index = sjl.indexOf(this._keys, key);
+                var _index = this._keys.indexOf(key);
                 if (this.has(key)) {
                     delete this._values[_index];
                     delete this._keys[_index];
@@ -1781,7 +1738,7 @@
                 return this;
             },
             has: function (key) {
-                return sjl.indexOf(this._keys, key) > -1 ? true : false;
+                return this._keys.indexOf(key) > -1 ? true : false;
             },
             keys: function () {
                 return this._keys[sjl.Symbol.iterator]();
@@ -1790,11 +1747,11 @@
                 return this._values[sjl.Symbol.iterator]();
             },
             get: function (key) {
-                var index = sjl.indexOf(this._keys, key);
+                var index = this._keys.indexOf(key);
                 return index > -1 ? this._values[index] : undefined;
             },
             set: function (key, value) {
-                var index = sjl.indexOf(this._keys, key);
+                var index = this._keys.indexOf(key);
                 if (index > -1) {
                     this._keys[index] = key;
                     this._values[index] = value;
@@ -1835,7 +1792,7 @@
             toJSON: function () {
                 var self = this,
                     out = {};
-                sjl.forEach(this._keys, function (key, i) {
+                this._keys.forEach(function (key, i) {
                     out[key] = self._values[i];
                 });
                 return out;

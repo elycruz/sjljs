@@ -1,5 +1,6 @@
 /**
  * Created by Ely on 5/29/2015.
+ * @todo add extract value from array if of type (only extract at array start or end)
  */
 (function () {
 
@@ -37,50 +38,6 @@
         start = typeof start === 'undefined' ? 0 : start;
         end = end || args.length;
         return slice.call(args, start, end);
-    };
-
-    /**
-     * Foreach loop for arrays.
-     * @function module:sjl.forEach
-     * @param array {Array}
-     * @param callback {Function}
-     * @param context {undefined|*}
-     * @returns {Array}
-     */
-    sjl.forEach = function (array, callback, context) {
-        if ('forEach' in Array.prototype) {
-            Array.prototype.forEach.call(array, callback, context);
-        }
-        else {
-            for (var i in array) {
-                if (array.hasOwnProperty(i)) {
-                    i = parseInt(i, 10);
-                    callback.call(context, array[i], i, array);
-                }
-            }
-        }
-        return array;
-    };
-
-    /**
-     * Array indexOf method.
-     * @param array Array
-     * @param value
-     * @returns {number}
-     */
-    sjl.indexOf = function (array, value) {
-        if ('indexOf' in Array.prototype) {
-            return Array.prototype.indexOf.call(array, value);
-        }
-        var classOfValue = sjl.classOf(value),
-            _index = -1;
-        sjl.forEach(array, function (_value, i) {
-            if (sjl.classOf(_value) === classOfValue
-                && _value === value) {
-                _index = i;
-            }
-        });
-        return _index;
     };
 
     /**
@@ -719,7 +676,7 @@
             arg0 = args.shift();
 
         // Extend object `0` with other objects
-        sjl.forEach(args, function (arg) {
+        args.forEach(function (arg) {
             // Extend `arg0` if `arg` is an object
             if (sjl.classOfIs(arg, 'Object')) {
                 extend(arg0, arg, deep, useLegacyGettersAndSetters);
@@ -841,7 +798,7 @@
             shouldSetValue = typeof valueToSet !== 'undefined',
             hasOwnProperty;
 
-        sjl.forEach(parts, function (key, i) {
+        parts.forEach(function (key, i) {
             hasOwnProperty = parent.hasOwnProperty(key);
             if (i === parts.length - 1
                 && shouldSetValue && !hasOwnProperty) {
