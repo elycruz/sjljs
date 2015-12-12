@@ -47,6 +47,10 @@ A base attributable constructor which has two methods `attr` and `attrs`
 A simple iterator constructor which implements the es6 iterator and
 the php `Iterator` classes.
 
+##### sjl.ns.stdlib.ObjectIterator(object {Object}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
+One of two constructors calls available for `ObjectIterator`.
+See next section for description object and alternate constructor call.
+
 ##### sjl.ns.stdlib.ObjectIterator(keys{Array<*>, values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
 An object iterator;  Iterates similarly to Iterator but takes a set of
 keys and values on construction. Implements the es6 iterator and the php

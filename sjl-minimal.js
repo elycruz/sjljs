@@ -1,9 +1,10 @@
 /**! 
- * sjl-minimal.js Wed Dec 09 2015 22:13:47 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Sat Dec 12 2015 17:16:12 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
+ * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
  */
 (function () {
 
@@ -218,11 +219,7 @@
         var search, char, right, left;
 
         // If typeof `str` is not of type "String" then bail
-        if (!sjl.classOfIs(str, 'String')) {
-            throw new TypeError(thisFuncsName + ' expects parameter 1 ' +
-                'to be of type "String".  ' +
-                'Value received: "' + sjl.classOf(str) + '".');
-        }
+        sjl.throwTypeErrorIfNotOfType('changeCaseOfFirstChar', 'str', str, 'String');
 
         // Search for first alpha char
         search = str.search(/[a-z]/i);
@@ -634,12 +631,16 @@
      * @returns {*}
      */
     sjl.copyOfProto = function (proto) {
-        if (proto === null) throw new TypeError('`copyOfProto` function expects param1 to be a non-null value.'); // proto must be a non-null object
+        if (proto === null) {
+            throw new TypeError('`copyOfProto` function expects param1 to be a non-null value.');
+        } // proto must be a non-null object
         if (Object.create) // If Object.create() is defined...
             return Object.create(proto); // then just use it.
         var type = typeof proto; // Otherwise do some more type checking
-        if (type !== 'object' && type !== 'function') throw new TypeError('`copyOfProto` function expects param1 ' +
-            'to be of type "Object" or of type "Function".');
+        if (type !== 'object' && type !== 'function') {
+            throw new TypeError('`copyOfProto` function expects param1 ' +
+                'to be of type "Object" or of type "Function".');
+        }
         function Func() {} // Define a dummy constructor function.
         Func.prototype = proto; // Set its prototype property to p.
         return new Func();
@@ -661,12 +662,6 @@
     {
         // Resolve superclass
         superclass = superclass || sjl.copyOfProto(Object.prototype);
-
-        // If `constructor` is a string give deprecation notice to user
-        if (sjl.classOfIs(constructor, 'String')) {
-            throw new Error('`sjl.defineSubClass` no longer allows a string value in the `constructor` param position.  ' +
-                'This functionality is now deprecated.  Please pass in an actual constructor instead.');
-        }
 
         // Set up the prototype object of the subclass
         constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
@@ -772,29 +767,73 @@
         }());
     };
 
-    //filterWhereType: function (obj, type) {},
+    ///**
+    // * Flattens passed in array.
+    // * @function module:sjl.flattenArray
+    // * @param array {Array}
+    // * @returns {Array}
+    // */
+    //sjl.flattenArray = function (array) {
+    //    var newArray = [];
+    //    // Flatten ...humanString if length > 1
+    //    for (var i = 0; i < array.length; i += 1) {
+    //        if (sjl.classOf(array[i]) === 'Array') {
+    //            newArray = sjl.flattenArray(array[i]).concat(newArray);
+    //        }
+    //        else {
+    //            newArray.push(array[i]);
+    //        }
+    //    }
+    //    return newArray;
+    //};
 
     /**
-     * Flattens passed in array.
-     * @function module:sjl.flattenArray
-     * @param array {Array}
-     * @returns {Array}
+     * Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.
+     * E.g., If pointer is less than `min` then returns `min`.  If pointer is greater than `max` returns `max`.
+     * If pointer is within bounds returns `pointer`.
+     * @param pointer {Number}
+     * @param min {Number}
+     * @param max {Number}
+     * @returns {Number}
      */
-    sjl.flattenArray = function (array) {
-        var newArray = [];
-        // Flatten ...humanString if length > 1
-        for (var i = 0; i < array.length; i += 1) {
-            if (sjl.classOf(array[i]) === 'Array') {
-                newArray = sjl.flattenArray(array[i]).concat(newArray);
-            }
-            else {
-                newArray.push(array[i]);
-            }
-        }
-        return newArray;
+    sjl.constrainPointerWithinBounds = function (pointer, min, max) {
+        return pointer < min ? min : ((pointer > max) ? max : pointer);
     };
 
-    //primitives: new Set('Array', 'Object', 'Boolean', 'String', 'Map', 'Set', 'WeakMap', 'Function'),
+    /**
+     * Wraps a pointer (number) around a bounds (range of two numbers) or returns the next valid pointer depending
+     * on direction:  E.g.,
+     * If pointer is less than `min` then returns `max`.  If pointer is greater than `max` returns `min`.
+     * If pointer is within bounds then returns `pointer`.
+     * @param pointer {Number}
+     * @param min {Number}
+     * @param max {Number}
+     * @returns {Number}
+     */
+    sjl.wrapPointerWithinBounds = function (pointer, min, max) {
+        return pointer > max ? min : (pointer < min ? max : pointer);
+    };
+
+    /**
+     * Throws a type error if value is not of type and prepends the contextName and
+     * paramName/variable-name to the message (removes type checking boilerplate where required).
+     * @param contextName {String} - The context name of where this function is being called.  Prefixed to the error message.
+     * @param paramName {String} - Param name of the value being passed in.
+     * @param value {*} - Value to inspect.
+     * @param type {String|Constructor} - Expected type constructor or constructor name.
+     * @param fixHint {String} - A hint to user or a way to fix the error.
+     * @returns {{}} - Sjl.
+     */
+    sjl.throwTypeErrorIfNotOfType = function (contextName, paramName, value, type, fixHint) {
+        type = sjl.classOfIs(type, 'String') ? type : type.name;
+        var classOfValue = sjl.classOf(value);
+        if (classOfValue !== type) {
+            throw new TypeError('#`' + contextName + '`.`' + paramName
+                + '` is not of type "' + type + '".  ' + (fixHint || '')
+                + '  Type received: "' + classOfValue);
+        }
+        return sjl;
+    };
 
     /**
      * Creates a new primitive based on passed in string representation of type.  E.g., sjl.newPrimitive('Map')

@@ -1,4 +1,31 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: sjl.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: sjl.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
@@ -16,7 +43,7 @@
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
-    globalContext.__isAmd = typeof define === "function" && define.amd,
+    globalContext.__isAmd = typeof define === "function" &amp;&amp; define.amd,
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -48,7 +75,7 @@
      * @returns {Boolean}
      */
     sjl.isset = function (value) {
-        return typeof value !== _undefined && value !== null;
+        return typeof value !== _undefined &amp;&amp; value !== null;
     };
 
     /**
@@ -59,7 +86,7 @@
      * @returns {Boolean}
      */
     sjl.issetAndOfType = function (value, type) {
-        return sjl.isset(value) && sjl.classOfIs(value, type);
+        return sjl.isset(value) &amp;&amp; sjl.classOfIs(value, type);
     };
 
     /**
@@ -81,7 +108,7 @@
         else {
             valueType = Object.prototype.toString.call(value);
             retVal = valueType.substring(8, valueType.length - 1);
-            if (retVal === 'Number' && isNaN(value)) {
+            if (retVal === 'Number' &amp;&amp; isNaN(value)) {
                 retVal = 'NaN';
             }
         }
@@ -123,7 +150,7 @@
             retVal = value.length === 0;
         }
 
-        else if ((classOfValue === 'Number' && value !== 0) || (classOfValue === 'Function')) {
+        else if ((classOfValue === 'Number' &amp;&amp; value !== 0) || (classOfValue === 'Function')) {
             retVal = false;
         }
 
@@ -188,11 +215,11 @@
             shouldSetValue = !sjl.classOfIs(valueToSet, 'undefined'),
             i;
 
-        for (i = 0; i < parts.length; i += 1) {
+        for (i = 0; i &lt; parts.length; i += 1) {
             if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'undefined')) {
                 parent[parts[i]] = {};
             }
-            if (i === parts.length - 1 && shouldSetValue) {
+            if (i === parts.length - 1 &amp;&amp; shouldSetValue) {
                 parent[parts[i]] = valueToSet;
             }
             parent = parent[parts[i]];
@@ -222,7 +249,7 @@
         search = str.search(/[a-z]/i);
 
         // If alpha char
-        if (sjl.classOfIs(search, 'Number') && search > -1) {
+        if (sjl.classOfIs(search, 'Number') &amp;&amp; search > -1) {
 
             // Make it lower case
             char = str.substr(search, 1)[func]();
@@ -282,7 +309,7 @@
             parts = str.split(replaceStrRegex);
 
         // Upper Case First char for parts
-        for (i = 0; i < parts.length; i += 1) {
+        for (i = 0; i &lt; parts.length; i += 1) {
 
             // If alpha chars
             if (/[a-z\d]/.test(parts[i])) {
@@ -355,7 +382,7 @@
      * @returns {Boolean|boolean}
      */
     sjl.isUsableNumber = function (value) {
-        return sjl.classOfIs(value, 'Number') && !isNaN(value);
+        return sjl.classOfIs(value, 'Number') &amp;&amp; !isNaN(value);
     };
 
     /**
@@ -391,7 +418,7 @@
         var parts = ns_string.split('.'),
             parent = objToSearch,
             i;
-        for (i = 0; i < parts.length; i += 1) {
+        for (i = 0; i &lt; parts.length; i += 1) {
             if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'undefined')) {
                 parent = null;
                 break;
@@ -447,10 +474,10 @@
             retVal = sjl.namespace(key, obj);
         }
         // If obj has a getter function for key, call it
-        else if (!noLegacyGetters && sjl.hasMethod(obj, getterFunc)) {
+        else if (!noLegacyGetters &amp;&amp; sjl.hasMethod(obj, getterFunc)) {
             retVal = obj[getterFunc]();
         }
-        else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
+        else if (!noLegacyGetters &amp;&amp; sjl.hasMethod(obj, overloadedGetterFunc)) {
             console.log(obj, overloadedGetterFunc, obj[overloadedGetterFunc]);
             retVal = obj[overloadedGetterFunc]();
         }
@@ -459,7 +486,7 @@
         }
 
         // Decide what to do if return value is a function
-        if (sjl.classOfIs(retVal, 'Function') && isEmpty(raw)) {
+        if (sjl.classOfIs(retVal, 'Function') &amp;&amp; isEmpty(raw)) {
             retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
         }
 
@@ -533,14 +560,14 @@
 
             // If property is present on target (o) and is not writable, skip iteration
             propDescription = Object.getOwnPropertyDescriptor(o, prop);
-            if (propDescription && !propDescription.writable) {
+            if (propDescription &amp;&amp; !propDescription.writable) {
                 continue;
             }
 
             if (deep) {
                 if (classOf_o_prop === 'Object'
-                    && classOf_p_prop === 'Object'
-                    && !sjl.isEmptyObj(p[prop])) {
+                    &amp;&amp; classOf_p_prop === 'Object'
+                    &amp;&amp; !sjl.isEmptyObj(p[prop])) {
                     extend(o[prop], p[prop], deep);
                 }
                 else if (useLegacyGettersAndSetters) {
@@ -634,7 +661,7 @@
         if (Object.create) // If Object.create() is defined...
             return Object.create(proto); // then just use it.
         var type = typeof proto; // Otherwise do some more type checking
-        if (type !== 'object' && type !== 'function') {
+        if (type !== 'object' &amp;&amp; type !== 'function') {
             throw new TypeError('`copyOfProto` function expects param1 ' +
                 'to be of type "Object" or of type "Function".');
         }
@@ -714,10 +741,10 @@
         parts.forEach(function (key, i) {
             hasOwnProperty = parent.hasOwnProperty(key);
             if (i === parts.length - 1
-                && shouldSetValue && !hasOwnProperty) {
+                &amp;&amp; shouldSetValue &amp;&amp; !hasOwnProperty) {
                 makeNotSettableProp(parent, key, valueToSet);
             }
-            else if (typeof parent[key] === _undefined && !hasOwnProperty) {
+            else if (typeof parent[key] === _undefined &amp;&amp; !hasOwnProperty) {
                 makeNotSettableProp(parent, key, {});
             }
             parent = parent[key];
@@ -773,7 +800,7 @@
     //sjl.flattenArray = function (array) {
     //    var newArray = [];
     //    // Flatten ...humanString if length > 1
-    //    for (var i = 0; i < array.length; i += 1) {
+    //    for (var i = 0; i &lt; array.length; i += 1) {
     //        if (sjl.classOf(array[i]) === 'Array') {
     //            newArray = sjl.flattenArray(array[i]).concat(newArray);
     //        }
@@ -794,7 +821,7 @@
      * @returns {Number}
      */
     sjl.constrainPointerWithinBounds = function (pointer, min, max) {
-        return pointer < min ? min : ((pointer > max) ? max : pointer);
+        return pointer &lt; min ? min : ((pointer > max) ? max : pointer);
     };
 
     /**
@@ -808,7 +835,7 @@
      * @returns {Number}
      */
     sjl.wrapPointerWithinBounds = function (pointer, min, max) {
-        return pointer > max ? min : (pointer < min ? max : pointer);
+        return pointer > max ? min : (pointer &lt; min ? max : pointer);
     };
 
     /**
@@ -893,8 +920,31 @@
     sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
     // Return sjl if amd is being used
-    if (!isNodeEnv && globalContext.__isAmd) {
+    if (!isNodeEnv &amp;&amp; globalContext.__isAmd) {
         return sjl;
     }
 
 }());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="sjl.package.stdlib.Attributable.html">Attributable</a></li><li><a href="sjl.package.stdlib.html#Extendable">Extendable</a></li><li><a href="sjl.package.stdlib.Iterator.html">Iterator</a></li><li><a href="sjl.package.stdlib.ObjectIterator.html">ObjectIterator</a></li><li><a href="sjl.package.stdlib.Optionable.html">Optionable</a></li><li><a href="sjl.SjlSet.html">SjlSet</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Dec 12 2015 17:16:16 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

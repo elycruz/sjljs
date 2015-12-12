@@ -21,7 +21,7 @@ describe('Iterator', function () {
         ],
         basicArray = 'abcdefghijklmnopqrstuvwxyz'.split(''),
         Iterator = sjl.package.stdlib.Iterator,
-        iterator = Iterator(basicArray);
+        iterator = new Iterator(basicArray);
 
     it ('should be able to return an iterator whether called as a function or not.', function () {
         expect(iterator instanceof Iterator).to.equal(true);
@@ -29,8 +29,8 @@ describe('Iterator', function () {
     });
 
     it ('should have it\'s main properties (`values` and `pointer`) set on an `__internal` object', function () {
-        expect(sjl.issetAndOfType(iterator.__internal.values, 'Array')).to.equal(true);
-        expect(sjl.issetAndOfType(iterator.__internal.pointer, 'Number')).to.equal(true);
+        expect(sjl.issetAndOfType(iterator.values(), 'Array')).to.equal(true);
+        expect(sjl.issetAndOfType(iterator.pointer(), 'Number')).to.equal(true);
     });
 
     it ('should have the appropriate interface: [' + interfaceKeys.join(', ') + '] .', function () {

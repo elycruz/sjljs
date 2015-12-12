@@ -35,18 +35,54 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = function Iterator(values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof Iterator)) {
-                return new Iterator(values, pointer);
-            }
+        errorContextName = 'sjl.package.stdlib.Iterator',
 
-            // Internalize the `values` collection and pointer here
-            // to make this class more functional.
-            this.__internal = {
-                values: values || [],
-                pointer: sjl.classOfIs(pointer, 'Number') ? pointer : 0
-            };
+        Iterator = function Iterator(values, pointer) {
+            var _values,
+                _pointer = 0;
+
+            // Define properties before setting values
+            Object.defineProperties(this, {
+                _values: {
+                    /**
+                     * @returns {Array}
+                     */
+                    get: function () {
+                        return _values;
+                    },
+                    /**
+                     * @param values {Array}
+                     * @throws {TypeError}
+                     * @note Pointer gets constrained to bounds of `values`'s length if it is out of
+                     *  bounds (if it is less than `0` gets pushed to `0` if it is greater than values.length
+                     *      gets pulled back down to values.length).
+                     */
+                    set: function (values) {
+                        sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, Array);
+                        _values = values;
+                        this._pointer = _pointer; // Force pointer within bounds (if it is out of bounds)
+                    }
+                },
+                _pointer: {
+                    /**
+                     * @returns {Number}
+                     */
+                    get: function () {
+                        return _pointer;
+                    },
+                    /**
+                     * @param pointer {Number}
+                     * @throws {TypeError}
+                     */
+                    set: function (pointer) {
+                        sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', pointer, Number);
+                        _pointer = sjl.constrainPointerWithinBounds(pointer, 0, _values.length);
+                    }
+                }
+            }); // End of properties define
+
+            // Set values
+            this._values = values || [];
         };
 
     /**
@@ -56,7 +92,7 @@
      */
     Iterator = sjl.package.stdlib.Extendable.extend(Iterator, {
         /**
-         * Returns the current value that `pointer()` is pointing to.
+         * Returns the current value that `pointer` is pointing to.
          * @method sjl.package.stdlib.Iterator#current
          * @returns {{done: boolean, value: *}}
          */
@@ -64,7 +100,7 @@
             var self = this;
             return self.valid() ? {
                 done: false,
-                value: self.values()[self.pointer()]
+                value: self._values[self._pointer]
             } : {
                 done: true
             };
@@ -78,14 +114,14 @@
          */
         next: function () {
             var self = this,
-                pointer = self.pointer(),
+                pointer = self._pointer,
                 retVal = self.valid() ? {
                     done: false,
-                    value: self.values()[pointer]
+                    value: self._values[pointer]
                 } : {
                     done: true
                 };
-            self.pointer(pointer + 1);
+            self._pointer += 1;
             return retVal;
         },
 
@@ -104,52 +140,46 @@
          * @returns {boolean}
          */
         valid: function () {
-            return this.pointer() &lt; this.values().length;
+            return this._pointer &lt; this._values.length;
         },
 
         /**
-         * Overloaded method for fetching or setting the internal pointer value.
-         * @method sjl.package.stdlib.Iterator#pointer
-         * @param pointer {Number|undefined}
-         * @returns {sjl.package.stdlib.Iterator|Number}
+         * Overloaded getter and setter for `_pointer` property.
+         * @param pointer {Number|undefined} - If undefined then method is a getter call else it is a setter call.
+         * @returns {sjl.package.stdlib.Iterator}
+         * @throws {TypeError} - If `pointer` is set and is not of type `Number`.
          */
         pointer: function (pointer) {
-            var self = this,
-                isGetterCall = typeof pointer === _undefined,
-                defaultNum = sjl.classOfIs(self.__internal.pointer, 'Number')
-                    ? self.__internal.pointer : 0,
-                retVal = self;
-            if (isGetterCall) {
-                retVal = defaultNum;
+            var retVal = this;
+            // If is a getter call get the value
+            if (typeof pointer === 'undefined') {
+                retVal = this._pointer;
             }
-            // Else set pointer
+            // If is a setter call
             else {
-                self.__internal.pointer = sjl.classOfIs(pointer, 'Number') ? pointer : defaultNum;
+                // Set and validate pointer (validated via `_pointer` getter property definition)
+                this._pointer = pointer;
             }
             return retVal;
         },
 
         /**
-         * Overloaded method for fetching or setting the internal values array.
-         * @method sjl.Itertator#values
-         * @param values {Array|undefined}
-         * @returns {sjl.package.stdlib.Iterator|Array}
+         * Overloaded getter and setter for `_values` property.
+         * @param values {Array|undefined} - If undefined then method is a getter call else it is a setter call.
+         * @returns {sjl.package.stdlib.Iterator}
+         * @throws {TypeError} - If `values` is set and is not of type `Array`.
          */
         values: function (values) {
-            var isGetterCall = typeof values === _undefined,
-                retVal = this,
-                selfCollectionIsArray;
-            if (isGetterCall) {
-                retVal = this.__internal.values;
+            var retVal = this;
+            // If is a getter call get the value
+            if (typeof values === 'undefined') {
+                retVal = this._values;
             }
+            // If is a setter call
             else {
-                selfCollectionIsArray = sjl.classOfIs(this.__internal.values, 'Array');
-                // Set the internal values collection to `values` if `values` is an array
-                // else if self internal values is an array leave as is
-                // else set internal values to an empty array
-                this.__internal.values =
-                    sjl.classOfIs(values, 'Array') ? values :
-                        (selfCollectionIsArray ? this.__internal.values : []);
+                // Set and check if value is of expected type and throw error if
+                // it is not (done via `_values` property definition).
+                this._values = values;
             }
             return retVal;
         }
@@ -161,7 +191,7 @@
     else {
         sjl.package('stdlib.Iterator', Iterator);
         if (window.__isAmd) {
-            return Iterator;
+            return sjl.package.stdlib.Iterator;
         }
     }
 
@@ -182,7 +212,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Dec 09 2015 22:13:50 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Dec 12 2015 17:16:14 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

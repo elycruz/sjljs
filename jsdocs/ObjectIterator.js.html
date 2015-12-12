@@ -36,13 +36,62 @@
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Iterator = sjl.package.stdlib.Iterator,
-        ObjectIterator = function ObjectIterator(keys, values, pointer) {
-            // Allow Iterator to be called as a function
-            if (!(this instanceof ObjectIterator)) {
-                return new ObjectIterator(keys, values, pointer);
+        contextName = 'sjl.package.stdlib.ObjectIterator',
+
+        /**
+         *
+         * @param keysOrObj {Array|Object}
+         * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else the
+         *  value would be used as the iterator's pointer in which case it would be optional.
+         * @param pointer {Number} - Optional.
+         * @constructor
+         */
+        ObjectIterator = function ObjectIterator(keysOrObj, valuesOrPointer, pointer) {
+            var keys, obj, values,
+                classOfParam1 = sjl.classOf(keysOrObj),
+                receivedParamTypesList;
+
+            // If called with obj as first param
+            if (classOfParam1 === 'Object') {
+                obj = keysOrObj;
+                keys = Object.keys(obj);
+                pointer = valuesOrPointer;
+                values = keys.map(function (key) {
+                    return obj[key];
+                });
             }
+            else if (classOfParam1 === 'Array') {
+                keys = keysOrObj;
+                sjl.throwTypeErrorIfNotOfType(contextName, 'valuesOrPointer', valuesOrPointer, Array,
+                    'With the previous param being an array `valuesOrPointer` can only be an array in this scenario.');
+                values = valuesOrPointer;
+                pointer = pointer || 0;
+            }
+            else {
+                receivedParamTypesList = [sjl.classOf(keysOrObj), sjl.classOf(valuesOrPointer), sjl.classOf(pointer)];
+                throw new TypeError ('#`' + contextName + '` recieved incorrect parameter values.  The expected ' +
+                    'parameter list should one of two: [Object, Number] or [Array, Array, Number].  ' +
+                    'Parameter list recieved: [' + receivedParamTypesList.join(', ') + '].');
+            }
+
+            // Extend #own properties with #Iterator's own properties
             Iterator.call(this, values, pointer);
-            this.__internal.keys = keys;
+
+            // Define other own properties
+            Object.defineProperties(this, {
+                keys: {
+                    get: function () {
+                        return _keys;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType('ObjectIterator.keys', 'keys', value, Array);
+                        _keys = value;
+                    }
+                }
+            });
+
+            // Set keys
+            this._keys = keys;
         };
 
     /**
@@ -61,7 +110,7 @@
                 pointer = self.pointer();
             return self.valid() ? {
                 done: false,
-                value: [self.keys()[pointer], self.values()[pointer]]
+                value: [self.keys[pointer], self.values[pointer]]
             } : {
                 done: true
             };
@@ -78,7 +127,7 @@
                 pointer = self.pointer(),
                 retVal = self.valid() ? {
                     done: false,
-                    value: [self.keys()[pointer], self.values()[pointer]]
+                    value: [self._keys[pointer], self._values[pointer]]
                 } : {
                     done: true
                 };
@@ -87,8 +136,8 @@
         },
 
         valid: function () {
-            var pointer = this.pointer();
-            return pointer &lt; this.values().length &amp;&amp; pointer &lt; this.keys().length;
+            var pointer = this._pointer;
+            return pointer &lt; this._values.length &amp;&amp; pointer &lt; this._keys.length;
         },
 
         /**
@@ -96,20 +145,13 @@
          * @returns {sjl.package.stdlib.ObjectIterator|Array&lt;*>}
          */
         keys: function (keys) {
-            var isGetterCall = typeof keys === _undefined,
-                retVal = this,
-                selfCollectionIsArray;
-            if (isGetterCall) {
-                retVal = this.__internal.keys;
+            var retVal = this;
+            if (typeof keys === _undefined) {
+                retVal = this._keys;
             }
             else {
-                selfCollectionIsArray = sjl.classOfIs(this.__internal.keys, 'Array');
-                // Set the internal keys collection to `keys` if `keys` is an array
-                // else if self internal keys is an array leave as is
-                // else set internal keys to an empty array
-                this.__internal.keys =
-                    sjl.classOfIs(keys, 'Array') ? keys :
-                        (selfCollectionIsArray ? this.__internal.keys : []);
+                // Type validated by property definition `this._keys`
+                this._keys = keys;
             }
             return retVal;
         }
@@ -126,7 +168,8 @@
         }
     }
 
-}());</code></pre>
+}());
+</code></pre>
         </article>
     </section>
 
@@ -142,7 +185,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Wed Dec 09 2015 22:13:50 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Dec 12 2015 17:16:14 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
