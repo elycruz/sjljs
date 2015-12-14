@@ -649,7 +649,7 @@
         }
 
         // Ensure a constructor is set
-        constructor = constructor || function EmptyConstructor () {
+        constructor = constructor || function () {
                 superclass.apply(this, arguments);
             };
 

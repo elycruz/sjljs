@@ -1,4 +1,4 @@
-/**! sjl.js Mon Dec 14 2015 03:33:31 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Mon Dec 14 2015 03:47:51 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
@@ -649,7 +649,7 @@
         }
 
         // Ensure a constructor is set
-        constructor = constructor || function EmptyConstructor () {
+        constructor = constructor || function () {
                 superclass.apply(this, arguments);
             };
 
