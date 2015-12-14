@@ -648,6 +648,11 @@
             delete methods.constructor;
         }
 
+        // Ensure a constructor is set
+        constructor = constructor || function EmptyConstructor () {
+                superclass.apply(this, arguments);
+            };
+
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);
 

@@ -471,6 +471,10 @@ like property on instantiation (if you use the `extend` method to merge passed i
 ##### ~~sjl.copyOfProto(prototype {Prototype|Object}) :Object|Prototype~~
 Removed in sjljs version 0.5.10.  Use `Object.create` instead for the same functionality.
 
+##### sjl.defineSubClass(superclass {Function}, methodsAndConstructor {Object}, statics {Object}) :Function
+Alternate signature for `defineSubClass` though the second parameter here requires a `constructor` property with a 
+named function set to it (a named function should be used for best effect).
+ 
 ##### sjl.defineSubClass(superclass {Function}, constructor {Function}, methods {Object}, statics {Object}) :Function
 Creates a sub class of a constructor and makes it extendable via the static method `extend`;  E.g., pretty much 
 creates `sjl.Extendable`.

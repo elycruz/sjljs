@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Mon Dec 14 2015 02:58:05 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Mon Dec 14 2015 03:33:31 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -650,6 +650,11 @@
             methods.constructor = null;
             delete methods.constructor;
         }
+
+        // Ensure a constructor is set
+        constructor = constructor || function EmptyConstructor () {
+                superclass.apply(this, arguments);
+            };
 
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);

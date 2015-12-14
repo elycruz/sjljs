@@ -1,5 +1,6 @@
 /**
  * Created by elydelacruz on 11/2/15.
+ * @todo fix issue with _keys property not being defined in `ObjectIterator`.
  */
 (function () {
 

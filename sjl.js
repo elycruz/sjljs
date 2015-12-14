@@ -1,4 +1,4 @@
-/**! sjl.js Mon Dec 14 2015 02:58:06 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Mon Dec 14 2015 03:33:31 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
@@ -647,6 +647,11 @@
             methods.constructor = null;
             delete methods.constructor;
         }
+
+        // Ensure a constructor is set
+        constructor = constructor || function EmptyConstructor () {
+                superclass.apply(this, arguments);
+            };
 
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);
@@ -1318,6 +1323,7 @@
 
 /**
  * Created by elydelacruz on 11/2/15.
+ * @todo fix issue with _keys property not being defined in `ObjectIterator`.
  */
 (function () {
 
