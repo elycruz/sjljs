@@ -649,11 +649,11 @@ and are no longer available directly on/at <code>sjljs</code>;  E.g.,
 var BaseValidator = sjl.BaseValidator;</li>
 </ul>
 <p>// Now becomes
-var BaseValidator = sjl.validator.BaseValidator;</p>
+var BaseValidator = sjl.ns.validator.BaseValidator;</p>
 <p>// and 
 var InputFilter = sjl.InputFilter;</p>
 <p>// Now becomes 
-var InputFilter = sjl.input.InputFilter;</p>
+var InputFilter = sjl.ns.input.InputFilter;</p>
 <pre><code>This allows us to protect (and optionally freeze) our class members.
 
 ##### When developing `sjljs`:

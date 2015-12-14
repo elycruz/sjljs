@@ -8,8 +8,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Optionable = sjl.package.stdlib.Optionable,
-        ValidatorChain = sjl.package.validator.ValidatorChain,
+        Optionable = sjl.ns.stdlib.Optionable,
+        ValidatorChain = sjl.ns.validator.ValidatorChain,
         Input = function Input(options) {
             var alias = null;
 
@@ -225,7 +225,7 @@
         module.exports = Input;
     }
     else {
-        sjl.package('input.Input', Input);
+        sjl.ns('input.Input', Input);
         if (window.__isAmd) {
             return Input;
         }

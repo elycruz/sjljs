@@ -20,7 +20,7 @@ describe('Iterator', function () {
         'current', 'next', 'rewind', 'pointer', 'values', 'valid'
         ],
         basicArray = 'abcdefghijklmnopqrstuvwxyz'.split(''),
-        Iterator = sjl.package.stdlib.Iterator,
+        Iterator = sjl.ns.stdlib.Iterator,
         iterator = new Iterator(basicArray);
 
     it ('should be able to return an iterator whether called as a function or not.', function () {

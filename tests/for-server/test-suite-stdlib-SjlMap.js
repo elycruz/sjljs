@@ -16,7 +16,7 @@ describe('SjlMap', function () {
 
     "use strict";
 
-    var SjlMap = sjl.package.stdlib.SjlMap;
+    var SjlMap = sjl.ns.stdlib.SjlMap;
 
     describe('#`SjlMap Methods Existence`', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],

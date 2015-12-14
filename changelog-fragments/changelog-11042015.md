@@ -24,13 +24,13 @@ and are no longer available directly on/at `sjljs`;  E.g.,
 var BaseValidator = sjl.BaseValidator;
 
 // Now becomes
-var BaseValidator = sjl.validator.BaseValidator;
+var BaseValidator = sjl.ns.validator.BaseValidator;
 
 // and 
 var InputFilter = sjl.InputFilter;
 
 // Now becomes 
-var InputFilter = sjl.input.InputFilter;
+var InputFilter = sjl.ns.input.InputFilter;
 ```
 This allows us to protect (and optionally freeze) our class members.
 

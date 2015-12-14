@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Sat Dec 12 2015 17:16:12 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Mon Dec 14 2015 02:58:05 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -625,28 +625,6 @@
     };
 
     /**
-     * Creates a copy of a prototype to use for inheritance.
-     * @function module:sjl.copyOfProto
-     * @param proto {Prototype|Object} - Prototype to make a copy of.
-     * @returns {*}
-     */
-    sjl.copyOfProto = function (proto) {
-        if (proto === null) {
-            throw new TypeError('`copyOfProto` function expects param1 to be a non-null value.');
-        } // proto must be a non-null object
-        if (Object.create) // If Object.create() is defined...
-            return Object.create(proto); // then just use it.
-        var type = typeof proto; // Otherwise do some more type checking
-        if (type !== 'object' && type !== 'function') {
-            throw new TypeError('`copyOfProto` function expects param1 ' +
-                'to be of type "Object" or of type "Function".');
-        }
-        function Func() {} // Define a dummy constructor function.
-        Func.prototype = proto; // Set its prototype property to p.
-        return new Func();
-    };
-
-    /**
      * Defines a class using a `superclass`, `constructor`, methods and/or static methods
      * @function module:sjl.defineSubClass
      * @param superclass {Constructor} - SuperClass's constructor.  Optional.
@@ -661,14 +639,24 @@
                                    statics)     // Class properties: copied to constructor
     {
         // Resolve superclass
-        superclass = superclass || sjl.copyOfProto(Object.prototype);
+        superclass = superclass || Object.create(Object.prototype);
+
+        // If `constructor` param is an object then
+        if (typeof constructor === 'object') {
+            statics = methods;
+            methods = constructor;
+            constructor = !sjl.isset(methods.constructor)
+                ? function StandInConstructor () {} : methods.constructor;
+            methods.constructor = null;
+            delete methods.constructor;
+        }
 
         // Set up the prototype object of the subclass
-        constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
+        constructor.prototype = Object.create(superclass.prototype);
 
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {
-            return sjl.defineSubClass(this, constructor_, methods_, statics_);
+            return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
         };
 
         // Define constructor's constructor
@@ -758,9 +746,9 @@
              */
             obj[altFuncKey] =
                 obj[funcKey] = function (nsString, value) {
-                return typeof nsString === _undefined ? obj[funcKey]
-                    : namespace(nsString, obj[funcKey], value);
-            };
+                    return typeof nsString === _undefined ? obj[funcKey]
+                        : namespace(nsString, obj[funcKey], value);
+                };
 
             // Return passed in obj
             return obj;
@@ -835,39 +823,6 @@
         return sjl;
     };
 
-    /**
-     * Creates a new primitive based on passed in string representation of type.  E.g., sjl.newPrimitive('Map')
-     * @note Used internally when needing to flatten an object of a particular type (@see sjl.flatten)
-     * @param type
-     */
-    //sjl.newPrimitive = function (type) {
-    //    var retVal = {};
-    //    switch(type) {
-    //        case 'Array':
-    //            retVal = [];
-    //            break;
-    //        case 'String':
-    //            retVal = '';
-    //            break;
-    //        case 'Map':
-    //            retVal = new Map();
-    //            break;
-    //        case 'Set':
-    //            retVal = new Set();
-    //            break;
-    //        case 'WeakMap':
-    //            retVal = new WeakMap();
-    //            break;
-    //        case 'Function':
-    //            retVal = function () {};
-    //            break;
-    //        case 'Object':
-    //        default:
-    //            retVal = {};
-    //            break;
-    //    }
-    //};
-
     // Ensure we have access to the `Symbol`
     if (typeof Symbol === _undefined) {
         sjl.Symbol = {
@@ -887,13 +842,13 @@
         libSrcRootPath = __dirname;
     }
 
+    // Create top level frontend package
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+
     // Export sjl globally g(the node global export will be deprecated at a later version)
     Object.defineProperty(globalContext, 'sjl', {
         value: sjl
     });
-
-    // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {

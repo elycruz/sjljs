@@ -18,7 +18,7 @@ if (typeof expect === 'undefined') {
 describe('Sjl Optionable', function () {
 
     // Some test values
-    var Optionable = sjl.package.stdlib.Optionable,
+    var Optionable = sjl.ns.stdlib.Optionable,
         engToSpaSalutations = {
             goodafternoon: 'buenas tardes',
             goodevening: 'buenas noches',

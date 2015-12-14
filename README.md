@@ -468,8 +468,8 @@ like property on instantiation (if you use the `extend` method to merge passed i
 
 ### OOP Util functions:
 
-##### sjl.copyOfProto(prototype {Prototype|Object}) :Object|Prototype
-Creates a copy of a prototype (backward compatible to older IEs).
+##### ~~sjl.copyOfProto(prototype {Prototype|Object}) :Object|Prototype~~
+Removed in sjljs version 0.5.10.  Use `Object.create` instead for the same functionality.
 
 ##### sjl.defineSubClass(superclass {Function}, constructor {Function}, methods {Object}, statics {Object}) :Function
 Creates a sub class of a constructor and makes it extendable via the static method `extend`;  E.g., pretty much 
@@ -668,13 +668,13 @@ and are no longer available directly on/at `sjljs`;  E.g.,
 var BaseValidator = sjl.BaseValidator;
 
 // Now becomes
-var BaseValidator = sjl.validator.BaseValidator;
+var BaseValidator = sjl.ns.validator.BaseValidator;
 
 // and 
 var InputFilter = sjl.InputFilter;
 
 // Now becomes 
-var InputFilter = sjl.input.InputFilter;
+var InputFilter = sjl.ns.input.InputFilter;
 ```
 This allows us to protect (and optionally freeze) our class members.
 
@@ -688,6 +688,7 @@ sjl.package('somePackage.SomeClass', SomeClass);
 - Classes have to be exported for nodejs via it's exporting facilities;  
 I.e., `module.exports = SomeClass;`
  
+
 ### Changelog for 11/05/2015 version 0.5.3:
 
 - Removed support for multiple type checking functions (classOfIs, issetAndOfType etc.).

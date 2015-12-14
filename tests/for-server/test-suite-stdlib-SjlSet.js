@@ -16,7 +16,7 @@ describe('SjlSet', function () {
 
     "use strict";
 
-    var SjlSet = sjl.package.stdlib.SjlSet;
+    var SjlSet = sjl.ns.stdlib.SjlSet;
 
     function validateHasFunction (obj, funcName) {
         it ('should have a `' + funcName + '` function.', function () {

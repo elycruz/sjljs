@@ -13,8 +13,8 @@ describe('Sjl Extendable', function () {
 
     'use strict';
 
-    var Extendable = sjl.package.stdlib.Extendable,
-        Iterator = sjl.package.stdlib.Iterator;
+    var Extendable = sjl.ns.stdlib.Extendable,
+        Iterator = sjl.ns.stdlib.Iterator;
 
     it ('should create an extendable class', function () {
         var extendable = new Extendable();

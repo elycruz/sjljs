@@ -14,7 +14,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         InRangeValidator = function InRangeValidator (options) {
 
             // Set defaults and extend with Base validator
@@ -106,7 +106,7 @@
         module.exports = InRangeValidator;
     }
     else {
-        sjl.package('validator.InRangeValidator', InRangeValidator);
+        sjl.ns('validator.InRangeValidator', InRangeValidator);
         if (window.__isAmd) {
             return InRangeValidator;
         }

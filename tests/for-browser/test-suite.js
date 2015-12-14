@@ -86,8 +86,8 @@ describe('Sjl InputFilter', function () {
 
     "use strict";
 
-    var RegexValidator = sjl.package.validator.RegexValidator,
-        InputFilter = sjl.package.input.InputFilter;
+    var RegexValidator = sjl.ns.validator.RegexValidator,
+        InputFilter = sjl.ns.input.InputFilter;
 
     describe ('Should have the appropriate interface', function () {
         var inputFilter = new InputFilter(),
@@ -852,7 +852,7 @@ describe('Iterator', function () {
         'current', 'next', 'rewind', 'pointer', 'values', 'valid'
         ],
         basicArray = 'abcdefghijklmnopqrstuvwxyz'.split(''),
-        Iterator = sjl.package.stdlib.Iterator,
+        Iterator = sjl.ns.stdlib.Iterator,
         iterator = new Iterator(basicArray);
 
     it ('should be able to return an iterator whether called as a function or not.', function () {
@@ -919,7 +919,7 @@ if (typeof expect === 'undefined') {
 describe('Sjl Optionable', function () {
 
     // Some test values
-    var Optionable = sjl.package.stdlib.Optionable,
+    var Optionable = sjl.ns.stdlib.Optionable,
         engToSpaSalutations = {
             goodafternoon: 'buenas tardes',
             goodevening: 'buenas noches',
@@ -1097,7 +1097,7 @@ describe('SjlMap', function () {
 
     "use strict";
 
-    var SjlMap = sjl.package.stdlib.SjlMap;
+    var SjlMap = sjl.ns.stdlib.SjlMap;
 
     describe('#`SjlMap Methods Existence`', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
@@ -1328,6 +1328,7 @@ describe('SjlMap', function () {
     });
 
 });
+
 /**
  * Created by Ely on 8/6/2015.
  */
@@ -1346,7 +1347,7 @@ describe('SjlSet', function () {
 
     "use strict";
 
-    var SjlSet = sjl.package.stdlib.SjlSet;
+    var SjlSet = sjl.ns.stdlib.SjlSet;
 
     function validateHasFunction (obj, funcName) {
         it ('should have a `' + funcName + '` function.', function () {
@@ -1532,6 +1533,7 @@ describe('SjlSet', function () {
     });
 
 });
+
 /**
  * Created by Ely on 6/21/2014.
  */
@@ -1550,7 +1552,7 @@ describe('Sjl Attributable', function () {
 
     'use strict';
 
-    var Attributable = sjl.package.stdlib.Attributable,
+    var Attributable = sjl.ns.stdlib.Attributable,
         attributable = new Attributable({
             nullValue:              null,
             undefinedValue:         undefined,
@@ -1630,8 +1632,8 @@ describe('Sjl Extendable', function () {
 
     'use strict';
 
-    var Extendable = sjl.package.stdlib.Extendable,
-        Iterator = sjl.package.stdlib.Iterator;
+    var Extendable = sjl.ns.stdlib.Extendable,
+        Iterator = sjl.ns.stdlib.Iterator;
 
     it ('should create an extendable class', function () {
         var extendable = new Extendable();

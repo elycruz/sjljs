@@ -19,8 +19,8 @@ describe('Sjl InputFilter', function () {
 
     "use strict";
 
-    var RegexValidator = sjl.package.validator.RegexValidator,
-        InputFilter = sjl.package.input.InputFilter;
+    var RegexValidator = sjl.ns.validator.RegexValidator,
+        InputFilter = sjl.ns.input.InputFilter;
 
     describe ('Should have the appropriate interface', function () {
         var inputFilter = new InputFilter(),

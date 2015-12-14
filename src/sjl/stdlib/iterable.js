@@ -9,8 +9,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = sjl.package.stdlib.Iterator,
-        ObjectIterator = sjl.package.stdlib.ObjectIterator;
+        Iterator = sjl.ns.stdlib.Iterator,
+        ObjectIterator = sjl.ns.stdlib.ObjectIterator;
 
     /**
      * Turns an array into an iterable.
@@ -47,7 +47,7 @@
         module.exports = sjl.iterable;
     }
     else {
-        sjl.package('stdlib.iterable', sjl.iterable);
+        sjl.ns('stdlib.iterable', sjl.iterable);
         if (window.__isAmd) {
             return sjl.iterable;
         }

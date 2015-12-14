@@ -10,7 +10,7 @@
 (function () {
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         PostCodeValidator = function PostCodeValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -307,7 +307,7 @@
         module.exports = PostCodeValidator;
     }
     else {
-        sjl.package('validator.PostCodeValidator', PostCodeValidator);
+        sjl.ns('validator.PostCodeValidator', PostCodeValidator);
         if (window.__isAmd) {
             return PostCodeValidator;
         }

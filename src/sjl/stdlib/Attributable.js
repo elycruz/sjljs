@@ -13,19 +13,19 @@
         };
 
     /**
-     * @class sjl.package.stdlib.Attributable
-     * @extends sjl.package.stdlib.Extendable
+     * @class sjl.ns.stdlib.Attributable
+     * @extends sjl.ns.stdlib.Extendable
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @type {void|Object|*}
      */
-    Attributable = sjl.package.stdlib.Extendable.extend(Attributable, {
+    Attributable = sjl.ns.stdlib.Extendable.extend(Attributable, {
 
         /**
          * Gets or sets a collection of attributes.
-         * @method sjl.package.stdlib.Attributable#attr
+         * @method sjl.ns.stdlib.Attributable#attr
          * @param attr {mixed|Array|Object} - Attributes to set or get from object
          * @todo add an `attr` function to this class
-         * @returns {sjl.package.stdlib.Attributable}
+         * @returns {sjl.ns.stdlib.Attributable}
          */
         attr: function (attr) {
             var self = this,
@@ -63,7 +63,7 @@
 
         /**
          * Gets a set of attributes hash for queried attributes.
-         * @method sjl.package.stdlib.Attributable#_getAttribs
+         * @method sjl.ns.stdlib.Attributable#_getAttribs
          * @param attribsList {Array} - Attributes list to return
          * @returns {*}
          * @private
@@ -88,7 +88,7 @@
         module.exports = Attributable;
     }
     else {
-        sjl.package('stdlib.Attributable', Attributable);
+        sjl.ns('stdlib.Attributable', Attributable);
         if (window.__isAmd) {
             return Attributable;
         }

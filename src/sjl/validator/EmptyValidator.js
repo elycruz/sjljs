@@ -7,7 +7,7 @@
 (function () {
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         EmptyValidator = function EmptyValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -52,7 +52,7 @@
         module.exports = EmptyValidator;
     }
     else {
-        sjl.package('validator.EmptyValidator', EmptyValidator);
+        sjl.ns('validator.EmptyValidator', EmptyValidator);
         if (window.__isAmd) {
             return EmptyValidator;
         }

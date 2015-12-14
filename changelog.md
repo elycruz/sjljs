@@ -88,13 +88,13 @@ and are no longer available directly on/at `sjljs`;  E.g.,
 var BaseValidator = sjl.BaseValidator;
 
 // Now becomes
-var BaseValidator = sjl.validator.BaseValidator;
+var BaseValidator = sjl.ns.validator.BaseValidator;
 
 // and 
 var InputFilter = sjl.InputFilter;
 
 // Now becomes 
-var InputFilter = sjl.input.InputFilter;
+var InputFilter = sjl.ns.input.InputFilter;
 ```
 This allows us to protect (and optionally freeze) our class members.
 
@@ -108,6 +108,7 @@ sjl.package('somePackage.SomeClass', SomeClass);
 - Classes have to be exported for nodejs via it's exporting facilities;  
 I.e., `module.exports = SomeClass;`
  
+
 ### Changelog for 11/05/2015 version 0.5.3:
 
 - Removed support for multiple type checking functions (classOfIs, issetAndOfType etc.).

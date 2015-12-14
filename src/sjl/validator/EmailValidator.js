@@ -8,7 +8,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        RegexValidator = sjl.package.validator.RegexValidator,
+        RegexValidator = sjl.ns.validator.RegexValidator,
         EmailValidator = function EmailValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -83,7 +83,7 @@
         module.exports = EmailValidator;
     }
     else {
-        sjl.package('validator.EmailValidator', EmailValidator);
+        sjl.ns('validator.EmailValidator', EmailValidator);
         if (window.__isAmd) {
             return EmailValidator;
         }

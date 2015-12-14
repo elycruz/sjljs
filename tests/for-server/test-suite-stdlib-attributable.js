@@ -16,7 +16,7 @@ describe('Sjl Attributable', function () {
 
     'use strict';
 
-    var Attributable = sjl.package.stdlib.Attributable,
+    var Attributable = sjl.ns.stdlib.Attributable,
         attributable = new Attributable({
             nullValue:              null,
             undefinedValue:         undefined,

@@ -8,8 +8,8 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = sjl.package.stdlib.Iterator,
-        contextName = 'sjl.package.stdlib.ObjectIterator',
+        Iterator = sjl.ns.stdlib.Iterator,
+        contextName = 'sjl.ns.stdlib.ObjectIterator',
 
         /**
          *
@@ -68,14 +68,14 @@
         };
 
     /**
-     * @class sjl.package.stdlib.ObjectIterator
-     * @extends sjl.package.stdlib.Iterator
+     * @class sjl.ns.stdlib.ObjectIterator
+     * @extends sjl.ns.stdlib.Iterator
      * @type {Object|void|*}
      */
     ObjectIterator = Iterator.extend(ObjectIterator, {
         /**
          * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.package.stdlib.Iterator#current
+         * @method sjl.ns.stdlib.Iterator#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         current: function () {
@@ -92,7 +92,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.package.stdlib.Iterator#next
+         * @method sjl.ns.stdlib.Iterator#next
          * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         next: function () {
@@ -115,7 +115,7 @@
 
         /**
          * Overloaded getter/setter method for internal `keys` property.
-         * @returns {sjl.package.stdlib.ObjectIterator|Array<*>}
+         * @returns {sjl.ns.stdlib.ObjectIterator|Array<*>}
          */
         keys: function (keys) {
             var retVal = this;
@@ -135,7 +135,7 @@
         module.exports = ObjectIterator;
     }
     else {
-        sjl.package('stdlib.ObjectIterator', ObjectIterator);
+        sjl.ns('stdlib.ObjectIterator', ObjectIterator);
         if (window.__isAmd) {
             return ObjectIterator;
         }

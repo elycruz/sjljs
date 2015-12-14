@@ -11,15 +11,15 @@
         Extendable = function Extendable () {};
 
     /**
-     * The `sjl.package.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-     * @class module:sjl.package.stdlib.Extendable
-     * @name sjl.package.stdlib.Extendable
+     * The `sjl.ns.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
+     * @class module:sjl.ns.stdlib.Extendable
+     * @name sjl.ns.stdlib.Extendable
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
 
     /**
      * Extends a new copy of self with passed in parameters.
-     * @method sjl.package.stdlib.Extendable.extend
+     * @method sjl.ns.stdlib.Extendable.extend
      * @param constructor {Constructor} - Required.
      * @param methods {Object} - Optional.
      * @param statics {Object} - Static methods. Optional.
@@ -30,7 +30,7 @@
         module.exports = Extendable;
     }
     else {
-        sjl.package('stdlib.Extendable', Extendable);
+        sjl.ns('stdlib.Extendable', Extendable);
         if (window.__isAmd) {
             return Extendable;
         }

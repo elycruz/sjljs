@@ -2,6 +2,9 @@
  * Created by Ely on 11/7/2015.
  */
 (function () {
+
+    'use strict';
+
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
         Optionable = sjl.ns.stdlib.Optionable,
@@ -14,6 +17,8 @@
             return value; // filtered
         }
     });
+
+    sjl.ns('filter.Filter', Filter);
 
     if (window.__isAmd) {
         return Filter;

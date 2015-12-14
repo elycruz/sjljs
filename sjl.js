@@ -1,4 +1,4 @@
-/**! sjl.js Sat Dec 12 2015 17:16:14 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Mon Dec 14 2015 02:58:06 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
@@ -622,28 +622,6 @@
     };
 
     /**
-     * Creates a copy of a prototype to use for inheritance.
-     * @function module:sjl.copyOfProto
-     * @param proto {Prototype|Object} - Prototype to make a copy of.
-     * @returns {*}
-     */
-    sjl.copyOfProto = function (proto) {
-        if (proto === null) {
-            throw new TypeError('`copyOfProto` function expects param1 to be a non-null value.');
-        } // proto must be a non-null object
-        if (Object.create) // If Object.create() is defined...
-            return Object.create(proto); // then just use it.
-        var type = typeof proto; // Otherwise do some more type checking
-        if (type !== 'object' && type !== 'function') {
-            throw new TypeError('`copyOfProto` function expects param1 ' +
-                'to be of type "Object" or of type "Function".');
-        }
-        function Func() {} // Define a dummy constructor function.
-        Func.prototype = proto; // Set its prototype property to p.
-        return new Func();
-    };
-
-    /**
      * Defines a class using a `superclass`, `constructor`, methods and/or static methods
      * @function module:sjl.defineSubClass
      * @param superclass {Constructor} - SuperClass's constructor.  Optional.
@@ -658,14 +636,24 @@
                                    statics)     // Class properties: copied to constructor
     {
         // Resolve superclass
-        superclass = superclass || sjl.copyOfProto(Object.prototype);
+        superclass = superclass || Object.create(Object.prototype);
+
+        // If `constructor` param is an object then
+        if (typeof constructor === 'object') {
+            statics = methods;
+            methods = constructor;
+            constructor = !sjl.isset(methods.constructor)
+                ? function StandInConstructor () {} : methods.constructor;
+            methods.constructor = null;
+            delete methods.constructor;
+        }
 
         // Set up the prototype object of the subclass
-        constructor.prototype = sjl.copyOfProto(superclass.prototype || superclass);
+        constructor.prototype = Object.create(superclass.prototype);
 
         // Make the constructor extendable
         constructor.extend = function (constructor_, methods_, statics_) {
-            return sjl.defineSubClass(this, constructor_, methods_, statics_);
+            return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
         };
 
         // Define constructor's constructor
@@ -755,9 +743,9 @@
              */
             obj[altFuncKey] =
                 obj[funcKey] = function (nsString, value) {
-                return typeof nsString === _undefined ? obj[funcKey]
-                    : namespace(nsString, obj[funcKey], value);
-            };
+                    return typeof nsString === _undefined ? obj[funcKey]
+                        : namespace(nsString, obj[funcKey], value);
+                };
 
             // Return passed in obj
             return obj;
@@ -832,39 +820,6 @@
         return sjl;
     };
 
-    /**
-     * Creates a new primitive based on passed in string representation of type.  E.g., sjl.newPrimitive('Map')
-     * @note Used internally when needing to flatten an object of a particular type (@see sjl.flatten)
-     * @param type
-     */
-    //sjl.newPrimitive = function (type) {
-    //    var retVal = {};
-    //    switch(type) {
-    //        case 'Array':
-    //            retVal = [];
-    //            break;
-    //        case 'String':
-    //            retVal = '';
-    //            break;
-    //        case 'Map':
-    //            retVal = new Map();
-    //            break;
-    //        case 'Set':
-    //            retVal = new Set();
-    //            break;
-    //        case 'WeakMap':
-    //            retVal = new WeakMap();
-    //            break;
-    //        case 'Function':
-    //            retVal = function () {};
-    //            break;
-    //        case 'Object':
-    //        default:
-    //            retVal = {};
-    //            break;
-    //    }
-    //};
-
     // Ensure we have access to the `Symbol`
     if (typeof Symbol === _undefined) {
         sjl.Symbol = {
@@ -884,13 +839,13 @@
         libSrcRootPath = __dirname;
     }
 
+    // Create top level frontend package
+    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+
     // Export sjl globally g(the node global export will be deprecated at a later version)
     Object.defineProperty(globalContext, 'sjl', {
         value: sjl
     });
-
-    // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {
@@ -912,15 +867,15 @@
         Extendable = function Extendable () {};
 
     /**
-     * The `sjl.package.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-     * @class module:sjl.package.stdlib.Extendable
-     * @name sjl.package.stdlib.Extendable
+     * The `sjl.ns.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
+     * @class module:sjl.ns.stdlib.Extendable
+     * @name sjl.ns.stdlib.Extendable
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
 
     /**
      * Extends a new copy of self with passed in parameters.
-     * @method sjl.package.stdlib.Extendable.extend
+     * @method sjl.ns.stdlib.Extendable.extend
      * @param constructor {Constructor} - Required.
      * @param methods {Object} - Optional.
      * @param statics {Object} - Static methods. Optional.
@@ -931,7 +886,7 @@
         module.exports = Extendable;
     }
     else {
-        sjl.package('stdlib.Extendable', Extendable);
+        sjl.ns('stdlib.Extendable', Extendable);
         if (window.__isAmd) {
             return Extendable;
         }
@@ -954,19 +909,19 @@
         };
 
     /**
-     * @class sjl.package.stdlib.Attributable
-     * @extends sjl.package.stdlib.Extendable
+     * @class sjl.ns.stdlib.Attributable
+     * @extends sjl.ns.stdlib.Extendable
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @type {void|Object|*}
      */
-    Attributable = sjl.package.stdlib.Extendable.extend(Attributable, {
+    Attributable = sjl.ns.stdlib.Extendable.extend(Attributable, {
 
         /**
          * Gets or sets a collection of attributes.
-         * @method sjl.package.stdlib.Attributable#attr
+         * @method sjl.ns.stdlib.Attributable#attr
          * @param attr {mixed|Array|Object} - Attributes to set or get from object
          * @todo add an `attr` function to this class
-         * @returns {sjl.package.stdlib.Attributable}
+         * @returns {sjl.ns.stdlib.Attributable}
          */
         attr: function (attr) {
             var self = this,
@@ -1004,7 +959,7 @@
 
         /**
          * Gets a set of attributes hash for queried attributes.
-         * @method sjl.package.stdlib.Attributable#_getAttribs
+         * @method sjl.ns.stdlib.Attributable#_getAttribs
          * @param attribsList {Array} - Attributes list to return
          * @returns {*}
          * @private
@@ -1029,7 +984,7 @@
         module.exports = Attributable;
     }
     else {
-        sjl.package('stdlib.Attributable', Attributable);
+        sjl.ns('stdlib.Attributable', Attributable);
         if (window.__isAmd) {
             return Attributable;
         }
@@ -1050,7 +1005,7 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Optionable = function Optionable(/*[, options]*/) {
-            this.options = new sjl.package.stdlib.Attributable();
+            this.options = new sjl.ns.stdlib.Attributable();
             this.merge.apply(this, arguments);
         };
 
@@ -1059,19 +1014,19 @@
      * Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
      * @note when using this class you shouldn't have a nested `options` attribute directly within options
      * as this will cause adverse effects when getting and setting properties via the given methods.
-     * @class sjl.package.stdlib.Optionable
-     * @extends sjl.package.stdlib.Extendable
-     * @type {void|sjl.package.stdlib.Optionable}
+     * @class sjl.ns.stdlib.Optionable
+     * @extends sjl.ns.stdlib.Extendable
+     * @type {void|sjl.ns.stdlib.Optionable}
      */
-    Optionable = sjl.package.stdlib.Extendable.extend(Optionable, {
+    Optionable = sjl.ns.stdlib.Extendable.extend(Optionable, {
         /**
          * Sets an option on Optionable's `options` using `sjl.setValueOnObj`;
          *  E.g., `optionable.options = value`;
          * @deprecated - Will be removed in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#setOption
+         * @method sjl.ns.stdlib.Optionable#setOption
          * @param key
          * @param value
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         setOption: function (key, value) {
             sjl.setValueOnObj(key, value, this.options);
@@ -1083,10 +1038,10 @@
          *  `sjl.Attributable`'s `attr` function;
          *  E.g., `optionable.options.attr(Object);
          * @deprecated - Will be removed in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#setOptions
+         * @method sjl.ns.stdlib.Optionable#setOptions
          * @param key {String}
          * @param value {Object}
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         setOptions: function (options) {
             if (sjl.classOfIs(options, 'Object')) {
@@ -1098,7 +1053,7 @@
         /**
          * Gets an options value by key.
          * @deprecated - Slotted for removal in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#getOption
+         * @method sjl.ns.stdlib.Optionable#getOption
          * @param key {String}
          * @returns {*}
          */
@@ -1109,7 +1064,7 @@
         /**
          * Gets options by either array or just by key.
          * @deprecated - Slotted for removal in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#getOptions
+         * @method sjl.ns.stdlib.Optionable#getOptions
          * @param options {Array|String}
          * @returns {*}
          */
@@ -1124,7 +1079,7 @@
 
         /**
          * Gets one or many option values.
-         * @method sjl.package.stdlib.Optionable#get
+         * @method sjl.ns.stdlib.Optionable#get
          * @param keyOrArray
          * @returns {*}
          */
@@ -1135,10 +1090,10 @@
         /**
          * Sets an option (key, value) or multiple options (Object)
          * based on what's passed in.
-         * @method sjl.package.stdlib.Optionable#set
+         * @method sjl.ns.stdlib.Optionable#set
          * @param0 {String|Object}
          * @param1 {*}
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         set: function () {
             var self = this,
@@ -1156,7 +1111,7 @@
         /**
          * Checks a key/namespace string ('a.b.c') to see if `this.options`
          *  has a value (a non falsy value otherwise returns `false`).
-         * @method sjl.package.stdlib.Optionable#has
+         * @method sjl.ns.stdlib.Optionable#has
          * @param nsString - key or namespace string
          * @returns {Boolean}
          */
@@ -1166,10 +1121,10 @@
 
         /**
          * Merges all objects passed in to `options`.
-         * @method sjl.package.stdlib.Optionable#merge
+         * @method sjl.ns.stdlib.Optionable#merge
          * @param ...options {Object} - Any number of `Object`s passed in.
          * @param useLegacyGettersAndSetters {Object|Boolean|undefined}
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         merge: function (options) {
             sjl.extend.apply(sjl, [true, this.options].concat(sjl.argsToArray(arguments)));
@@ -1181,7 +1136,7 @@
         module.exports = Optionable;
     }
     else {
-        sjl.package('stdlib.Optionable', Optionable);
+        sjl.ns('stdlib.Optionable', Optionable);
         if (window.__isAmd) {
             return Optionable;
         }
@@ -1199,7 +1154,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        errorContextName = 'sjl.package.stdlib.Iterator',
+        errorContextName = 'sjl.ns.stdlib.Iterator',
 
         Iterator = function Iterator(values, pointer) {
             var _values,
@@ -1250,14 +1205,14 @@
         };
 
     /**
-     * @class sjl.package.stdlib.Iterator
-     * @extends sjl.package.stdlib.Extendable
+     * @class sjl.ns.stdlib.Iterator
+     * @extends sjl.ns.stdlib.Extendable
      * @type {void|Object|*}
      */
-    Iterator = sjl.package.stdlib.Extendable.extend(Iterator, {
+    Iterator = sjl.ns.stdlib.Extendable.extend(Iterator, {
         /**
          * Returns the current value that `pointer` is pointing to.
-         * @method sjl.package.stdlib.Iterator#current
+         * @method sjl.ns.stdlib.Iterator#current
          * @returns {{done: boolean, value: *}}
          */
         current: function () {
@@ -1273,7 +1228,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.package.stdlib.Iterator#next
+         * @method sjl.ns.stdlib.Iterator#next
          * @returns {{done: boolean, value: *}}
          */
         next: function () {
@@ -1291,8 +1246,8 @@
 
         /**
          * Rewinds the iterator.
-         * @method sjl.package.stdlib.Iterator#rewind
-         * @returns {sjl.package.stdlib.Iterator}
+         * @method sjl.ns.stdlib.Iterator#rewind
+         * @returns {sjl.ns.stdlib.Iterator}
          */
         rewind: function () {
             return this.pointer(0);
@@ -1300,7 +1255,7 @@
 
         /**
          * Returns whether the iterator has reached it's end.
-         * @method sjl.package.stdlib.Iterator#valid
+         * @method sjl.ns.stdlib.Iterator#valid
          * @returns {boolean}
          */
         valid: function () {
@@ -1310,7 +1265,7 @@
         /**
          * Overloaded getter and setter for `_pointer` property.
          * @param pointer {Number|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.package.stdlib.Iterator}
+         * @returns {sjl.ns.stdlib.Iterator}
          * @throws {TypeError} - If `pointer` is set and is not of type `Number`.
          */
         pointer: function (pointer) {
@@ -1330,7 +1285,7 @@
         /**
          * Overloaded getter and setter for `_values` property.
          * @param values {Array|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.package.stdlib.Iterator}
+         * @returns {sjl.ns.stdlib.Iterator}
          * @throws {TypeError} - If `values` is set and is not of type `Array`.
          */
         values: function (values) {
@@ -1353,9 +1308,9 @@
         module.exports = Iterator;
     }
     else {
-        sjl.package('stdlib.Iterator', Iterator);
+        sjl.ns('stdlib.Iterator', Iterator);
         if (window.__isAmd) {
-            return sjl.package.stdlib.Iterator;
+            return sjl.ns.stdlib.Iterator;
         }
     }
 
@@ -1371,8 +1326,8 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = sjl.package.stdlib.Iterator,
-        contextName = 'sjl.package.stdlib.ObjectIterator',
+        Iterator = sjl.ns.stdlib.Iterator,
+        contextName = 'sjl.ns.stdlib.ObjectIterator',
 
         /**
          *
@@ -1431,14 +1386,14 @@
         };
 
     /**
-     * @class sjl.package.stdlib.ObjectIterator
-     * @extends sjl.package.stdlib.Iterator
+     * @class sjl.ns.stdlib.ObjectIterator
+     * @extends sjl.ns.stdlib.Iterator
      * @type {Object|void|*}
      */
     ObjectIterator = Iterator.extend(ObjectIterator, {
         /**
          * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.package.stdlib.Iterator#current
+         * @method sjl.ns.stdlib.Iterator#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         current: function () {
@@ -1455,7 +1410,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.package.stdlib.Iterator#next
+         * @method sjl.ns.stdlib.Iterator#next
          * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         next: function () {
@@ -1478,7 +1433,7 @@
 
         /**
          * Overloaded getter/setter method for internal `keys` property.
-         * @returns {sjl.package.stdlib.ObjectIterator|Array<*>}
+         * @returns {sjl.ns.stdlib.ObjectIterator|Array<*>}
          */
         keys: function (keys) {
             var retVal = this;
@@ -1498,7 +1453,7 @@
         module.exports = ObjectIterator;
     }
     else {
-        sjl.package('stdlib.ObjectIterator', ObjectIterator);
+        sjl.ns('stdlib.ObjectIterator', ObjectIterator);
         if (window.__isAmd) {
             return ObjectIterator;
         }
@@ -1517,8 +1472,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = sjl.package.stdlib.Iterator,
-        ObjectIterator = sjl.package.stdlib.ObjectIterator;
+        Iterator = sjl.ns.stdlib.Iterator,
+        ObjectIterator = sjl.ns.stdlib.ObjectIterator;
 
     /**
      * Turns an array into an iterable.
@@ -1555,7 +1510,7 @@
         module.exports = sjl.iterable;
     }
     else {
-        sjl.package('stdlib.iterable', sjl.iterable);
+        sjl.ns('stdlib.iterable', sjl.iterable);
         if (window.__isAmd) {
             return sjl.iterable;
         }
@@ -1573,7 +1528,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        stdlib = sjl.package.stdlib,
+        stdlib = sjl.ns.stdlib,
         Extendable = stdlib.Extendable,
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
@@ -1684,7 +1639,7 @@
         module.exports = SjlSet;
     }
     else {
-        sjl.package('stdlib.SjlSet', SjlSet);
+        sjl.ns('stdlib.SjlSet', SjlSet);
         if (window.__isAmd) {
             return SjlSet;
         }
@@ -1702,7 +1657,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        stdlib = sjl.package.stdlib,
+        stdlib = sjl.ns.stdlib,
         Extendable = stdlib.Extendable,
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
@@ -1836,13 +1791,14 @@
         module.exports = SjlMap;
     }
     else {
-        sjl.package('stdlib.SjlMap', SjlMap);
+        sjl.ns('stdlib.SjlMap', SjlMap);
         if (window.__isAmd) {
             return SjlMap;
         }
     }
 
 })();
+
 /**
  * Created by Ely on 7/21/2014.
  * Initial idea borrowed from Zend Framework 2's Zend/Validator
@@ -1854,7 +1810,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Optionable = sjl.package.stdlib.Optionable,
+        Optionable = sjl.ns.stdlib.Optionable,
         BaseValidator = function BaseValidator(options) {
             var self = this,
                 customTemplates;
@@ -1991,7 +1947,7 @@
         module.exports = BaseValidator;
     }
     else {
-        sjl.package('validator.BaseValidator', BaseValidator);
+        sjl.ns('validator.BaseValidator', BaseValidator);
         if (window.__isAmd) {
             return BaseValidator;
         }
@@ -2009,7 +1965,7 @@
 (function () {
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         ValidatorChain = function ValidatorChain(options) {
 
             // Call BaseValidator's constructor on this with some default options
@@ -2177,7 +2133,7 @@
         module.exports = ValidatorChain;
     }
     else {
-        sjl.package('validator.ValidatorChain', ValidatorChain);
+        sjl.ns('validator.ValidatorChain', ValidatorChain);
         if (window.__isAmd) {
             return ValidatorChain;
         }
@@ -2200,7 +2156,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         AlphaNumValidator = function AlphaNumValidator (options) {
 
             // Set defaults and extend with Base validator
@@ -2244,7 +2200,7 @@
         module.exports = AlphaNumValidator;
     }
     else {
-        sjl.package('validator.AlphaNumValidator', AlphaNumValidator);
+        sjl.ns('validator.AlphaNumValidator', AlphaNumValidator);
         if (window.__isAmd) {
             return AlphaNumValidator;
         }
@@ -2262,7 +2218,7 @@
 (function () {
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         EmptyValidator = function EmptyValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -2307,7 +2263,7 @@
         module.exports = EmptyValidator;
     }
     else {
-        sjl.package('validator.EmptyValidator', EmptyValidator);
+        sjl.ns('validator.EmptyValidator', EmptyValidator);
         if (window.__isAmd) {
             return EmptyValidator;
         }
@@ -2331,7 +2287,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         InRangeValidator = function InRangeValidator (options) {
 
             // Set defaults and extend with Base validator
@@ -2423,7 +2379,7 @@
         module.exports = InRangeValidator;
     }
     else {
-        sjl.package('validator.InRangeValidator', InRangeValidator);
+        sjl.ns('validator.InRangeValidator', InRangeValidator);
         if (window.__isAmd) {
             return InRangeValidator;
         }
@@ -2441,7 +2397,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         RegexValidator = function RegexValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -2509,7 +2465,7 @@
         module.exports = RegexValidator;
     }
     else {
-        sjl.package('validator.RegexValidator', RegexValidator);
+        sjl.ns('validator.RegexValidator', RegexValidator);
         if (window.__isAmd) {
             return RegexValidator;
         }
@@ -2527,7 +2483,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        RegexValidator = sjl.package.validator.RegexValidator,
+        RegexValidator = sjl.ns.validator.RegexValidator,
         EmailValidator = function EmailValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -2602,7 +2558,7 @@
         module.exports = EmailValidator;
     }
     else {
-        sjl.package('validator.EmailValidator', EmailValidator);
+        sjl.ns('validator.EmailValidator', EmailValidator);
         if (window.__isAmd) {
             return EmailValidator;
         }
@@ -2621,7 +2577,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         NumberValidator = function NumberValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -2806,7 +2762,7 @@
         module.exports = NumberValidator;
     }
     else {
-        sjl.package('validator.NumberValidator', NumberValidator);
+        sjl.ns('validator.NumberValidator', NumberValidator);
         if (window.__isAmd) {
             return NumberValidator;
         }
@@ -2826,7 +2782,7 @@
 (function () {
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         PostCodeValidator = function PostCodeValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -3123,7 +3079,7 @@
         module.exports = PostCodeValidator;
     }
     else {
-        sjl.package('validator.PostCodeValidator', PostCodeValidator);
+        sjl.ns('validator.PostCodeValidator', PostCodeValidator);
         if (window.__isAmd) {
             return PostCodeValidator;
         }
@@ -3141,8 +3097,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Optionable = sjl.package.stdlib.Optionable,
-        ValidatorChain = sjl.package.validator.ValidatorChain,
+        Optionable = sjl.ns.stdlib.Optionable,
+        ValidatorChain = sjl.ns.validator.ValidatorChain,
         Input = function Input(options) {
             var alias = null;
 
@@ -3358,7 +3314,7 @@
         module.exports = Input;
     }
     else {
-        sjl.package('input.Input', Input);
+        sjl.ns('input.Input', Input);
         if (window.__isAmd) {
             return Input;
         }
@@ -3376,8 +3332,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Optionable = sjl.package.stdlib.Optionable,
-        Input = sjl.package.input.Input,
+        Optionable = sjl.ns.stdlib.Optionable,
+        Input = sjl.ns.input.Input,
         InputFilter = function InputFilter(options) {
 
             // Set defaults as options on this class
@@ -3734,7 +3690,7 @@
         module.exports = InputFilter;
     }
     else {
-        sjl.package('input.InputFilter', InputFilter);
+        sjl.ns('input.InputFilter', InputFilter);
         if (window.__isAmd) {
             return InputFilter;
         }

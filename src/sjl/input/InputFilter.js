@@ -8,8 +8,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Optionable = sjl.package.stdlib.Optionable,
-        Input = sjl.package.input.Input,
+        Optionable = sjl.ns.stdlib.Optionable,
+        Input = sjl.ns.input.Input,
         InputFilter = function InputFilter(options) {
 
             // Set defaults as options on this class
@@ -366,7 +366,7 @@
         module.exports = InputFilter;
     }
     else {
-        sjl.package('input.InputFilter', InputFilter);
+        sjl.ns('input.InputFilter', InputFilter);
         if (window.__isAmd) {
             return InputFilter;
         }

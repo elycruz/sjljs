@@ -8,7 +8,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        stdlib = sjl.package.stdlib,
+        stdlib = sjl.ns.stdlib,
         Extendable = stdlib.Extendable,
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
@@ -142,7 +142,7 @@
         module.exports = SjlMap;
     }
     else {
-        sjl.package('stdlib.SjlMap', SjlMap);
+        sjl.ns('stdlib.SjlMap', SjlMap);
         if (window.__isAmd) {
             return SjlMap;
         }

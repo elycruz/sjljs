@@ -9,7 +9,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Optionable = sjl.package.stdlib.Optionable,
+        Optionable = sjl.ns.stdlib.Optionable,
         BaseValidator = function BaseValidator(options) {
             var self = this,
                 customTemplates;
@@ -146,7 +146,7 @@
         module.exports = BaseValidator;
     }
     else {
-        sjl.package('validator.BaseValidator', BaseValidator);
+        sjl.ns('validator.BaseValidator', BaseValidator);
         if (window.__isAmd) {
             return BaseValidator;
         }

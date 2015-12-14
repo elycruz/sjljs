@@ -13,7 +13,7 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-describe('sjl.package.navigation', function () {
+describe('sjl.navigation', function () {
 
     'use strict';
 

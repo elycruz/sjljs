@@ -8,7 +8,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         RegexValidator = function RegexValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -76,7 +76,7 @@
         module.exports = RegexValidator;
     }
     else {
-        sjl.package('validator.RegexValidator', RegexValidator);
+        sjl.ns('validator.RegexValidator', RegexValidator);
         if (window.__isAmd) {
             return RegexValidator;
         }

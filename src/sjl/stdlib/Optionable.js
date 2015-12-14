@@ -11,7 +11,7 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Optionable = function Optionable(/*[, options]*/) {
-            this.options = new sjl.package.stdlib.Attributable();
+            this.options = new sjl.ns.stdlib.Attributable();
             this.merge.apply(this, arguments);
         };
 
@@ -20,19 +20,19 @@
      * Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
      * @note when using this class you shouldn't have a nested `options` attribute directly within options
      * as this will cause adverse effects when getting and setting properties via the given methods.
-     * @class sjl.package.stdlib.Optionable
-     * @extends sjl.package.stdlib.Extendable
-     * @type {void|sjl.package.stdlib.Optionable}
+     * @class sjl.ns.stdlib.Optionable
+     * @extends sjl.ns.stdlib.Extendable
+     * @type {void|sjl.ns.stdlib.Optionable}
      */
-    Optionable = sjl.package.stdlib.Extendable.extend(Optionable, {
+    Optionable = sjl.ns.stdlib.Extendable.extend(Optionable, {
         /**
          * Sets an option on Optionable's `options` using `sjl.setValueOnObj`;
          *  E.g., `optionable.options = value`;
          * @deprecated - Will be removed in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#setOption
+         * @method sjl.ns.stdlib.Optionable#setOption
          * @param key
          * @param value
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         setOption: function (key, value) {
             sjl.setValueOnObj(key, value, this.options);
@@ -44,10 +44,10 @@
          *  `sjl.Attributable`'s `attr` function;
          *  E.g., `optionable.options.attr(Object);
          * @deprecated - Will be removed in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#setOptions
+         * @method sjl.ns.stdlib.Optionable#setOptions
          * @param key {String}
          * @param value {Object}
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         setOptions: function (options) {
             if (sjl.classOfIs(options, 'Object')) {
@@ -59,7 +59,7 @@
         /**
          * Gets an options value by key.
          * @deprecated - Slotted for removal in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#getOption
+         * @method sjl.ns.stdlib.Optionable#getOption
          * @param key {String}
          * @returns {*}
          */
@@ -70,7 +70,7 @@
         /**
          * Gets options by either array or just by key.
          * @deprecated - Slotted for removal in version 1.0.0
-         * @method sjl.package.stdlib.Optionable#getOptions
+         * @method sjl.ns.stdlib.Optionable#getOptions
          * @param options {Array|String}
          * @returns {*}
          */
@@ -85,7 +85,7 @@
 
         /**
          * Gets one or many option values.
-         * @method sjl.package.stdlib.Optionable#get
+         * @method sjl.ns.stdlib.Optionable#get
          * @param keyOrArray
          * @returns {*}
          */
@@ -96,10 +96,10 @@
         /**
          * Sets an option (key, value) or multiple options (Object)
          * based on what's passed in.
-         * @method sjl.package.stdlib.Optionable#set
+         * @method sjl.ns.stdlib.Optionable#set
          * @param0 {String|Object}
          * @param1 {*}
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         set: function () {
             var self = this,
@@ -117,7 +117,7 @@
         /**
          * Checks a key/namespace string ('a.b.c') to see if `this.options`
          *  has a value (a non falsy value otherwise returns `false`).
-         * @method sjl.package.stdlib.Optionable#has
+         * @method sjl.ns.stdlib.Optionable#has
          * @param nsString - key or namespace string
          * @returns {Boolean}
          */
@@ -127,10 +127,10 @@
 
         /**
          * Merges all objects passed in to `options`.
-         * @method sjl.package.stdlib.Optionable#merge
+         * @method sjl.ns.stdlib.Optionable#merge
          * @param ...options {Object} - Any number of `Object`s passed in.
          * @param useLegacyGettersAndSetters {Object|Boolean|undefined}
-         * @returns {sjl.package.stdlib.Optionable}
+         * @returns {sjl.ns.stdlib.Optionable}
          */
         merge: function (options) {
             sjl.extend.apply(sjl, [true, this.options].concat(sjl.argsToArray(arguments)));
@@ -142,7 +142,7 @@
         module.exports = Optionable;
     }
     else {
-        sjl.package('stdlib.Optionable', Optionable);
+        sjl.ns('stdlib.Optionable', Optionable);
         if (window.__isAmd) {
             return Optionable;
         }

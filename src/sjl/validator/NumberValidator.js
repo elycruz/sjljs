@@ -9,7 +9,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        BaseValidator = sjl.package.validator.BaseValidator,
+        BaseValidator = sjl.ns.validator.BaseValidator,
         NumberValidator = function NumberValidator(options) {
 
             // Set defaults and extend with Base validator
@@ -194,7 +194,7 @@
         module.exports = NumberValidator;
     }
     else {
-        sjl.package('validator.NumberValidator', NumberValidator);
+        sjl.ns('validator.NumberValidator', NumberValidator);
         if (window.__isAmd) {
             return NumberValidator;
         }
