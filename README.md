@@ -473,7 +473,7 @@ Removed in sjljs version 0.5.10.  Use `Object.create` instead for the same funct
 
 ##### sjl.defineSubClass(superclass {Function}, methodsAndConstructor {Object}, statics {Object}) :Function
 Alternate signature for `defineSubClass` though the second parameter here requires a `constructor` property with a 
-named function set to it (a named function should be used for best effect).
+named function set to it (a named function should be used for best effect though an anonymous function also works).
  
 ##### sjl.defineSubClass(superclass {Function}, constructor {Function}, methods {Object}, statics {Object}) :Function
 Creates a sub class of a constructor and makes it extendable via the static method `extend`;  E.g., pretty much 
