@@ -1,6 +1,5 @@
 /**
  * Created by elydelacruz on 11/2/15.
- * @todo fix issue with _keys property not being defined in `ObjectIterator`.
  */
 (function () {
 
@@ -21,21 +20,22 @@
          * @constructor
          */
         ObjectIterator = function ObjectIterator(keysOrObj, valuesOrPointer, pointer) {
-            var keys, obj, values,
+            var obj, values,
                 classOfParam1 = sjl.classOf(keysOrObj),
-                receivedParamTypesList;
+                receivedParamTypesList,
+                _keys;
 
             // If called with obj as first param
             if (classOfParam1 === 'Object') {
                 obj = keysOrObj;
-                keys = Object.keys(obj);
+                _keys = Object.keys(obj);
                 pointer = valuesOrPointer;
-                values = keys.map(function (key) {
+                values = _keys.map(function (key) {
                     return obj[key];
                 });
             }
             else if (classOfParam1 === 'Array') {
-                keys = keysOrObj;
+                _keys = keysOrObj;
                 sjl.throwTypeErrorIfNotOfType(contextName, 'valuesOrPointer', valuesOrPointer, Array,
                     'With the previous param being an array `valuesOrPointer` can only be an array in this scenario.');
                 values = valuesOrPointer;
@@ -53,7 +53,7 @@
 
             // Define other own properties
             Object.defineProperties(this, {
-                keys: {
+                _keys: {
                     get: function () {
                         return _keys;
                     },
@@ -63,9 +63,6 @@
                     }
                 }
             });
-
-            // Set keys
-            this._keys = keys;
         };
 
     /**
@@ -84,7 +81,7 @@
                 pointer = self.pointer();
             return self.valid() ? {
                 done: false,
-                value: [self.keys[pointer], self.values[pointer]]
+                value: [self._keys[pointer], self.values[pointer]]
             } : {
                 done: true
             };

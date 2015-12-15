@@ -139,7 +139,6 @@ describe('Sjl InputFilter', function () {
         });
 
         it ('should have 2 new created inputs', function () {
-            console.log(inputFilter);
             //expect(Object.keys(inputFilter.getInputs()).length).to.equal(2);
         });
 

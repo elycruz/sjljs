@@ -125,7 +125,7 @@
         pointer: function (pointer) {
             var retVal = this;
             // If is a getter call get the value
-            if (typeof pointer === 'undefined') {
+            if (typeof pointer === _undefined) {
                 retVal = this._pointer;
             }
             // If is a setter call
@@ -145,7 +145,7 @@
         values: function (values) {
             var retVal = this;
             // If is a getter call get the value
-            if (typeof values === 'undefined') {
+            if (typeof values === _undefined) {
                 retVal = this._values;
             }
             // If is a setter call

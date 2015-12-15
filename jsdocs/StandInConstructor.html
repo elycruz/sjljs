@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: filter/Filter.js</title>
+    <title>JSDoc: Class: StandInConstructor</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,44 +17,119 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: filter/Filter.js</h1>
+    <h1 class="page-title">Class: StandInConstructor</h1>
 
     
 
 
+
+<section>
+
+<header>
+    <h2>
+    StandInConstructor
+    </h2>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Created by Ely on 11/7/2015.
- */
-(function () {
+</header>
 
-    'use strict';
+<article>
+    <div class="container-overview">
+    
 
-    var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
-        Optionable = sjl.ns.stdlib.Optionable,
-        Filter = function Filter () {
-            Optionable.apply(this, arguments);
-        };
+    
+        
+<dt>
+    <h4 class="name" id="StandInConstructor"><span class="type-signature"></span>new StandInConstructor<span class="signature">()</span><span class="type-signature"></span></h4>
 
-    Filter = Optionable.extend(Filter, {
-        filter: function (value) {
-            return value; // filtered
-        }
-    });
+    
+</dt>
+<dd>
 
-    sjl.ns('filter.Filter', Filter);
+    
+    <div class="description">
+        A constructor to use when user doesn't supply a constructor or named constructor for constructor operations, which warns userthat they should use a named constructor.
+    </div>
+    
 
-    if (window.__isAmd) {
-        return Filter;
-    }
+    
 
-}());
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="sjl.js.html">sjl.js</a>, <a href="sjl.js.html#line649">line 649</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

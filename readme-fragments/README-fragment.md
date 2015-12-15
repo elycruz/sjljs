@@ -145,9 +145,9 @@ function someFunction (arg1, arg2, arg3) {
 someFunction ('value1', 'value2', 'valu3', 'value4', 'value5'); 
 ```
 
-##### ~~sjl.hasMethod (method) :Boolean~~
+##### sjl.hasMethod (method) :Boolean
 This function has been removed in sjljs-0.5.7.
-Use `sjl.issetAndOfType(obj[method], 'Function')` instead.
+Use `sjl.issetAndOfType(obj[method], Function)` instead.
 
 ##### sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}) :String
 Camel Cases a string;  
@@ -162,12 +162,13 @@ sjl.classOf(new Map()) === 'Map'  // true
 // etc.
 ```
 
-##### sjl.classOfIs(obj {*}, classTypeStr {String}) :Boolean
-Checks whether `obj` is of `classTypeStr` passed in;  E.g.,
+##### sjl.classOfIs(obj {*}, classTypeStr {String|Function}) :Boolean
+Checks whether `obj` is of `classTypeStr` or Constructor passed in;  E.g.,
 ```
 sjl.classOfIs(0, 'Number') // true.  Matches 'Number'.
 sjl.classOfIs([], 'Array') === true  // true
 sjl.classOfIs([], 'Array') // true.  Matches 'Array'.
+sjl.classOfIs([], Array) // true.  Matches 'Array'.
 ```
 
 ##### sjl.empty(value {*}) :Boolean

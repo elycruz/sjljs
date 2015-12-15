@@ -1,9 +1,10 @@
-/**! sjl.js Mon Dec 14 2015 03:47:51 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Tue Dec 15 2015 03:04:36 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
+ * @todo Cleanup jsdocs and make them more readable where possible (some of the jsdoc definitions in sjljs's source files are old and need to be written using es5 and es6 kind of language to make them more readable to the user (also since most of the functionality is es5/es6ish makes sense to perform this upgrade).
  */
-(function () {
+(function (undefined) {
 
     'use strict';
 
@@ -16,7 +17,7 @@
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
-    globalContext.__isAmd = typeof define === "function" && define.amd,
+    globalContext.__isAmd = typeof define === 'function' && define.amd,
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -73,10 +74,10 @@
         var retVal,
             valueType;
         if (typeof value === _undefined) {
-            retVal = _undefined;
+            retVal = _undefined; // @todo replace `_undefined` at this line with string 'Undefined' (@see todo below).
         }
         else if (value === null) {
-            retVal = 'null';
+            retVal = 'null'; // @todo make 'null' in `classOf` method class case as es5 will support giving you back [object Undefined] and [object Null] when calling Object.prototype.toString on an `undefined` and `null` value respectively.
         }
         else {
             valueType = Object.prototype.toString.call(value);
@@ -89,14 +90,28 @@
     };
 
     /**
-     * Checks to see if an object is of type humanString (class name) .
+     * Checks to see if an object is of type 'constructor name'.
+     * Note: If passing in constructors as your `type` to check, ensure they are *'named' constructors
+     * as the `name` property is checked directly on them to use in the class/constructor-name comparison.
+     * *'named' constructors - Not anonymous functions/constructors but ones having a name:  E.g.,
+     * ```
+     * (function Hello () {}) // Named function.
+     * (function () {}) // Anonymous function.
+     * ```
      * @function module:sjl.classOfIs
      * @param obj {*} - Object to be checked.
-     * @param humanString {String}
+     * @param type {String|Function} - Either a constructor name or an constructor itself.
      * @returns {Boolean} - Whether object matches class string or not.
+     * @note For devs developing the library or reviewing this source file:  Excuse the nested ternary operators!
+     * They are too succinct to replace with var declarations and if,else statements :(::: hahaha!
+     * Code cleanliness at it's finest!!!  Hahaha!!
      */
-    sjl.classOfIs = function (obj, humanString) {
-        return sjl.classOf(obj) === humanString;
+    sjl.classOfIs = function (obj, type) {
+        return sjl.classOf(obj) === (
+                sjl.classOf(type) === String.name ? type : (
+                    type instanceof Function ? type.name : null
+                )
+            );
     };
 
     /**
@@ -169,6 +184,21 @@
     };
 
     /**
+     * Frees references for value and removes the property from `obj` if no references are found and if obj[propName] is configurable.
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete  - Read the 'Examples' section.
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty - Read description for `configurable`.
+     * @param obj {*}
+     * @param propName {String}
+     * @returns {Boolean} - Whether deletion occurred or not (will always return true if obj[propName] is configurable.
+     * @note If obj[propName] is not configurable obj[propName] isn't de-referenced and `propName` isn't deleted from `obj`.  Look at (@see)s above.
+     * @todo Add readme entry for this method/function.
+     */
+    sjl.unset = function (obj, propName) {
+        obj[propName] = undefined;
+        return delete obj[propName];
+    };
+
+    /**
      * Takes a namespace string and fetches that location out from
      * an object/Map.  If the namespace doesn't exists it is created then
      * returned.
@@ -216,7 +246,7 @@
         var search, char, right, left;
 
         // If typeof `str` is not of type "String" then bail
-        sjl.throwTypeErrorIfNotOfType('changeCaseOfFirstChar', 'str', str, 'String');
+        sjl.throwTypeErrorIfNotOfType(thisFuncsName, 'str', str, 'String');
 
         // Search for first alpha char
         search = str.search(/[a-z]/i);
@@ -304,7 +334,6 @@
 
     /**
      * Extracts a boolean from the beginning or ending of an array depending on startOrEndBln.
-     * @todo ** Note ** Closure within this function is temporary and should be removed.
      * @param array {Array}
      * @param startOrEndBln {Boolean}
      * @returns {Boolean}
@@ -384,9 +413,9 @@
      * Searches an object for namespace string.
      * @param ns_string {String} - Namespace string;  E.g., 'all.your.base'
      * @param objToSearch {*}
+     * @todo Consider renaming this method to something like `sjl.objHasValueForKey`.
      * @returns {*} - If property chain is not found then returns `null`.
      */
-
     sjl.searchObj = function (ns_string, objToSearch) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
@@ -421,18 +450,12 @@
      * @param obj {Object} the hash to search within
      * @param args {Array} optional the array to pass to value if it is a function
      * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
-     * @todo allow this function to use getter function for key if it exists
      * @param noLegacyGetters {Boolean} - Default false (use legacy getters).
      *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
      *
      * @returns {*}
      */
     sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
-        // Warn user(s) of new update to this function where `raw` is not being passed in.
-        //if (typeof raw === _undefined) {
-        //    console.warn('`sjl.getValueFromObj` now has it\'s `raw` parameter set to `true` by default.  ' +
-        //        'This warning will be removed in the next library update.');
-        //}
         args = args || null;
         raw = raw || true;
         noLegacyGetters = typeof noLegacyGetters === _undefined ? false : noLegacyGetters;
@@ -451,7 +474,6 @@
             retVal = obj[getterFunc]();
         }
         else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
-            console.log(obj, overloadedGetterFunc, obj[overloadedGetterFunc]);
             retVal = obj[overloadedGetterFunc]();
         }
         else if (typeof obj[key] !== _undefined) {
@@ -508,8 +530,8 @@
      * This function does not handle getters and setters or copy attributes but
      * does search for setter methods in the format "setPropertyName" and uses them
      * if they are available for property `useLegacyGettersAndSetters` is set to true.
-     * @param o {mixed} - *object to extend
-     * @param p {mixed} - *object to extend from
+     * @param o {*} - *object to extend
+     * @param p {*} - *object to extend from
      * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
      * @param useLegacyGettersAndSetters {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
      * @returns {*} - returns o
@@ -528,6 +550,9 @@
         }
 
         for (prop in p) { // For all props in p.
+            if (!p.hasOwnProperty(prop)) {
+                continue;
+            }
             classOf_p_prop = sjl.isset(p[prop]) ? sjl.classOf(p[prop]) : 'Empty';
             classOf_o_prop = sjl.isset(o[prop]) ? sjl.classOf(o[prop]) : 'Empty';
 
@@ -577,17 +602,17 @@
      * @param [, Boolean, obj] {Object|Boolean} - If boolean, causes `extend` to perform a deep extend.  Optional.
      * @param [, obj, obj] {Object} - Objects to hierarchically extend.
      * @param [, Boolean] {Boolean} - Optional.
-     * @returns {Object} - Returns first object passed in.
+     * @returns {Object|null} - Returns first object passed in or null if no values were passed in.
      */
     sjl.extend = function () {
         // Return if no arguments
         if (arguments.length === 0) {
-            return;
+            return null;
         }
 
         var args = sjl.argsToArray(arguments),
             deep = sjl.extractBoolFromArrayStart(args),
-            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),// Can't remove this until version 0.5 cause it may cause breaking changes in dependant projects
+            useLegacyGettersAndSetters = sjl.extractBoolFromArrayEnd(args),
             arg0 = args.shift();
 
         // Extend object `0` with other objects
@@ -622,13 +647,29 @@
     };
 
     /**
+     * A constructor to use when user doesn't supply a constructor or named constructor for constructor operations, which warns user
+     * that they should use a named constructor.
+     * @constructor StandInConstructor
+     */
+    function StandInConstructor () {
+        console.warn(
+            'An anonymous constructor was used!  Please ' +
+            'replace it with a named constructor for best ' +
+            'interoperability.'
+        );
+    }
+
+    /**
      * Defines a class using a `superclass`, `constructor`, methods and/or static methods
      * @function module:sjl.defineSubClass
-     * @param superclass {Constructor} - SuperClass's constructor.  Optional.
-     * @param constructor {Constructor} -  Constructor.  Required.
-     * @param methods {Object} - Optional.
-     * @param statics {Object} - Static methods. Optional.
-     * @returns {Constructor}
+     * @param superclass {Function} - SuperClass's constructor.  Optional.
+     * @param constructor {Function|Object} -  Constructor or Object containing 'own' constructor key and methods.
+     *  Required.
+     * @param methods {Object} - Optional.  @note: If the value for the `constructor` param passed in is an object
+     *  then this object actually represents the `statics` hash.
+     * @param statics {Object} - Static methods. Optional.  @note: If the value for `constructor` passed in is an
+     *  instance object than the `statics` param isn't used internally.
+     * @returns {Function}
      */
     sjl.defineSubClass = function (superclass,  // Constructor of the superclass
                                    constructor, // The constructor for the new subclass
@@ -639,13 +680,20 @@
         superclass = superclass || Object.create(Object.prototype);
 
         // If `constructor` param is an object then
-        if (typeof constructor === 'object') {
+        if (sjl.classOfIs(constructor, Object)) {
+
+            // Set static methods, if any
             statics = methods;
+
+            // Set methods
             methods = constructor;
-            constructor = !sjl.isset(methods.constructor)
-                ? function StandInConstructor () {} : methods.constructor;
-            methods.constructor = null;
-            delete methods.constructor;
+
+            // Decide whether to use a stand in constructor or the user supplied one
+            constructor = !( methods.constructor instanceof Function )
+                ? StandInConstructor : methods.constructor;
+
+            // Unset the constructor from the methods hash since we have a pointer to it
+            sjl.unset(methods, 'constructor');
         }
 
         // Ensure a constructor is set
@@ -657,9 +705,14 @@
         constructor.prototype = Object.create(superclass.prototype);
 
         // Make the constructor extendable
-        constructor.extend = function (constructor_, methods_, statics_) {
-            return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
-        };
+        Object.defineProperty(constructor, 'extend', {
+            value: function (constructor_, methods_, statics_) {
+                return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
+            },
+            writable: true,
+            configurable: true,
+            enumerable: true
+        });
 
         // Define constructor's constructor
         constructor.prototype.constructor = constructor;
@@ -675,30 +728,30 @@
     };
 
     /**
-     * Makes a property non settable on `obj` and sets `value` as the returnable property.
+     * Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
      * @param obj {Object}
      * @param key {String}
+     * @param enumerable {Boolean} - Default `false`.
      * @param value {*}
      */
-    function makeNotSettableProp(obj, key, value) {
+    function makeNotSettableProp(obj, key, value, enumerable) {
         (function (_obj, _key, _value) {
             Object.defineProperty(_obj, _key, {
-                get: function () {
-                    return _value;
-                }
+                value: _value,
+                enumerable: enumerable instanceof Boolean ? enumerable : false
             });
         }(obj, key, value));
     }
 
     /**
-     * Sets properties on obj passed in and makes those properties unsettable.
+     * Sets properties on obj passed in and makes those properties not configurable.
      * @param ns_string {String} - Namespace string; E.g., 'all.your.base'
      * @param objToSearch {Object}
      * @param valueToSet {*|undefined}
      * @returns {*} - Found or set value in the object to search.
      * @private
      */
-    function namespace(ns_string, objToSearch, valueToSet) {
+    function unConfigurableNamespace(ns_string, objToSearch, valueToSet) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
             shouldSetValue = typeof valueToSet !== _undefined,
@@ -708,10 +761,10 @@
             hasOwnProperty = parent.hasOwnProperty(key);
             if (i === parts.length - 1
                 && shouldSetValue && !hasOwnProperty) {
-                makeNotSettableProp(parent, key, valueToSet);
+                makeNotSettableProp(parent, key, valueToSet, true);
             }
             else if (typeof parent[key] === _undefined && !hasOwnProperty) {
-                makeNotSettableProp(parent, key, {});
+                makeNotSettableProp(parent, key, {}, true);
             }
             parent = parent[key];
         });
@@ -725,6 +778,9 @@
      * it's members (once) and then protects it's members.
      * @function module:sjl.createTopLevelPackage
      * @param obj {Object|*} - Object to set the `package` method on.
+     * @param funcKey {String} - Key to set package function to.  E.g., 'package'
+     * @param altFuncKey {String} - Alternate (usually shorter) key to set package function to.  E.g., 'ns'
+     * @param dirPath {String} - If using NodeJs only.  Optional.  Default `__dirname`.
      * @return {Object|*} - Returns passed in `obj`.
      */
     sjl.createTopLevelPackage = function (obj, funcKey, altFuncKey, dirPath) {
@@ -749,7 +805,7 @@
             obj[altFuncKey] =
                 obj[funcKey] = function (nsString, value) {
                     return typeof nsString === _undefined ? obj[funcKey]
-                        : namespace(nsString, obj[funcKey], value);
+                        : unConfigurableNamespace(nsString, obj[funcKey], value);
                 };
 
             // Return passed in obj
@@ -810,7 +866,7 @@
      * @param contextName {String} - The context name of where this function is being called.  Prefixed to the error message.
      * @param paramName {String} - Param name of the value being passed in.
      * @param value {*} - Value to inspect.
-     * @param type {String|Constructor} - Expected type constructor or constructor name.
+     * @param type {String|Function} - Expected type constructor or constructor name.
      * @param fixHint {String} - A hint to user or a way to fix the error.
      * @returns {{}} - Sjl.
      */
@@ -857,7 +913,7 @@
         return sjl;
     }
 
-}());
+}(undefined));
 
 /**
  * Created by Ely on 4/12/2014.
@@ -925,7 +981,6 @@
          * Gets or sets a collection of attributes.
          * @method sjl.ns.stdlib.Attributable#attr
          * @param attr {mixed|Array|Object} - Attributes to set or get from object
-         * @todo add an `attr` function to this class
          * @returns {sjl.ns.stdlib.Attributable}
          */
         attr: function (attr) {
@@ -1276,7 +1331,7 @@
         pointer: function (pointer) {
             var retVal = this;
             // If is a getter call get the value
-            if (typeof pointer === 'undefined') {
+            if (typeof pointer === _undefined) {
                 retVal = this._pointer;
             }
             // If is a setter call
@@ -1296,7 +1351,7 @@
         values: function (values) {
             var retVal = this;
             // If is a getter call get the value
-            if (typeof values === 'undefined') {
+            if (typeof values === _undefined) {
                 retVal = this._values;
             }
             // If is a setter call
@@ -1323,7 +1378,6 @@
 
 /**
  * Created by elydelacruz on 11/2/15.
- * @todo fix issue with _keys property not being defined in `ObjectIterator`.
  */
 (function () {
 
@@ -1344,21 +1398,22 @@
          * @constructor
          */
         ObjectIterator = function ObjectIterator(keysOrObj, valuesOrPointer, pointer) {
-            var keys, obj, values,
+            var obj, values,
                 classOfParam1 = sjl.classOf(keysOrObj),
-                receivedParamTypesList;
+                receivedParamTypesList,
+                _keys;
 
             // If called with obj as first param
             if (classOfParam1 === 'Object') {
                 obj = keysOrObj;
-                keys = Object.keys(obj);
+                _keys = Object.keys(obj);
                 pointer = valuesOrPointer;
-                values = keys.map(function (key) {
+                values = _keys.map(function (key) {
                     return obj[key];
                 });
             }
             else if (classOfParam1 === 'Array') {
-                keys = keysOrObj;
+                _keys = keysOrObj;
                 sjl.throwTypeErrorIfNotOfType(contextName, 'valuesOrPointer', valuesOrPointer, Array,
                     'With the previous param being an array `valuesOrPointer` can only be an array in this scenario.');
                 values = valuesOrPointer;
@@ -1376,7 +1431,7 @@
 
             // Define other own properties
             Object.defineProperties(this, {
-                keys: {
+                _keys: {
                     get: function () {
                         return _keys;
                     },
@@ -1386,9 +1441,6 @@
                     }
                 }
             });
-
-            // Set keys
-            this._keys = keys;
         };
 
     /**
@@ -1407,7 +1459,7 @@
                 pointer = self.pointer();
             return self.valid() ? {
                 done: false,
-                value: [self.keys[pointer], self.values[pointer]]
+                value: [self._keys[pointer], self.values[pointer]]
             } : {
                 done: true
             };

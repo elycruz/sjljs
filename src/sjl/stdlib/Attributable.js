@@ -24,7 +24,6 @@
          * Gets or sets a collection of attributes.
          * @method sjl.ns.stdlib.Attributable#attr
          * @param attr {mixed|Array|Object} - Attributes to set or get from object
-         * @todo add an `attr` function to this class
          * @returns {sjl.ns.stdlib.Attributable}
          */
         attr: function (attr) {
