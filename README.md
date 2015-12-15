@@ -572,10 +572,19 @@ instead of requiring global require).
 
 ### MVP for 0.5.1+
 - [X] - Add changelog.md in main readme.
-- [ ] - Remove all shimming of es5 features and support for older browsers (IE8 etc.).
+- [X] - Remove all shimming of es5 features and support for older browsers (IE8 etc.).
+    - [ ] - Some features had to remain due to incomplete support of es5 in IE9.  List those features here:
 - [ ] - Update all classes to use Object.defineProperty and Object.defineProperties internally for
-their properties to eliminate alternate schemes to hide access to their internal properties.
-- [ ] - Remove all overloaded methods in exchange for Object.defineProperty and Object.defineProperties getters and setters.
+their properties to eliminate alternate schemes to hide access to their internal properties also to make them more functional.
+- [X] - ~~Remove all overloaded methods in exchange for Object.defineProperty and Object.defineProperties getters and setters.~~
+Overloaded methods will remain on the classes that have them inorder to not break backward functionality which isn't browser specific.
+- [ ] - Add file hashes to minified files and add a unix time stamp instead of a utc time stamp to the file.
+- [ ] - Define all methods on `sjl` directly in it's object definition when it is defined instead of define every property separately;  
+    E.g., `sjl = {prop1: ..., prop2: ..., etc.} /** instead of **/ sjl.prop1 = ...; sjl.prop2 = ...;, etc.`;  Also this'll save a couple o' bytes haha!!!
+- [ ] - Either remove changelog functionality or generate it correctly (in descending order (from actual commit logs 2x thumbsup)
+ (to eliminate having to write double commit messages (one in the changelog and one in the commit blarghhh)). 
+     
+### MVP for 0.6.0
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") &
