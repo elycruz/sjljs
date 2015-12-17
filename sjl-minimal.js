@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Wed Dec 16 2015 22:11:13 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 17 2015 12:51:27 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -543,47 +543,45 @@
         deep = deep || false;
         useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
 
-        var prop, propDescription,
-            classOf_p_prop,
-            classOf_o_prop;
+        var propDescription;
 
         // If `o` or `p` are not set bail
         if (!sjl.isset(o) || !sjl.isset(p)) {
             return o;
         }
 
-        for (prop in p) { // For all props in p.
-            if (!p.hasOwnProperty(prop)) {
-                continue;
-            }
-            classOf_p_prop = sjl.classOf(p[prop]);
-            classOf_o_prop = sjl.classOf(o[prop]);
-
+        Object.keys(p).forEach(function (prop) { // For all props in p.
             // If property is present on target (o) and is not writable, skip iteration
-            propDescription = Object.getOwnPropertyDescriptor(o, prop);
+            var propDescription = Object.getOwnPropertyDescriptor(o, prop);
             if (propDescription && !propDescription.writable) {
-                continue;
+                return;
             }
 
             if (deep) {
-                if (classOf_o_prop === 'Object'
-                    && classOf_p_prop === 'Object'
+                if (sjl.classOfIs(p[prop], Object)
+                    && sjl.classOfIs(o[prop], Object)
                     && !sjl.isEmptyObj(p[prop])) {
                     extend(o[prop], p[prop], deep);
                 }
                 else if (useLegacyGettersAndSetters) {
-                    sjl.setValueOnObj(prop, sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters), o);
+                    sjl.setValueOnObj(prop,
+                        sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters),
+                        o);
                 }
                 else {
                     o[prop] = p[prop];
                 }
             }
-
+            else if (useLegacyGettersAndSetters) {
+                sjl.setValueOnObj(prop,
+                    sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters),
+                    o);
+            }
             // Else set
             else {
                 o[prop] = p[prop];
             }
-        }
+        });
 
         return o;
     }
