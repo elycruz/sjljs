@@ -238,6 +238,16 @@ This method was removed in sjljs-0.5.7.  For the same functionality use
 This method was removed in version 0.5.7.  For the same functionality use
  `sjl.issetAndOfType(obj[key], 'SomeTypeNameHere')` or `sjl.issetAndOfType(obj.key, 'SomeTypeNameHere')` where key
  is the property key want to check.
+ 
+##### sjl.unset (key {String}, value {*}): Boolean
+Sets and object's `key` to `null` then removes references to it if possible (calls `delete` on property).
+```
+var object = {g: 'hello'};
+sjl.unset(object, 'g');
+
+console.log(object.g);  // `undefined`
+console.log(object.hasOwnProperty('g')); // `false`
+```
 
 ##### sjl.lcaseFirst(str {String}) :String
 Lowercases the first character of a string;  E.g., 

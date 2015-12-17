@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Dec 17 2015 12:51:27 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 17 2015 15:11:27 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -47,6 +47,36 @@
     };
 
     /**
+     * Extracts a value at an `index` of passed in array (alternately only extract the value if it is of `type`).
+     * Returns an array with two elements: Element `1` contains the extracted value and element `2` the resulting
+     * array of the extraction (copy of original array with extracted element) of the value at `index`.
+     * @param array {Array} - Array to operate on.
+     * @param index {Number} - Index of element to look for in `array`.
+     * @param type {String} - Optional.
+     * @returns {Array<*,Array>|Null} - If passed in array has an element at `index` (and alternately) element
+     *  matches `type` then returns an array with found index and resulting array of extraction of said value.
+     *  Else returns `null`.
+     * @todo Add readme entry for this function (`extractFromArrayAt`).
+     */
+    sjl.extractFromArrayAt = function (array, index, type, makeCopyOfArray) {
+        var retVal = null,
+            matchesType, foundElement, copyOfArray;
+        makeCopyOfArray = sjl.classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
+        if (array.hasOwnProperty(index + '')) {
+            if (makeCopyOfArray) {
+                array = array.concat([]);
+            }
+            foundElement = array[index];
+            matchesType = sjl.isset(type) ? sjl.classOfIs(foundElement, type) : true;
+            foundElement = array.splice(index, 1);
+            if (matchesType) {
+                retVal = [foundElement, array];
+            }
+        }
+        return retVal;
+    };
+
+    /**
      * Checks to see if value passed in is set (not undefined and not null).
      * @function module:sjl.isset
      * @returns {Boolean}
@@ -77,10 +107,10 @@
         var retVal,
             valueType;
         if (typeof value === _undefined) {
-            retVal = _undefined; // @todo replace `_undefined` at this line with string 'Undefined' (@see todo below).
+            retVal = 'Undefined';
         }
         else if (value === null) {
-            retVal = 'null'; // @todo make 'null' in `classOf` method class case as es5 will support giving you back [object Undefined] and [object Null] when calling Object.prototype.toString on an `undefined` and `null` value respectively.
+            retVal = 'Null';
         }
         else {
             valueType = Object.prototype.toString.call(value);
@@ -194,7 +224,6 @@
      * @param propName {String}
      * @returns {Boolean} - Whether deletion occurred or not (will always return true if obj[propName] is configurable.
      * @note If obj[propName] is not configurable obj[propName] isn't de-referenced and `propName` isn't deleted from `obj`.  Look at (@see)s above.
-     * @todo Add readme entry for this method/function.
      */
     sjl.unset = function (obj, propName) {
         obj[propName] = undefined;
@@ -218,11 +247,11 @@
     sjl.namespace = function (ns_string, objToSearch, valueToSet) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
-            shouldSetValue = !sjl.classOfIs(valueToSet, 'undefined'),
+            shouldSetValue = !sjl.classOfIs(valueToSet, 'Undefined'),
             i;
 
         for (i = 0; i < parts.length; i += 1) {
-            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'undefined')) {
+            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'Undefined')) {
                 parent[parts[i]] = {};
             }
             if (i === parts.length - 1 && shouldSetValue) {
@@ -416,7 +445,6 @@
      * Searches an object for namespace string.
      * @param ns_string {String} - Namespace string;  E.g., 'all.your.base'
      * @param objToSearch {*}
-     * @todo Consider renaming this method to something like `sjl.objHasValueForKey`.
      * @returns {*} - If property chain is not found then returns `null`.
      */
     sjl.searchObj = function (ns_string, objToSearch) {
@@ -424,7 +452,7 @@
             parent = objToSearch,
             i;
         for (i = 0; i < parts.length; i += 1) {
-            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'undefined')) {
+            if (parts[i] in parent === false || sjl.classOfIs(parent[parts[i]], 'Undefined')) {
                 parent = null;
                 break;
             }
@@ -470,7 +498,7 @@
 
         // Resolve return value
         if (key.indexOf('.') !== -1) {
-            retVal = sjl.namespace(key, obj);
+            retVal = sjl.searchObj(key, obj);
         }
         // If obj has a getter function for key, call it
         else if (!noLegacyGetters && sjl.hasMethod(obj, getterFunc)) {
@@ -546,7 +574,7 @@
         var propDescription;
 
         // If `o` or `p` are not set bail
-        if (!sjl.isset(o) || !sjl.isset(p)) {
+        if (!sjl.isset(o) || !sjl.isset(p)){
             return o;
         }
 

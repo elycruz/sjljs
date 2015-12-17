@@ -193,8 +193,8 @@ describe('Sjl Utils', function () {
             nonEmptyArrayValue:  '(function () { return [1] }())'
         },
         keyTypesForIssetAndEmptyChecks = {
-            nullValue:              'null',
-            undefinedValue:         'undefined',
+            nullValue:              'Null',
+            undefinedValue:         'Undefined',
             nonEmptyStringValue:    'String',
             emptyStringValue:       'String',
             nonEmptyNumberValue:    'Number',
@@ -208,8 +208,8 @@ describe('Sjl Utils', function () {
             nonEmptyArrayValue:     'Array'
         },
         truthyKeysForTypes = {
-            nullValue:              'null',
-            undefinedValue:         'undefined',
+            nullValue:              'Null',
+            undefinedValue:         'Undefined',
             nonEmptyStringValue:    'String',
             emptyStringValue:       'String',
             nonEmptyNumberValue:    'Number',
@@ -455,6 +455,7 @@ describe('Sjl Utils', function () {
     });
 
 });
+
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
@@ -569,11 +570,11 @@ describe('Sjl Reflection', function () {
             'Array': [[], new Array()],
             'Boolean': [true, false],
             'Function': [function () {}, new Function()],
-            'null': null,
+            'Null': null,
             'Number': [1, 0, -1, 12e+3],
             'Object': [{}, new Object()],
             'String': [new String('ola'), 'hello'],
-            'undefined': undefined
+            'Undefined': undefined
         };
 
         Object.keys(valueMap).forEach(function (x) {
@@ -609,8 +610,8 @@ describe('Sjl Reflection', function () {
         },
             failForClassStrings = {
                 '([])':         'String',
-                '(true)':       'undefined',
-                '(1)':          'null',
+                '(true)':       'Undefined',
+                '(1)':          'Null',
                 '({})':         'Number',
                 '("")':         'Array',
                 '(null)':       'Set',
@@ -679,7 +680,7 @@ describe('Sjl Set Functions', function () {
                     func: function otherFunc() { }, num: 456, bln: true,
                     obj: {c: 'C', d: 'D'}, str: 'unitee2'
                 },
-                expectedKeyTypeMap = { 'func': 'Function', 'nil': 'null', 'num': 'Number',
+                expectedKeyTypeMap = { 'func': 'Function', 'nil': 'Null', 'num': 'Number',
                     'bln': 'Boolean',
                     'obj': 'Object', 'str': 'String'
                 },

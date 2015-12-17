@@ -31,8 +31,8 @@ describe('Sjl Utils', function () {
             nonEmptyArrayValue:  '(function () { return [1] }())'
         },
         keyTypesForIssetAndEmptyChecks = {
-            nullValue:              'null',
-            undefinedValue:         'undefined',
+            nullValue:              'Null',
+            undefinedValue:         'Undefined',
             nonEmptyStringValue:    'String',
             emptyStringValue:       'String',
             nonEmptyNumberValue:    'Number',
@@ -46,8 +46,8 @@ describe('Sjl Utils', function () {
             nonEmptyArrayValue:     'Array'
         },
         truthyKeysForTypes = {
-            nullValue:              'null',
-            undefinedValue:         'undefined',
+            nullValue:              'Null',
+            undefinedValue:         'Undefined',
             nonEmptyStringValue:    'String',
             emptyStringValue:       'String',
             nonEmptyNumberValue:    'Number',

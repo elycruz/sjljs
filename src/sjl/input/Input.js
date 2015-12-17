@@ -162,7 +162,7 @@
         },
 
         hasFallbackValue: function () {
-            return !sjl.classOfIs(this.getFallbackValue(), 'undefined') && !sjl.classOfIs(this.getFallbackValue(), 'null');
+            return !sjl.classOfIs(this.getFallbackValue(), 'Undefined') && !sjl.classOfIs(this.getFallbackValue(), 'Null');
         },
 
         getRequired: function () {
