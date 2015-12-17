@@ -595,6 +595,7 @@ Overloaded methods will remain on the classes that have them inorder to not brea
  (to eliminate having to write double commit messages (one in the changelog and one in the commit blarghhh)). 
      
 ### MVP for 0.6.0
+- [ ] - Remove use of `eval` from tests.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") &
