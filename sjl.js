@@ -1,4 +1,4 @@
-/**! sjl.js Tue Dec 15 2015 03:04:36 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Wed Dec 16 2015 22:11:15 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
@@ -553,8 +553,8 @@
             if (!p.hasOwnProperty(prop)) {
                 continue;
             }
-            classOf_p_prop = sjl.isset(p[prop]) ? sjl.classOf(p[prop]) : 'Empty';
-            classOf_o_prop = sjl.isset(o[prop]) ? sjl.classOf(o[prop]) : 'Empty';
+            classOf_p_prop = sjl.classOf(p[prop]);
+            classOf_o_prop = sjl.classOf(o[prop]);
 
             // If property is present on target (o) and is not writable, skip iteration
             propDescription = Object.getOwnPropertyDescriptor(o, prop);

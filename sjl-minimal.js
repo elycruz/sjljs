@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Tue Dec 15 2015 03:04:35 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Wed Dec 16 2015 22:11:13 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -556,8 +556,8 @@
             if (!p.hasOwnProperty(prop)) {
                 continue;
             }
-            classOf_p_prop = sjl.isset(p[prop]) ? sjl.classOf(p[prop]) : 'Empty';
-            classOf_o_prop = sjl.isset(o[prop]) ? sjl.classOf(o[prop]) : 'Empty';
+            classOf_p_prop = sjl.classOf(p[prop]);
+            classOf_o_prop = sjl.classOf(o[prop]);
 
             // If property is present on target (o) and is not writable, skip iteration
             propDescription = Object.getOwnPropertyDescriptor(o, prop);
