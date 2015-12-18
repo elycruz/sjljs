@@ -246,4 +246,23 @@ describe('SjlMap', function () {
         });
     });
 
+    describe('#`SjlMap#addFromObject`', function () {
+        it ('Should be able to populate itself from a value of type `Object`.', function () {
+            var object = {
+                all: {your: {base: {are: {belong: {to: {us: true}}}}}},
+                someBooleanValue: false,
+                someNumberValue: 100,
+                objectValue: {someKey: 'some value'},
+                functionValue: function HelloWorld() {},
+                someStringValue: 'string value here',
+                someNullValue: null
+            },
+                sjlMap = new SjlMap(object);
+            Object.keys(object).forEach(function (key) {
+                expect(object[key]).to.equal(sjlMap.get(key));
+            });
+        });
+
+    });
+
 });

@@ -19,23 +19,38 @@
          * @constructor
          */
         SjlMap = function SjlMap (iterable) {
-            var self = this;
+            var self = this,
+                _keys = [],
+                _values = [];
             self.size = 0;
-            self._keys = [];
-            self._values = [];
+            Object.defineProperties(this, {
+                _keys: {
+                    get: function () {
+                        return _keys;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_keys', value, Array);
+                        _keys = makeIterable(value);
+                    }
+                },
+                _values: {
+                    get: function () {
+                        return _values;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_values', value, Array);
+                        _values = makeIterable(value);
+                    }
+                }
+            })
 
             // If an array was passed in inject values
             if (Array.isArray(iterable)) {
                 self.addFromArray(iterable);
-                // Make our internal arrays inherit our special iterator
-                self._values = makeIterable(self._values);
-                self._keys = makeIterable(self._keys);
             }
 
-            else if (sjl.classOfIs(iterable, 'Object') && sjl.hasMethod(iterable, 'next')) {
-                for (var keyValuePair in iterable) {
-                    console.log(keyValuePair);
-                }
+            else if (sjl.classOfIs(iterable, 'Object')) {
+                self.addFromObject(iterable);
             }
 
             // If anything other than an array is passed in throw an Error
@@ -128,6 +143,16 @@
                 iterator = null;
                 entry = null;
                 return this;
+            },
+
+            addFromObject: function (object) {
+                sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
+                    'Only `Object` types allowed.');
+                var self = this;
+                (new ObjectIterator(object)).forEach(function (key, value) {
+                    self.set(key, value);
+                });
+                return self;
             },
 
             iterator: function () {
