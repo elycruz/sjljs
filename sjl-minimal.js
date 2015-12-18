@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Thu Dec 17 2015 15:11:27 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Thu Dec 17 2015 21:56:14 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -574,7 +574,7 @@
         var propDescription;
 
         // If `o` or `p` are not set bail
-        if (!sjl.isset(o) || !sjl.isset(p)){
+        if (!sjl.isset(o) || !sjl.isset(p)) {
             return o;
         }
 

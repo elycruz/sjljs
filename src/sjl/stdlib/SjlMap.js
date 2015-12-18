@@ -25,11 +25,17 @@
             self._values = [];
 
             // If an array was passed in inject values
-            if (sjl.classOfIs(iterable, 'Array')) {
+            if (Array.isArray(iterable)) {
                 self.addFromArray(iterable);
                 // Make our internal arrays inherit our special iterator
-                self._values = makeIterable(self._values, 0);
-                self._keys = makeIterable(self._keys, 0);
+                self._values = makeIterable(self._values);
+                self._keys = makeIterable(self._keys);
+            }
+
+            else if (sjl.classOfIs(iterable, 'Object') && sjl.hasMethod(iterable, 'next')) {
+                for (var keyValuePair in iterable) {
+                    console.log(keyValuePair);
+                }
             }
 
             // If anything other than an array is passed in throw an Error
