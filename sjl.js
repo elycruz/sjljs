@@ -1,4 +1,4 @@
-/**! sjl.js Thu Dec 17 2015 23:29:15 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Fri Dec 18 2015 12:44:24 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
