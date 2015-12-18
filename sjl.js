@@ -1,4 +1,4 @@
-/**! sjl.js Thu Dec 17 2015 21:56:16 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Thu Dec 17 2015 23:29:15 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
@@ -1752,23 +1752,41 @@
          * @constructor
          */
         SjlMap = function SjlMap (iterable) {
-            var self = this;
+            var self = this,
+                _keys,
+                _values;
             self.size = 0;
+            Object.defineProperties(this, {
+                _keys: {
+                    get: function () {
+                        return _keys;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_keys', value, Array);
+                        _keys = makeIterable(value);
+                    }
+                },
+                _values: {
+                    get: function () {
+                        return _values;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_values', value, Array);
+                        _values = makeIterable(value);
+                    }
+                }
+            });
+
             self._keys = [];
             self._values = [];
 
             // If an array was passed in inject values
             if (Array.isArray(iterable)) {
                 self.addFromArray(iterable);
-                // Make our internal arrays inherit our special iterator
-                self._values = makeIterable(self._values);
-                self._keys = makeIterable(self._keys);
             }
 
-            else if (sjl.classOfIs(iterable, 'Object') && sjl.hasMethod(iterable, 'next')) {
-                for (var keyValuePair in iterable) {
-                    console.log(keyValuePair);
-                }
+            else if (sjl.classOfIs(iterable, 'Object')) {
+                self.addFromObject(iterable);
             }
 
             // If anything other than an array is passed in throw an Error
@@ -1861,6 +1879,24 @@
                 iterator = null;
                 entry = null;
                 return this;
+            },
+
+            /**
+             * Add all the `object`'s instance's own property key-value pairs to SjlMap.
+             * @param object {Object} - Object to operate on.
+             * @returns {SjlMap} - Returns `self`.
+             */
+            addFromObject: function (object) {
+                sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
+                    'Only `Object` types allowed.');
+                var self = this,
+                    entry,
+                    objectIt = new ObjectIterator(object);
+                while (objectIt.valid()) {
+                    entry = objectIt.next();
+                    self.set(entry.value[0], entry.value[1]);
+                }
+                return self;
             },
 
             iterator: function () {
