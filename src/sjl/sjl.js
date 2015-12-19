@@ -747,7 +747,7 @@
 
         // @note To bypass this functionality just name your toString method as is being done
         //  here (with a name of your choosing or even the name used below).
-        if (!methods || methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
+        if (!methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
             constructor.prototype.toString = function toStringOverride () {
                 return '[object ' + constructor.name + ']';
             };

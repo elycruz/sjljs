@@ -1,5 +1,5 @@
 /**! 
- * sjl-minimal.js Sat Dec 19 2015 02:08:51 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Sat Dec 19 2015 02:33:47 GMT-0500 (Eastern Standard Time)
  **/
 /**
  * Created by Ely on 5/29/2015.
@@ -750,7 +750,7 @@
 
         // @note To bypass this functionality just name your toString method as is being done
         //  here (with a name of your choosing or even the name used below).
-        if (!methods || methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
+        if (!methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
             constructor.prototype.toString = function toStringOverride () {
                 return '[object ' + constructor.name + ']';
             };

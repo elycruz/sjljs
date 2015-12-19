@@ -1,4 +1,4 @@
-/**! sjl.js Sat Dec 19 2015 02:08:53 GMT-0500 (Eastern Standard Time) **//**
+/**! sjl.js Sat Dec 19 2015 02:33:49 GMT-0500 (Eastern Standard Time) **//**
  * Created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end)
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
@@ -747,7 +747,7 @@
 
         // @note To bypass this functionality just name your toString method as is being done
         //  here (with a name of your choosing or even the name used below).
-        if (!methods || methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
+        if (!methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
             constructor.prototype.toString = function toStringOverride () {
                 return '[object ' + constructor.name + ']';
             };
