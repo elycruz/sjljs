@@ -122,14 +122,16 @@
 
     /**
      * Returns the class name of an object from it's class string.
-     * **Note** - Returns 'NaN' if type is 'Number' and isNaN as of version 0.4.85.
+     * @note Returns 'NaN' if type is 'Number' and isNaN as of version 0.4.85.
+     * @note If your constructor/class overrides it's `toString` method use a named method to get the accurate constructor name out of `classOf`;  E.g., If you do override `toString` on your class(es) and don't set them to named functions then `sjl.classOf*` will use Object.prototype.toString
      * @function module:sjl.classOf
      * @param value {*}
      * @returns {string} - A string representation of the type of the value; E.g., 'Number' for `0`
      */
     sjl.classOf = function (value) {
         var retVal,
-            valueType;
+            valueType,
+            toString;
         if (typeof value === _undefined) {
             retVal = 'Undefined';
         }
@@ -137,7 +139,8 @@
             retVal = 'Null';
         }
         else {
-            valueType = Object.prototype.toString.call(value);
+            toString = value.toString.name === 'toString' ? Object.prototype.toString : value.toString;
+            valueType = toString.call(value);
             retVal = valueType.substring(8, valueType.length - 1);
             if (retVal === 'Number' &amp;&amp; isNaN(value)) {
                 retVal = 'NaN';
@@ -700,19 +703,6 @@
     };
 
     /**
-     * A constructor to use when user doesn't supply a constructor or named constructor for constructor operations, which warns user
-     * that they should use a named constructor.
-     * @constructor StandInConstructor
-     */
-    function StandInConstructor () {
-        console.warn(
-            'An anonymous constructor was used!  Please ' +
-            'replace it with a named constructor for best ' +
-            'interoperability.'
-        );
-    }
-
-    /**
      * Defines a class using a `superclass`, `constructor`, methods and/or static methods
      * @function module:sjl.defineSubClass
      * @param superclass {Function} - SuperClass's constructor.  Optional.
@@ -732,6 +722,19 @@
         // Resolve superclass
         superclass = superclass || Object.create(Object.prototype);
 
+        /**
+         * Helper for missing constructors.
+         * @constructor
+         */
+        function StandInConstructor () {
+            console.warn(
+                'An anonymous constructor was used!  Please ' +
+                'replace it with a named constructor for best ' +
+                'interoperability.'
+            );
+            superclass.apply(this, arguments);
+        }
+
         // If `constructor` param is an object then
         if (sjl.classOfIs(constructor, Object)) {
 
@@ -750,22 +753,15 @@
         }
 
         // Ensure a constructor is set
-        constructor = constructor || function () {
-                superclass.apply(this, arguments);
-            };
+        constructor = sjl.isset(constructor) ? constructor : StandInConstructor;
 
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);
 
         // Make the constructor extendable
-        Object.defineProperty(constructor, 'extend', {
-            value: function (constructor_, methods_, statics_) {
-                return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
-            },
-            writable: true,
-            configurable: true,
-            enumerable: true
-        });
+        constructor.extend = function (constructor_, methods_, statics_) {
+            return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
+        };
 
         // Define constructor's constructor
         constructor.prototype.constructor = constructor;
@@ -775,6 +771,14 @@
 
         // If static functions set them
         if (statics) sjl.extend(constructor, statics);
+
+        // @note To bypass this functionality just name your toString method as is being done
+        //  here (with a name of your choosing or even the name used below).
+        if (!methods || methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
+            constructor.prototype.toString = function toStringOverride () {
+                return '[object ' + constructor.name + ']';
+            };
+        }
 
         // Return the class
         return constructor;
@@ -977,13 +981,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="sjl.ns.stdlib.Attributable.html">Attributable</a></li><li><a href="sjl.ns.stdlib.html#Extendable">Extendable</a></li><li><a href="sjl.ns.stdlib.Iterator.html">Iterator</a></li><li><a href="sjl.ns.stdlib.ObjectIterator.html">ObjectIterator</a></li><li><a href="sjl.ns.stdlib.Optionable.html">Optionable</a></li><li><a href="sjl.SjlSet.html">SjlSet</a></li><li><a href="StandInConstructor.html">StandInConstructor</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li></li><li><a href="sjl.ns.stdlib.Attributable.html">Attributable</a></li><li><a href="sjl.ns.stdlib.html#Extendable">Extendable</a></li><li><a href="sjl.ns.stdlib.Iterator.html">Iterator</a></li><li><a href="sjl.ns.stdlib.ObjectIterator.html">ObjectIterator</a></li><li><a href="sjl.ns.stdlib.Optionable.html">Optionable</a></li><li><a href="sjl.SjlSet.html">SjlSet</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Fri Dec 18 2015 12:44:26 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Dec 19 2015 02:08:54 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
