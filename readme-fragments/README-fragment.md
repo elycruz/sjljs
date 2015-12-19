@@ -596,6 +596,7 @@ Overloaded methods will remain on the classes that have them inorder to not brea
      
 ### MVP for 0.6.0
 - [ ] - Remove use of `eval` from tests.
+- [ ] - Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.
 
 ## License:
 [GPL v2-3+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") &

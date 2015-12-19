@@ -555,16 +555,53 @@
         return retVal;
     };
 
+    /** Idea:
+     * Have hydrators for different hydration strategies (but simplified ones! jeje look at Zf's hydration stuff pretty cool
+     * but a bit too granular for javascript: http://framework.zend.com/apidoc/2.4/namespaces/Zend.Stdlib.Hydrator.html
+
+     // Hydration method
+     sjl.hydrate = function () {
+        var lastParam = sjl.extractFromArrayAt(arguments, arguments.length - 1),
+            retVal;
+        switch (lastParam) {
+            case sjl.hydrate.BY_OVERLOADED_METHODS:
+                break;
+            case sjl.hydrate.BY_LEGACY_GETTERS_AND_SETTERS:
+                break;
+            case sjl.hydrate.BY_OWN_PROPS:
+            default:
+                sjl.extend();
+                break;
+        }
+        return retVal;
+     };
+
+     // Strategy for hydration
+     sjl.hydrateByOwnProps = function (obj, inheritFrom, deep) {};
+
+     // Stategy for hydration
+     sjl.hydrateByMethods = function (obj, inheritFrom, deep) {};
+
+     // Constants representing different hydration strategies
+     Object.defineProperties(sjl.hydrate, {
+        BY_OWN_PROPS: {value: 0},
+        BY_OVERLOADED_METHODS: {value: 1},
+        BY_LEGACY_GETTERS_AND_SETTERS: {value: 2}
+     });
+
+     * Not pursuing idea just jotting it down here for future reference.
+     */
+
     /**
      * Copy the enumerable properties of p to o, and return o.
      * If o and p have a property by the same name, o's property is overwritten.
-     * This function does not handle getters and setters or copy attributes but
-     * does search for setter methods in the format "setPropertyName" and uses them
-     * if they are available for property `useLegacyGettersAndSetters` is set to true.
+     * If `useLegacyGettersAndSetters` is set method will inject values to o via
+     * any setters it finds (whether overloaded setters/getters or setters of
+     * the for `set{PropertyName}`).
      * @param o {*} - *object to extend
      * @param p {*} - *object to extend from
      * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
-     * @param useLegacyGettersAndSetters {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use legacy getters and setters (`(s|g)et{PropName}`) or overloaded methods ('propName' -> 'propName(in propName)')
      * @returns {*} - returns o
      */
     function extend (o, p, deep, useLegacyGettersAndSetters) {
@@ -578,14 +615,14 @@
             return o;
         }
 
+        // Merge all props from `p` to `o`
         Object.keys(p).forEach(function (prop) { // For all props in p.
             // If property is present on target (o) and is not writable, skip iteration
-            var propDescription = Object.getOwnPropertyDescriptor(o, prop);
+            propDescription = Object.getOwnPropertyDescriptor(o, prop);
             if (propDescription && !propDescription.writable) {
                 return;
             }
-
-            if (deep) {
+            if (deep === true) {
                 if (sjl.classOfIs(p[prop], Object)
                     && sjl.classOfIs(o[prop], Object)
                     && !sjl.isEmptyObj(p[prop])) {
@@ -593,7 +630,7 @@
                 }
                 else if (useLegacyGettersAndSetters) {
                     sjl.setValueOnObj(prop,
-                        sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters),
+                        sjl.getValueFromObj(prop, p, null, true, useLegacyGettersAndSetters),
                         o);
                 }
                 else {
@@ -602,7 +639,7 @@
             }
             else if (useLegacyGettersAndSetters) {
                 sjl.setValueOnObj(prop,
-                    sjl.getValueFromObj(prop, p, null, useLegacyGettersAndSetters),
+                    sjl.getValueFromObj(prop, p, null, true, useLegacyGettersAndSetters),
                     o);
             }
             // Else set
@@ -618,9 +655,9 @@
      * Extends first object passed in with all other object passed in after.
      * First param could be a boolean indicating whether or not to perform a deep extend.
      * Last param could also be a boolean indicating whether to use legacy setters if they are available
-     * when extending one object with another.
+     * on the receiving object.
      *
-     * @example
+     * @example (if last param to passed in to `sjl.extend` is `true`
      *  var o = {setGreeting: v => this.greeting = 'Hello ' + v},
      *      otherObject = {greeting: 'Junior'};
      *  // Calls o.setGreeting when merging otherObject because `true` was passed in
@@ -628,10 +665,10 @@
      *  sjl.extend(o, otherObject, true);
      *
      * @function module:sjl.extend
-     * @param [, Boolean, obj] {Object|Boolean} - If boolean, causes `extend` to perform a deep extend.  Optional.
-     * @param [, obj, obj] {Object} - Objects to hierarchically extend.
-     * @param [, Boolean] {Boolean} - Optional.
-     * @returns {Object|null} - Returns first object passed in or null if no values were passed in.
+     * @arg `0`    {Object|Boolean} - If boolean, causes `extend` to perform a deep extend.  Optional.
+     * @arg `1-*`  {Object} - Objects to merge on @arg 0.
+     * @arg `last` {Boolean} - Optional.
+     * @returns    {Object|null} - Returns first object passed in or null if no values were passed in.
      */
     sjl.extend = function () {
         // Return if no arguments
@@ -695,10 +732,7 @@
         // Resolve superclass
         superclass = superclass || Object.create(Object.prototype);
 
-        /**
-         * Helper for missing constructors.
-         * @constructor
-         */
+        // Helper for missing constructors.
         function StandInConstructor () {
             console.warn(
                 'An anonymous constructor was used!  Please ' +
