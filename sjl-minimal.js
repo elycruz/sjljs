@@ -1,9 +1,11 @@
 /**! 
- * sjl-minimal.js Sat Dec 19 2015 20:02:06 GMT-0500 (Eastern Standard Time)
+ * sjl-minimal.js Sun Dec 20 2015 01:41:37 GMT-0500 (Eastern Standard Time)
  **/
 /**
- * Created by Ely on 5/29/2015.
- * @todo add extract value from array if of type (only extract at array start or end)
+ * The `sjl` module.
+ * @module {Object} sjl
+ * @created by Ely on 5/29/2015.
+ * @todo add extract value from array if of type (only extract at array start or end).
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
  * @todo Cleanup jsdocs and make them more readable where possible (some of the jsdoc definitions in sjljs's source files are old and need to be written using es5 and es6 kind of language to make them more readable to the user (also since most of the functionality is es5/es6ish makes sense to perform this upgrade).
  */
@@ -768,7 +770,15 @@
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);
 
-        // Make the constructor extendable
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.ns.stdlib.Extendable
+         * @static sjl.ns.stdlib.Extendable.extend
+         * @param constructor {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
+         *  the `statics` param (as if this param is an Object then it can contain methods within itself).
+         * @param methods {Object|undefined} - Methods.  Optional.
+         * @param statics {Object|undefined} - Static methods.  Optional.
+         */
         constructor.extend = function (constructor_, methods_, statics_) {
             return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
         };
@@ -856,7 +866,7 @@
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
                 require('../sjl-nodejs/Namespace.js')(dirPath);
-            return obj[altFuncKey];
+            return obj;
         }
         return (function () {
 
@@ -959,8 +969,8 @@
         libSrcRootPath = __dirname;
     }
 
-    // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+    // Create top level frontend package.
+    sjl = sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
     // Export sjl globally g(the node global export will be deprecated at a later version)
     Object.defineProperty(globalContext, 'sjl', {

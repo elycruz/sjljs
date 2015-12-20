@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: stdlib/Extendable.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,55 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: stdlib/Extendable.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by Ely on 4/12/2014.
+ * Code copy pasted from "Javascript the definitive guide"
+ */
+
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Extendable = function Extendable () {};
+
+    /**
+     * The `sjl.ns.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
+     * @class module:sjl.ns.stdlib.Extendable
+     * @memberof namespace:sjl.ns.stdlib
+     */
+    Extendable = sjl.defineSubClass(Function, Extendable);
 
 
-    <h3> </h3>
+    // Export `Extendable`
+    if (isNodeEnv) {
+        module.exports = Extendable;
+    }
+    else {
+        sjl.ns('stdlib.Extendable', Extendable);
+        if (window.__isAmd) {
+            return Extendable;
+        }
+    }
 
+    /**
+     * @static class:sjl.ns.stdlib.Extendable#extend
+     */
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+})();
+</code></pre>
+        </article>
+    </section>
 
 
 

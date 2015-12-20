@@ -1,6 +1,6 @@
 {
   "name": "sjljs",
-  "version": "0.5.20",
+  "version": "0.5.21",
   "description": "Simple Javascript Library",
   "main": "./src/sjl/sjl.js",
   "directories": {
@@ -39,7 +39,7 @@
     "library"
   ],
   "author": "Ely De La Cruz <elycruz@elycruz.com>",
-  "license": "GPL v2-3 & MIT",
+  "license": "GPL-2.0+ AND MIT",
   "bugs": {
     "url": "https://github.com/elycruz/sjljs/issues"
   },

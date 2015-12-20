@@ -8,9 +8,11 @@ var gulp        = require('gulp'),
     jshint      = require('gulp-jshint'),
     uglify      = require('gulp-uglify'),
     duration    = require('gulp-duration'),
+    fncallback  = require('gulp-fncallback'),
+    //jsdoc       = require('gulp-jsdoc'),
     lazypipe    = require('lazypipe'),
     chalk       = require('chalk'),
-    jsdoc       = require("gulp-jsdoc"),
+    crypto      = require('crypto'),
 
     // LazyPipes
     jsHintPipe  = lazypipe()
@@ -34,10 +36,10 @@ gulp.task('readme', ['changelog'], function () {
 });
 
 // Builds './jsdocs'
-gulp.task('jsdoc', function () {
-    return gulp.src(['./src/**/*.js', './README.md'])
-        .pipe(jsdoc('./jsdocs'))
-});
+//gulp.task('jsdoc', function () {
+//    return gulp.src(['./src/**/*.js', './README.md'])
+//        .pipe(jsdoc('./jsdocs'))
+//});
 
 // Runs mocha tests 'for-server'
 gulp.task('tests', function () {
@@ -71,7 +73,14 @@ gulp.task('concat', function () {
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
-        .pipe(header('/**! sjl.js <%= (new Date()) %> **/'))
+        //.pipe(fncallback(function (file, enc, cb) {
+        //    // Create file hasher
+        //    var hasher = crypto.createHash('md5');
+        //    hasher.update(file.contents.toString(enc));
+        //    //file.contents = hasher.digest('hex') + file.contents;
+        //    cb();
+        //}))
+        .pipe(header('/**! sjl.js <%= (new Date()).getTime() %> **/'))
         .pipe(gulp.dest('./'));
 });
 
@@ -130,7 +139,7 @@ gulp.task('watch', function () {
     // Watch all javascript files
     gulp.watch(['./tests/for-server/*', './src/**/*'], [
         'jshint',
-        'jsdoc',
+        //'jsdoc',
         'concat',
         'uglify',
         'minimal',
@@ -139,22 +148,27 @@ gulp.task('watch', function () {
     ]);
 
     // Watch readme for 'jsdoc' task
-    gulp.watch(['README.md'], ['jsdoc']);
+    gulp.watch(['README.md'] /*['jsdoc']*/);
 
     // Watch changelog-fragments and readme-fragments for 'readme' task
     gulp.watch(['readme-fragments/*.md', 'changelog-fragments/*.md'], ['readme']);
 
 });
 
-// Default task
-gulp.task('default', [
+// Build task
+gulp.task('build', [
     'readme',
-    'jsdoc',
+    //'jsdoc',
     'concat',
     'uglify',
     'minimal',
     'minimal-min',
     'tests',
-    'make-browser-test-suite',
+    'make-browser-test-suite'
+]);
+
+// Default task
+gulp.task('default', [
+    'build',
     'watch'
 ]);

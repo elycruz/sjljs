@@ -1,5 +1,10 @@
 /**
- * Created by Ely on 11/7/2015.
+ * @constructor Filter
+ * @extends sjl.ns.stdlib.Optionable
+ * @memberof module:sjl.ns.filter
+ * @requires sjl
+ * @requires sjl.ns.stdlib.Optionable
+ * @requires sjl.ns.stdlib.Extendable
  */
 (function () {
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: filter/Filter.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,50 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: filter/Filter.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @constructor Filter
+ * @extends sjl.ns.stdlib.Optionable
+ * @memberof module:sjl.ns.filter
+ * @requires sjl
+ * @requires sjl.ns.stdlib.Optionable
+ * @requires sjl.ns.stdlib.Extendable
+ */
+(function () {
 
+    'use strict';
 
-    <h3> </h3>
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
+        Optionable = sjl.ns.stdlib.Optionable,
+        Filter = function Filter () {
+            Optionable.apply(this, arguments);
+        };
 
+    Filter = Optionable.extend(Filter, {
+        filter: function (value) {
+            return value; // filtered
+        }
+    });
 
+    sjl.ns('filter.Filter', Filter);
 
+    if (window.__isAmd) {
+        return Filter;
+    }
 
-
-
-
-
-
-
-    
-
-
-
-
-
+}());
+</code></pre>
+        </article>
+    </section>
 
 
 

@@ -22,12 +22,15 @@
     
 
 
+
     
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Created by Ely on 5/29/2015.
- * @todo add extract value from array if of type (only extract at array start or end)
+ * The `sjl` module.
+ * @module {Object} sjl
+ * @created by Ely on 5/29/2015.
+ * @todo add extract value from array if of type (only extract at array start or end).
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
  * @todo Cleanup jsdocs and make them more readable where possible (some of the jsdoc definitions in sjljs's source files are old and need to be written using es5 and es6 kind of language to make them more readable to the user (also since most of the functionality is es5/es6ish makes sense to perform this upgrade).
  */
@@ -792,7 +795,15 @@
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);
 
-        // Make the constructor extendable
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.ns.stdlib.Extendable
+         * @static sjl.ns.stdlib.Extendable.extend
+         * @param constructor {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
+         *  the `statics` param (as if this param is an Object then it can contain methods within itself).
+         * @param methods {Object|undefined} - Methods.  Optional.
+         * @param statics {Object|undefined} - Static methods.  Optional.
+         */
         constructor.extend = function (constructor_, methods_, statics_) {
             return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
         };
@@ -822,16 +833,15 @@
      * Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
      * @param obj {Object}
      * @param key {String}
-     * @param enumerable {Boolean} - Default `false`.
      * @param value {*}
+     * @param enumerable {Boolean} - Default `false`.
+     * @return {Void}
      */
     function makeNotSettableProp(obj, key, value, enumerable) {
-        (function (_obj, _key, _value) {
-            Object.defineProperty(_obj, _key, {
-                value: _value,
-                enumerable: enumerable instanceof Boolean ? enumerable : false
-            });
-        }(obj, key, value));
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: sjl.classOfIs(enumerable, Boolean) ? enumerable : false
+        });
     }
 
     /**
@@ -881,7 +891,7 @@
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
                 require('../sjl-nodejs/Namespace.js')(dirPath);
-            return obj[altFuncKey];
+            return obj;
         }
         return (function () {
 
@@ -904,25 +914,18 @@
         }());
     };
 
-    ///**
-    // * Flattens passed in array.
-    // * @function module:sjl.flattenArray
-    // * @param array {Array}
-    // * @returns {Array}
-    // */
-    //sjl.flattenArray = function (array) {
-    //    var newArray = [];
-    //    // Flatten ...humanString if length > 1
-    //    for (var i = 0; i &lt; array.length; i += 1) {
-    //        if (sjl.classOf(array[i]) === 'Array') {
-    //            newArray = sjl.flattenArray(array[i]).concat(newArray);
-    //        }
-    //        else {
-    //            newArray.push(array[i]);
-    //        }
-    //    }
-    //    return newArray;
-    //};
+    /**
+     * Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
+     * @param obj {Object}
+     * @param key {String}
+     * @param enumerable {Boolean} - Default `false`.
+     * @param value {*}
+     * @return sjl {Object}
+     */
+    sjl.makeNotSettableProp = function (obj, key, value, enumerable) {
+        makeNotSettableProp(obj, key, value, enumerable);
+        return sjl;
+    };
 
     /**
      * Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.
@@ -991,8 +994,29 @@
         libSrcRootPath = __dirname;
     }
 
-    // Create top level frontend package
+    /**
+     * @module sjl.ns
+     */
+    // Create top level frontend package.
     sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+
+    /**
+     * @memberof module:sjl.ns
+     * @module sjl.ns.input
+     */
+    sjl .ns('input', {})
+        /**
+         * @module sjl.ns.filter
+         */
+        .ns('filter', {})
+        /**
+         * @module sjl.ns.validator
+         */
+        .ns('validator', {})
+        /**
+         * @module sjl.ns.stdlib
+         */
+        .ns('stdlib', {});
 
     // Export sjl globally g(the node global export will be deprecated at a later version)
     Object.defineProperty(globalContext, 'sjl', {
@@ -1015,13 +1039,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="sjl.ns.stdlib.Attributable.html">Attributable</a></li><li><a href="sjl.ns.stdlib.html#Extendable">Extendable</a></li><li><a href="sjl.ns.stdlib.Iterator.html">Iterator</a></li><li><a href="sjl.ns.stdlib.ObjectIterator.html">ObjectIterator</a></li><li><a href="sjl.ns.stdlib.Optionable.html">Optionable</a></li><li><a href="sjl.SjlSet.html">SjlSet</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-sjl.html">sjl</a></li><li><a href="module-sjl.ns.sjl.ns.module_input.html">input</a></li><li><a href="sjl.module_ns.html">ns</a></li><li><a href="sjl.ns.module_filter.html">filter</a></li><li><a href="sjl.ns.module_stdlib.html">stdlib</a></li><li><a href="sjl.ns.module_validator.html">validator</a></li></ul><h3>Classes</h3><ul><li><a href="module-sjl.ns.filter.Filter.html">Filter</a></li><li><a href="module-sjl.ns.stdlib.Attributable.html">Attributable</a></li><li><a href="namespace_sjl.ns.stdlib.module_sjl.ns.stdlib.Extendable.html">Extendable</a></li><li><a href="namespace_sjl.ns.stdlib.SjlSet.html">SjlSet</a></li><li><a href="ObjectIterator.html">ObjectIterator</a></li><li><a href="sjl.ns.stdlib.Iterator.html">Iterator</a></li><li><a href="sjl.ns.stdlib.Optionable.html">Optionable</a></li><li><a href="sjl.ns.stdlib.SjlMap.html">SjlMap</a></li></ul><h3>Global</h3><ul><li><a href="global.html#isValid">isValid</a></li><li><a href="global.html#keys">keys</a></li><li><a href="global.html#pattern">pattern</a></li><li><a href="global.html#pointer">pointer</a></li><li><a href="global.html#values">values</a></li></ul>
 </nav>
 
-<br clear="both">
+<br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Sat Dec 19 2015 04:14:29 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Dec 20 2015 01:21:00 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

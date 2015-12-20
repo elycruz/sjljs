@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: stdlib/iterable.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,74 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: stdlib/iterable.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Created by elydelacruz on 11/2/15.
+ */
+
+(function () {
 
 
-    <h3> </h3>
+    'use strict';
 
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Iterator = sjl.ns.stdlib.Iterator,
+        ObjectIterator = sjl.ns.stdlib.ObjectIterator;
 
+    /**
+     * Turns an array into an iterable.
+     * @function module:sjl.iterable
+     * @param array {Array|Object} - Array or object to set iterator function on.
+     * @param pointer {Number|undefined}
+     * @returns array {Array|Object}
+     */
+    sjl.iterable = function (arrayOrObj, pointer) {
+        var classOfArrayOrObj = sjl.classOf(arrayOrObj),
+            keys, values;
+        if (classOfArrayOrObj === 'Array') {
+            arrayOrObj[sjl.Symbol.iterator] = function () {
+                return new Iterator(arrayOrObj, pointer);
+            };
+        }
+        else if (classOfArrayOrObj === 'Object') {
+            keys = sjl.keys(arrayOrObj);
+            values = keys.map(function (key) {
+                return arrayOrObj[key];
+            });
+            arrayOrObj[sjl.Symbol.iterator] = function () {
+                return new ObjectIterator(keys, values, pointer);
+            };
+        }
+        else {
+            throw new Error('sjl.iterable only takes objects or arrays.  ' +
+                'arrayOrObj param recieved type is "' + classOfArrayOrObj + '".  Value recieved: ' + arrayOrObj);
+        }
+        return arrayOrObj;
+    };
 
+    if (isNodeEnv) {
+        module.exports = sjl.iterable;
+    }
+    else {
+        sjl.ns('stdlib.iterable', sjl.iterable);
+        if (window.__isAmd) {
+            return sjl.iterable;
+        }
+    }
 
-
-
-
-
-
-
-    
-
-
-
-
-
+}());
+</code></pre>
+        </article>
+    </section>
 
 
 

@@ -1,6 +1,8 @@
-/**! sjl.js Sat Dec 19 2015 20:02:08 GMT-0500 (Eastern Standard Time) **//**
- * Created by Ely on 5/29/2015.
- * @todo add extract value from array if of type (only extract at array start or end)
+/**! sjl.js 1450593698272 **//**
+ * The `sjl` module.
+ * @module {Object} sjl
+ * @created by Ely on 5/29/2015.
+ * @todo add extract value from array if of type (only extract at array start or end).
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
  * @todo Cleanup jsdocs and make them more readable where possible (some of the jsdoc definitions in sjljs's source files are old and need to be written using es5 and es6 kind of language to make them more readable to the user (also since most of the functionality is es5/es6ish makes sense to perform this upgrade).
  */
@@ -765,7 +767,15 @@
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);
 
-        // Make the constructor extendable
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.ns.stdlib.Extendable
+         * @static sjl.ns.stdlib.Extendable.extend
+         * @param constructor {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
+         *  the `statics` param (as if this param is an Object then it can contain methods within itself).
+         * @param methods {Object|undefined} - Methods.  Optional.
+         * @param statics {Object|undefined} - Static methods.  Optional.
+         */
         constructor.extend = function (constructor_, methods_, statics_) {
             return sjl.defineSubClass(constructor, constructor_, methods_, statics_);
         };
@@ -853,7 +863,7 @@
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
                 require('../sjl-nodejs/Namespace.js')(dirPath);
-            return obj[altFuncKey];
+            return obj;
         }
         return (function () {
 
@@ -956,8 +966,8 @@
         libSrcRootPath = __dirname;
     }
 
-    // Create top level frontend package
-    sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+    // Create top level frontend package.
+    sjl = sjl.createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
     // Export sjl globally g(the node global export will be deprecated at a later version)
     Object.defineProperty(globalContext, 'sjl', {
@@ -975,6 +985,7 @@
  * Created by Ely on 4/12/2014.
  * Code copy pasted from "Javascript the definitive guide"
  */
+
 (function () {
 
     'use strict';
@@ -986,17 +997,10 @@
     /**
      * The `sjl.ns.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
      * @class module:sjl.ns.stdlib.Extendable
-     * @name sjl.ns.stdlib.Extendable
+     * @memberof namespace:sjl.ns.stdlib
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
 
-    /**
-     * Extends a new copy of self with passed in parameters.
-     * @method sjl.ns.stdlib.Extendable.extend
-     * @param constructor {Constructor} - Required.
-     * @param methods {Object} - Optional.
-     * @param statics {Object} - Static methods. Optional.
-     */
 
     // Export `Extendable`
     if (isNodeEnv) {
@@ -1008,6 +1012,10 @@
             return Extendable;
         }
     }
+
+    /**
+     * @static class:sjl.ns.stdlib.Extendable#extend
+     */
 
 })();
 
@@ -1026,8 +1034,9 @@
         };
 
     /**
-     * @class sjl.ns.stdlib.Attributable
+     * @class Attributable
      * @extends sjl.ns.stdlib.Extendable
+     * @memberof module:sjl.ns.stdlib
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @type {void|Object|*}
      */
@@ -1446,12 +1455,11 @@
         contextName = 'sjl.ns.stdlib.ObjectIterator',
 
         /**
-         *
+         * Constructor for ObjectIterator.
          * @param keysOrObj {Array|Object}
          * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else the
          *  value would be used as the iterator's pointer in which case it would be optional.
          * @param pointer {Number} - Optional.
-         * @constructor
          */
         ObjectIterator = function ObjectIterator(keysOrObj, valuesOrPointer, pointer) {
             var obj, values,
@@ -1502,7 +1510,11 @@
     /**
      * @class sjl.ns.stdlib.ObjectIterator
      * @extends sjl.ns.stdlib.Iterator
-     * @type {Object|void|*}
+     * @name ObjectIterator
+     * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
+     * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else pointer.
+     * @param pointer {Number} - Optional.
+     * @type {sjl.ns.stdlib.ObjectIterator}
      */
     ObjectIterator = Iterator.extend(ObjectIterator, {
         /**
@@ -1591,10 +1603,10 @@
 
     /**
      * Turns an array into an iterable.
-     * @param array {Array}
-     * @param pointer {Number|undefined}
      * @function module:sjl.iterable
-     * @returns {*}
+     * @param array {Array|Object} - Array or object to set iterator function on.
+     * @param pointer {Number|undefined}
+     * @returns array {Array|Object}
      */
     sjl.iterable = function (arrayOrObj, pointer) {
         var classOfArrayOrObj = sjl.classOf(arrayOrObj),
@@ -1632,9 +1644,6 @@
 
 }());
 
-/**
- * Created by Ely on 7/17/2015.
- */
 (function () {
 
     'use strict';
@@ -1679,8 +1688,9 @@
      * object.  The only difference is this one uses a more sugery iterator which
      * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
      * `valid` methods (@see sjl.Iterator)
-     * @class sjl.SjlSet
-     * @extends sjl.Extendable
+     * @constructor SjlSet
+     * @memberof namespace:sjl.ns.stdlib
+     * @extends sjl.ns.stdlib.Extendable
      * @param iterable {Array}
      */
     SjlSet = Extendable.extend(SjlSet, {
@@ -1770,17 +1780,18 @@
 
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
+
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+
         stdlib = sjl.ns.stdlib,
+
         Extendable = stdlib.Extendable,
+
         ObjectIterator = stdlib.ObjectIterator,
+
         makeIterable = stdlib.iterable,
 
-        /**
-         * SjlMap Constructor.
-         * @param iterable
-         * @constructor
-         */
+        // Constructor to augment
         SjlMap = function SjlMap (iterable) {
             var self = this,
                 _keys,
@@ -1834,8 +1845,24 @@
             self._iteratorOverridden = true;
         };
 
+    /**
+     * 'Simple Javascript Library Map' object (stand-in object
+     *  for es6 `Maps` until they're support is more widely accepted).
+     *
+     *  This constructor offers the same exact api as es6 `Map` objects with
+     *  an additional couple of convenience methods (`addFromArray`, `addFromObject`, `iterator`, `toJson`).
+     *
+     * @param iterable {Array|Object} - The object to populate itself from (either an `Array<[[key, value]]>`
+     *  or an `Object` hash).
+     * @constructor sjl.ns.stdlib.SjlMap
+     */
     SjlMap = Extendable.extend(SjlMap, {
-            clear: function () {
+        /**
+         * Clears the `SjlMap` object of all data that has been set on it.
+         * @method sjl.ns.stdlib.SjlMap#clear
+         * @returns {SjlMap}
+         */
+        clear: function () {
                 while (this._values.length > 0) {
                     this._values.pop();
                 }
@@ -1845,7 +1872,14 @@
                 this.size = 0;
                 return this;
             },
-            delete: function (key) {
+
+        /**
+         * Deletes an entry in the `SjlMap`.
+         * @method sjl.ns.stdlib.SjlMap#delete
+         * @param key {String} - Key of key-value pair to remove.
+         * @returns {SjlMap}
+         */
+        delete: function (key) {
                 var _index = this._keys.indexOf(key);
                 if (this.has(key)) {
                     delete this._values[_index];
@@ -1854,67 +1888,127 @@
                 }
                 return this;
             },
-            entries: function () {
+
+        /**
+         * Returns the entries in this `SjlMap` as a valid es6 iterator to iterate over (usable in
+         *  older versions of javascript).
+         * @method sjl.ns.stdlib.SjlMap#entries
+         * @returns {sjl.ns.stdlib.ObjectIterator}
+         */
+        entries: function () {
                 return new ObjectIterator(this._keys, this._values, 0);
             },
-            forEach: function (callback, context) {
-                for (var i = 0; i < this._keys.length - 1; i += 1) {
-                    callback.call(context, this._keys[i], this._values[i]);
-                }
-                return this;
-            },
-            has: function (key) {
-                return this._keys.indexOf(key) > -1 ? true : false;
-            },
-            keys: function () {
-                return this._keys[sjl.Symbol.iterator]();
-            },
-            values: function () {
-                return this._values[sjl.Symbol.iterator]();
-            },
-            get: function (key) {
-                var index = this._keys.indexOf(key);
-                return index > -1 ? this._values[index] : undefined;
-            },
-            set: function (key, value) {
-                var index = this._keys.indexOf(key);
-                if (index > -1) {
-                    this._keys[index] = key;
-                    this._values[index] = value;
-                    this.size += 1;
-                }
-                else {
-                    this._keys.push(key);
-                    this._values.push(value);
-                    this.size += 1;
-                }
-                index = null;
-                return this;
-            },
+
+        /**
+         * Iterates through all key value pairs in itself and passes them to `callback`
+         *  on each iteration.
+         * @method sjl.ns.stdlib.SjlMap#forEach
+         * @param callback {Function} - Required.
+         * @param context {Object} - Optional.
+         * @returns {SjlMap}
+         */
+        forEach: function (callback, context) {
+            var self = this;
+            self._keys.forEach(function (key, index) {
+                callback.call(context, key, self._values[index]);
+            });
+            return self;
+        },
+
+        /**
+         * Returns whether a `key` is set on this `SjlMap`.
+         * @method sjl.ns.stdlib.SjlMap#has
+         * @param key {String} - Required.
+         * @returns {boolean}
+         */
+        has: function (key) {
+            return this._keys.indexOf(key) > -1;
+        },
+
+        /**
+         * Returns the keys in this `SjlMap` as a valid es6 iterator object to iterate over (usable in
+         *  older versions of javascript).
+         * @method sjl.ns.stdlib.SjlMap#keys
+         * @returns {sjl.ns.stdlib.Iterator}
+         */
+        keys: function () {
+            return this._keys[sjl.Symbol.iterator]();
+        },
+
+        /**
+         * Returns the values in this `SjlMap` as a valid es6 iterator object to iterate over (usable in
+         *  older versions of javascript).
+         * @method sjl.ns.stdlib.SjlMap#values
+         * @returns {sjl.ns.stdlib.Iterator}
+         */
+        values: function () {
+            return this._values[sjl.Symbol.iterator]();
+        },
+
+        /**
+         * Returns the value "set" for a key in instance.
+         * @method sjl.ns.stdlib.SjlMap#get
+         * @param key {String}
+         * @returns {*}
+         */
+        get: function (key) {
+            var index = this._keys.indexOf(key);
+            return index > -1 ? this._values[index] : undefined;
+        },
+
+        /**
+         * Sets a key-value pair in this instance.
+         * @method sjl.ns.stdlib.SjlMap#set
+         * @param key {String} - Key to set.
+         * @param value {*} - Value to set.
+         * @returns {SjlMap}
+         */
+        set: function (key, value) {
+            var index = this._keys.indexOf(key);
+            if (index > -1) {
+                this._keys[index] = key;
+                this._values[index] = value;
+                this.size += 1;
+            }
+            else {
+                this._keys.push(key);
+                this._values.push(value);
+                this.size += 1;
+            }
+            index = null;
+            return this;
+        },
 
             /**************************************************
              * METHODS NOT PART OF THE `Set` spec for ES6:
              **************************************************/
 
-            addFromArray: function (array) {
-                // Iterate through the passed in iterable and add all values to `_values`
-                var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
-                    entry;
+        /**
+         * Adds key-value array pairs in an array to this instance.
+         * @method sjl.ns.stdlib.SjlMap#addFromArray
+         * @param array {Array<Array<*, *>>} - Array of key-value array entries to parse.
+         * @returns {SjlMap}
+         */
+        addFromArray: function (array) {
+            // Iterate through the passed in iterable and add all values to `_values`
+            var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
+                entry;
 
-                // Loop through values and add them
-                while (iterator.valid()) {
-                    entry = iterator.next();
-                    this.set(entry.value[0], entry.value[1]);
-                }
-                iterator = null;
-                entry = null;
-                return this;
-            },
+            // Loop through values and add them
+            while (iterator.valid()) {
+                entry = iterator.next();
+                this.set(entry.value[0], entry.value[1]);
+            }
+            iterator = null;
+            entry = null;
+            return this;
+        },
 
             /**
-             * Add all the `object`'s instance's own property key-value pairs to SjlMap.
+             * Add all the `object`'s instance's own property key-value pairs to this instance.
+             * @method sjl.ns.stdlib.SjlMap#addFromObject
              * @param object {Object} - Object to operate on.
-             * @returns {SjlMap} - Returns `self`.
+             * @returns {SjlMap}
              */
             addFromObject: function (object) {
                 sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
@@ -1929,10 +2023,21 @@
                 return self;
             },
 
+            /**
+             * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
+             *  (same as `SjlMap#entries`).
+             * @method sjl.ns.stdlib.SjlMap#iterator
+             * @returns {sjl.ns.stdlib.ObjectIterator}
+             */
             iterator: function () {
                 return this.entries();
             },
 
+            /**
+             * Shallow to json method.
+             * @method sjl.ns.stdlib.SjlMap#toJSON
+             * @returns {{}}
+             */
             toJSON: function () {
                 var self = this,
                     out = {};

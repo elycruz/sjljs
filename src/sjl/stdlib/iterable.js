@@ -14,10 +14,10 @@
 
     /**
      * Turns an array into an iterable.
-     * @param array {Array}
-     * @param pointer {Number|undefined}
      * @function module:sjl.iterable
-     * @returns {*}
+     * @param array {Array|Object} - Array or object to set iterator function on.
+     * @param pointer {Number|undefined}
+     * @returns array {Array|Object}
      */
     sjl.iterable = function (arrayOrObj, pointer) {
         var classOfArrayOrObj = sjl.classOf(arrayOrObj),
