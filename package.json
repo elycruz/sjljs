@@ -9,7 +9,6 @@
   "devDependencies": {
     "chai": "^1.9.1",
     "chalk": "^0.5.1",
-    "checkjs": "^0.2.0",
     "gulp": "~3.6.1",
     "gulp-concat": "~2.2.0",
     "gulp-duration": "0.0.0",

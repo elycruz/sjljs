@@ -795,16 +795,15 @@
      * Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
      * @param obj {Object}
      * @param key {String}
-     * @param enumerable {Boolean} - Default `false`.
      * @param value {*}
+     * @param enumerable {Boolean} - Default `false`.
+     * @return {Void}
      */
     function makeNotSettableProp(obj, key, value, enumerable) {
-        (function (_obj, _key, _value) {
-            Object.defineProperty(_obj, _key, {
-                value: _value,
-                enumerable: enumerable instanceof Boolean ? enumerable : false
-            });
-        }(obj, key, value));
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: sjl.classOfIs(enumerable, Boolean) ? enumerable : false
+        });
     }
 
     /**
@@ -877,25 +876,18 @@
         }());
     };
 
-    ///**
-    // * Flattens passed in array.
-    // * @function module:sjl.flattenArray
-    // * @param array {Array}
-    // * @returns {Array}
-    // */
-    //sjl.flattenArray = function (array) {
-    //    var newArray = [];
-    //    // Flatten ...humanString if length > 1
-    //    for (var i = 0; i < array.length; i += 1) {
-    //        if (sjl.classOf(array[i]) === 'Array') {
-    //            newArray = sjl.flattenArray(array[i]).concat(newArray);
-    //        }
-    //        else {
-    //            newArray.push(array[i]);
-    //        }
-    //    }
-    //    return newArray;
-    //};
+    /**
+     * Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
+     * @param obj {Object}
+     * @param key {String}
+     * @param enumerable {Boolean} - Default `false`.
+     * @param value {*}
+     * @return sjl {Object}
+     */
+    sjl.makeNotSettableProp = function (obj, key, value, enumerable) {
+        makeNotSettableProp(obj, key, value, enumerable);
+        return sjl;
+    };
 
     /**
      * Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.
