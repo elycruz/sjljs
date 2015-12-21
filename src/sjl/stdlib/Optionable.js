@@ -143,6 +143,7 @@
     }
     else {
         sjl.ns('stdlib.Optionable', Optionable);
+        sjl.makeNotSettableProp(sjl, 'Optionable', Optionable);
         if (window.__isAmd) {
             return Optionable;
         }

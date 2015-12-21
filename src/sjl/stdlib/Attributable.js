@@ -17,6 +17,7 @@
      * @extends sjl.ns.stdlib.Extendable
      * @memberof module:sjl.ns.stdlib
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
+     * @deprecated This class is going to be removed for version `0.6.0`.
      * @type {void|Object|*}
      */
     Attributable = sjl.ns.stdlib.Extendable.extend(Attributable, {
@@ -89,6 +90,7 @@
     }
     else {
         sjl.ns('stdlib.Attributable', Attributable);
+        sjl.makeNotSettableProp(sjl, 'Attributable', Attributable);
         if (window.__isAmd) {
             return Attributable;
         }

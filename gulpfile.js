@@ -32,7 +32,7 @@ gulp.task('changelog', function () {
 
 // Builds './README.md'
 gulp.task('readme', ['changelog'], function () {
-    gulp.src(['readme-fragments/README-fragment.md', 'changelog.md'])
+    gulp.src(['readme-fragments/README-fragment.md'])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });

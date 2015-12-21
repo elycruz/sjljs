@@ -275,11 +275,18 @@
         }
     });
 
+
     if (isNodeEnv) {
         module.exports = SjlMap;
     }
     else {
+        // Export class to namespace
         sjl.ns('stdlib.SjlMap', SjlMap);
+
+        // Set shortcut to class on `sjl`
+        sjl.makeNotSettableProp(sjl, 'SjlMap', SjlMap);
+
+        // If `Amd` return the class
         if (window.__isAmd) {
             return SjlMap;
         }

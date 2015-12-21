@@ -25,6 +25,7 @@
     }
     else {
         sjl.ns('stdlib.Extendable', Extendable);
+        sjl.makeNotSettableProp(sjl, 'Extendable', Extendable);
         if (window.__isAmd) {
             return Extendable;
         }

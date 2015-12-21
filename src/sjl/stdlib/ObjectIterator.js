@@ -153,6 +153,7 @@
     }
     else {
         sjl.ns('stdlib.ObjectIterator', ObjectIterator);
+        sjl.makeNotSettableProp(sjl, 'ObjectIterator', ObjectIterator);
         if (window.__isAmd) {
             return ObjectIterator;
         }

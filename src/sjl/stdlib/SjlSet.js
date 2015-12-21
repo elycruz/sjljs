@@ -130,6 +130,7 @@
     }
     else {
         sjl.ns('stdlib.SjlSet', SjlSet);
+        sjl.makeNotSettableProp(sjl, 'SjlSet', SjlSet);
         if (window.__isAmd) {
             return SjlSet;
         }

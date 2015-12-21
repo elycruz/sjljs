@@ -1,7 +1,7 @@
-/**! sjljs 0.5.21
+/**! sjljs 0.5.22
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: c1c5fcd983527515b66f9ddb47624f1b
- * | Built-on: Mon Dec 21 2015 00:51:00 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: bcbe7c4225916f52ab593b3969648add
+ * | Built-on: Mon Dec 21 2015 01:17:11 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -1012,6 +1012,7 @@
     }
     else {
         sjl.ns('stdlib.Extendable', Extendable);
+        sjl.makeNotSettableProp(sjl, 'Extendable', Extendable);
         if (window.__isAmd) {
             return Extendable;
         }
@@ -1042,6 +1043,7 @@
      * @extends sjl.ns.stdlib.Extendable
      * @memberof module:sjl.ns.stdlib
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
+     * @deprecated This class is going to be removed for version `0.6.0`.
      * @type {void|Object|*}
      */
     Attributable = sjl.ns.stdlib.Extendable.extend(Attributable, {
@@ -1114,6 +1116,7 @@
     }
     else {
         sjl.ns('stdlib.Attributable', Attributable);
+        sjl.makeNotSettableProp(sjl, 'Attributable', Attributable);
         if (window.__isAmd) {
             return Attributable;
         }
@@ -1266,6 +1269,7 @@
     }
     else {
         sjl.ns('stdlib.Optionable', Optionable);
+        sjl.makeNotSettableProp(sjl, 'Optionable', Optionable);
         if (window.__isAmd) {
             return Optionable;
         }
@@ -1455,6 +1459,7 @@
     }
     else {
         sjl.ns('stdlib.Iterator', Iterator);
+        sjl.makeNotSettableProp(sjl, 'Iterator', Iterator);
         if (window.__isAmd) {
             return sjl.ns.stdlib.Iterator;
         }
@@ -1617,6 +1622,7 @@
     }
     else {
         sjl.ns('stdlib.ObjectIterator', ObjectIterator);
+        sjl.makeNotSettableProp(sjl, 'ObjectIterator', ObjectIterator);
         if (window.__isAmd) {
             return ObjectIterator;
         }
@@ -1674,6 +1680,7 @@
     }
     else {
         sjl.ns('stdlib.iterable', sjl.iterable);
+        sjl.makeNotSettableProp(sjl, 'iterable', sjl.iterable);
         if (window.__isAmd) {
             return sjl.iterable;
         }
@@ -1813,6 +1820,7 @@
     }
     else {
         sjl.ns('stdlib.SjlSet', SjlSet);
+        sjl.makeNotSettableProp(sjl, 'SjlSet', SjlSet);
         if (window.__isAmd) {
             return SjlSet;
         }
@@ -2097,11 +2105,18 @@
         }
     });
 
+
     if (isNodeEnv) {
         module.exports = SjlMap;
     }
     else {
+        // Export class to namespace
         sjl.ns('stdlib.SjlMap', SjlMap);
+
+        // Set shortcut to class on `sjl`
+        sjl.makeNotSettableProp(sjl, 'SjlMap', SjlMap);
+
+        // If `Amd` return the class
         if (window.__isAmd) {
             return SjlMap;
         }
