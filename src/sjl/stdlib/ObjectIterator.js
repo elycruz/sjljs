@@ -128,6 +128,22 @@
                 this._keys = keys;
             }
             return retVal;
+        },
+
+        /**
+         * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
+         * @param callback {Function}
+         * @param context {Object}
+         * @returns {sjl.ns.stdlib.Iterator}
+         */
+        forEach: function (callback, context) {
+            var self = this,
+                values = self._values;
+            context = context || self;
+            self._keys.forEach(function (key, index, keys) {
+                callback.call(context, key, values[index], self);
+            });
+            return this;
         }
 
     });

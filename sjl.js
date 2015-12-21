@@ -1,4 +1,8 @@
-/**! sjl.js 1450593698272 **//**
+/**! sjljs 0.5.21
+ * | License: GPL-2.0+ AND MIT
+ * | md5checksum: c1c5fcd983527515b66f9ddb47624f1b
+ * | Built-on: Mon Dec 21 2015 00:51:00 GMT-0500 (Eastern Standard Time)
+ **//**
  * The `sjl` module.
  * @module {Object} sjl
  * @created by Ely on 5/29/2015.
@@ -1322,6 +1326,11 @@
                         sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', pointer, Number);
                         _pointer = sjl.constrainPointerWithinBounds(pointer, 0, _values.length);
                     }
+                },
+                size: {
+                    get: function () {
+                        return _values.length;
+                    }
                 }
             }); // End of properties define
 
@@ -1426,7 +1435,19 @@
                 this._values = values;
             }
             return retVal;
+        },
+
+        /**
+         * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
+         * @param callback {Function}
+         * @param context {Object}
+         * @returns {sjl.ns.stdlib.Iterator}
+         */
+        forEach: function (callback, context) {
+            this._values.forEach(callback, context);
+            return this;
         }
+
     });
 
     if (isNodeEnv) {
@@ -1571,6 +1592,22 @@
                 this._keys = keys;
             }
             return retVal;
+        },
+
+        /**
+         * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
+         * @param callback {Function}
+         * @param context {Object}
+         * @returns {sjl.ns.stdlib.Iterator}
+         */
+        forEach: function (callback, context) {
+            var self = this,
+                values = self._values;
+            context = context || self;
+            self._keys.forEach(function (key, index, keys) {
+                callback.call(context, key, values[index], self);
+            });
+            return this;
         }
 
     });
@@ -1656,9 +1693,25 @@
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
         SjlSet = function SjlSet (iterable) {
-            var self = this;
-            self._values = [];
-            self.size = 0;
+            var self = this,
+                _values = [];
+
+            Object.defineProperties(this, {
+                _values: {
+                    get: function () {
+                        return _values;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(SjlSet.name, '_values', value, Array);
+                        _values = makeIterable(value);
+                    }
+                },
+                size: {
+                    get: function () {
+                        return _values.length;
+                    }
+                }
+            });
 
             // If an array was passed in inject values
             if (sjl.classOfIs(iterable, 'Array')) {
@@ -1672,11 +1725,11 @@
             }
 
             // Make our `_values` array inherit our special iterator
-            makeIterable(self._values, 0);
+            makeIterable(_values);
 
             // Set custom iterator function on `this`
             self[sjl.Symbol.iterator] = function () {
-                return new ObjectIterator(self._values, self._values, 0);
+                return new ObjectIterator(_values, _values);
             };
 
             // Set flag to remember that original iterator was overridden
@@ -1697,7 +1750,6 @@
         add: function (value) {
             if (!this.has(value)) {
                 this._values.push(value);
-                this.size += 1;
             }
             return this;
         },
@@ -1705,15 +1757,12 @@
             while (this._values.length > 0) {
                 this._values.pop();
             }
-            this.size = 0;
             return this;
         },
         delete: function (value) {
-            var _index = value.indexOf(this._values);
-            if (_index > -1) {
-                delete this._values[_index];
-                this.size -= 1;
-                this.size = this.size < 0 ? 1 : 0;
+            var _index = this._values.indexOf(value);
+            if (_index > -1 && _index <= this._values.length) {
+                this._values.splice(_index, 1);
             }
             return this;
         },
@@ -1796,7 +1845,6 @@
             var self = this,
                 _keys,
                 _values;
-            self.size = 0;
             Object.defineProperties(this, {
                 _keys: {
                     get: function () {
@@ -1814,6 +1862,11 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_values', value, Array);
                         _values = makeIterable(value);
+                    }
+                },
+                size: {
+                    get: function () {
+                        return self._keys.length;
                     }
                 }
             });
@@ -1869,7 +1922,6 @@
                 while (this._keys.length > 0) {
                     this._keys.pop();
                 }
-                this.size = 0;
                 return this;
             },
 
@@ -1882,9 +1934,8 @@
         delete: function (key) {
                 var _index = this._keys.indexOf(key);
                 if (this.has(key)) {
-                    delete this._values[_index];
-                    delete this._keys[_index];
-                    this.size -= sjl.classOfIs(this.size, 'Number') && this.size > 0 ? 1 : 0;
+                    this._values.splice(_index, 1);
+                    this._keys.splice(_index, 1);
                 }
                 return this;
             },
@@ -1968,20 +2019,18 @@
             if (index > -1) {
                 this._keys[index] = key;
                 this._values[index] = value;
-                this.size += 1;
             }
             else {
                 this._keys.push(key);
                 this._values.push(value);
-                this.size += 1;
             }
             index = null;
             return this;
         },
 
-            /**************************************************
-             * METHODS NOT PART OF THE `Set` spec for ES6:
-             **************************************************/
+        /**************************************************
+         * METHODS NOT PART OF THE `Set` spec for ES6:
+         **************************************************/
 
         /**
          * Adds key-value array pairs in an array to this instance.
@@ -2004,49 +2053,49 @@
             return this;
         },
 
-            /**
-             * Add all the `object`'s instance's own property key-value pairs to this instance.
-             * @method sjl.ns.stdlib.SjlMap#addFromObject
-             * @param object {Object} - Object to operate on.
-             * @returns {SjlMap}
-             */
-            addFromObject: function (object) {
-                sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
-                    'Only `Object` types allowed.');
-                var self = this,
-                    entry,
-                    objectIt = new ObjectIterator(object);
-                while (objectIt.valid()) {
-                    entry = objectIt.next();
-                    self.set(entry.value[0], entry.value[1]);
-                }
-                return self;
-            },
-
-            /**
-             * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
-             *  (same as `SjlMap#entries`).
-             * @method sjl.ns.stdlib.SjlMap#iterator
-             * @returns {sjl.ns.stdlib.ObjectIterator}
-             */
-            iterator: function () {
-                return this.entries();
-            },
-
-            /**
-             * Shallow to json method.
-             * @method sjl.ns.stdlib.SjlMap#toJSON
-             * @returns {{}}
-             */
-            toJSON: function () {
-                var self = this,
-                    out = {};
-                this._keys.forEach(function (key, i) {
-                    out[key] = self._values[i];
-                });
-                return out;
+        /**
+         * Add all the `object`'s instance's own property key-value pairs to this instance.
+         * @method sjl.ns.stdlib.SjlMap#addFromObject
+         * @param object {Object} - Object to operate on.
+         * @returns {SjlMap}
+         */
+        addFromObject: function (object) {
+            sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
+                'Only `Object` types allowed.');
+            var self = this,
+                entry,
+                objectIt = new ObjectIterator(object);
+            while (objectIt.valid()) {
+                entry = objectIt.next();
+                self.set(entry.value[0], entry.value[1]);
             }
-        });
+            return self;
+        },
+
+        /**
+         * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
+         *  (same as `SjlMap#entries`).
+         * @method sjl.ns.stdlib.SjlMap#iterator
+         * @returns {sjl.ns.stdlib.ObjectIterator}
+         */
+        iterator: function () {
+            return this.entries();
+        },
+
+        /**
+         * Shallow to json method.
+         * @method sjl.ns.stdlib.SjlMap#toJSON
+         * @returns {{}}
+         */
+        toJSON: function () {
+            var self = this,
+                out = {};
+            this._keys.forEach(function (key, i) {
+                out[key] = self._values[i];
+            });
+            return out;
+        }
+    });
 
     if (isNodeEnv) {
         module.exports = SjlMap;

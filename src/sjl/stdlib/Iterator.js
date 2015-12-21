@@ -51,6 +51,11 @@
                         sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', pointer, Number);
                         _pointer = sjl.constrainPointerWithinBounds(pointer, 0, _values.length);
                     }
+                },
+                size: {
+                    get: function () {
+                        return _values.length;
+                    }
                 }
             }); // End of properties define
 
@@ -155,7 +160,19 @@
                 this._values = values;
             }
             return retVal;
+        },
+
+        /**
+         * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
+         * @param callback {Function}
+         * @param context {Object}
+         * @returns {sjl.ns.stdlib.Iterator}
+         */
+        forEach: function (callback, context) {
+            this._values.forEach(callback, context);
+            return this;
         }
+
     });
 
     if (isNodeEnv) {

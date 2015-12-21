@@ -23,7 +23,6 @@
             var self = this,
                 _keys,
                 _values;
-            self.size = 0;
             Object.defineProperties(this, {
                 _keys: {
                     get: function () {
@@ -41,6 +40,11 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_values', value, Array);
                         _values = makeIterable(value);
+                    }
+                },
+                size: {
+                    get: function () {
+                        return self._keys.length;
                     }
                 }
             });
@@ -96,7 +100,6 @@
                 while (this._keys.length > 0) {
                     this._keys.pop();
                 }
-                this.size = 0;
                 return this;
             },
 
@@ -109,9 +112,8 @@
         delete: function (key) {
                 var _index = this._keys.indexOf(key);
                 if (this.has(key)) {
-                    delete this._values[_index];
-                    delete this._keys[_index];
-                    this.size -= sjl.classOfIs(this.size, 'Number') && this.size > 0 ? 1 : 0;
+                    this._values.splice(_index, 1);
+                    this._keys.splice(_index, 1);
                 }
                 return this;
             },
@@ -195,20 +197,18 @@
             if (index > -1) {
                 this._keys[index] = key;
                 this._values[index] = value;
-                this.size += 1;
             }
             else {
                 this._keys.push(key);
                 this._values.push(value);
-                this.size += 1;
             }
             index = null;
             return this;
         },
 
-            /**************************************************
-             * METHODS NOT PART OF THE `Set` spec for ES6:
-             **************************************************/
+        /**************************************************
+         * METHODS NOT PART OF THE `Set` spec for ES6:
+         **************************************************/
 
         /**
          * Adds key-value array pairs in an array to this instance.
@@ -231,49 +231,49 @@
             return this;
         },
 
-            /**
-             * Add all the `object`'s instance's own property key-value pairs to this instance.
-             * @method sjl.ns.stdlib.SjlMap#addFromObject
-             * @param object {Object} - Object to operate on.
-             * @returns {SjlMap}
-             */
-            addFromObject: function (object) {
-                sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
-                    'Only `Object` types allowed.');
-                var self = this,
-                    entry,
-                    objectIt = new ObjectIterator(object);
-                while (objectIt.valid()) {
-                    entry = objectIt.next();
-                    self.set(entry.value[0], entry.value[1]);
-                }
-                return self;
-            },
-
-            /**
-             * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
-             *  (same as `SjlMap#entries`).
-             * @method sjl.ns.stdlib.SjlMap#iterator
-             * @returns {sjl.ns.stdlib.ObjectIterator}
-             */
-            iterator: function () {
-                return this.entries();
-            },
-
-            /**
-             * Shallow to json method.
-             * @method sjl.ns.stdlib.SjlMap#toJSON
-             * @returns {{}}
-             */
-            toJSON: function () {
-                var self = this,
-                    out = {};
-                this._keys.forEach(function (key, i) {
-                    out[key] = self._values[i];
-                });
-                return out;
+        /**
+         * Add all the `object`'s instance's own property key-value pairs to this instance.
+         * @method sjl.ns.stdlib.SjlMap#addFromObject
+         * @param object {Object} - Object to operate on.
+         * @returns {SjlMap}
+         */
+        addFromObject: function (object) {
+            sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
+                'Only `Object` types allowed.');
+            var self = this,
+                entry,
+                objectIt = new ObjectIterator(object);
+            while (objectIt.valid()) {
+                entry = objectIt.next();
+                self.set(entry.value[0], entry.value[1]);
             }
-        });
+            return self;
+        },
+
+        /**
+         * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
+         *  (same as `SjlMap#entries`).
+         * @method sjl.ns.stdlib.SjlMap#iterator
+         * @returns {sjl.ns.stdlib.ObjectIterator}
+         */
+        iterator: function () {
+            return this.entries();
+        },
+
+        /**
+         * Shallow to json method.
+         * @method sjl.ns.stdlib.SjlMap#toJSON
+         * @returns {{}}
+         */
+        toJSON: function () {
+            var self = this,
+                out = {};
+            this._keys.forEach(function (key, i) {
+                out[key] = self._values[i];
+            });
+            return out;
+        }
+    });
 
     if (isNodeEnv) {
         module.exports = SjlMap;

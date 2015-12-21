@@ -1,7 +1,8 @@
 /**
  * Created by edelacruz on 4/14/14.
  */
-var gulp        = require('gulp'),
+var packageJson = require('./package.json'),
+    gulp        = require('gulp'),
     concat      = require('gulp-concat'),
     header      = require('gulp-header'),
     mocha       = require('gulp-mocha'),
@@ -13,6 +14,7 @@ var gulp        = require('gulp'),
     lazypipe    = require('lazypipe'),
     chalk       = require('chalk'),
     crypto      = require('crypto'),
+    del         = require('del'),
 
     // LazyPipes
     jsHintPipe  = lazypipe()
@@ -47,9 +49,31 @@ gulp.task('tests', function () {
         .pipe(mocha());
 });
 
+gulp.task('clean', function () {
+    return del([
+        'sjl.js',
+        'sjl.min.js',
+        'sjl-minimal.js',
+        'sjl-minimal.min.js'
+    ]).then(function (paths) {
+            if (paths.length > 0) {
+                console.log(chalk.dim('\nThe following paths have been deleted: \n - ' + paths.join('\n - ') + '\n'));
+            }
+            else {
+                console.log(chalk.dim(' - No paths to clean.') + '\n', '--mandatory');
+            }
+            //console.log('[' + chalk.green('gulp') +'] ' + chalk.cyan(taskName + ' duration: ')
+            //    + chalk.magenta((new Date() - start) / 1000 + 'ms\n')
+            //);
+        })
+        .catch(function (failure) {
+            console.log(failure, '\n');
+        });
+});
+
 // Builds './sjl.js'
 gulp.task('concat', function () {
-    gulp.src([
+    return gulp.src([
         'src/sjl/sjl.js',
         'src/sjl/stdlib/Extendable.js',
         'src/sjl/stdlib/Attributable.js',
@@ -73,49 +97,80 @@ gulp.task('concat', function () {
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
-        //.pipe(fncallback(function (file, enc, cb) {
-        //    // Create file hasher
-        //    var hasher = crypto.createHash('md5');
-        //    hasher.update(file.contents.toString(enc));
-        //    //file.contents = hasher.digest('hex') + file.contents;
-        //    cb();
-        //}))
-        .pipe(header('/**! sjl.js <%= (new Date()).getTime() %> **/'))
+        .pipe(fncallback(function (file, enc, cb) {
+            // Create file hasher
+            var hasher = crypto.createHash('md5');
+            hasher.update(file.contents.toString(enc));
+            packageJson.fileHash = hasher.digest('hex');
+            cb();
+        }))
+        .pipe(header(
+            '/**! sjljs <%= version %>\n' +
+            ' * | License: <%= license %>\n' +
+            ' * | md5checksum: <%= fileHash %>\n' +
+            ' * | Built-on: <%= (new Date()) %>\n' +
+            ' **/',
+            packageJson))
         .pipe(gulp.dest('./'));
 });
 
 // Builds './sjl.min.js'
 gulp.task('uglify', ['concat'], function () {
-    gulp.src('./sjl.js')
+    return gulp.src('./sjl.js')
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.min.js'))
+        .pipe(fncallback(function (file, enc, cb) {
+            // Create file hasher
+            var hasher = crypto.createHash('md5');
+            hasher.update(file.contents.toString(enc));
+            packageJson.fileHash = hasher.digest('hex');
+            cb();
+        }))
         .pipe(uglify())
-        .pipe(header('/**! sjl.min.js <%= (new Date()) %> **/'))
+        .pipe(header('/**! sjljs <%= version %> | License: <%= license %> | md5checksum: <%= fileHash %> | Built-on: <%= (new Date()) %> **/', packageJson))
         .pipe(gulp.dest('./'));
 });
 
 // Builds './sjl-minimal.js'
 gulp.task('minimal', function () {
-    gulp.src([
+    return gulp.src([
         'src/sjl/sjl.js'
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.js'))
-        .pipe(header('/**! \n' +
-            ' * sjl-minimal.js <%= (new Date()) %>\n' +
-            ' **/\n'))
+        .pipe(fncallback(function (file, enc, cb) {
+            // Create file hasher
+            var hasher = crypto.createHash('md5');
+            hasher.update(file.contents.toString(enc));
+            packageJson.fileHash = hasher.digest('hex');
+            cb();
+        }))
+        .pipe(header(
+            '/**! sjl-minimal.js <%= version %> \n' +
+            ' * | License: <%= license %> \n' +
+            ' * | md5checksum: <%= fileHash %> \n' +
+            ' * | Built-on: <%= (new Date()) %> \n' +
+            ' **/\n', packageJson))
         .pipe(gulp.dest('./'));
 });
 
 // Builds './sjl-minimal.min.js'
 gulp.task('minimal-min', ['minimal'], function () {
-    gulp.src([
+    return gulp.src([
         'sjl-minimal.js'
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.min.js'))
+        .pipe(fncallback(function (file, enc, cb) {
+            // Create file hasher
+            var hasher = crypto.createHash('md5');
+            hasher.update(file.contents.toString(enc));
+            packageJson.fileHash = hasher.digest('hex');
+            cb();
+        }))
         .pipe(uglify())
-        .pipe(header('/**! sjl-minimal.min.js <%= (new Date()) %> **/'))
+        .pipe(header('/**! sjl-minimal.min.js <%= version %> | License: <%= license %>' +
+            ' | md5checksum: <%= fileHash %> | Built-on: <%= (new Date()) %> **/', packageJson))
         .pipe(gulp.dest('./'));
 });
 
@@ -157,6 +212,7 @@ gulp.task('watch', function () {
 
 // Build task
 gulp.task('build', [
+    'clean',
     'readme',
     //'jsdoc',
     'concat',
