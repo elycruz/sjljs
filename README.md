@@ -17,6 +17,8 @@ via a `sjl.package` and it's alias `sjl.ns`;  E.g.,
 `sjl.Extendable` is now accessible via `sjl.ns.stdlib.Extendable`
  Also all classes that were available in the root level are 
 now available in the `sjl.ns.stdlib` package.  Also all `sjl.ns.stdlib` classes can also be found at `sjl.{className}` 
+(only when used in browser, for nodejs old functionality remains the same and the only option 
+for dynamically loaded classes).
 
 See release notes for release 0.5.0.
 
