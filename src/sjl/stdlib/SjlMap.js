@@ -10,13 +10,11 @@
 
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
 
-        stdlib = sjl.ns.stdlib,
+        Extendable = sjl.ns.stdlib.Extendable,
 
-        Extendable = stdlib.Extendable,
+        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
 
-        ObjectIterator = stdlib.ObjectIterator,
-
-        makeIterable = stdlib.iterable,
+        makeIterable = sjl.ns.stdlib.iterable,
 
         // Constructor to augment
         SjlMap = function SjlMap (iterable) {
@@ -274,7 +272,6 @@
             return out;
         }
     });
-
 
     if (isNodeEnv) {
         module.exports = SjlMap;

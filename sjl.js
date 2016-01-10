@@ -1,7 +1,7 @@
 /**! sjljs 0.5.22
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: bcbe7c4225916f52ab593b3969648add
- * | Built-on: Mon Dec 21 2015 01:17:11 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: f262587667b4e05d7b6ca23e7484bc62
+ * | Built-on: Sun Jan 10 2016 16:58:02 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -1840,13 +1840,11 @@
 
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
 
-        stdlib = sjl.ns.stdlib,
+        Extendable = sjl.ns.stdlib.Extendable,
 
-        Extendable = stdlib.Extendable,
+        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
 
-        ObjectIterator = stdlib.ObjectIterator,
-
-        makeIterable = stdlib.iterable,
+        makeIterable = sjl.ns.stdlib.iterable,
 
         // Constructor to augment
         SjlMap = function SjlMap (iterable) {
