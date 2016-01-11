@@ -108,7 +108,12 @@
                 retVal = this._matchedRouteName;
             }
             else {
-                this._matchedRouteName = matchedRouteName;
+                if (this._matchedRouteName.length === 0) {
+                    this._matchedRouteName = matchedRouteName;
+                }
+                else {
+                    this._mathcedRouteName += this._matchedRouteNameSeparator + matchedRouteName;
+                }
             }
             return retVal;
         },
