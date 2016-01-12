@@ -81,6 +81,7 @@ gulp.task('concat', function () {
         'src/sjl/stdlib/Iterator.js',
         'src/sjl/stdlib/ObjectIterator.js',
         'src/sjl/stdlib/iterable.js',
+        'src/sjl/stdlib/PriorityList.js',
         'src/sjl/stdlib/SjlSet.js',
         'src/sjl/stdlib/SjlMap.js',
         'src/sjl/validator/BaseValidator.js',

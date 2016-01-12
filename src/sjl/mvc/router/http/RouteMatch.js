@@ -118,12 +118,25 @@
             return retVal;
         },
 
+        matchedRouteNameSeparator: function (matchedRouteNameSeparator) {
+            var isGetterCall = typeof matchedRouteNameSeparator === 'undefined',
+                retVal;
+            if (isGetterCall) {
+                retVal = this._matchedRouteNameSeparator;
+            }
+            else {
+                this._matchedRouteNameSeparator = matchedRouteNameSeparator;
+                retVal = this;
+            }
+            return retVal;
+        },
+
+
         mergeRouteMatch: function (routeMatch) {
             return this.params(routeMatch.params, true)
                 .length(this.length() + routeMatch.length)
                 .matchedRouteName(routeMatch.getMatchedRouteName());
         }
-    }, {
     });
 
     if (isNodeEnv) {
