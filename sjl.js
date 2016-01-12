@@ -1,7 +1,7 @@
 /**! sjljs 0.5.22
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: f262587667b4e05d7b6ca23e7484bc62
- * | Built-on: Sun Jan 10 2016 16:58:02 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: b936858620193b0db1121504882be8b8
+ * | Built-on: Tue Jan 12 2016 18:44:54 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -2102,7 +2102,6 @@
             return out;
         }
     });
-
 
     if (isNodeEnv) {
         module.exports = SjlMap;
