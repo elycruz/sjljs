@@ -1107,7 +1107,8 @@ describe('PriorityList', function () {
                 ['v4', 4], ['v5', 5], ['v6', 6],
                 ['v7', 5], ['v8', 4]],
             priorityList = new PriorityList([]),
-            methods = ['clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', 'get', 'set'];
+            methods = ['clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', 'get', 'set',
+                'next', 'current', 'valid', 'rewind', 'addFromArray', 'addFromObject'];
         it ('should have the following methods: [`' + methods.join('`, `') + '`]', function () {
             methods.forEach(function (method) {
                 expect(typeof priorityList[method]).to.equal('function');
@@ -1142,12 +1143,17 @@ describe('PriorityList', function () {
             priorityList = new PriorityList(mapFrom);
 
         it ('should delete unique key and return `self`.', function () {
+            // Ensure has key entry to delete
+            expect(priorityList.has(keyEntryToDelete)).to.equal(true);
+
             // Ensure method returns `self`
             expect(priorityList.delete(keyEntryToDelete)).to.equal(priorityList);
 
             // Ensure method deleted key entry
             expect(priorityList.has(keyEntryToDelete)).to.equal(false);
-            expect(priorityList.itemsMap._values.indexOf(keyEntryToDeleteValue)).to.equal(-1);
+            expect(priorityList.itemsMap._values.some(function (item) {
+                return item.value === keyEntryToDeleteValue;
+            })).to.equal(false);
             expect(priorityList.itemsMap._keys.indexOf(keyEntryToDelete)).to.equal(-1);
         });
 
@@ -1163,33 +1169,37 @@ describe('PriorityList', function () {
                 ['v7', 5], ['v8', 4]],
             priorityList = new PriorityList(entries),
             iterator = priorityList.entries(),
+            reversedEntries = entries.concat([]).sort(function (a, b) {
+                return a[0] < b[0];
+            }),
             value;
-
         // Validate
         it ('should work as an iterator with included extra functions (`valid`).', function () {
             while (iterator.valid()) {
-                console.log(iterator);
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(entries[iterator.pointer() - 1][0]);
-                expect(value.value[1]).to.equal(entries[iterator.pointer() - 1][1]);
+                expect(value.value[0]).to.equal(reversedEntries[iterator.pointer() - 1][0]);
+                expect(value.value[1]).to.equal(reversedEntries[iterator.pointer() - 1][1]);
             }
         });
     });
 
     describe('#`PriorityList#forEach`', function () {
-        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+        var entries = [['v1', 1], ['v2', 2], ['v3', 3],
                 ['v4', 4], ['v5', 5], ['v6', 6],
                 ['v7', 5], ['v8', 4]],
-            priorityList = new PriorityList(entries),
+            reversedEntries = entries.concat([]).sort(function (a, b) {
+                return a[0] < b[0];
+            }),
+            priorityList = new PriorityList(entries, true),
             exampleContext = {someProperty: 'someValue'},
             indexCount = 0;
 
         it ('should work as expected when no context is passed in.', function () {
             // Validate `forEach` method works as expected
             priorityList.forEach(function (key, value) {
-                expect(entries[indexCount][0]).to.equal(key);
-                expect(entries[indexCount][1]).to.equal(value);
+                expect(reversedEntries[indexCount][0]).to.equal(key);
+                expect(reversedEntries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(undefined);
                 indexCount += 1;
             });
@@ -1201,8 +1211,8 @@ describe('PriorityList', function () {
 
             // Validate `forEach` method works as expected
             priorityList.forEach(function (key, value) {
-                expect(entries[indexCount][0]).to.equal(key);
-                expect(entries[indexCount][1]).to.equal(value);
+                expect(reversedEntries[indexCount][0]).to.equal(key);
+                expect(reversedEntries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(exampleContext);
                 indexCount += 1;
             }, exampleContext);
@@ -1229,13 +1239,16 @@ describe('PriorityList', function () {
             var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
                     ['v4', 4], ['v5', 5], ['v6', 6],
                     ['v7', 5], ['v8', 4]],
-                priorityList = new PriorityList(entries),
+                priorityList = new PriorityList(entries, false),
                 iterator = priorityList.keys(),
+                reversedEntries = entries.concat([]).sort(function (a, b) {
+                    return a[0] < b[0];
+                }),
                 value,
                 index = 0;
             while (iterator.valid()) {
                 value = iterator.next();
-                expect(value.value).to.equal(entries[index][0]);
+                expect(value.value).to.equal(reversedEntries[index][0]);
                 index += 1;
             }
         });
@@ -1246,13 +1259,17 @@ describe('PriorityList', function () {
             var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
                     ['v4', 4], ['v5', 5], ['v6', 6],
                     ['v7', 5], ['v8', 4]],
+
                 priorityList = new PriorityList(entries),
+                reversedEntries = entries.concat([]).sort(function (a, b) {
+                    return a[0] < b[0];
+                }),
                 iterator = priorityList.values(),
                 value,
                 index = 0;
             while (iterator.valid()) {
                 value = iterator.next();
-                expect(value.value).to.equal(entries[index][1]);
+                expect(value.value).to.equal(reversedEntries[index][1]);
                 index += 1;
             }
         });
@@ -1266,7 +1283,6 @@ describe('PriorityList', function () {
         it ('should return the correct value for a given key.', function () {
             expect(priorityList.get('v1')).to.equal(1);
         });
-
         it ('should return undefined for for a given non-existent key entry.', function () {
             expect(priorityList.get('v9')).to.equal(undefined);
         });
@@ -1282,7 +1298,6 @@ describe('PriorityList', function () {
             expect(priorityList.set('v9')).to.equal(priorityList);
             expect(priorityList.has('v9')).to.equal(true);
         });
-
         it ('should return undefined for for a given non-existent key entry.', function () {
             expect(priorityList.get('v10')).to.equal(undefined);
         });

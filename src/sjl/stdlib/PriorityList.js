@@ -13,7 +13,7 @@
         priorityItemSerial = 0,
         PriorityListItem = function PriorityListItem (key, value, priority) {
             var _priority;
-            Object.defineProperty({
+            Object.defineProperties(this, {
                 key: {
                     value: key
                 },
@@ -37,13 +37,24 @@
         },
         PriorityList = function PriorityList (objOrArray, LIFO) {
             LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false;
-            var _sorted = false;
+            var _sorted = false,
+                _internalPriorities = 0,
+                classOfIterable = sjl.classOf(objOrArray);
             Object.defineProperties(this, {
                 originallyPassedInIterableType: {
-                    value: sjl.classOf(objOrArray)
+                    value: classOfIterable
+                },
+                _internalPriorities: {
+                    get: function () {
+                        return _internalPriorities;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, '_internalPriorities', value, Number);
+                        _internalPriorities = value;
+                    }
                 },
                 itemsMap: {
-                    value: new SjlMap(objOrArray)
+                    value: new SjlMap()
                 },
                 LIFO: {
                     value: LIFO ? 1 : -1
@@ -63,6 +74,12 @@
                     }
                 }
             });
+            if (classOfIterable === 'Object') {
+                this.addFromObject(objOrArray);
+            }
+            else if (classOfIterable === 'Array') {
+                this.addFromArray(objOrArray);
+            }
         };
 
     PriorityListItem = Extendable.extend(PriorityListItem);
@@ -78,17 +95,29 @@
                 return retVal;
             }
             sortedValues = [].concat(this.itemsMap._values).sort(function (a, b) {
-                return ((a.priority === b.priority ? -1 : 1) * retVal.LIFO > 0)
-                    ? (a.serial > b.serial ? -1 : 1)
+                return (a.priority === b.priority) ? (a.serial > b.serial ? -1 : 1) * retVal.LIFO
                     : (a.priority > a.priority ? -1 : 1);
             }, this);
             sortedKeys = sortedValues.map(function (item) {
                 return item.key;
             });
             this.itemsMap._keys = sortedKeys;
-            this.itemsMap._values = sortedValues;
+            this.itemsMap._values = sortedValues.map(function (item) {
+                return item.value;
+            });
             this.sorted = true;
-            return this;
+            return this.pointer(0);
+        },
+
+        normalizePriority: function (priority) {
+            var retVal;
+            if (sjl.classOfIs(priority, Number)) {
+                retVal = priority;
+            } else {
+                this._internalPriorities += 1;
+                retVal = +this._internalPriorities;
+            };
+            return retVal;
         },
 
         isLIFO: function () {
@@ -164,11 +193,10 @@
             return this;
         },
         entries: function () {
-            var out = [];
-            this.sort().itemsMap.forEach(function (key, value) {
-                out.push([key, value.value]);
-            });
-            return sjl.iterable(out)
+            this.sort();
+            var keys = this.itemsMap._keys.concat([]),
+                values = this.itemsMap._values.concat([]);
+            return new sjl.ns.stdlib.ObjectIterator(keys, values);
         },
         forEach: function (callback, context) {
             return this.sort().itemsMap.forEach(callback, context);
@@ -177,21 +205,22 @@
             return this.itemsMap.has(key);
         },
         keys: function () {
-            return sjl.iterable(this.sort().itemsMap.keys().map(function (value) {
-                return value.value.value;
-            }));
+            return this.sort().itemsMap.keys();
         },
         values: function () {
-            return sjl.iterable(this.sort().itemsMap.values().map(function (value) {
-                return value.value.value;
-            }));
+            var out = [];
+            this.sort().itemsMap.forEach(function (key, value) {
+                out.push(value);
+            });
+            return new sjl.ns.stdlib.Iterator(out);
         },
         get: function (key) {
-            return this.itemsMap.get(key).value;
+            var item = this.itemsMap.get(key);
+            return sjl.classOfIs(item, PriorityListItem) ? item.value : item;
         },
         set: function (key, value, priority) {
             this.sorted = false;
-            this.itemsMap.set(key, new PriorityListItem(key, value, priority));
+            this.itemsMap.set(key, new PriorityListItem(key, value, this.normalizePriority(priority)));
             return this;
         },
         delete: function (key) {
@@ -201,6 +230,57 @@
 
         // Non api specific functions
         // -------------------------------------------
+
+        /**
+         * Adds key-value array pairs in an array to this instance.
+         * @method sjl.ns.stdlib.SjlMap#addFromArray
+         * @param array {Array<Array<*, *>>} - Array of key-value array entries to parse.
+         * @returns {SjlMap}
+         */
+        addFromArray: function (array) {
+            // Iterate through the passed in iterable and add all values to `_values`
+            var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
+                entry;
+
+            // Loop through values and add them
+            while (iterator.valid()) {
+                entry = iterator.next();
+                this.set(entry.value[0], entry.value[1]);
+            }
+            iterator = null;
+            entry = null;
+            return this;
+        },
+
+        /**
+         * Add all the `object`'s instance's own property key-value pairs to this instance.
+         * @method sjl.ns.stdlib.SjlMap#addFromObject
+         * @param object {Object} - Object to operate on.
+         * @returns {SjlMap}
+         */
+        addFromObject: function (object) {
+            sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
+                'Only `Object` types allowed.');
+            var self = this,
+                entry,
+                objectIt = new ObjectIterator(object);
+            while (objectIt.valid()) {
+                entry = objectIt.next();
+                self.set(entry.value[0], entry.value[1]);
+            }
+            return self;
+        },
+
+        /**
+         * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
+         *  (same as `SjlMap#entries`).
+         * @method sjl.ns.stdlib.SjlMap#iterator
+         * @returns {sjl.ns.stdlib.ObjectIterator}
+         */
+        iterator: function () {
+            return this.entries();
+        },
+
         toJSON: function () {}
     });
 
