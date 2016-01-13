@@ -220,4 +220,49 @@ describe('PriorityList', function () {
         });
     });
 
+    describe('#`PriorityList#addFromArray`', function () {
+        it ('should import unique values from an array.', function () {
+            var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+                    ['v4', 4], ['v5', 5], ['v6', 6],
+                    ['v7', 5], ['v8', 4]],
+                otherEntries = [['v10', 7], ['v11', 8], ['v12', 9]],
+                expectedEntries = entries.concat(otherEntries).sort(function (a, b) {
+                    a = parseInt(a[0].split('v')[1], 10);
+                    b = parseInt(b[0].split('v')[1], 10);
+                    return a > b ? -1 : ((a === b) ? 0 : 1);
+                }),
+                priorityList = new PriorityList(entries, true),
+                value,
+                index = 0,
+                iterator;
+            priorityList.addFromArray(otherEntries);
+            iterator = priorityList.entries();
+            expect(priorityList.size).to.equal(expectedEntries.length);
+            while (iterator.valid()) {
+                value = iterator.next();
+                expect(value.value[0]).to.equal(expectedEntries[index][0]);
+                expect(value.value[1]).to.equal(expectedEntries[index][1]);
+                index += 1;
+            }
+        });
+    });
+
+    describe('#`PriorityList#addFromObject`', function () {
+        it ('Should be able to populate itself from a value of type `Object`.', function () {
+            var object = {
+                    all: {your: {base: {are: {belong: {to: {us: true}}}}}},
+                    someBooleanValue: false,
+                    someNumberValue: 100,
+                    objectValue: {someKey: 'some value'},
+                    functionValue: function HelloWorld() {},
+                    someStringValue: 'string value here',
+                    someNullValue: null
+                },
+                priorityList = new PriorityList(object);
+            Object.keys(object).forEach(function (key) {
+                expect(object[key]).to.equal(priorityList.get(key));
+            });
+        });
+
+    });
 });

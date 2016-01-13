@@ -1,7 +1,7 @@
 /**! sjljs 0.5.24
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: e00cde43eb407a2db90fd4e031a53ad4
- * | Built-on: Tue Jan 12 2016 19:02:54 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: 7409e32f932798d95e3400ba2627afae
+ * | Built-on: Tue Jan 12 2016 21:19:05 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -1699,6 +1699,7 @@
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Extendable = sjl.ns.stdlib.Extendable,
+        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
         SjlMap = sjl.ns.stdlib.SjlMap,
         priorityItemSerial = 0,
         PriorityListItem = function PriorityListItem (key, value, priority) {
@@ -1785,8 +1786,9 @@
                 return retVal;
             }
             sortedValues = [].concat(this.itemsMap._values).sort(function (a, b) {
-                return (a.priority === b.priority) ? (a.serial > b.serial ? -1 : 1) * retVal.LIFO
-                    : (a.priority > a.priority ? -1 : 1);
+                return a.priority === b.priority
+                    ? (a.serial > b.serial ? -1 : 1) * 1
+                    : (a.priority > b.priority ? -1 : 1);
             }, this);
             sortedKeys = sortedValues.map(function (item) {
                 return item.key;
@@ -1939,7 +1941,7 @@
             }
             iterator = null;
             entry = null;
-            return this;
+            return this; //.sort();
         },
 
         /**
@@ -1958,7 +1960,7 @@
                 entry = objectIt.next();
                 self.set(entry.value[0], entry.value[1]);
             }
-            return self;
+            return self; //.sort();
         },
 
         /**

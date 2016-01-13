@@ -9,6 +9,7 @@
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Extendable = sjl.ns.stdlib.Extendable,
+        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
         SjlMap = sjl.ns.stdlib.SjlMap,
         priorityItemSerial = 0,
         PriorityListItem = function PriorityListItem (key, value, priority) {
@@ -36,9 +37,10 @@
             this.priority = priority;
         },
         PriorityList = function PriorityList (objOrArray, LIFO) {
-            LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false;
             var _sorted = false,
                 _internalPriorities = 0,
+                _LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false,
+                _LIFO_modifier = _LIFO ? 1 : -1,
                 classOfIterable = sjl.classOf(objOrArray);
             Object.defineProperties(this, {
                 originallyPassedInIterableType: {
@@ -57,7 +59,24 @@
                     value: new SjlMap()
                 },
                 LIFO: {
-                    value: LIFO ? 1 : -1
+                    get: function () {
+                        return _LIFO
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO', value, Boolean);
+                        _LIFO = value;
+                        this.sorted = false;
+                    }
+                },
+                LIFO_modifier: {
+                    get: function () {
+                        this.LIFO ? 1 : -1;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO_modifier', value, Number);
+                        _LIFO_modifier = value;
+                        this.sorted = false;
+                    }
                 },
                 sorted: {
                     get: function () {
@@ -89,14 +108,16 @@
         // -------------------------------------------
         sort: function () {
             var retVal = this,
+                LIFO_modifier = this.LIFO_modifier,
                 sortedValues,
                 sortedKeys;
             if (this.sorted) {
                 return retVal;
             }
             sortedValues = [].concat(this.itemsMap._values).sort(function (a, b) {
-                return (a.priority === b.priority) ? (a.serial > b.serial ? -1 : 1) * retVal.LIFO
-                    : (a.priority > a.priority ? -1 : 1);
+                return a.priority === b.priority
+                    ? (a.serial > b.serial ? -1 : 1) * LIFO_modifer
+                    : (a.priority > b.priority ? -1 : 1);
             }, this);
             sortedKeys = sortedValues.map(function (item) {
                 return item.key;
@@ -120,15 +141,11 @@
             return retVal;
         },
 
-        isLIFO: function () {
-            return this.LIFO === 1;
-        },
-
         // Iterator functions
         // -------------------------------------------
         /**
          * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.ns.stdlib.SjlMap#current
+         * @method sjl.ns.stdlib.PriorityList#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         current: function () {
@@ -139,7 +156,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.ns.stdlib.SjlMap#next
+         * @method sjl.ns.stdlib.PriorityList#next
          * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         next: function () {
@@ -157,8 +174,8 @@
 
         /**
          * Rewinds the iterator.
-         * @method sjl.ns.stdlib.SjlMap#rewind
-         * @returns {sjl.ns.stdlib.SjlMap}
+         * @method sjl.ns.stdlib.PriorityList#rewind
+         * @returns {sjl.ns.stdlib.PriorityList}
          */
         rewind: function () {
             this.itemsMap.rewind();
@@ -233,9 +250,9 @@
 
         /**
          * Adds key-value array pairs in an array to this instance.
-         * @method sjl.ns.stdlib.SjlMap#addFromArray
+         * @method sjl.ns.stdlib.PriorityList#addFromArray
          * @param array {Array<Array<*, *>>} - Array of key-value array entries to parse.
-         * @returns {SjlMap}
+         * @returns {PriorityList}
          */
         addFromArray: function (array) {
             // Iterate through the passed in iterable and add all values to `_values`
@@ -249,17 +266,17 @@
             }
             iterator = null;
             entry = null;
-            return this;
+            return this; //.sort();
         },
 
         /**
          * Add all the `object`'s instance's own property key-value pairs to this instance.
-         * @method sjl.ns.stdlib.SjlMap#addFromObject
+         * @method sjl.ns.stdlib.PriorityList#addFromObject
          * @param object {Object} - Object to operate on.
-         * @returns {SjlMap}
+         * @returns {PriorityList}
          */
         addFromObject: function (object) {
-            sjl.throwTypeErrorIfNotOfType(SjlMap.name, 'object', object, 'Object',
+            sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'object', object, 'Object',
                 'Only `Object` types allowed.');
             var self = this,
                 entry,
@@ -268,13 +285,13 @@
                 entry = objectIt.next();
                 self.set(entry.value[0], entry.value[1]);
             }
-            return self;
+            return self; //.sort();
         },
 
         /**
          * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
-         *  (same as `SjlMap#entries`).
-         * @method sjl.ns.stdlib.SjlMap#iterator
+         *  (same as `PriorityList#entries`).
+         * @method sjl.ns.stdlib.PriorityList#iterator
          * @returns {sjl.ns.stdlib.ObjectIterator}
          */
         iterator: function () {
