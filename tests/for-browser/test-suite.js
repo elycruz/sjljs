@@ -1081,9 +1081,7 @@ describe('Sjl Optionable', function () {
 
 /**
  * Created by elyde on 1/12/2016.
- */
-/**
- * Created by Ely on 8/6/2015.
+ * @todo add tests for `addFromArray` and `addFromObject`.
  */
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
