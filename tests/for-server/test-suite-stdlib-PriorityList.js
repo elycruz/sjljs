@@ -1,6 +1,6 @@
 /**
  * Created by elyde on 1/12/2016.
- * @todo add tests for `addFromArray` and `addFromObject`.
+ * @todo add tests iterator methods
  */
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
@@ -114,7 +114,7 @@ describe('PriorityList', function () {
 
         it ('should work as expected when no context is passed in.', function () {
             // Validate `forEach` method works as expected
-            priorityList.forEach(function (key, value) {
+            priorityList.forEach(function (value, key) {
                 expect(reversedEntries[indexCount][0]).to.equal(key);
                 expect(reversedEntries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(undefined);
@@ -127,7 +127,7 @@ describe('PriorityList', function () {
             indexCount = 0;
 
             // Validate `forEach` method works as expected
-            priorityList.forEach(function (key, value) {
+            priorityList.forEach(function (value, key) {
                 expect(reversedEntries[indexCount][0]).to.equal(key);
                 expect(reversedEntries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(exampleContext);

@@ -1081,7 +1081,7 @@ describe('Sjl Optionable', function () {
 
 /**
  * Created by elyde on 1/12/2016.
- * @todo add tests for `addFromArray` and `addFromObject`.
+ * @todo add tests iterator methods
  */
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
@@ -1098,8 +1098,7 @@ describe('PriorityList', function () {
 
     "use strict";
 
-    var PriorityList = sjl.ns.stdlib.PriorityList,
-        ObjectIterator;
+    var PriorityList = sjl.ns.stdlib.PriorityList;
 
     describe('#`PriorityList Methods Existence`', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
@@ -1196,7 +1195,7 @@ describe('PriorityList', function () {
 
         it ('should work as expected when no context is passed in.', function () {
             // Validate `forEach` method works as expected
-            priorityList.forEach(function (key, value) {
+            priorityList.forEach(function (value, key) {
                 expect(reversedEntries[indexCount][0]).to.equal(key);
                 expect(reversedEntries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(undefined);
@@ -1209,7 +1208,7 @@ describe('PriorityList', function () {
             indexCount = 0;
 
             // Validate `forEach` method works as expected
-            priorityList.forEach(function (key, value) {
+            priorityList.forEach(function (value, key) {
                 expect(reversedEntries[indexCount][0]).to.equal(key);
                 expect(reversedEntries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(exampleContext);
@@ -1319,7 +1318,6 @@ describe('PriorityList', function () {
                 iterator;
             priorityList.addFromArray(otherEntries);
             iterator = priorityList.entries();
-            console.log(expectedEntries, iterator._values);
             expect(priorityList.size).to.equal(expectedEntries.length);
             while (iterator.valid()) {
                 value = iterator.next();
@@ -1454,7 +1452,7 @@ describe('SjlMap', function () {
 
         it ('should work as expected when no context is passed in.', function () {
             // Validate `forEach` method works as expected
-            sjlMap.forEach(function (key, value) {
+            sjlMap.forEach(function (value, key) {
                 expect(entries[indexCount][0]).to.equal(key);
                 expect(entries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(undefined);
@@ -1467,7 +1465,7 @@ describe('SjlMap', function () {
             indexCount = 0;
 
             // Validate `forEach` method works as expected
-            sjlMap.forEach(function (key, value) {
+            sjlMap.forEach(function (value, key) {
                 expect(entries[indexCount][0]).to.equal(key);
                 expect(entries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(exampleContext);

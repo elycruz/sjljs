@@ -137,7 +137,7 @@
         forEach: function (callback, context) {
             var self = this;
             self._keys.forEach(function (key, index) {
-                callback.call(context, key, self._values[index]);
+                callback.call(context, self._values[index], key);
             });
             return self;
         },

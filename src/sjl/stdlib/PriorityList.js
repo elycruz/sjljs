@@ -7,7 +7,7 @@
 
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
-        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
         Extendable = sjl.ns.stdlib.Extendable,
         ObjectIterator = sjl.ns.stdlib.ObjectIterator,
         SjlMap = sjl.ns.stdlib.SjlMap,
@@ -150,7 +150,8 @@
          */
         current: function () {
             var current = this.itemsMap.current();
-            return !current.done ? current.value.value : current;
+            current.value = current.value.value;
+            return !current.done ? current.value : current;
         },
 
         /**
@@ -161,7 +162,8 @@
          */
         next: function () {
             var next = this.itemsMap.next();
-            return !next.done ? next.value.value : next;
+            next.value = next.value.value;
+            return !next.done ? next.value : next;
         },
 
         /**
@@ -226,7 +228,7 @@
         },
         values: function () {
             var out = [];
-            this.sort().itemsMap.forEach(function (key, value) {
+            this.sort().itemsMap.forEach(function (value, key) {
                 out.push(value);
             });
             return new sjl.ns.stdlib.Iterator(out);

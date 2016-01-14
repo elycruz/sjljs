@@ -102,7 +102,7 @@ describe('SjlMap', function () {
 
         it ('should work as expected when no context is passed in.', function () {
             // Validate `forEach` method works as expected
-            sjlMap.forEach(function (key, value) {
+            sjlMap.forEach(function (value, key) {
                 expect(entries[indexCount][0]).to.equal(key);
                 expect(entries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(undefined);
@@ -115,7 +115,7 @@ describe('SjlMap', function () {
             indexCount = 0;
 
             // Validate `forEach` method works as expected
-            sjlMap.forEach(function (key, value) {
+            sjlMap.forEach(function (value, key) {
                 expect(entries[indexCount][0]).to.equal(key);
                 expect(entries[indexCount][1]).to.equal(value);
                 expect(this).to.equal(exampleContext);

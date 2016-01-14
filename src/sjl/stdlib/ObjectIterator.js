@@ -141,7 +141,7 @@
                 values = self._values;
             context = context || self;
             self._keys.forEach(function (key, index, keys) {
-                callback.call(context, key, values[index], self);
+                callback.call(context, values[index], key, self);
             });
             return this;
         }
