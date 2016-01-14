@@ -41,28 +41,28 @@ See release notes for release 0.5.0.
 
 ### Classes/Constructors
 
-##### sjl~~.ns.stdlib~~.Attributable(attributes {Object|undefined}) :sjl.ns.stdlib.Attributable
+##### sjl.Attributable(attributes {Object|undefined}) :sjl.ns.stdlib.Attributable
 A base attributable constructor which has two methods `attr` and `attrs`
 (for setting and getting multiple attributes jquery style).
 Class also available at **`sjl.ns.stdlib.Attributable`**.
 
-##### sjl~~.ns.stdlib~~.Iterator(values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.Iterator
+##### sjl.Iterator(values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.Iterator
 A simple iterator constructor which implements the es6 iterator and
 the php `Iterator` classes.
 Class also available at **`sjl.ns.stdlib.Iterator`**.
 
-##### sjl~~.ns.stdlib~~.ObjectIterator(object {Object}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
+##### sjl.ObjectIterator(object {Object}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
 One of two constructors calls available for `ObjectIterator`.
 See next section for description object and alternate constructor call.
 Class also available at **`sjl.ns.stdlib.ObjectIterator`**.
 
-##### sjl~~.ns.stdlib~~.ObjectIterator(keys{Array<*>, values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
+##### sjl.ObjectIterator(keys{Array<*>, values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
 An object iterator;  Iterates similarly to Iterator but takes a set of
 keys and values on construction. Implements the es6 iterator and the php
 `Iterator` classes.
 Class also available at **`sjl.ns.stdlib.ObjectIterator`**.
 
-##### sjl~~.ns.stdlib~~.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable
+##### sjl.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable
 A base extendable constructor with a static `extend` method that allows
  you to easily extend constructors/classes; E.g.,
 
@@ -102,21 +102,21 @@ module.exports = SomeOtherConstructor.extend(SomeOtherSubClass, {
 
 Class also available at **`sjl.ns.stdlib.Extendable`**.
 
-##### sjl~~.ns.stdlib~~.SjlSet(Array<*>) :sjl.ns.stdlib.SjlSet
+##### sjl.SjlSet(Array<*>) :sjl.ns.stdlib.SjlSet
 A set object that acts just like the es6 `Set` object with two additional convenience methods.
 - `addFromArray(Array<*>) :sjl.ns.stdlib.SjlSet`
 - `iterator() :iterable`
 
 Class also available at **`sjl.ns.stdlib.SjlSet`**.
 
-##### sjl~~.ns.stdlib~~.SjlMap(Array<Array>) :sjl.ns.stdlib.SjlMap
+##### sjl.SjlMap(Array<Array>) :sjl.ns.stdlib.SjlMap
 A map that acts just like the es6 `Map` object with two additional convenience methods:
 - `addFromArray(Array<*>) :sjl.ns.stdlib.SjlMap`
 - `iterator() :iterable`
 
 Class also available at **`sjl.ns.stdlib.SjlMap`**.
 
-##### sjl~~.ns.stdlib~~.Optionable(...obj {Object|undefined}) :sjl.Optionable
+##### sjl.Optionable(...obj {Object|undefined}) :sjl.Optionable
 A simple Optionable class with `set`, `get`, `merge`, and `has` methods meant to be similiar to Backbone's Model constructor
 but with some enhanced methods on it and without the ajax stuff (barebones object).
 Class also available at **`sjl.ns.stdlib.Optionable`**.
@@ -243,16 +243,6 @@ sjl.issetAndOfType(someNumberValue, 'Number'])
 // true.  Matches type 'Number'.
 ```
 
-##### ~~sjl.issetObjKey (obj {*}, key {String}) :Boolean~~
-This method was removed in sjljs-0.5.7.  For the same functionality use
- `sjl.isset(obj[key])` or `sjl.issetAndOfType(obj.key, 'SomeTypeName')` where key
- is the property key you want to check.
-
-##### ~~issetObjKeyAndOfType (obj {*}, key {String}, type {String}) :Boolean~~
-This method was removed in version 0.5.7.  For the same functionality use
- `sjl.issetAndOfType(obj[key], 'SomeTypeNameHere')` or `sjl.issetAndOfType(obj.key, 'SomeTypeNameHere')` where key
- is the property key want to check.
- 
 ##### sjl.unset (key {String}, value {*}): Boolean
 Sets and object's `key` to `null` then removes references to it if possible (calls `delete` on property).
 ```
@@ -493,9 +483,6 @@ like property on instantiation (if you use the `extend` method to merge passed i
 
 ### OOP Util functions:
 
-##### ~~sjl.copyOfProto(prototype {Prototype|Object}) :Object|Prototype~~
-Removed in sjljs version 0.5.10.  Use `Object.create` instead for the same functionality.
-
 ##### sjl.defineSubClass(superclass {Function}, methodsAndConstructor {Object}, statics {Object}) :Function
 Alternate signature for `defineSubClass` though the second parameter here requires a `constructor` property with a 
 named function set to it (a named function should be used for best effect though an anonymous function also works).
@@ -503,9 +490,6 @@ named function set to it (a named function should be used for best effect though
 ##### sjl.defineSubClass(superclass {Function}, constructor {Function}, methods {Object}, statics {Object}) :Function
 Creates a sub class of a constructor and makes it extendable via the static method `extend`;  E.g., pretty much 
 creates `sjl.Extendable`.
-
-##### ~~sjl.throwNotOfTypeError(value {*}, paramName {String}, funcName {String}, expectedType {String}) :Void~~
-This method is has been removed officially since version 0.5.0 (was removed before that but wasn't documented as such).
 
 #### Composition helpers:
 
