@@ -62,7 +62,15 @@
                         sjl.throwTypeErrorIfNotOfType(contextName, 'valueObscured', value, Boolean);
                         _valueObscured = value;
                     }
-                }
+                },
+                _value: {
+                    get: () => {
+                        return _value;
+                    },
+                    set: (value) => {
+                        _value = value;
+                    }
+                },
             });
 
             // Merge options in
