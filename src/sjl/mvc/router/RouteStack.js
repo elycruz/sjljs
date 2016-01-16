@@ -59,7 +59,6 @@
             return retVal;
         },
         assemble: function (params, options) {
-
         }
     }, {
         factory: function () {}

@@ -132,8 +132,8 @@
         },
 
         mergeRouteMatch: function (routeMatch) {
-            return this.params(routeMatch.params, true)
-                .length(this.length() + routeMatch.length)
+            return this.params(routeMatch.params(), true)
+                .length(this.length() + routeMatch.length())
                 .matchedRouteName(routeMatch.getMatchedRouteName());
         }
     });

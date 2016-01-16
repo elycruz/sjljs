@@ -1,9 +1,6 @@
 /**
  * Created by elyde on 1/12/2016.
  */
-/**
- * Created by elyde on 1/10/2016.
- */
 (function () {
 
     'use strict';
@@ -14,9 +11,27 @@
         contextName = 'sjl.mvc.router.TreeRouteStack',
         PriorityList = sjl.stdlib.PriorityList,
         TreeRouteStack = function TreeRouteStack (iterable, LIFO) {
+            var _baseUrl = '',
+                _requestUri = '';
             Object.defineProperties(this, {
-                baseUrl: {},
-                requestUri: {},
+                baseUrl: {
+                    get: function () {
+                        return _baseUrl;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(TreeRouteStack.name, 'baseUrl', value, String);
+                        _baseUrl = value;
+                    }
+                },
+                requestUri: {
+                    get: function () {
+                        return _requestUri;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(TreeRouteStack.name, 'requestUri', value, String);
+                        _requestUri = value;
+                    }
+                },
                 defaultParams: {
                     value: {}
                 }
@@ -75,6 +90,7 @@
         assemble: function (params, options) {
             var names = options.names.split('/'),
                 route = this.routes.get(names[0]);
+
         }
     }, {
         factory: function () {}
