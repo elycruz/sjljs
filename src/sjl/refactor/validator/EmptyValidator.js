@@ -29,7 +29,7 @@
             self.clearMessages();
 
             // Set and get or get value (gets the set value if value is undefined
-            value = typeof value === 'undefined' ? this.value() : value;
+            value = typeof value === 'undefined' ? this.value : value;
 
             // Run the test
             retVal = !sjl.empty(value);

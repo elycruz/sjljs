@@ -10,127 +10,71 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
         contextName = 'sjl.ns.validator.Validator',
-        Validator = function Validator() {
+        Validator = function Validator(/** ...options {Object} **/) {
             var _messages = {},
                 _messagesMaxLength = 100,
                 _messageTemplates = {},
-                _valueObscured = false;
+                _valueObscured = false,
+                _value = null;
 
-            this._value = null;
-
+            // Define public accessible properties
             Object.defineProperties(this, {
-                _messages: {
+                messages: {
                     get: function () {
                         return _messages;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, '_messages', value, Array);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'messages', value, Array);
                         _messages = value;
                     }
                 },
-                _messagesMaxLength: {
+                messagesMaxLength: {
                     get: function () {
                         return _messagesMaxLength;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, '_messagesMaxLength', value, Number);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'messagesMaxLength', value, Number);
                         _messagesMaxLength = value;
                     }
                 },
-                _messageTemplates: {
+                messageTemplates: {
                     get: function () {
                         return _messageTemplates;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, '_messageTemplates', value, Object);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'messageTemplates', value, Object);
                         _messageTemplates = value;
                     }
                 },
-                _valueObscured: {
+                value: {
+                    get: function () {
+                        return _value;
+                    },
+                    set: function (value) {
+                        _value = value;
+                    }
+                },
+                valueObscured: {
                     get: function () {
                         return _valueObscured;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, '_valueObscured', value, Boolean);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'valueObscured', value, Boolean);
                         _valueObscured = value;
                     }
                 }
             });
+
+            // Merge options in
             sjl.extend.apply(sjl, [true, this].concat(sjl.argsToArray(arguments), [true]));
         };
 
     Validator = sjl.ns.stdlib.Extendable.extend(Validator, {
 
-        messages: function (messages) {
-            var isGetterCall = typeof messages === 'undefined',
-                retVal;
-            if (isGetterCall) {
-                retVal = this._messages;
-            }
-            else {
-                this._messages = messages;
-                retVal = this;
-            }
-            return retVal;
-        },
-
-        messagesMaxLength: function (messagesMaxLength) {
-            var isGetterCall = typeof messagesMaxLength === 'undefined',
-                retVal;
-            if (isGetterCall) {
-                retVal = this._messagesMaxLength;
-            }
-            else {
-                this._messagesMaxLength = messagesMaxLength;
-                retVal = this;
-            }
-            return retVal;
-        },
-
-        messageTemplates: function (messageTemplates, merge) {
-            var isGetterCall = typeof messageTemplates === 'undefined',
-                retVal;
-            if (isGetterCall) {
-                retVal = this._messageTemplates;
-            }
-            else {
-                this._messageTemplates = messageTemplates;
-                retVal = this;
-            }
-            return retVal;
-        },
-
-        value: function (value) {
-            var isGetterCall = typeof value === 'undefined',
-                retVal = this;
-            if (isGetterCall) {
-                retVal = retVal._value;
-            }
-            else {
-                retVal._value = value;
-                retVal._value = value;
-                retVal._messages = [];
-            }
-            return retVal;
-        },
-
-        valueObscured: function (valueObscured) {
-            var isGetterCall = typeof valueObscured === 'undefined',
-                retVal;
-            if (isGetterCall) {
-                retVal = this._valueObscured;
-            }
-            else {
-                this._valueObscured = valueObscured;
-                retVal = this;
-            }
-            return retVal;
-        },
-
         addErrorByKey: function (key) {
             var self = this,
-                messageTemplate = self._messageTemplates,
-                messages = self._messages;
+                messageTemplate = self.messageTemplates,
+                messages = self.messages;
 
             // If key is string
             if (sjl.classOfIs(key, 'String') &&
@@ -152,7 +96,7 @@
         },
 
         clearMessages: function () {
-            this._messages = [];
+            this.messages = [];
             return this;
         },
 
@@ -163,7 +107,7 @@
         isValid: function (value) {
             throw Error('Can not instantiate `Validator` directly, all class named with ' +
                 'a prefixed "Base" should not be instantiated.');
-        },
+        }
 
     });
 
