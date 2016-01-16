@@ -82,6 +82,15 @@
             return retVal;
         },
 
+
+        isValidator: function (validator) {
+            return validator instanceof Validator;
+        },
+
+        isValidatorChain: function (validatorChain) {
+            return validatorChain instanceof ValidatorChain;
+        },
+
         addValidator: function (validator) {
             var self = this;
             if (this.isValidator(validator)) {
@@ -117,14 +126,6 @@
                 this._throwTypeError('prependValidator', Validator, validator);
             }
             return this.validators = [validator].concat(this.validators);
-        },
-
-        isValidator: function (validator) {
-            return validator instanceof Validator;
-        },
-
-        isValidatorChain: function (validatorChain) {
-            return validatorChain instanceof ValidatorChain;
         },
 
         mergeValidatorChain: function (validatorChain) {

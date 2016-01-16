@@ -74,7 +74,7 @@
             });
 
             // Merge options in
-            sjl.extend.apply(sjl, [true, this].concat(sjl.argsToArray(arguments), [true]));
+            sjl.extend.apply(sjl, [true, this].concat(sjl.argsToArray(arguments)));
         };
 
     Validator = sjl.ns.stdlib.Extendable.extend(Validator, {
