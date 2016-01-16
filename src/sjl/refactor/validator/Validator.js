@@ -14,9 +14,8 @@
             var _messages = {},
                 _messagesMaxLength = 100,
                 _messageTemplates = {},
-                _valueObscured = false;
-
-            this._value = null;
+                _valueObscured = false,
+                _value = null;
 
             Object.defineProperties(this, {
                 _messages: {
@@ -54,7 +53,15 @@
                         sjl.throwTypeErrorIfNotOfType(contextName, '_valueObscured', value, Boolean);
                         _valueObscured = value;
                     }
-                }
+                },
+                _value: {
+                    get: () => {
+                        return _value;
+                    },
+                    set: (value) => {
+                        _value = value;
+                    }
+                },
             });
             sjl.extend.apply(sjl, [true, this].concat(sjl.argsToArray(arguments), [true]));
         };

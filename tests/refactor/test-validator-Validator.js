@@ -16,15 +16,42 @@ var Validator = sjl.ns.refactor.validator.Validator;
 
 describe('sjl.ns.validator.Validator', function () {
 
-    var expectedProperties = [
-        '_messages'
-        // ... @todo add rest of properties and their types here
-    ];
+    var expectedPropertyAndTypes = {
+        _messages: 'Object',
+        _messagesMaxLength: 'Number',
+        _messageTemplates: 'Object',
+        _valueObscured: 'Boolean',
+        _value: 'Null'
+    },
+        expectedMethodNames = [
 
-    it ('should have the expected properties as their expected types.', function () {
+            // Value getter and setters
+            'messages',
+            'messagesMaxLength',
+            'messageTemplates',
+            'valueObscured',
+            'value',
+
+            // Application methods
+            'addErrorByKey',
+            'clearMessages',
+            'validate',
+            'isValid'
+        ];
+
+    it ('should have the expected properties as expected types.', function () {
         var validator = new Validator();
-        expectedProperties.forEach(function (value) {
-            expect(validator.hasOwnProperty(value)).to.equal(true);
+        Object.keys(expectedPropertyAndTypes).forEach(function (key) {
+            expect(validator.hasOwnProperty(key)).to.equal(true);
+            expect(sjl.classOf(validator[key])).to.equal(expectedPropertyAndTypes[key]);
+        });
+    });
+
+    it ('should have the expected methods.', function () {
+        var validator = new Validator();
+        expectedMethodNames.forEach(function (methodName) {
+            expect(typeof validator[methodName]).to.equal('function');
+            expect(typeof Validator.prototype[methodName]).to.equal('function');
         });
     });
 
