@@ -17,20 +17,20 @@ var Validator = sjl.ns.refactor.validator.Validator;
 describe('sjl.ns.validator.Validator', function () {
 
     var expectedPropertyAndTypes = {
-        _messages: 'Object',
-        _messagesMaxLength: 'Number',
-        _messageTemplates: 'Object',
-        _valueObscured: 'Boolean',
-        _value: 'Null'
+        messages: 'Object',
+        messagesMaxLength: 'Number',
+        messageTemplates: 'Object',
+        valueObscured: 'Boolean',
+        value: 'Null'
     },
         expectedMethodNames = [
 
             // Value getter and setters
-            'messages',
-            'messagesMaxLength',
-            'messageTemplates',
-            'valueObscured',
-            'value',
+            //'messages',
+            //'messagesMaxLength',
+            //'messageTemplates',
+            //'valueObscured',
+            //'value',
 
             // Application methods
             'addErrorByKey',
