@@ -131,7 +131,6 @@
             return retVal;
         },
 
-
         mergeRouteMatch: function (routeMatch) {
             return this.params(routeMatch.params, true)
                 .length(this.length() + routeMatch.length)
