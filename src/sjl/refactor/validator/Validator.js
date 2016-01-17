@@ -43,7 +43,7 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'messageTemplates', value, Object);
-                        _messageTemplates = value;
+                        sjl.extend(true, _messageTemplates, value);
                     }
                 },
                 value: {

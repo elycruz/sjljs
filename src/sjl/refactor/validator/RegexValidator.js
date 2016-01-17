@@ -7,7 +7,7 @@
 (function () {
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
         contextName = 'sjl.ns.refactor.validator.RegexValidator',
         Validator = sjl.ns.refactor.validator.Validator,
         RegexValidator = function RegexValidator(/** ...options {Object} **/) {
