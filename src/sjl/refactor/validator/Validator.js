@@ -11,7 +11,7 @@
         sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
         contextName = 'sjl.ns.validator.Validator',
         Validator = function Validator(/** ...options {Object} **/) {
-            var _messages = {},
+            var _messages = [],
                 _messagesMaxLength = 100,
                 _messageTemplates = {},
                 _valueObscured = false,

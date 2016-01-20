@@ -10,6 +10,7 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
         Validator = sjl.ns.refactor.validator.Validator,
+        contextName = 'sjl.ns.refactor.validator.NumberValidator',
         //InRangeValidator = sjl.ns.refactor.validator.InRangeValidator,
         NumberValidator = function NumberValidator(options) {
             var _messageTemplates = {

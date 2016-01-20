@@ -26,7 +26,7 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         [12, 'C'], [13, 'D'], [14, 'E'], [15, 'F']
     ];
 
-    function numToHex (d) {
+    function numToHex(d) {
         var q,
             r,
             a = [],
@@ -37,14 +37,14 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
             a.push(hexMap[r][1]);
             d = q;
         }
-        while  (q > 0);
+        while (q > 0);
         for (var i = a.length - 1; i >= 0; i -= 1) {
             out += a[i];
         }
         return out;
     }
 
-    function fib (limit) {
+    function fib(limit) {
         var out = [],
             a = 0,
             b = 1;
@@ -64,13 +64,20 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         expect((new NumberValidator()) instanceof NumberValidator).to.equal(true);
     });
 
-    describe ('#validateHex', function () {
-        it ('should return an array of [Boolean, Number] when hex value is a valid hex value.', function (){
-            var validHexValues = [0x000212, '0xff00ff', '0xfff', 0x000],
-                validator = new NumberValidator();
-            validHexValues.forEach(function (value) {
-                validator.validateHex(value);
+    describe('#validateHex', function () {
+        it('should return an array of [Boolean, Number] when hex value is a valid hex value.', function () {
+            var vals = fib(1000).map(function (value) {
+                    return [value, numToHex(value)];
+                }),
+                validator = new NumberValidator({allowHex: true});
+            vals.forEach(function (value, index) {
+                var blnValue = value[0],
+                    hexValue = value[1],
+                    checkedValuePair = validator.validateHex(value[1]);
+                expect(parseInt(checkedValuePair[1], 16)).to.equal(vals[index][0]);
+                expect(checkedValuePair[0]).to.equal(true);
             });
+            expect(validator.messages.length).to.equal(0);
         });
     });
 

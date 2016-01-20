@@ -17,7 +17,7 @@ var Validator = sjl.ns.refactor.validator.Validator;
 describe('sjl.ns.validator.Validator', function () {
 
     var expectedPropertyAndTypes = {
-        messages: 'Object',
+        messages: 'Array',
         messagesMaxLength: 'Number',
         messageTemplates: 'Object',
         valueObscured: 'Boolean',
