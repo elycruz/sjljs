@@ -7,6 +7,21 @@
 
     'use strict';
 
+    /**
+     * Container for defining/holding the result format of string validation operations within NumberValidator.
+     * @param flag {Array<Number, String|Value>} - [-1, 0, 1] (operation state `-1` falied, `0` untouched, `1` value transformed).
+     * @param value {String} - String value to be validated.
+     * @constructor
+     */
+    function StringValidationOpResult (flag, value) {
+        if (sjl.classOfIs(value, String)) {
+            throw new Error(StringValidationOpResult.name + ' expects param 2 to be of type' +
+                ' "String".  Type received: "' + sjl.classOf(value) + '".');
+        }
+        this[0] = flag;
+        this[1] = value;
+    }
+
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
         Validator = sjl.ns.refactor.validator.Validator,
@@ -259,7 +274,7 @@
             // If is string, ...
             else if (classOfValue === 'String') {
                 // Lower case any alpha characters to make the value easier to validate
-                value = this.validateStringValue(value.toLowerCase())[1];
+                value = this._validateStringValue(value.toLowerCase())[1];
             }
 
             // Else if 'Not a Number' add error message
@@ -277,37 +292,72 @@
 
         }, // End of `isValid` function
 
-        validateStringValue: function (value) {},
+        /**
+         * Returns the resulting of validating the passed in `value` via all it's internal string validation methods.
+         * Validates through the different type of possible string representations of numbers and returns an
+         * array [
+         *      performedOpFlag {Number}, // [-1, 0, 1] - `-1` when `value` was a candidate for validation and failed validation.
+         *      value {Number|String} // Untouched or transformed value that was passed (value gets transformed by some validation functions into an actual number who then pass the value along for validation outside of the string validation functions (as a number)).
+         * ]
+         * @param value {String}
+         * @returns {Array<Number,String|Number>} - Element `0` is `performedOpFlag` [-1, 0, 1] and element [1] is the passed in value (transformed or not - look at element 0 to know (1 means transformed)).
+         * @private
+         */
+        _validateStringValue: function (value) {
+            var validationFuncs = ['_validateHex', '_validateSigned'],
+                funcsLen = validationFuncs.length,
+                resultSet,
+                i;
+            for (i = 0; i < funcsLen; i += 1) {
+                resultSet = this[validationFuncs[i]](value);
+                // If `value`'s validation failed exit the loop
+                if (resultSet[0] === -1) {
+                    break;
+                }
+                // If value (set[1]) was transformed set it as value
+                if (resultSet[0] === 1) {
+                    value = resultSet[1];
+                }
+            }
+            return resultSet;
+        },
 
+        /**
+         * Validates a hex string.  Returns
+         * @param value {String}
+         * @returns {Array<Number, String|Number>}
+         * @private
+         */
         _validateHex: function (value) {
-            var retVal = [true, value],
+            var retVal = [0, value],
                 isHexString = value.length > 0 && value[1] === 'x',
                 isValidFormat;
             if (isHexString) {
                 if (this.allowHex) {
                     isValidFormat = this.regexForHex.test(value);
                     if (!isValidFormat) {
-                        retVal[0] = false;
+                        retVal[1] = -1;
                         this.addErrorByKey('NOT_ALLOWED_HEX');
                     }
                     else {
+                        retVal[0] = 1;
                         retVal[1] = parseInt(value, 16);
                     }
                 }
                 else {
-                    retVal[0] = false;
+                    retVal[1] = -1;
                     this.addErrorByKey('NOT_ALLOWED_HEX');
                 }
             }
             return retVal;
         },
 
-        validateSigned: function (value) {
-            var retVal = [true, value];
+        _validateSigned: function (value) {
+            var retVal = [0, value];
             // If no signed numbers allowed add error if number has sign
             if (!this.allowSigned && /^(:?\-|\+)/.test(value)) {
                 this.addErrorByKey('NO_SIGNED_ALLOWED');
-                retVal[0] = false;
+                retVal[0] = -1;
             }
             return retVal;
         },

@@ -65,9 +65,9 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
     });
 
     describe('#_validateHex', function () {
-        it('should return an array of [Boolean, Number] when hex value is a valid hex value.', function () {
+        it('should return an array of [1, Number] when hex value is a valid hex value.', function () {
             var vals = fib(1000).map(function (value) {
-                    return [value, numToHex(value), true];
+                    return [value, numToHex(value), 1];
                 }),
                 validator,
                 failingVals;
@@ -76,12 +76,17 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
             validator = new NumberValidator({allowHex: true});
 
             // Failing values
+            // Last index in inner arrays stand for untouched;  NumberValidator#_validate* functions return an array of
+            // [performedOpFlag{Number[-1,0,1]}, value{String|Number|*}]  `performedOpFlag` is:
+            // -- -1 was candidate for test but test failed
+            // -- 0 is not candidate so value wasn't touched
+            // -- 1 was candidate value and test passed and value was transformed
             failingVals = [
-                [Math.floor(Math.random() * 98), 'object', false],
-                [Math.floor(Math.random() * 97), 'somevalue', false],
-                [Math.floor(Math.random() * 96), 'someothervalue', false],
-                [Math.floor(Math.random() * 95), 'someothervalue', false],
-                [Math.floor(Math.random() * 94), 'someothervalue', false]
+                [Math.floor(Math.random() * 98), 'object', 0],
+                [Math.floor(Math.random() * 97), 'somevalue', 0],
+                [Math.floor(Math.random() * 96), 'someothervalue', 0],
+                [Math.floor(Math.random() * 95), 'someothervalue', 0],
+                [Math.floor(Math.random() * 94), 'someothervalue', 0]
             ];
 
             // Test values
@@ -99,6 +104,7 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
             failingVals.forEach(function (value, index) {
                 var checkedValuePair = validator._validateHex(value[1]);
                 expect(checkedValuePair[1]).to.equal(failingVals[index][1]);
+                expect(checkedValuePair[0]).to.equal(failingVals[index][2]);
             });
 
             // Expect length of `failingVals`
