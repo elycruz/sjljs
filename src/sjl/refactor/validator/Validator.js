@@ -26,7 +26,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'messages', value, Array);
                         _messages = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 messagesMaxLength: {
                     get: function () {
@@ -35,7 +36,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'messagesMaxLength', value, Number);
                         _messagesMaxLength = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 messageTemplates: {
                     get: function () {
@@ -44,7 +46,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'messageTemplates', value, Object);
                         sjl.extend(true, _messageTemplates, value);
-                    }
+                    },
+                    enumerable: true
                 },
                 value: {
                     get: function () {
@@ -52,7 +55,8 @@
                     },
                     set: function (value) {
                         _value = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 valueObscured: {
                     get: function () {
@@ -61,16 +65,9 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'valueObscured', value, Boolean);
                         _valueObscured = value;
-                    }
-                },
-                _value: {
-                    get: () => {
-                        return _value;
                     },
-                    set: (value) => {
-                        _value = value;
-                    }
-                },
+                    enumerable: true
+                }
             });
 
             // Merge options in

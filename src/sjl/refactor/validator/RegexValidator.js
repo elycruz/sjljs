@@ -30,8 +30,8 @@
                 messageTemplates: {
                     DOES_NOT_MATCH_PATTERN: function () {
                         return 'The value passed in does not match pattern"'
-                            + this.getPattern() + '".  Value passed in: "'
-                            + this.getValue() + '".';
+                            + this.pattern + '".  Value passed in: "'
+                            + this.value + '".';
                     }
                 }
             });

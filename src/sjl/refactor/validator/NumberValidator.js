@@ -12,7 +12,10 @@
         Validator = sjl.ns.refactor.validator.Validator,
         contextName = 'sjl.ns.refactor.validator.NumberValidator',
         //InRangeValidator = sjl.ns.refactor.validator.InRangeValidator,
-        NumberValidator = function NumberValidator(options) {
+        NumberValidator = function NumberValidator(/** ...options {Object}**/) {
+            // Apply Validator to self
+            Validator.apply(this);
+
             var _messageTemplates = {
                     NOT_A_NUMBER: function () {
                         return 'The input value is not a number.  Value received: "' + this.value + '".';
@@ -68,7 +71,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'regexForHex', value, RegExp);
                         _regexForHex = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 regexForOctal: {
                     get: function () {
@@ -77,7 +81,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'regexForOctal', value, RegExp);
                         _regexForOctal = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 regexForBinary: {
                     get: function () {
@@ -86,7 +91,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'regexForBinary', value, RegExp);
                         _regexForBinary = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 regexForScientific: {
                     get: function () {
@@ -95,7 +101,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'regexForScientific', value, RegExp);
                         _regexForScientific = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 allowFloat: {
                     get: function () {
@@ -104,7 +111,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'allowFloat', value, Boolean);
                         _allowFloat = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 allowCommas: {
                     get: function () {
@@ -113,7 +121,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'allowCommas', value, Boolean);
                         _allowCommas = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 allowSigned: {
                     get: function () {
@@ -122,7 +131,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'allowSigned', value, Boolean);
                         _allowSigned = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 allowBinary: {
                     get: function () {
@@ -131,7 +141,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'allowBinary', value, Boolean);
                         _allowBinary = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 allowHex: {
                     get: function () {
@@ -140,7 +151,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'allowHex', value, Boolean);
                         _allowHex = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 allowOctal: {
                     get: function () {
@@ -149,7 +161,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'allowOctal', value, Boolean);
                         _allowOctal = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 allowScientific: {
                     get: function () {
@@ -158,7 +171,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'allowScientific', value, Boolean);
                         _allowScientific = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 checkRange: {
                     get: function () {
@@ -167,7 +181,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'checkRange', value, Boolean);
                         _checkRange = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 defaultRangeSettings: {
                     get: function () {
@@ -176,7 +191,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'defaultRangeSettings', value, Object);
                         sjl.extend(true, _defaultRangeSettings, value);
-                    }
+                    },
+                    enumerable: true
                 },
                 min: {
                     get: function () {
@@ -185,7 +201,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'min', value, Number);
                         _min = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 max: {
                     get: function () {
@@ -194,7 +211,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'max', value, Number);
                         _max = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 inclusive: {
                     get: function () {
@@ -203,15 +221,18 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'inclusive', value, Boolean);
                         _inclusive = value;
-                    }
+                    },
+                    enumerable: true
                 }
             });
 
             // Set default min, max, and inclusive values
-            sjl.extend(true, this, this.defaultRangeSettings);
-
-            // Set defaults and extend with  validator
-            Validator.apply(this, [{messageTemplates: _messageTemplates}].concat(sjl.argsToArray(arguments)));
+            sjl.extend.apply(sjl, [
+                    true, this,
+                    this.defaultRangeSettings,
+                    {messageTemplates: _messageTemplates}
+                ].concat(sjl.argsToArray(arguments))
+            );
         };
 
     NumberValidator = Validator.extend(NumberValidator, {
@@ -258,7 +279,7 @@
 
         validateStringValue: function (value) {},
 
-        validateHex: function (value) {
+        _validateHex: function (value) {
             var retVal = [true, value],
                 isHexString = value.length > 0 && value[1] === 'x',
                 isValidFormat;

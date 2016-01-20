@@ -621,7 +621,7 @@
         Object.keys(p).forEach(function (prop) { // For all props in p.
             // If property is present on target (o) and is not writable, skip iteration
             propDescription = Object.getOwnPropertyDescriptor(o, prop);
-            if (propDescription && !propDescription.writable) {
+            if (propDescription && (!sjl.isset(propDescription.get) && !sjl.isset(propDescription.set)) && !propDescription.writable) {
                 return;
             }
             if (deep === true) {

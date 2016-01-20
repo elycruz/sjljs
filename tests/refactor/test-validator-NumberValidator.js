@@ -48,7 +48,7 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         var out = [],
             a = 0,
             b = 1;
-        while (a < limit) {
+        while (a <= limit) {
             out.push(a);
             if (b <= limit) {
                 out.push(b);
@@ -64,19 +64,44 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         expect((new NumberValidator()) instanceof NumberValidator).to.equal(true);
     });
 
-    describe('#validateHex', function () {
+    describe('#_validateHex', function () {
         it('should return an array of [Boolean, Number] when hex value is a valid hex value.', function () {
             var vals = fib(1000).map(function (value) {
-                    return [value, numToHex(value)];
+                    return [value, numToHex(value), true];
                 }),
-                validator = new NumberValidator({allowHex: true});
+                validator,
+                failingVals;
+
+            // Instantiate validator (set separately to easily debug
+            validator = new NumberValidator({allowHex: true});
+
+            // Failing values
+            failingVals = [
+                [Math.floor(Math.random() * 98), 'object', false],
+                [Math.floor(Math.random() * 97), 'somevalue', false],
+                [Math.floor(Math.random() * 96), 'someothervalue', false],
+                [Math.floor(Math.random() * 95), 'someothervalue', false],
+                [Math.floor(Math.random() * 94), 'someothervalue', false]
+            ];
+
+            // Test values
             vals.forEach(function (value, index) {
-                var blnValue = value[0],
-                    hexValue = value[1],
-                    checkedValuePair = validator.validateHex(value[1]);
-                expect(parseInt(checkedValuePair[1], 16)).to.equal(vals[index][0]);
-                expect(checkedValuePair[0]).to.equal(true);
+                var checkedValuePair = validator._validateHex(value[1]);
+                //console.log(blnValue, hexValue, checkedValuePair);
+                expect(checkedValuePair[1]).to.equal(vals[index][0]);
+                expect(checkedValuePair[0]).to.equal(vals[index][2]);
             });
+
+            // Zero error messages;  All checks up to should have passed
+            expect(validator.messages.length).to.equal(0);
+
+            // Test values
+            failingVals.forEach(function (value, index) {
+                var checkedValuePair = validator._validateHex(value[1]);
+                expect(checkedValuePair[1]).to.equal(failingVals[index][1]);
+            });
+
+            // Expect length of `failingVals`
             expect(validator.messages.length).to.equal(0);
         });
     });
