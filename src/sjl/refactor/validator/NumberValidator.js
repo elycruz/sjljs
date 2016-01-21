@@ -362,8 +362,8 @@
             return retVal;
         },
 
-        validateComma: function (value) {
-            var out = [true, value],
+        _validateComma: function (value) {
+            var out = [0, value],
                 valueHasCommas = /,/.test(value),
                 replacedString;
             if (valueHasCommas) {
@@ -371,25 +371,26 @@
                     replacedString = value.replace(',', '');
                     if (replacedString.length === 0) {
                         this.addErrorByKey('NOT_A_NUMBER');
-                        out[0] = false;
+                        out[0] = -1;
                     }
                     else {
                         out[1] = replacedString;
+                        out[0] = 1;
                     }
                 }
                 else if (!this.allowCommas) {
                     this.addErrorByKey('NO_COMMAS_ALLOWED');
-                    out[0] = false;
+                    out[0] = -1;
                 }
             }
             return out;
         },
 
-        validateFloat: function (value) {
-            var out = [true, value];
+        _validateFloat: function (value) {
+            var out = [0, value];
             if (!this.allowFloat && /\./.test(value)) {
                 this.addErrorByKey('NO_FLOATS_ALLOWED');
-                out[0] = false;
+                out[0] = -1;
             }
             return out;
         },

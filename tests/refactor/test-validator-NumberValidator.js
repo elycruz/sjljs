@@ -112,4 +112,48 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         });
     });
 
+    describe('#`_validateSigned', function () {
+        it ('should return [-1, value] when value is a signed number.', function () {
+            var validator = new NumberValidator(),
+                values = [
+                    // Should return failure (-1) and value
+                    [-1, -3], [-1, -999.99], [-1, -0x99ff99], [-1, '+100'],
+                    // Should return untouched and value
+                    [0, 99], [0, '123123.234e20'], [0, 0xff9900]],
+                result;
+
+            // Test for `allowSigned` is false
+            values.forEach(function (value, index) {
+                result = validator._validateSigned(value[1]);
+                expect(result[0]).to.equal(values[index][0]);
+                expect(result[1]).to.equal(values[index][1]);
+            });
+        });
+    });
+
+    describe('#`_validateComma', function () {
+        it ('should return [-1, value] when value contains comma(s) and `allowComma` is `false`.', function () {
+            var validator = new NumberValidator(),
+                valuesWithCommas = [[-1, ',1,000,000,000', '1000000000'], [-1, ',', ''], [-1, '1,000,000', '1000000'], [-1, '+100,000', '+100000']],
+                valuesWithoutCommas = [[0, 99], [0, '123123.234e20'], [0, 0xff9900]],
+                values = valuesWithCommas.concat(valuesWithoutCommas),
+                result;
+
+            // Test for `allowComma` is false
+            values.forEach(function (value, index) {
+                result = validator._validateComma(value[1]);
+                expect(result[0]).to.equal(values[index][0]);
+                expect(result[1]).to.equal(values[index][1]);
+            });
+
+            // Test for `allowComma` is true
+            validator.allowCommas = true;
+            valuesWithCommas.forEach(function (value, index) {
+                result = validator._validateComma(value[1]);
+                expect(result[0]).to.equal(1);
+                expect(result[1]).to.equal(valuesWithCommas[index][1]);
+            });
+        });
+    });
+
 });
