@@ -135,6 +135,7 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         it ('should return [-1, value] when value contains comma(s) and `allowComma` is `false`.', function () {
             var validator = new NumberValidator(),
                 valuesWithCommas = [[-1, ',1,000,000,000', '1000000000'], [-1, ',', ''], [-1, '1,000,000', '1000000'], [-1, '+100,000', '+100000']],
+                valuesWithCommas2 = [[1, ',1,000,000,000', '1000000000'], [-1, ',', ','], [1, '1,000,000', '1000000'], [1, '+100,000', '+100000']],
                 valuesWithoutCommas = [[0, 99], [0, '123123.234e20'], [0, 0xff9900]],
                 values = valuesWithCommas.concat(valuesWithoutCommas),
                 result;
@@ -148,10 +149,10 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
 
             // Test for `allowComma` is true
             validator.allowCommas = true;
-            valuesWithCommas.forEach(function (value, index) {
+            valuesWithCommas2.forEach(function (value, index) {
                 result = validator._validateComma(value[1]);
-                expect(result[0]).to.equal(1);
-                expect(result[1]).to.equal(valuesWithCommas[index][1]);
+                expect(result[0]).to.equal(valuesWithCommas2[index][0]);
+                expect(result[1]).to.equal(valuesWithCommas2[index][2]);
             });
         });
     });

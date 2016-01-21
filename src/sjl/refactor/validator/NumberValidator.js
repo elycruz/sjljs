@@ -368,7 +368,7 @@
                 replacedString;
             if (valueHasCommas) {
                 if (this.allowCommas) {
-                    replacedString = value.replace(',', '');
+                    replacedString = value.replace(/,/g, '');
                     if (replacedString.length === 0) {
                         this.addErrorByKey('NOT_A_NUMBER');
                         out[0] = -1;
