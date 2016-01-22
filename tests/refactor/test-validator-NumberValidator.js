@@ -157,4 +157,30 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         });
     });
 
+    describe('#`_validateFloat', function () {
+        it ('should return [-1, value] when value contains a decimal point and `allowFloat` is `false`.', function () {
+            var validator = new NumberValidator(),
+                valuesWithFloats = [[-1, ',1,000,000,000.00'], [-1, ',', ''], [-1, '1,000,000.00'], [-1, '+100,000.00']],
+                valuesWithFloats2 = [[1, ',1,000,000,000.00'], [-1, ',', ','], [1, '1,000,000.00'], [1, '+100,000.00']],
+                valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
+                values = valuesWithFloats.concat(valuesWithoutFloats),
+                result;
+
+            // Test for `allowFloat` is false
+            values.forEach(function (value, index) {
+                result = validator._validateFloat(value[1]);
+                expect(result[0]).to.equal(values[index][0]);
+                expect(result[1]).to.equal(values[index][1]);
+            });
+
+            // Test for `allowFloat` is true
+            validator.allowFloat = true;
+            valuesWithFloats.forEach(function (value, index) {
+                result = validator._validateFloat(value[1]);
+                expect(result[0]).to.equal(valuesWithFloats[index][0]);
+                expect(result[1]).to.equal(valuesWithFloats[index][1]);
+            });
+        });
+    });
+
 });

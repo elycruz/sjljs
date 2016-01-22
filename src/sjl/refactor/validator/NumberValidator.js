@@ -388,7 +388,7 @@
 
         _validateFloat: function (value) {
             var out = [0, value];
-            if (!this.allowFloat && /\./.test(value)) {
+            if (!this.allowFloat && /\.{1}/g.test(value)) {
                 this.addErrorByKey('NO_FLOATS_ALLOWED');
                 out[0] = -1;
             }
