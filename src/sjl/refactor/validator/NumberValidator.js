@@ -36,19 +36,19 @@
                         return 'The input value is not a number.  Value received: "' + this.value + '".';
                     },
                     NOT_IN_RANGE: function () {
-                        return 'The number passed in is not within the specified '
-                            + (this.get('inclusive') ? 'inclusive' : '') + ' range. ' +
+                        return 'The number passed in is not ' + (this.inclusive ? 'inclusive' : '')
+                            + 'ly within the specified '  + ' range. ' +
                             ' Value received: "' + this.value + '".';
                     },
-                    NO_FLOATS_ALLOWED: function () {
+                    NOT_ALLOWED_FLOAT: function () {
                         return 'No floats allowed.  ' +
                             'Value received: "' + this.value + '".';
                     },
-                    NO_COMMAS_ALLOWED: function () {
+                    NOT_ALLOWED_COMMA: function () {
                         return 'No commas allowed.  ' +
                             'Value received: "' + this.value + '".';
                     },
-                    NO_SIGNED_ALLOWED: function () {
+                    NOT_ALLOWED_SIGNED: function () {
                         return 'No signed numbers allowed.  ' +
                             'Value received: "' + this.value + '".';
                     },
@@ -63,12 +63,20 @@
                     NOT_ALLOWED_BINARY: function () {
                         return 'No binary strings allowed.  ' +
                             'Value received: "' + this.value + '".';
-                    }
+                    },
+                    NOT_ALLOWED_SCIENTIFIC: function () {
+                        return 'No scientific number strings allowed.  ' +
+                            'Value received: "' + this.value + '".';
+                    },
+                    INVALID_HEX: function () {},
+                    INVALID_OCTAL: function () {},
+                    INVALID_BINARY: function () {},
+                    INVALID_SCIENTIFIC: function () {},
                 },
-                _regexForHex = /^(?:(?:\dx)|(?:\#))[\da-z]+$/i,
-                _regexForOctal = /^0\d+?$/,
-                _regexForBinary = /^\db[01]+$/i,
-                _regexForScientific = /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+(?:\.\d+)?)?$/i,
+                _regexForHex = /^(?:(?:0x)|(?:\#))[\da-z]+$/i,
+                _regexForOctal = /^0\d+$/,
+                _regexForBinary = /^0b[01]+$/i,
+                _regexForScientific = /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+)?$/i,
                 _allowFloat = true,
                 _allowCommas = false,
                 _allowSigned = false,
@@ -259,17 +267,21 @@
         };
 
     NumberValidator = Validator.extend(NumberValidator, {
+
         isValid: function (value) {
             var self = this,
 
                 // Return value
-                retVal = false,
+                retVal,
 
                 // Class of initial value
                 classOfValue = sjl.classOf(value),
 
-                // Check range `Boolean`
-                checkRange = self.checkRange;
+                // A place to hold sub validation results
+                parsedValidationResult,
+
+                // Transformed value
+                parsedValue;
 
             // Get value
             value = classOfValue === 'Undefined' ? self.value : value;
@@ -282,7 +294,16 @@
             // If is string, ...
             else if (classOfValue === 'String') {
                 // Lower case any alpha characters to make the value easier to validate
-                value = this._validateStringValue(value.toLowerCase())[1];
+                parsedValidationResult = this._parseValidationFunctions([
+                    '_validateComma', '_validateBinary', '_validateHex',
+                    '_validateOctal', '_validateScientific'
+                ], value.toLowerCase());
+
+                // Get validation result
+                retVal = parsedValidationResult[0] === -1 ? false : true;
+
+                // possibly transformed value (to number) depends on what we set `retVal` to above.
+                parsedValue = parsedValidationResult[1];
             }
 
             // Else if 'Not a Number' add error message
@@ -291,61 +312,49 @@
                 self.addErrorByKey('NOT_A_NUMBER');
             }
 
-            // Check min and max if value is a `Number` (`classOfIs` differentiates between NaN and usable Number)
-            if (retVal === true && checkRange && sjl.classOfIs(value, Number)) {
-                // work here
+            // If value is a `Number` so far
+            if (retVal) {
+                parsedValidationResult =
+                    this._parseValidationFunctions(
+                            ['_validateSigned', '_validateFloat', '_validateRange'],
+                            sjl.classOfIs(parsedValue, 'Number') ? parsedValue : value
+                        );
+                retVal = parsedValidationResult[0] === -1 ? false : true;
             }
 
             return retVal;
+        },
 
-        }, // End of `isValid` function
-
-        /**
-         * Returns the resulting of validating the passed in `value` via all it's internal string validation methods.
-         * Validates through the different type of possible string representations of numbers and returns an
-         * array [
-         *      performedOpFlag {Number}, // [-1, 0, 1] - `-1` when `value` was a candidate for validation and failed validation.
-         *      value {Number|String} // Untouched or transformed value that was passed (value gets transformed by some validation functions into an actual number who then pass the value along for validation outside of the string validation functions (as a number)).
-         * ]
-         * @param value {String}
-         * @returns {Array<Number,String|Number>} - Element `0` is `performedOpFlag` [-1, 0, 1] and element [1] is the passed in value (transformed or not - look at element 0 to know (1 means transformed)).
-         * @private
-         */
-        _validateStringValue: function (value) {
-            var validationFuncs = ['_validateHex', '_validateSigned'],
-                funcsLen = validationFuncs.length,
+        _parseValidationFunctions: function (functions, value) {
+            var funcsLen = functions.length,
                 resultSet,
                 i;
             for (i = 0; i < funcsLen; i += 1) {
-                resultSet = this[validationFuncs[i]](value);
+                resultSet = this[functions[i]](value);
                 // If `value`'s validation failed exit the loop
                 if (resultSet[0] === -1) {
                     break;
-                }
-                // If value (set[1]) was transformed set it as value
-                if (resultSet[0] === 1) {
-                    value = resultSet[1];
                 }
             }
             return resultSet;
         },
 
         /**
-         * Validates a hex string.  Returns
+         * Validates a hex string.  Returns an internal validation result [[-1, 0, 1], `value`]
          * @param value {String}
          * @returns {Array<Number, String|Number>}
          * @private
          */
         _validateHex: function (value) {
             var retVal = [0, value],
-                isHexString = value.length > 0 && value[1] === 'x',
+                isHexString = value[1] === 'x',
                 isValidFormat;
             if (isHexString) {
                 if (this.allowHex) {
                     isValidFormat = this.regexForHex.test(value);
                     if (!isValidFormat) {
                         retVal[1] = -1;
-                        this.addErrorByKey('NOT_ALLOWED_HEX');
+                        this.addErrorByKey('INVALID_HEX');
                     }
                     else {
                         retVal[0] = 1;
@@ -364,7 +373,7 @@
             var retVal = [0, value];
             // If no signed numbers allowed add error if number has sign
             if (!this.allowSigned && /^(:?\-|\+)/.test(value)) {
-                this.addErrorByKey('NO_SIGNED_ALLOWED');
+                this.addErrorByKey('NOT_ALLOWED_SIGNED');
                 retVal[0] = -1;
             }
             return retVal;
@@ -387,7 +396,7 @@
                     }
                 }
                 else if (!this.allowCommas) {
-                    this.addErrorByKey('NO_COMMAS_ALLOWED');
+                    this.addErrorByKey('NOT_ALLOWED_COMMA');
                     out[0] = -1;
                 }
             }
@@ -397,7 +406,7 @@
         _validateFloat: function (value) {
             var out = [0, value];
             if (!this.allowFloat && /\.{1}/g.test(value)) {
-                this.addErrorByKey('NO_FLOATS_ALLOWED');
+                this.addErrorByKey('NOT_ALLOWED_FLOAT');
                 out[0] = -1;
             }
             return out;
@@ -415,7 +424,7 @@
                         out[1] = Number(value);
                     }
                     else {
-                        this.addErrorByKey('NOT_ALLOWED_BINARY');
+                        this.addErrorByKey('INVALID_BINARY');
                         out[0] = -1;
                     }
                 }
@@ -444,7 +453,7 @@
                     }
                 }
                 else {
-                    this.addErrorByKey('NOT_ALLOWED_OCTAL');
+                    this.addErrorByKey('INVALID_OCTAL');
                     out[0] = -1;
                 }
             }
@@ -452,30 +461,41 @@
         },
 
         _validateScientific: function (value) {
-            // If scientific number ...
-            //if (allowScientific) {
-            //    retVal = regexForScientific.test(value);
-            //    value = Number(value);
-            //}
+            var out = [0, value],
+                possibleScientific = /\de\d/.test(value),
+                isValidScientificValue;
+            if (possibleScientific) {
+                if (this.allowScientific) {
+                    isValidScientificValue = this.regexForScientific.test(value);
+                    if (isValidScientificValue) {
+                        out[0] = 1;
+                        out[1] = Number(value);
+                    }
+                    else {
+                        this.addErrorByKey('INVALID_SCIENTIFIC');
+                        out[0] = -1;
+                    }
+                }
+                else {
+                    this.addErrorByKey('NOT_ALLOWED_SCIENTIFIC');
+                    out[0] = -1;
+                }
+            }
+            return out;
         },
 
         _validateRange: function (value) {
-            // Create in range validator
-            //inRangeValidator = new InRangeValidator({
-            //    min: this.min,
-            //    max: this.max,
-            //    inclusive: this.inclusive
-            //});
-            //
-            //// Check range
-            //retVal = inRangeValidator.isValid(value);
-            //
-            //// If 'in range validator' failed set error message
-            //if (!retVal) {
-            //    self.addErrorByKey('NOT_IN_RANGE');
-            //}
+            var out = [0, value];
+            if (this.checkRange && sjl.classOfIs(value, Number)) {
+                if (this.inclusive && value < this.min || value > this.max) {
+                    out[0] = -1;
+                }
+                else if (value <= this.min || value >= this.max) {
+                    out[0] = -1;
+                }
+            }
+            return out;
         },
-
 
     }); // End of `NumberValidator` declaration
 
