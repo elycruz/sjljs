@@ -187,7 +187,6 @@
             return retVal;
 
         } // End of `isValid` function
-
     }); // End of `NumberValidator` declaration
 
     if (isNodeEnv) {

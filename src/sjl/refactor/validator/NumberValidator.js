@@ -55,11 +55,19 @@
                     NOT_ALLOWED_HEX: function () {
                         return 'No hexadecimal numbers allowed.  ' +
                             'Value received: "' + this.value + '".';
+                    },
+                    NOT_ALLOWED_OCTAL: function () {
+                        return 'No octal strings allowed.  ' +
+                            'Value received: "' + this.value + '".';
+                    },
+                    NOT_ALLOWED_BINARY: function () {
+                        return 'No binary strings allowed.  ' +
+                            'Value received: "' + this.value + '".';
                     }
                 },
                 _regexForHex = /^(?:(?:\dx)|(?:\#))[\da-z]+$/i,
                 _regexForOctal = /^0\d+?$/,
-                _regexForBinary = /^\db\d+$/i,
+                _regexForBinary = /^\db[01]+$/i,
                 _regexForScientific = /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+(?:\.\d+)?)?$/i,
                 _allowFloat = true,
                 _allowCommas = false,
@@ -395,37 +403,55 @@
             return out;
         },
 
-        validateBinary: function (value) {
-            var out = [true, value],
+        _validateBinary: function (value) {
+            var out = [0, value],
                 possibleBinary = value.length > 0 && value[1] === 'b',
                 isValidBinaryValue;
             if (possibleBinary) {
                 if (this.allowBinary) {
-                    isValidBinaryValue = regexForBinary.test(value);
+                    isValidBinaryValue = this.regexForBinary.test(value);
                     if (isValidBinaryValue) {
+                        out[0] = 1;
                         out[1] = Number(value);
                     }
                     else {
                         this.addErrorByKey('NOT_ALLOWED_BINARY');
-                        out[0] = false;
+                        out[0] = -1;
                     }
                 }
                 else {
                     this.addErrorByKey('NOT_ALLOWED_BINARY');
-                    out[0] = false;
+                    out[0] = -1;
                 }
             }
             return out;
         },
 
-        validateOctal: function (value) {
-            //if (this.allowOctal && /^0\d/.test(value)) {
-            //    retVal = regexForOctal.test(value);
-            //    value = parseInt(value, 8);
-            //}
+        _validateOctal: function (value) {
+            var out = [0, value],
+                possibleOctal = /^0\d/.test(value),
+                isValidOctalValue;
+            if (possibleOctal) {
+                if (this.allowOctal) {
+                    isValidOctalValue = this.regexForOctal.test(value);
+                    if (isValidOctalValue) {
+                        out[0] = 1;
+                        out[1] = parseInt(value, 8);
+                    }
+                    else {
+                        this.addErrorByKey('NOT_ALLOWED_OCTAL');
+                        out[0] = -1;
+                    }
+                }
+                else {
+                    this.addErrorByKey('NOT_ALLOWED_OCTAL');
+                    out[0] = -1;
+                }
+            }
+            return out;
         },
 
-        validateScientific: function (value) {
+        _validateScientific: function (value) {
             // If scientific number ...
             //if (allowScientific) {
             //    retVal = regexForScientific.test(value);
@@ -433,7 +459,7 @@
             //}
         },
 
-        validateRange: function (value) {
+        _validateRange: function (value) {
             // Create in range validator
             //inRangeValidator = new InRangeValidator({
             //    min: this.min,

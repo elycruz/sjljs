@@ -159,26 +159,86 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
 
     describe('#`_validateFloat', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowFloat` is `false`.', function () {
-            var validator = new NumberValidator(),
-                valuesWithFloats = [[-1, ',1,000,000,000.00'], [-1, ',', ''], [-1, '1,000,000.00'], [-1, '+100,000.00']],
-                valuesWithFloats2 = [[1, ',1,000,000,000.00'], [-1, ',', ','], [1, '1,000,000.00'], [1, '+100,000.00']],
+            var validator = new NumberValidator({allowFloat: false}),
+                valuesWithFloats = [[-1, ',1,000,000,000.00'], [-1, '.', '.'], [-1, '1,000,000.00'], [-1, '+100,000.00']],
+                valuesWithFloats2 = [[0, ',1,000,000,000.00'], [0, '.', '.'], [0, '1,000,000.00'], [0, '+100,000.00']],
                 valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
                 values = valuesWithFloats.concat(valuesWithoutFloats),
                 result;
 
             // Test for `allowFloat` is false
-            values.forEach(function (value, index) {
-                result = validator._validateFloat(value[1]);
-                expect(result[0]).to.equal(values[index][0]);
-                expect(result[1]).to.equal(values[index][1]);
-            });
-
-            // Test for `allowFloat` is true
-            validator.allowFloat = true;
             valuesWithFloats.forEach(function (value, index) {
                 result = validator._validateFloat(value[1]);
                 expect(result[0]).to.equal(valuesWithFloats[index][0]);
                 expect(result[1]).to.equal(valuesWithFloats[index][1]);
+            });
+
+            //// Test for `allowFloat` is true
+            validator.allowFloat = true;
+            valuesWithFloats2.forEach(function (value, index) {
+                result = validator._validateFloat(value[1]);
+                expect(result[0]).to.equal(valuesWithFloats2[index][0]);
+                expect(result[1]).to.equal(valuesWithFloats2[index][1]);
+            });
+        });
+    });
+
+    describe('#`_validateBinary', function () {
+        it ('should return [-1, value] when value contains a decimal point and `allowBinary` is `false`.', function () {
+            var validator = new NumberValidator({allowBinary: false}),
+                binaryValues = [[-1, 'abcdefg'], [-1, '0b98345'], [-1, '0b111'], [0, '9999'], [0, 9999], [-1, 'bb010101'], [-1, '0b01010101']],
+                binaryValues2 = [[-1, 'abcdefg'], [-1, '0b98345'], [1, '0b111'], [0, '9999'], [0, 9999], [-1, 'bb010101'], [1, '0b01010101']],
+                result;
+
+            // Test for `allowBinary` is false
+            binaryValues.forEach(function (value, index) {
+                result = validator._validateBinary(value[1]);
+                expect(result[0]).to.equal(binaryValues[index][0]);
+                expect(result[1]).to.equal(binaryValues[index][1]);
+            });
+
+            //// Test for `allowBinary` is true
+            validator.allowBinary = true;
+            binaryValues2.forEach(function (value, index) {
+                result = validator._validateBinary(value[1]);
+                console.log(result, binaryValues2[index]);
+                expect(result[0]).to.equal(binaryValues2[index][0]);
+                if (result[0] !== 1) {
+                    expect(result[1]).to.equal(binaryValues2[index][1]);
+                }
+                else {
+                    expect(result[1]).to.equal(Number(binaryValues2[index][1]));
+                }
+            });
+        });
+    });
+
+    describe('#`_validateOctal', function () {
+        it ('should return [-1, value] when value contains a decimal point and `allowOctal` is `false`.', function () {
+            var validator = new NumberValidator({allowOctal: false}),
+                octalValues = [[-1, '999'], [-1, 999], [-1, '0b111'], [-1, '0777'], [-1, '0757']],
+                octalValues2 = [[-1, '999'], [-1, 999], [-1, '0b111'], [1, '0777'], [1, '0757']],
+                result;
+
+            // Test for `allowOctal` is false
+            octalValues.forEach(function (value, index) {
+                result = validator._validateOctal(value[1]);
+                expect(result[0]).to.equal(octalValues[index][0]);
+                expect(result[1]).to.equal(octalValues[index][1]);
+            });
+
+            //// Test for `allowOctal` is true
+            validator.allowOctal = true;
+            octalValues2.forEach(function (value, index) {
+                result = validator._validateOctal(value[1]);
+                console.log(result, octalValues2[index]);
+                expect(result[0]).to.equal(octalValues2[index][0]);
+                if (result[0] !== 1) {
+                    expect(result[1]).to.equal(octalValues2[index][1]);
+                }
+                else {
+                    expect(result[1]).to.equal(Number(octalValues2[index][1]));
+                }
             });
         });
     });
