@@ -76,7 +76,14 @@
 
     Validator = sjl.ns.stdlib.Extendable.extend(Validator, {
 
-        addErrorByKey: function (key) {
+        /**
+         * @todo change this method name to `addErrorByKeyOrCallback` or just add `addErrorByCallback` method
+         * @param key {String|Function} - Key for add error by or callback to generate error string from.
+         * @param value {*|undefined} - Value to pass into the error callback.
+         * @returns {Validator}
+         */
+        addErrorByKey: function (key, value) {
+            value = typeof value !== 'undefined' ? value : this.value;
             var self = this,
                 messageTemplate = self.messageTemplates,
                 messages = self.messages;
@@ -85,14 +92,14 @@
             if (sjl.classOfIs(key, 'String') &&
                 sjl.isset(messageTemplate[key])) {
                 if (typeof messageTemplate[key] === 'function') {
-                    messages.push(messageTemplate[key].apply(self));
+                    messages.push(messageTemplate[key].call(self, self, value)); // @todo should change this to just call values as functions directly
                 }
                 else if (sjl.classOfIs(messageTemplate[key], 'String')) {
                     messages.push(messageTemplate[key]);
                 }
             }
             else if (sjl.classOfIs(key, 'function')) {
-                messages.push(key.apply(self));
+                messages.push(key.call(self, self, value));
             }
             else {
                 messages.push(key);

@@ -32,46 +32,46 @@
             Validator.apply(this);
 
             var _messageTemplates = {
-                    NOT_A_NUMBER: function () {
-                        return 'The input value is not a number.  Value received: "' + this.value + '".';
+                    NOT_A_NUMBER: function (value, validator) {
+                        return 'The input value is not a number.  Value received: "' + value + '".';
                     },
-                    NOT_IN_RANGE: function () {
-                        return 'The number passed in is not ' + (this.inclusive ? 'inclusive' : '')
+                    NOT_IN_RANGE: function (value, validator) {
+                        return 'The number passed in is not ' + (validator.inclusive ? 'inclusive' : '')
                             + 'ly within the specified '  + ' range. ' +
-                            ' Value received: "' + this.value + '".';
+                            ' Value received: "' + value + '".';
                     },
-                    NOT_ALLOWED_FLOAT: function () {
+                    NOT_ALLOWED_FLOAT: function (value, validator) {
                         return 'No floats allowed.  ' +
-                            'Value received: "' + this.value + '".';
+                            'Value received: "' + value + '".';
                     },
-                    NOT_ALLOWED_COMMA: function () {
+                    NOT_ALLOWED_COMMA: function (value, validator) {
                         return 'No commas allowed.  ' +
-                            'Value received: "' + this.value + '".';
+                            'Value received: "' + value + '".';
                     },
-                    NOT_ALLOWED_SIGNED: function () {
+                    NOT_ALLOWED_SIGNED: function (value, validator) {
                         return 'No signed numbers allowed.  ' +
-                            'Value received: "' + this.value + '".';
+                            'Value received: "' + value + '".';
                     },
-                    NOT_ALLOWED_HEX: function () {
+                    NOT_ALLOWED_HEX: function (value, validator) {
                         return 'No hexadecimal numbers allowed.  ' +
-                            'Value received: "' + this.value + '".';
+                            'Value received: "' + value + '".';
                     },
-                    NOT_ALLOWED_OCTAL: function () {
+                    NOT_ALLOWED_OCTAL: function (value, validator) {
                         return 'No octal strings allowed.  ' +
-                            'Value received: "' + this.value + '".';
+                            'Value received: "' + value + '".';
                     },
-                    NOT_ALLOWED_BINARY: function () {
+                    NOT_ALLOWED_BINARY: function (value, validator) {
                         return 'No binary strings allowed.  ' +
-                            'Value received: "' + this.value + '".';
+                            'Value received: "' + value + '".';
                     },
-                    NOT_ALLOWED_SCIENTIFIC: function () {
+                    NOT_ALLOWED_SCIENTIFIC: function (value, validator) {
                         return 'No scientific number strings allowed.  ' +
-                            'Value received: "' + this.value + '".';
+                            'Value received: "' + value + '".';
                     },
-                    INVALID_HEX: function () {},
-                    INVALID_OCTAL: function () {},
-                    INVALID_BINARY: function () {},
-                    INVALID_SCIENTIFIC: function () {},
+                    INVALID_HEX: function (value, validator) {},
+                    INVALID_OCTAL: function (value, validator) {},
+                    INVALID_BINARY: function (value, validator) {},
+                    INVALID_SCIENTIFIC: function (value, validator) {},
                 },
                 _regexForHex = /^(?:(?:0x)|(?:\#))[\da-z]+$/i,
                 _regexForOctal = /^0\d+$/,
@@ -462,7 +462,7 @@
 
         _validateScientific: function (value) {
             var out = [0, value],
-                possibleScientific = /\de\d/.test(value),
+                possibleScientific = /\de/.test(value),
                 isValidScientificValue;
             if (possibleScientific) {
                 if (this.allowScientific) {

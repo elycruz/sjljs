@@ -216,8 +216,8 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
     describe('#`_validateOctal', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowOctal` is `false`.', function () {
             var validator = new NumberValidator({allowOctal: false}),
-                octalValues = [[-1, '999'], [-1, 999], [-1, '0b111'], [-1, '0777'], [-1, '0757']],
-                octalValues2 = [[-1, '999'], [-1, 999], [-1, '0b111'], [1, '0777'], [1, '0757']],
+                octalValues = [[0, '999'], [0, 999], [0, '0b111'], [-1, '0777'], [-1, '0757']],
+                octalValues2 = [[0, '999'], [0, 999], [0, '0b111'], [1, '0777'], [1, '0757']],
                 result;
 
             // Test for `allowOctal` is false
@@ -231,13 +231,41 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
             validator.allowOctal = true;
             octalValues2.forEach(function (value, index) {
                 result = validator._validateOctal(value[1]);
-                console.log(result, octalValues2[index]);
                 expect(result[0]).to.equal(octalValues2[index][0]);
                 if (result[0] !== 1) {
                     expect(result[1]).to.equal(octalValues2[index][1]);
                 }
                 else {
-                    expect(result[1]).to.equal(Number(octalValues2[index][1]));
+                    expect(result[1]).to.equal(parseInt(octalValues2[index][1], 8));
+                }
+            });
+        });
+    });
+
+    describe('#`_validateScientific', function () {
+        it ('should return [-1, value] when value contains a decimal point and `allowScientific` is `false`.', function () {
+            var validator = new NumberValidator({allowScientific: false}),
+                scientificValues = [[0, '999'], [0, 999], [0, '0b111'], [-1, '10e10'], [-1, '-29.01e+29'], [-1, '29.01e-29'], [-1, '29.01e29'], [-1, '29e29']],
+                scientificValues2 = [[0, '999'], [0, 999], [0, '0b111'], [1, '10e10'], [1, '-29.01e+29'], [1, '29.01e-29'], [1, '29.01e29'], [1, '29e29']],
+                result;
+
+            // Test for `allowScientific` is false
+            scientificValues.forEach(function (value, index) {
+                result = validator._validateScientific(value[1]);
+                expect(result[0]).to.equal(scientificValues[index][0]);
+                expect(result[1]).to.equal(scientificValues[index][1]);
+            });
+
+            //// Test for `allowScientific` is true
+            validator.allowScientific = true;
+            scientificValues2.forEach(function (value, index) {
+                result = validator._validateScientific(value[1]);
+                expect(result[0]).to.equal(scientificValues2[index][0]);
+                if (result[0] !== 1) {
+                    expect(result[1]).to.equal(scientificValues2[index][1]);
+                }
+                else {
+                    expect(result[1]).to.equal(Number(scientificValues2[index][1]));
                 }
             });
         });
