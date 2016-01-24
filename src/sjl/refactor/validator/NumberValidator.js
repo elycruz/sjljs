@@ -493,6 +493,9 @@
                 else if (value <= this.min || value >= this.max) {
                     out[0] = -1;
                 }
+                else {
+                    out[0] = 1;
+                }
             }
             return out;
         },

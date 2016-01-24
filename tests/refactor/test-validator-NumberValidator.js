@@ -271,4 +271,29 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         });
     });
 
+    describe('#`_validateRange', function () {
+        it ('should return [-1, value] when value contains a decimal point and `allowRange` is `false`.', function () {
+            var validator = new NumberValidator({checkRange: false}),
+                rangeValues = [[-1, 999], [-1, 100], [-1, 'abc']],
+                rangeValues2 = [[-1, 999, 0, 998], [1, 999, 0, 999], [-1, 'abc']],
+                result;
+
+            // Test for `allowRange` is false
+            rangeValues.forEach(function (value, index) {
+                result = validator._validateRange(value[1]);
+                expect(result[0]).to.equal(rangeValues[index][0]);
+                expect(result[1]).to.equal(rangeValues[index][1]);
+            });
+
+            //rangeValues2.forEach(function (value, index) {
+            //    validator.min = value[2];
+            //    validator.max = value[3];
+            //    result = validator._validateRange(value[1]);
+            //    expect(result[0]).to.equal(rangeValues2[index][0]);
+            //    expect(result[1]).to.equal(rangeValues2[index][1]);
+            //});
+
+        });
+    });
+
 });
