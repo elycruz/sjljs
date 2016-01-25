@@ -92,14 +92,14 @@
             if (sjl.classOfIs(key, 'String') &&
                 sjl.isset(messageTemplate[key])) {
                 if (typeof messageTemplate[key] === 'function') {
-                    messages.push(messageTemplate[key].call(self, self, value)); // @todo should change this to just call values as functions directly
+                    messages.push(messageTemplate[key].call(self, value, self)); // @todo should change this to just call values as functions directly
                 }
                 else if (sjl.classOfIs(messageTemplate[key], 'String')) {
                     messages.push(messageTemplate[key]);
                 }
             }
             else if (sjl.classOfIs(key, 'function')) {
-                messages.push(key.call(self, self, value));
+                messages.push(key.call(self, value, self));
             }
             else {
                 messages.push(key);

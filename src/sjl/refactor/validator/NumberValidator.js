@@ -33,7 +33,7 @@
 
             var _messageTemplates = {
                     NOT_A_NUMBER: function (value, validator) {
-                        return 'The input value is not a number.  Value received: "' + value + '".';
+                        return 'Value "' + value + '" is not a number.';
                     },
                     NOT_IN_RANGE: function (value, validator) {
                         return 'The number passed in is not ' + (validator.inclusive ? 'inclusive' : '')
@@ -68,10 +68,18 @@
                         return 'No scientific number strings allowed.  ' +
                             'Value received: "' + value + '".';
                     },
-                    INVALID_HEX: function (value, validator) {},
-                    INVALID_OCTAL: function (value, validator) {},
-                    INVALID_BINARY: function (value, validator) {},
-                    INVALID_SCIENTIFIC: function (value, validator) {},
+                    INVALID_HEX: function (value, validator) {
+                        return 'Invalid hexadecimal value: "' + value + '".';
+                    },
+                    INVALID_OCTAL: function (value, validator) {
+                        return 'Invalid octal value: "' + value + '".';
+                    },
+                    INVALID_BINARY: function (value, validator) {
+                        return 'Invalid binary value: "' + value + '".';
+                    },
+                    INVALID_SCIENTIFIC: function (value, validator) {
+                        return 'Invalid scientific value: "' + value + '".';
+                    },
                 },
                 _regexForHex = /^(?:(?:0x)|(?:\#))[\da-z]+$/i,
                 _regexForOctal = /^0\d+$/,
@@ -284,7 +292,7 @@
                 parsedValue;
 
             // Get value
-            value = classOfValue === 'Undefined' ? self.value : value;
+            value = self.value = classOfValue === 'Undefined' ? self.value : value;
 
             // If number return true
             if (classOfValue === 'Number') {
@@ -300,20 +308,21 @@
                 ], value.toLowerCase());
 
                 // Get validation result
-                retVal = parsedValidationResult[0] === -1 ? false : true;
+                retVal = parsedValidationResult[0] === -1
+                || parsedValidationResult[0] === 0 ? false : true;
 
                 // possibly transformed value (to number) depends on what we set `retVal` to above.
                 parsedValue = parsedValidationResult[1];
             }
 
             // Else if 'Not a Number' add error message
-            else {
+            if (!retVal) {
                 retVal = false;
                 self.addErrorByKey('NOT_A_NUMBER');
             }
 
             // If value is a `Number` so far
-            if (retVal) {
+            else if (retVal) {
                 parsedValidationResult =
                     this._parseValidationFunctions(
                             ['_validateSigned', '_validateFloat', '_validateRange'],
@@ -341,7 +350,7 @@
 
         _validateHex: function (value) {
             var retVal = [0, value],
-                isHexString = value[1] === 'x',
+                isHexString = value.length > 0 && value[1] === 'x',
                 isValidFormat;
             if (isHexString) {
                 if (this.allowHex) {

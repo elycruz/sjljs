@@ -328,15 +328,59 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
                 [1, '-12e-2', -0.12],
                 [1, '1,000.35', 1000.35],
                 [1, '1,000,000.35', 1000000.35],
+                [0, 'helloworld', 'helloworld'],
+                [-1, '0ehello', '0ehello'],
+                [-1, '0bhello', '0bhello'],
+                [0, '0x', '0x']
             ],
             result;
 
         values.forEach(function (value) {
             result = parser(value[1]);
-            console.log(result, value);
             expect(result[0]).to.equal(value[0]);
             expect(result[1]).to.equal(value[2]);
         });
+    });
+
+    describe ('#`isValid`', function () {
+        var validator = new NumberValidator({
+                allowFloat: true,
+                allowHex: true,
+                allowBinary: true,
+                allowOctal: true,
+                allowCommas: true,
+                allowScientific: true,
+                allowSigned: true
+        }),
+            values = [
+                [true, 999, 999],
+                [true, -999, -999],
+                [true, 10e2, 200],
+                [true, 0xff9900, 200],
+                [true, 999.88, 999.88],
+                [true, numToHex(999), 999],
+                [true, numToHex(1500), 1500],
+                [true, '0b0101010', 42],
+                [true, '0b111', 7],
+                [true, '0747', 487],
+                [true, '0777', 511],
+                [true, '12e2', 1200],
+                [true, '-12e2', -1200],
+                [true, '-12e-2', -0.12],
+                [true, '1,000.35', 1000.35],
+                [true, '1,000,000.35', 1000000.35],
+                [false, 'helloworld', 'helloworld'],
+                [false, '0ehello', '0ehello'],
+                [false, '0bhello', '0bhello'],
+                [false, '0x', '0x']
+            ];
+
+        values.forEach(function (value) {
+            expect(validator.isValid(value[1])).to.equal(value[0]);
+        });
+
+        // Ensure we have 7
+        expect(validator.messages.length).to.equal(7);
     });
 
 });
