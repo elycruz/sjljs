@@ -234,26 +234,21 @@ describe('sjl.ns.refactor.validator.ValidatorChain', function () {
                 breakChainOnFailure: true
             }),
 
-            // Run op
+            // Merge validator into first validator
             resultOfOp = validatorChain.mergeValidatorChain(validatorChain2);
-        expect(copyOfValidatorChain.isValid('helloworld')).to.equal(true);
-        expect(validatorChain.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
-        expect(validatorChain2.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
-        // @todo add more extensive tests for `ValidatorChain#isValid`
-    });
 
-    //it('should return true when checking value `100` for a range ' +
-    //    'between 0-100 (inclusive) and should have zero error messages.', function () {
-    //    var messages = chain.getMessages();
-    //    expect(chain.isValid(100)).to.equal(true);
-    //    expect(messages.length).to.equal(0);
-    //});
-    //
-    //it('should return true when checking value `99` for a range ' +
-    //    'between 0-100 (exclusive) and should return 0 messages for each validator.', function () {
-    //    var messages = chain.getMessages();
-    //    expect(chain.isValid(99)).to.equal(true);
-    //    expect(messages.length).to.equal(0);
-    //});
+        expect(copyOfValidatorChain.isValid('helloworld')).to.equal(true);
+        expect(copyOfValidatorChain.messages.length).to.equal(0);
+
+        expect(validatorChain.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
+        expect(validatorChain.messages.length).to.equal(1);
+
+        expect(validatorChain2.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
+        expect(validatorChain2.messages.length).to.equal(2);
+
+        // @note validator.messages get cleared from within `isValid` before validation occurs
+        expect(validatorChain2.isValid(99)).to.equal(true);
+        expect(validatorChain2.messages.length).to.equal(0);
+    });
 
 });
