@@ -385,7 +385,7 @@
                         out[0] = -1;
                     }
                     else {
-                        out[1] = replacedString;
+                        out[1] = Number(replacedString);
                         out[0] = 1;
                     }
                 }

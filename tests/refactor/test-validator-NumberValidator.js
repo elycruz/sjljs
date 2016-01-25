@@ -140,8 +140,8 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
     describe('#`_validateComma', function () {
         it ('should return [-1, value] when value contains comma(s) and `allowComma` is `false`.', function () {
             var validator = new NumberValidator(),
-                valuesWithCommas = [[-1, ',1,000,000,000', '1000000000'], [-1, ',', ''], [-1, '1,000,000', '1000000'], [-1, '+100,000', '+100000']],
-                valuesWithCommas2 = [[1, ',1,000,000,000', '1000000000'], [-1, ',', ','], [1, '1,000,000', '1000000'], [1, '+100,000', '+100000']],
+                valuesWithCommas = [[-1, ',1,000,000,000', 1000000000], [-1, ',', ','], [-1, '1,000,000', 1000000], [-1, '+100,000', 100000]],
+                valuesWithCommas2 = [[1, ',1,000,000,000', 1000000000], [-1, ',', ','], [1, '1,000,000', 1000000], [1, '+100,000', 100000]],
                 valuesWithoutCommas = [[0, 99], [0, '123123.234e20'], [0, 0xff9900]],
                 values = valuesWithCommas.concat(valuesWithoutCommas),
                 result;
@@ -308,19 +308,32 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
     describe('#`_parseValidationFunctions`', function () {
         var validator = new NumberValidator({
             allowHex: true,
+            allowBinary: true,
+            allowOctal: true,
+            allowCommas: true,
+            allowScientific: true
         }),
-            numTypeFuncs = ['_validateHex', '_validateFloat', '_validateBinary', '_validateOctal', '_validateScientific'],
+            numTypeFuncs = ['_validateComma', '_validateHex',
+                '_validateBinary', '_validateOctal', '_validateScientific'],
             parser = createValidationParser(validator, numTypeFuncs),
             values = [
-                [1, numToHex(999), 999, function () {}],
-                [1, numToHex(1500), 1500, function () {}],
+                [1, numToHex(999), 999],
+                [1, numToHex(1500), 1500],
+                [1, '0b0101010', 42],
+                [1, '0b111', 7],
+                [1, '0747', 487],
+                [1, '0777', 511],
+                [1, '12e2', 1200],
+                [1, '-12e2', -1200],
+                [1, '-12e-2', -0.12],
+                [1, '1,000.35', 1000.35],
+                [1, '1,000,000.35', 1000000.35],
             ],
             result;
 
         values.forEach(function (value) {
-            // Before validation
-            // value[3](validator);
             result = parser(value[1]);
+            console.log(result, value);
             expect(result[0]).to.equal(value[0]);
             expect(result[1]).to.equal(value[2]);
         });
