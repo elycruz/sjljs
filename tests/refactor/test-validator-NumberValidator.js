@@ -59,12 +59,18 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
         return out;
     }
 
+    function createValidationParser (validator, funcs) {
+        return function (value) {
+            return validator._parseValidationFunctions.call(validator, funcs, value);
+        };
+    }
+
     it('should be a subclass of `Validator`.', function () {
         expect((new NumberValidator()) instanceof Validator).to.equal(true);
         expect((new NumberValidator()) instanceof NumberValidator).to.equal(true);
     });
 
-    describe('#_validateHex', function () {
+    describe('#`_validateHex`', function () {
         it('should return an array of [1, Number] when hex value is a valid hex value.', function () {
             var vals = fib(1000).map(function (value) {
                     return [value, numToHex(value), 1];
@@ -201,7 +207,7 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
             validator.allowBinary = true;
             binaryValues2.forEach(function (value, index) {
                 result = validator._validateBinary(value[1]);
-                console.log(result, binaryValues2[index]);
+                //console.log(result, binaryValues2[index]);
                 expect(result[0]).to.equal(binaryValues2[index][0]);
                 if (result[0] !== 1) {
                     expect(result[1]).to.equal(binaryValues2[index][1]);
@@ -274,8 +280,8 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
     describe('#`_validateRange', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowRange` is `false`.', function () {
             var validator = new NumberValidator({checkRange: false}),
-                rangeValues = [[-1, 999], [-1, 100], [-1, 'abc']],
-                rangeValues2 = [[-1, 999, 0, 998], [1, 999, 0, 999], [-1, 'abc']],
+                rangeValues = [[0, 999], [0, 100], [0, 'abc']],
+                rangeValues2 = [[-1, 999, 0, 998], [1, 999, 0, 999], [-1, 999, 99, 100]],
                 result;
 
             // Test for `allowRange` is false
@@ -285,14 +291,38 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
                 expect(result[1]).to.equal(rangeValues[index][1]);
             });
 
-            //rangeValues2.forEach(function (value, index) {
-            //    validator.min = value[2];
-            //    validator.max = value[3];
-            //    result = validator._validateRange(value[1]);
-            //    expect(result[0]).to.equal(rangeValues2[index][0]);
-            //    expect(result[1]).to.equal(rangeValues2[index][1]);
-            //});
+            validator.checkRange = true;
+            validator.inclusive = true;
+            rangeValues2.forEach(function (value, index) {
+                validator.min = value[2];
+                validator.max = value[3];
+                result = validator._validateRange(value[1]);
+                //console.log(result, value);
+                expect(result[0]).to.equal(rangeValues2[index][0]);
+                expect(result[0]).to.equal(rangeValues2[index][0]);
+                expect(result[1]).to.equal(rangeValues2[index][1]);
+            });
+        });
+    });
 
+    describe('#`_parseValidationFunctions`', function () {
+        var validator = new NumberValidator({
+            allowHex: true,
+        }),
+            numTypeFuncs = ['_validateHex', '_validateFloat', '_validateBinary', '_validateOctal', '_validateScientific'],
+            parser = createValidationParser(validator, numTypeFuncs),
+            values = [
+                [1, numToHex(999), 999, function () {}],
+                [1, numToHex(1500), 1500, function () {}],
+            ],
+            result;
+
+        values.forEach(function (value) {
+            // Before validation
+            // value[3](validator);
+            result = parser(value[1]);
+            expect(result[0]).to.equal(value[0]);
+            expect(result[1]).to.equal(value[2]);
         });
     });
 

@@ -332,19 +332,13 @@
             for (i = 0; i < funcsLen; i += 1) {
                 resultSet = this[functions[i]](value);
                 // If `value`'s validation failed exit the loop
-                if (resultSet[0] === -1) {
+                if (resultSet[0] === -1 || resultSet[0] === 1) {
                     break;
                 }
             }
             return resultSet;
         },
 
-        /**
-         * Validates a hex string.  Returns an internal validation result [[-1, 0, 1], `value`]
-         * @param value {String}
-         * @returns {Array<Number, String|Number>}
-         * @private
-         */
         _validateHex: function (value) {
             var retVal = [0, value],
                 isHexString = value[1] === 'x',
@@ -486,11 +480,11 @@
 
         _validateRange: function (value) {
             var out = [0, value];
-            if (this.checkRange && sjl.classOfIs(value, Number)) {
-                if (this.inclusive && value < this.min || value > this.max) {
+            if (this.checkRange) {
+                if (this.inclusive && (value < this.min || value > this.max)) {
                     out[0] = -1;
                 }
-                else if (value <= this.min || value >= this.max) {
+                else if (!this.inclusive && (value <= this.min || value >= this.max)) {
                     out[0] = -1;
                 }
                 else {
