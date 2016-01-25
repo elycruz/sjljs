@@ -12,18 +12,18 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-var EmptyValidator = sjl.ns.refactor.validator.EmptyValidator,
+var NotEmptyValidator = sjl.ns.refactor.validator.NotEmptyValidator,
     Validator = sjl.ns.refactor.validator.Validator;
 
-describe('sjl.ns.validator.EmptyValidator', function () {
+describe('sjl.ns.validator.NotEmptyValidator', function () {
 
     it ('should be a subclass of `Validator`.', function () {
-        var validator = new EmptyValidator();
+        var validator = new NotEmptyValidator();
         expect(validator instanceof Validator).to.equal(true);
     });
 
     it ('should return `true` for `validate` and `isValid` if value is not `empty`.', function () {
-        var validator = new EmptyValidator();
+        var validator = new NotEmptyValidator();
         ['hello', 99, true, [1], {a: 1}].forEach(function (value) {
             expect(validator.validate(value)).to.equal(true);
             expect(validator.isValid(value)).to.equal(true);
@@ -31,7 +31,7 @@ describe('sjl.ns.validator.EmptyValidator', function () {
     });
 
     it ('should return `false` for `validate` and `isValid` if value is `empty`.', function () {
-        var validator = new EmptyValidator();
+        var validator = new NotEmptyValidator();
         ['', 0, false, [], {}].forEach(function (value) {
             expect(validator.validate(value)).to.equal(false);
             expect(validator.isValid(value)).to.equal(false);
@@ -39,7 +39,7 @@ describe('sjl.ns.validator.EmptyValidator', function () {
     });
 
     it ('should have messages when `validate` returns false.', function () {
-        var validator = new EmptyValidator();
+        var validator = new NotEmptyValidator();
         ['', 0, false, [], {}].forEach(function (value) {
             expect(validator.validate(value)).to.equal(false);
             expect(validator.messages.length > 0).to.equal(true);

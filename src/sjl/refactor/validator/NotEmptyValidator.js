@@ -2,13 +2,14 @@
  * Created by Ely on 7/21/2014.
  */
 
-'use strict';
-
 (function () {
+
+    'use strict';
+
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
         Validator = sjl.ns.refactor.validator.Validator,
-        EmptyValidator = function EmptyValidator() {
+        NotEmptyValidator = function NotEmptyValidator() {
             // Set defaults and extend with Base validator
             Validator.apply(this, [{
                 messageTemplates: {
@@ -19,7 +20,7 @@
             }].concat(sjl.argsToArray(arguments)));
         };
 
-    EmptyValidator = Validator.extend(EmptyValidator, {
+    NotEmptyValidator = Validator.extend(NotEmptyValidator, {
 
         isValid: function (value) {
             var self = this,
@@ -45,12 +46,12 @@
     });
 
     if (isNodeEnv) {
-        module.exports = EmptyValidator;
+        module.exports = NotEmptyValidator;
     }
     else {
-        sjl.ns('validator.EmptyValidator', EmptyValidator);
+        sjl.ns('validator.NotEmptyValidator', NotEmptyValidator);
         if (window.__isAmd) {
-            return EmptyValidator;
+            return NotEmptyValidator;
         }
     }
 

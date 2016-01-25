@@ -2,14 +2,15 @@
  * Created by Ely on 7/21/2014.
  */
 
-'use strict';
-
 (function () {
+
+    'use strict';
+
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        contextName = 'sjl.ns.validator.ValidatorChain',
+        sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
+        contextName = 'sjl.ns.refactor.validator.ValidatorChain',
         ObjectIterator = sjl.ns.stdlib.ObjectIterator,
-        Validator = sjl.ns.validator.Validator,
+        Validator = sjl.ns.refactor.validator.Validator,
         ValidatorChain = function ValidatorChain(/*...options {Object}*/) {
             var _breakChainOnFailure = false,
                 _validators = [];
@@ -44,8 +45,7 @@
         isValid: function (value) {
             var self = this,
                 retVal,
-                validators,
-                validator;
+                validators;
 
             // Set value internally and return it or get it
             value = typeof value === 'undefined' ? self.value : value;
@@ -56,32 +56,34 @@
             // Get validators
             validators = self.validators;
 
-            // If we've made it this far validators are good proceed
-            for (validator in validators) {
-                if (!validators.hasOwnProperty(validator)) {
-                    continue;
-                }
-                validator = validators[validator];
-                if (validator.isValid(value)) {
-                    continue;
-                }
-
-                // Else invalid validator found
-                retVal = false;
-
-                // Append error messages
-                self.appendMessages(validator.messages);
-
-                // Break chain if necessary
-                if (self.breakChainOnFailure) {
-                    break;
-                }
+            if (self.breakChainOnFailure) {
+                // If `some` value is not valid reverse return value of `some`
+                retVal = !validators.some(function (validator) {
+                    var out = false;
+                    if (!validator.isValid(value)) {
+                        // Append error messages
+                        self.appendMessages(validator.messages);
+                        out = true;
+                    }
+                    return out;
+                });
+            }
+            else {
+                // Check if every `validator` validates `value` to `true`
+                retVal = validators.every(function (validator) {
+                    var out = true;
+                    if (!validator.isValid(value)) {
+                        // Append error messages
+                        self.appendMessages(validator.messages);
+                        out = false;
+                    }
+                    return out;
+                });
             }
 
             // Return result of valid check
             return retVal;
         },
-
 
         isValidator: function (validator) {
             return validator instanceof Validator;
@@ -125,7 +127,8 @@
             if (!this.isValidator(validator)) {
                 this._throwTypeError('prependValidator', Validator, validator);
             }
-            return this.validators = [validator].concat(this.validators);
+            this.validators = [validator].concat(this.validators);
+            return this;
         },
 
         mergeValidatorChain: function (validatorChain) {
@@ -155,7 +158,7 @@
         module.exports = ValidatorChain;
     }
     else {
-        sjl.ns('validator.ValidatorChain', ValidatorChain);
+        sjl.ns('refactor.validator.ValidatorChain', ValidatorChain);
         if (window._isAmd) {
             return ValidatorChain;
         }
