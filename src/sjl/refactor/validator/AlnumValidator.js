@@ -9,16 +9,16 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},
         Validator = sjl.ns.refactor.validator.Validator,
-        AlnumValidator = function AlnumValidator (options) {
+        AlnumValidator = function AlnumValidator (/**...options {Object}**/) {
 
             // Set defaults and extend with Base validator
-            Validator.call(this, {
+            Validator.apply(this, [{
                 messageTemplates: {
                     NOT_ALPHA_NUMERIC: function (value) {
                         return 'Value is not alpha-numeric.  Value received: "' + value + '".';
                     }
                 }
-            });
+            }].concat(sjl.argsToArray(arguments)));
         };
 
     AlnumValidator = Validator.extend(AlnumValidator, {
