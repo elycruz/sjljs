@@ -1,7 +1,7 @@
-/**! sjljs 0.5.25
+/**! sjljs 0.5.26
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 8405128b129c56632a0e33e74cee9417
- * | Built-on: Wed Jan 13 2016 23:02:01 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: 0b489ce8c40503c1bd8ccebf89c9a8be
+ * | Built-on: Tue Feb 02 2016 16:26:49 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -968,6 +968,26 @@
 
         // Set lib src root path to be used in node env by `sjl.package`
         libSrcRootPath = __dirname;
+
+        // Allow all members from `sjl.ns.stdlib` to live and be accesible directly on `sjl`
+        var path = require('path'),
+            fs = require('fs'),
+            stdlibPath = path.join(libSrcRootPath, 'stdlib');
+        // Loop through files in 'sjl/stdlib'
+        fs.readdirSync(stdlibPath).forEach(function (file) {
+            // If file is not a directory, of either *.js or *.json file format, and a constructor
+            // then make it accessible on `sjl`
+            if (!fs.statSync(path.join(stdlibPath, file)).isDirectory()
+                && ['.js','.json'].indexOf(path.extname(file)) > -1
+                && file[0].toUpperCase() === file[0]) {
+                // Allow module to be fetched as a getter
+                Object.defineProperty(sjl, file.substr(0, file.lastIndexOf('.')), {
+                    get: function () {
+                        return require(path.join(dir, file));
+                    }
+                });
+            }
+        });
     }
 
     // Create top level frontend package.
@@ -1465,6 +1485,7 @@
         }
     }
 
+
 }());
 
 /**
@@ -1627,6 +1648,7 @@
             return ObjectIterator;
         }
     }
+
 
 }());
 
@@ -1825,6 +1847,7 @@
             return SjlSet;
         }
     }
+
 
 })();
 
