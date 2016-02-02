@@ -87,11 +87,11 @@
                 _regexForScientific = /^(?:\-|\+)?\d+(?:\.\d+)?(?:e(?:\-|\+)?\d+)?$/i,
                 _allowFloat = true,
                 _allowCommas = false,
-                _allowSigned = false,
+                _allowSigned = true,
                 _allowBinary = false,
                 _allowHex = false,
                 _allowOctal = false,
-                _allowScientific = false,
+                _allowScientific = true,
                 _checkRange = false,
                 _defaultRangeSettings = {
                     min: Number.NEGATIVE_INFINITY,

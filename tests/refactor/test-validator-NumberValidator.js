@@ -120,7 +120,7 @@ describe('sjl.ns.refactor.validator.NumberValidator`', function () {
 
     describe('#`_validateSigned', function () {
         it ('should return [-1, value] when value is a signed number.', function () {
-            var validator = new NumberValidator(),
+            var validator = new NumberValidator({allowSigned: false}),
                 values = [
                     // Should return failure (-1) and value
                     [-1, -3], [-1, -999.99], [-1, -0x99ff99], [-1, '+100'],
