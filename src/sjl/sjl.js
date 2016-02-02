@@ -971,15 +971,16 @@
             stdlibPath = path.join(libSrcRootPath, 'stdlib');
         // Loop through files in 'sjl/stdlib'
         fs.readdirSync(stdlibPath).forEach(function (file) {
+            var filePath = path.join(stdlibPath, file);
             // If file is not a directory, of either *.js or *.json file format, and a constructor
             // then make it accessible on `sjl`
-            if (!fs.statSync(path.join(stdlibPath, file)).isDirectory()
+            if (!fs.statSync(filePath).isDirectory()
                 && ['.js','.json'].indexOf(path.extname(file)) > -1
                 && file[0].toUpperCase() === file[0]) {
                 // Allow module to be fetched as a getter
                 Object.defineProperty(sjl, file.substr(0, file.lastIndexOf('.')), {
                     get: function () {
-                        return require(path.join(dir, file));
+                        return require(filePath);
                     }
                 });
             }

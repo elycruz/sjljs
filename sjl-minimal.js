@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 0.5.26 
+/**! sjl-minimal.js 0.5.27 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 13194046fde3261591dc4ce3c74cd9d9 
- * | Built-on: Tue Feb 02 2016 16:27:48 GMT-0500 (Eastern Standard Time) 
+ * | md5checksum: e81a7a7f2cad1640e1c6efdcb12abfb8 
+ * | Built-on: Tue Feb 02 2016 16:35:47 GMT-0500 (Eastern Standard Time) 
  **/
 /**
  * The `sjl` module.
@@ -976,15 +976,16 @@
             stdlibPath = path.join(libSrcRootPath, 'stdlib');
         // Loop through files in 'sjl/stdlib'
         fs.readdirSync(stdlibPath).forEach(function (file) {
+            var filePath = path.join(stdlibPath, file);
             // If file is not a directory, of either *.js or *.json file format, and a constructor
             // then make it accessible on `sjl`
-            if (!fs.statSync(path.join(stdlibPath, file)).isDirectory()
+            if (!fs.statSync(filePath).isDirectory()
                 && ['.js','.json'].indexOf(path.extname(file)) > -1
                 && file[0].toUpperCase() === file[0]) {
                 // Allow module to be fetched as a getter
                 Object.defineProperty(sjl, file.substr(0, file.lastIndexOf('.')), {
                     get: function () {
-                        return require(path.join(dir, file));
+                        return require(filePath);
                     }
                 });
             }
