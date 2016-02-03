@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 0.5.27 
+/**! sjl-minimal.js 0.5.29 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: e81a7a7f2cad1640e1c6efdcb12abfb8 
- * | Built-on: Tue Feb 02 2016 16:35:47 GMT-0500 (Eastern Standard Time) 
+ * | md5checksum: 6b6ba53ce81f4d389bc1d9af9650c5ab 
+ * | Built-on: Wed Feb 03 2016 01:15:44 GMT-0500 (Eastern Standard Time) 
  **/
 /**
  * The `sjl` module.
@@ -626,7 +626,7 @@
         Object.keys(p).forEach(function (prop) { // For all props in p.
             // If property is present on target (o) and is not writable, skip iteration
             propDescription = Object.getOwnPropertyDescriptor(o, prop);
-            if (propDescription && !propDescription.writable) {
+            if (propDescription && (!sjl.isset(propDescription.get) && !sjl.isset(propDescription.set)) && !propDescription.writable) {
                 return;
             }
             if (deep === true) {
@@ -974,14 +974,17 @@
         var path = require('path'),
             fs = require('fs'),
             stdlibPath = path.join(libSrcRootPath, 'stdlib');
+
         // Loop through files in 'sjl/stdlib'
         fs.readdirSync(stdlibPath).forEach(function (file) {
             var filePath = path.join(stdlibPath, file);
+
             // If file is not a directory, of either *.js or *.json file format, and a constructor
             // then make it accessible on `sjl`
             if (!fs.statSync(filePath).isDirectory()
                 && ['.js','.json'].indexOf(path.extname(file)) > -1
                 && file[0].toUpperCase() === file[0]) {
+
                 // Allow module to be fetched as a getter
                 Object.defineProperty(sjl, file.substr(0, file.lastIndexOf('.')), {
                     get: function () {
