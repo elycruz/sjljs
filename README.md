@@ -19,12 +19,12 @@ via a `sjl.package` and it's alias `sjl.ns`;  E.g.,
 now available in the `sjl.ns.stdlib` package.  Also all `sjl.ns.stdlib` classes can also be found at `sjl.{className}` 
 (only when used in browser, for nodejs old functionality remains the same and the only option 
 for dynamically loaded classes).~~
-
 Classes on `sjl.ns.stdlib.*` are now also available on `sjl.*` on both nodejs and in browsers!
 
 See release notes for release 0.5.0.
 
 ## Sections in Readme:
+- [Getting Started](#getting-started)
 - [Components Included](#components-included)
 - [Tests](#tests)
 - [Requirements](#requirements)
@@ -33,6 +33,10 @@ See release notes for release 0.5.0.
 - [Notes](#notes)
 - [License](#license)
 - [Changelogs](#changelogs)
+
+## Getting Started:
+Include either the full library './sjl[.min].js' or the minimal version './sjl-minimal[.min].js' (the minimal version
+only includes the core and no classes or constructors from it's other packages).
 
 ## Components included:
 - [Classes/Constructors](#classesconstructors)
@@ -161,8 +165,9 @@ someFunction ('value1', 'value2', 'valu3', 'value4', 'value5');
 ```
 
 ##### sjl.hasMethod (method) :Boolean
-This function has been removed in sjljs-0.5.7.
-Use `sjl.issetAndOfType(obj[method], Function)` instead.
+~~This function has been removed in sjljs-0.5.7.
+Use `sjl.issetAndOfType(obj[method], Function)` instead.~~
+This functions been re-added officially as of sjljs-0.5.31.
 
 ##### sjl.camelCase(str {String}, ucaseFirst {Boolean|undefined}) :String
 Camel Cases a string;  
@@ -177,13 +182,13 @@ sjl.classOf(new Map()) === 'Map'  // true
 // etc.
 ```
 
-##### sjl.classOfIs(obj {*}, classTypeStr {String|Function}) :Boolean
-Checks whether `obj` is of `classTypeStr` or Constructor passed in;  E.g.,
+##### sjl.classOfIs(obj {*}, classTypeStrOrConstructor {String|Function}) :Boolean
+Checks whether `obj` is of `classTypeStrOrConstructor` or Constructor passed in;  E.g.,
 ```
 sjl.classOfIs(0, 'Number') // true.  Matches 'Number'.
-sjl.classOfIs([], 'Array') === true  // true
+sjl.classOfIs([], Array) === true  // true (checks passed in constructors `name` property) 
 sjl.classOfIs([], 'Array') // true.  Matches 'Array'.
-sjl.classOfIs([], Array) // true.  Matches 'Array'.
+sjl.classOfIs([], Array) // true.  Matches 'Array' (checks passed in constructors `name` property).
 ```
 
 ##### sjl.empty(value {*}) :Boolean
@@ -206,7 +211,7 @@ Shifts a boolean off of the beginning of an array and returns it.
 If no boolean is found at there returns `false`.
 
 ##### sjl.isset(value {*}) :Boolean
-Checks to see if value is not `null` or `undefined` and returns true if it is.
+Checks to see if value is not `null` or `undefined` and returns a boolean on whether the value is set or not.
 ```
 // Note `someUndefinedValue` must be declared somewhere (E.g., as a function parameter etc.) or you'll
 // get a javascript error for trying to access a doubly undefined and undeclared variable.
@@ -229,8 +234,10 @@ sjl.isset(helloWorld);
 
 ```
 
-##### sjl.issetAndOfType(value {*}, type {String|Array<String>}, type {String}) :Boolean
-Checks to see if a value is set and is of given type.  E.g.,
+##### sjl.issetAndOfType(value {*}, type {String|Function}) :Boolean
+Checks to see if a value is set and is of given type name or constructor.  
+**Note** This method does not check whether value is an instance of a subclass of `type` instead it checks that it is of type `type`.
+E.g.,
 ```
 sjl.issetAndOfType(someFunctionValue, 'Function')
 // true.  Value is set and is of type of function.
@@ -264,9 +271,9 @@ For getting and setting values on hash objects (allows deep searching by namespa
  finds or sets `{all: {your: {base: ...}}}`).
 
 ##### ~~sjl.isEmptyObjKey(obj {Object}, key {String}, type {String|undefined}) :Boolean~~
-This method is removed in sjljs-0.5.7.
+This method has been removed as of sjljs-0.5.7.
 
-##### sjl.isEmptyOrNotOfType(value{*}, type {String|undefined}) :Boolean
+##### sjl.isEmptyOrNotOfType(value{*}, type {String|Function|undefined}) :Boolean
 
 ```
 sjl.isEmptyNotOfType(({hello: 'world'}).hello);
@@ -294,7 +301,7 @@ sjl.jsonClone(obj);
 ```
 
 ##### sjl.clone (obj {*}) :*
-Returns a new object with the properties from `obj`.
+Returns a new object with the properties from `obj` (does a deep copy).
 
 ##### sjl.ucaseFirst(str {String}) :String
 Uppercases the first character of a string;  E.g., `sjl.ucaseFirst('hello');`  returns 'Hello'.
@@ -457,8 +464,8 @@ var SomeClass = myObject.package.somePackage.SomeClass;
 
 
 **Note**:
-- This is called on the `sjl` object to allow to access its class members easily in nodejs and on the frontend.
-- For frontend end you have to include the file for the class you want to access it via the `package` and `ns` methods.
+- This is called on the `sjl` object to allow access to its class members easily in nodejs and on the frontend.
+- For frontend end you have to include the file for the class you want to access unless you are using './sjl[.min].js' (which includes all classes).
 
 ##### sjl.package
 Created using `sjl.createTopLevelPackage` and is available for accessing sjl package members (for, current, packages 'stdlib', 'input', and 'validator').
@@ -469,19 +476,44 @@ Same as `sjl.package`.
 
 ### Set Functions:
 
-##### sjl.extend(obj {Object|Boolean}, ...obj {Object|undefined}, useLegacyGettersAndSetters {Boolean|undefined}) : Object
-Similiar to JQuery's `extend` method except with the following method signature: 
-`extend((Boolean|*)[,obj, obj],[Boolean]) : Object`
-- If the first param is a Boolean then the `deep` option is set (extends first object found from passed in params (arguments[1]) deeply)
-- Where `*` is any type of object with type "Object".
-- `obj` is any type of object of type "Object".
-- and the last `[Boolean]` (optional boolean) is passed in to force
-the extend method to use any composite styled set and get methods that may be available
-for the key being merged on to the first object;  composite styled = `set{keyName}` | `setKeyName` or also
-if `keyName` is a function on the object to extend then it gets called as a setter if `extend`'s last param is a Boolean.
-
-This last item in the list above allows for interesting objects which inherit a waterfall
-like property on instantiation (if you use the `extend` method to merge passed in options from within the constructor).
+##### sjl.extend(obj {Object|Boolean}, ...obj {Object|undefined} [,hydrateViaMethods {Boolean|undefined}]) : Object
+Similar to JQuery's `extend` method except properties only get copied over to the first object.  Also the signature 
+ for the method allows for one more optional boolean which allows values to get pulled and pusehd via any found 
+ composite styled getter and setter methods or overloaded methods when merging values over to the first object: E.g.,
+```
+var obj_1 = {
+    _value: 'some-value',
+    _otherValue: 'some-other-value',
+    all: {your: {base: '...'}, otherValue: 'hello'},
+    getValue: function () { return this._value; }
+    setValue: function (value) { this._value = value; return this; }
+    otherValue: function (value) {
+        var retVal;
+        if (typeof value === 'undefined') {
+            retVal = this._otherValue; 
+        } 
+        else { /** or if value is of some type **/
+            this._otherValue = value;
+            retVal = this;
+        }
+        return retVal;
+    },
+    obj_2 = {
+        value: 'helloWorld',
+        otherValue: 29,  // if this was an overloaded or composite-getter/setter method ...  
+        all: {your: {base: {are: 'belong to us'}}}
+    };
+    
+    // Extend obj_1 with obj_2 and use any [composite/overloaded]-[getter/setter] methods that may be found 
+    // for push-pull else just set value(s));
+    sjl.extend(true, obj_1, obj_2, true);
+    
+    // Test merge
+    console.log(obj_1.getValue() === obj_2.value); // true
+    console.log(obj_1._otherValue === obj_2._otherValue); // true
+    console.log(obj_1.all.your.base.are === obj_2.all.your.base.are); // true
+    console.log(obj_1.otherValue === 'hello'); // true
+```
 
 ### OOP Util functions:
 
@@ -496,17 +528,19 @@ creates `sjl.Extendable`.
 #### Composition helpers:
 
 ##### sjl.getValueFromObj (key {String}, obj {Object}, args {*|undefined}, raw {Boolean|undefined}) :*
-Allows getting value by namespace string (ex: `'some.object.deep'`) also if return value is a function automatically 
-calls it and allows you to pass args to use with it also allows for fetching the function raw if `raw` is `true`.
+Allows getting value by namespace string (ex: `'some.object.deep'`) also if return value is a function allows 
+it to automatically be called via the `raw` params (optionally with `args` if they are set.
 
 ##### sjl.setValueOnObj (key {String}, value {*}, obj {Object}) :{Object|*}
-Allows setting a value on an object by namespace string or conjoined setter function (setPropertyName) or sets value 
-directly if no setter or namespace string found/used.
+Allows setting a value on an object by namespace string, composite setter function (setPropertyName), 
+ overloaded setter function (function of same name as the `key` passed), or sets the value 
+directly if none of the above are found.
 
 ### Tests:
+1.)  Run `npm install` in project root.
 - Tests for all components listed under "Utilities" above.
 - Tests to be run on server.  See './tests/for-server'.
-- Tests to be run in browser (requires running `bower install` in root directory).
+- Tests to be run in browser (requires running `bower install` in root directory of this project).
 See './tests/for-browser'.
 
 ## Requirements:

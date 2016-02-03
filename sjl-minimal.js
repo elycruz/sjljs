@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 0.5.30 
+/**! sjl-minimal.js 0.5.32 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 6b6ba53ce81f4d389bc1d9af9650c5ab 
- * | Built-on: Wed Feb 03 2016 01:23:41 GMT-0500 (Eastern Standard Time) 
+ * | md5checksum: 0abe1bcd9eca87fa5877b22a1191adf7 
+ * | Built-on: Wed Feb 03 2016 02:41:49 GMT-0500 (Eastern Standard Time) 
  **/
 /**
  * The `sjl` module.
@@ -93,7 +93,7 @@
      * Checks whether a value isset and if it's type is the same as the type name passed in.
      * @function module:sjl.issetAndOfType
      * @param value {*} - Value to check on.
-     * @param type {String} - Type name to check for;  E.g., 'Number', 'Array', 'HTMLMediaElement' etc.
+     * @param type {String|Function} - Type name to check for;  E.g., 'Number', 'Array', 'HTMLMediaElement' etc.
      * @returns {Boolean}
      */
     sjl.issetAndOfType = function (value, type) {
