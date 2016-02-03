@@ -1,6 +1,6 @@
 bower_components
 node_modules
-src/sjl/mvc
+_recyclebin/mvc
 src/sjl/navigation
 tests/for-browser/**/*
 tests/for-server-es6/**/*
