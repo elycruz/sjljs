@@ -11,14 +11,16 @@ Not meant to replace popular libraries (Backbone, Underscore, Jquery etc.)
 only meant as a supplement to them.
 
 **Note** 
-Version 0.5+ removes some backward compatibility.  Namely 
+~~Version 0.5+ removes some backward compatibility.  Namely 
 all classes that were included on `sjl` before our now included 
 via a `sjl.package` and it's alias `sjl.ns`;  E.g.,
 `sjl.Extendable` is now accessible via `sjl.ns.stdlib.Extendable`
  Also all classes that were available in the root level are 
 now available in the `sjl.ns.stdlib` package.  Also all `sjl.ns.stdlib` classes can also be found at `sjl.{className}` 
 (only when used in browser, for nodejs old functionality remains the same and the only option 
-for dynamically loaded classes).
+for dynamically loaded classes).~~
+
+Classes on `sjl.ns.stdlib.*` are now also available on `sjl.*` on both nodejs and in browsers.
 
 See release notes for release 0.5.0.
 
@@ -508,7 +510,7 @@ directly if no setter or namespace string found/used.
 See './tests/for-browser'.
 
 ## Requirements:
-- Javascript versions ecmascript 3+
+- Javascript versions ecmascript 5+
 
 ## Supported browsers:
 - ~~ie8+~~ (IE8 support was dropped in version 0.5.0) IE9+, and all other modern day browsers.
