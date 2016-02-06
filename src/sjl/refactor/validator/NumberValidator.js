@@ -13,14 +13,14 @@
      * @param value {String} - String value to be validated.
      * @constructor
      */
-    function StringValidationOpResult (flag, value) {
-        if (sjl.classOfIs(value, String)) {
-            throw new Error(StringValidationOpResult.name + ' expects param 2 to be of type' +
-                ' "String".  Type received: "' + sjl.classOf(value) + '".');
-        }
-        this[0] = flag;
-        this[1] = value;
-    }
+    //function StringValidationOpResult (flag, value) {
+    //    if (sjl.classOfIs(value, String)) {
+    //        throw new Error(StringValidationOpResult.name + ' expects param 2 to be of type' +
+    //            ' "String".  Type received: "' + sjl.classOf(value) + '".');
+    //    }
+    //    this[0] = flag;
+    //    this[1] = value;
+    //}
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../../sjl.js') : window.sjl || {},

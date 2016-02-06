@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 0.5.32 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 0abe1bcd9eca87fa5877b22a1191adf7 
- * | Built-on: Wed Feb 03 2016 02:41:49 GMT-0500 (Eastern Standard Time) 
+ * | md5checksum: 687d644663e4650e8966cd5fec30837c 
+ * | Built-on: Sat Feb 06 2016 17:46:05 GMT-0500 (EST) 
  **/
 /**
  * The `sjl` module.
@@ -24,7 +24,7 @@
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
-    globalContext.__isAmd = typeof define === 'function' && define.amd,
+    globalContext.__isAmd = typeof define === 'function' && define.amd;
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -64,7 +64,7 @@
      */
     sjl.extractFromArrayAt = function (array, index, type, makeCopyOfArray) {
         var retVal = null,
-            matchesType, foundElement, copyOfArray;
+            matchesType, foundElement;
         makeCopyOfArray = sjl.classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
         if (array.hasOwnProperty(index + '')) {
             if (makeCopyOfArray) {
@@ -87,6 +87,16 @@
      */
     sjl.isset = function (value) {
         return typeof value !== _undefined && value !== null;
+    };
+
+    /**
+     * Checks if one or more parameters are set (not null and not undefined).
+     * @returns {Boolean} - True if all params passed in are not null or undefined.
+     */
+    sjl.issetMulti = function (/** arg... **/) {
+        return sjl.argsToArray(arguments).some(function (value) {
+            return !sjl.isset(value);
+        }) ? false : true;
     };
 
     /**
@@ -203,6 +213,16 @@
      */
     sjl.empty = function (value) {
         return isEmpty(value);
+    };
+
+    /**
+     * Checks to see if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string}.
+     * @returns {Boolean} - Returns true if any of the values passed
+     */
+    sjl.emptyMulti = function (/** arg... **/) {
+        return sjl.argsToArray(arguments).some(function (value) {
+            return isEmpty(value);
+        });
     };
 
     /**

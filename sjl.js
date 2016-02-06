@@ -1,7 +1,7 @@
 /**! sjljs 0.5.32
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: b8d62bfc8585cb6f80a04e3b3b15edc6
- * | Built-on: Wed Feb 03 2016 02:41:50 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: a44caa3a02e0de7caf987e8b93456481
+ * | Built-on: Sat Feb 06 2016 17:46:06 GMT-0500 (EST)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -23,7 +23,7 @@
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
-    globalContext.__isAmd = typeof define === 'function' && define.amd,
+    globalContext.__isAmd = typeof define === 'function' && define.amd;
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -63,7 +63,7 @@
      */
     sjl.extractFromArrayAt = function (array, index, type, makeCopyOfArray) {
         var retVal = null,
-            matchesType, foundElement, copyOfArray;
+            matchesType, foundElement;
         makeCopyOfArray = sjl.classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
         if (array.hasOwnProperty(index + '')) {
             if (makeCopyOfArray) {
@@ -86,6 +86,16 @@
      */
     sjl.isset = function (value) {
         return typeof value !== _undefined && value !== null;
+    };
+
+    /**
+     * Checks if one or more parameters are set (not null and not undefined).
+     * @returns {Boolean} - True if all params passed in are not null or undefined.
+     */
+    sjl.issetMulti = function (/** arg... **/) {
+        return sjl.argsToArray(arguments).some(function (value) {
+            return !sjl.isset(value);
+        }) ? false : true;
     };
 
     /**
@@ -202,6 +212,16 @@
      */
     sjl.empty = function (value) {
         return isEmpty(value);
+    };
+
+    /**
+     * Checks to see if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string}.
+     * @returns {Boolean} - Returns true if any of the values passed
+     */
+    sjl.emptyMulti = function (/** arg... **/) {
+        return sjl.argsToArray(arguments).some(function (value) {
+            return isEmpty(value);
+        });
     };
 
     /**
@@ -2169,7 +2189,7 @@
                     value: key
                 },
                 serial: {
-                    value: priorityItemSerial++
+                    value: priorityItemSerial
                 },
                 value: {
                     value: value
@@ -2185,6 +2205,7 @@
                 }
             });
             this.priority = priority;
+            priorityItemSerial += 1;
         },
         PriorityList = function PriorityList (objOrArray, LIFO) {
             var _sorted = false,
@@ -2210,7 +2231,7 @@
                 },
                 LIFO: {
                     get: function () {
-                        return _LIFO
+                        return _LIFO;
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO', value, Boolean);
@@ -2220,7 +2241,7 @@
                 },
                 LIFO_modifier: {
                     get: function () {
-                        this.LIFO ? 1 : -1;
+                        return this.LIFO ? 1 : -1;
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO_modifier', value, Number);
@@ -2266,7 +2287,7 @@
             }
             sortedValues = [].concat(this.itemsMap._values).sort(function (a, b) {
                 return a.priority === b.priority
-                    ? (a.serial > b.serial ? -1 : 1) * LIFO_modifer
+                    ? (a.serial > b.serial ? -1 : 1) * LIFO_modifier
                     : (a.priority > b.priority ? -1 : 1);
             }, this);
             sortedKeys = sortedValues.map(function (item) {
@@ -2284,10 +2305,11 @@
             var retVal;
             if (sjl.classOfIs(priority, Number)) {
                 retVal = priority;
-            } else {
+            }
+            else {
                 this._internalPriorities += 1;
                 retVal = +this._internalPriorities;
-            };
+            }
             return retVal;
         },
 

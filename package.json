@@ -1,6 +1,6 @@
 {
   "name": "sjljs",
-  "version": "0.5.32",
+  "version": "0.5.33",
   "description": "Simple Javascript Library",
   "main": "./src/sjl/sjl.js",
   "directories": {

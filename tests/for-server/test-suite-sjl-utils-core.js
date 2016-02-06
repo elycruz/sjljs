@@ -125,6 +125,24 @@ describe('Sjl Utils', function () {
         });
     });
 
+    describe('#`issetMulti`', function () {
+        var falsyArgSets = [
+            [null, undefined],
+            [null, 'hello', undefined, {}, []],
+            [undefined, 'hello', (function () {})],
+        ],
+            truthyArgSets = [
+                ['hello', {hello: 'ola'}, (function () {})]
+            ];
+
+        falsyArgSets.forEach(function (args) {
+            expect(sjl.issetMulti.apply(sjl, args)).to.equal(false);
+        });
+        truthyArgSets.forEach(function (args) {
+            expect(sjl.issetMulti.apply(sjl, args)).to.equal(true);
+        });
+    });
+
     describe('#`issetAndOfType`', function () {
         var refObj = objForIssetAndEmptyChecks,
             evaledObj = returnedObjWithEvaledValues(refObj),
@@ -290,6 +308,24 @@ describe('Sjl Utils', function () {
         // Should return false for each in non-empty values
         makeEmptyTestsForValueMap(nonEmptyValueMap, 'false');
 
+    });
+
+    describe('#`emptyMulti`', function () {
+        var truthyArgSets = [
+                [null, undefined],
+                [null, 'hello', undefined, {}, []],
+                [undefined, 'hello', (function () {})],
+            ],
+            falsyArgSets = [
+                ['hello', {hello: 'ola'}, (function () {})]
+            ];
+
+        falsyArgSets.forEach(function (args) {
+            expect(sjl.emptyMulti.apply(sjl, args)).to.equal(false);
+        });
+        truthyArgSets.forEach(function (args) {
+            expect(sjl.emptyMulti.apply(sjl, args)).to.equal(true);
+        });
     });
 
 });

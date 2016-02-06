@@ -19,7 +19,7 @@
                     value: key
                 },
                 serial: {
-                    value: priorityItemSerial++
+                    value: priorityItemSerial
                 },
                 value: {
                     value: value
@@ -35,6 +35,7 @@
                 }
             });
             this.priority = priority;
+            priorityItemSerial += 1;
         },
         PriorityList = function PriorityList (objOrArray, LIFO) {
             var _sorted = false,
@@ -60,7 +61,7 @@
                 },
                 LIFO: {
                     get: function () {
-                        return _LIFO
+                        return _LIFO;
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO', value, Boolean);
@@ -70,7 +71,7 @@
                 },
                 LIFO_modifier: {
                     get: function () {
-                        this.LIFO ? 1 : -1;
+                        return this.LIFO ? 1 : -1;
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO_modifier', value, Number);
@@ -116,7 +117,7 @@
             }
             sortedValues = [].concat(this.itemsMap._values).sort(function (a, b) {
                 return a.priority === b.priority
-                    ? (a.serial > b.serial ? -1 : 1) * LIFO_modifer
+                    ? (a.serial > b.serial ? -1 : 1) * LIFO_modifier
                     : (a.priority > b.priority ? -1 : 1);
             }, this);
             sortedKeys = sortedValues.map(function (item) {
@@ -134,10 +135,11 @@
             var retVal;
             if (sjl.classOfIs(priority, Number)) {
                 retVal = priority;
-            } else {
+            }
+            else {
                 this._internalPriorities += 1;
                 retVal = +this._internalPriorities;
-            };
+            }
             return retVal;
         },
 
