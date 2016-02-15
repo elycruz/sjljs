@@ -28,7 +28,7 @@
             };
         }
         else if (classOfArrayOrObj === 'Object') {
-            keys = sjl.keys(arrayOrObj);
+            keys = Object.keys(arrayOrObj);
             values = keys.map(function (key) {
                 return arrayOrObj[key];
             });

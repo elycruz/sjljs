@@ -1,7 +1,7 @@
 /**! sjljs 0.5.33
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: a44caa3a02e0de7caf987e8b93456481
- * | Built-on: Sat Feb 06 2016 17:47:47 GMT-0500 (EST)
+ * | md5checksum: 123cdc1ea9440ff4b979d7e12cab7f95
+ * | Built-on: Sun Feb 14 2016 19:15:02 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -1706,7 +1706,7 @@
             };
         }
         else if (classOfArrayOrObj === 'Object') {
-            keys = sjl.keys(arrayOrObj);
+            keys = Object.keys(arrayOrObj);
             values = keys.map(function (key) {
                 return arrayOrObj[key];
             });
