@@ -2,22 +2,21 @@
  * Created by elydelacruz on 3/1/16.
  */
 
+
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    var sjl = require('./../../src/sjl/sjl.js');
+}
+
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
+
 describe('#`getValueFromObj`', function () {
 
-    "use strict";
-
-    // Make test suite directly interoperable with the browser
-    if (typeof window === 'undefined') {
-        var chai = require('chai');
-        var sjl = require('./../../src/sjl/sjl.js');
-    }
-
-    // Get chai.expect
-    if (typeof expect === 'undefined') {
-        var expect = chai.expect;
-    }
-
-    const objToTest = {
+    var objToTest = {
             'NumberValue': -1,
             'NumberValue2': 0,
             'NumberValue3': 1,
@@ -53,6 +52,7 @@ describe('#`getValueFromObj`', function () {
 
         // Loop through object keys and validate proper functionality for function
         objKeys.forEach(function (key, index) {
+            var retVal;
 
             // Ensure preliminary values used for test match those of test subject
             expect(objToTest[key] === objValues[index]).to.equal(true);
@@ -66,7 +66,7 @@ describe('#`getValueFromObj`', function () {
             }
 
             // Check result of getting value via legacy getter if available
-            let retVal = sjl.getValueFromObj(key, objToTest, null, null, true);
+            retVal = sjl.getValueFromObj(key, objToTest, null, null, true);
 
             // Ensure getters are called when `useLegacyGetters` is true
             if (typeof retVal === 'function') {
