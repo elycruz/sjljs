@@ -503,15 +503,15 @@
      * @param obj {Object} the hash to search within
      * @param args {Array} optional the array to pass to value if it is a function
      * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
-     * @param noLegacyGetters {Boolean} - Default false (use legacy getters).
+     * @param useLegacyGetters {Boolean} - Default false.
      *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
      *
      * @returns {*}
      */
-    sjl.getValueFromObj = function (key, obj, args, raw, noLegacyGetters) {
+    sjl.getValueFromObj = function (key, obj, args, raw, useLegacyGetters) {
         args = args || null;
-        raw = raw || true;
-        noLegacyGetters = typeof noLegacyGetters === _undefined ? false : noLegacyGetters;
+        raw = sjl.isset(raw) ? raw : true;
+        useLegacyGetters = !sjl.isset(useLegacyGetters) ? false : useLegacyGetters;
 
         // Get qualified getter function names
         var overloadedGetterFunc = sjl.camelCase(key, false),
@@ -523,10 +523,10 @@
             retVal = sjl.searchObj(key, obj);
         }
         // If obj has a getter function for key, call it
-        else if (!noLegacyGetters && sjl.hasMethod(obj, getterFunc)) {
+        else if (useLegacyGetters && sjl.hasMethod(obj, getterFunc)) {
             retVal = obj[getterFunc]();
         }
-        else if (!noLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
+        else if (useLegacyGetters && sjl.hasMethod(obj, overloadedGetterFunc)) {
             retVal = obj[overloadedGetterFunc]();
         }
         else if (typeof obj[key] !== _undefined) {
