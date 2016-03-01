@@ -2,20 +2,20 @@
  * Created by elydelacruz on 3/1/16.
  */
 
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
-}
-
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-
 describe('#`getValueFromObj`', function () {
 
     "use strict";
+
+    // Make test suite directly interoperable with the browser
+    if (typeof window === 'undefined') {
+        var chai = require('chai');
+        var sjl = require('./../../src/sjl/sjl.js');
+    }
+
+    // Get chai.expect
+    if (typeof expect === 'undefined') {
+        var expect = chai.expect;
+    }
 
     const objToTest = {
             'NumberValue': -1,
