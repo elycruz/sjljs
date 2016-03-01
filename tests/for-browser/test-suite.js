@@ -2,8 +2,16 @@
  * Created by elydelacruz on 3/1/16.
  */
 
-const expect = require('chai').expect,
-    sjl = require('./../../src/sjl/sjl.js');
+// Make test suite directly interoperable with the browser
+if (typeof window === 'undefined') {
+    var chai = require('chai');
+    var sjl = require('./../../src/sjl/sjl.js');
+}
+
+// Get chai.expect
+if (typeof expect === 'undefined') {
+    var expect = chai.expect;
+}
 
 describe('#`getValueFromObj`', function () {
 
