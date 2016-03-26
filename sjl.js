@@ -1,7 +1,7 @@
-/**! sjljs 0.5.39
+/**! sjljs 0.5.41
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: dfd0eb7e9b3ea4a23028f24947519073
- * | Built-on: Fri Mar 25 2016 20:56:31 GMT-0400 (EDT)
+ * | md5checksum: e84101d953c0862e145b9b739808148e
+ * | Built-on: Sat Mar 26 2016 10:00:32 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl

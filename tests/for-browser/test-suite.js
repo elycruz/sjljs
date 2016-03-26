@@ -94,7 +94,7 @@ describe('#defineSubClass', function () {
         var SubClass = SomeConstructor.extend(function SubClass() {}, methods3, statics3);
 
         it('should have return subclass with statics of parent and those passed in to inherit', function () {
-            var mergedProps = Object.assign({}, statics1, statics2, statics3);
+            var mergedProps = sjl.extend({}, statics1, statics2, statics3);
             concatKeys(statics1, statics2, statics3).forEach(function (key) {
                 expect(sjl.classOfIs(SubClass[key], sjl.classOf(mergedProps[key]))).to.equal(true);
                 expect(SubClass[key]).to.equal(mergedProps[key]);
@@ -102,7 +102,7 @@ describe('#defineSubClass', function () {
         });
 
         it('should return a subclass with methods of parent and those passed in to inherit.', function () {
-            var mergedProps = Object.assign({}, methods1, methods2, methods3);
+            var mergedProps = sjl.extend({}, methods1, methods2, methods3);
             concatKeys(methods1, methods2, methods3).forEach(function (key) {
                 expect(sjl.classOfIs(SubClass.prototype[key], Function)).to.equal(true);
                 expect(SubClass.prototype[key]).to.equal(mergedProps[key]);
@@ -117,12 +117,12 @@ describe('#defineSubClass', function () {
     describe ('returned subclass via parent\'s `extend` method with constructor via `constructor` key', function () {
 
         // Subclass from extend method via with constructor via constructor key
-        var SubClass = SomeConstructor.extend(Object.assign({
+        var SubClass = SomeConstructor.extend(sjl.extend({
                 constructor: function SubClass() {}
             }, methods3), statics3);
 
         it('should have return subclass with statics of parent and those passed in to inherit', function () {
-            var mergedProps = Object.assign({}, statics1, statics2, statics3);
+            var mergedProps = sjl.extend({}, statics1, statics2, statics3);
             concatKeys(statics1, statics2, statics3).forEach(function (key) {
                 expect(sjl.classOfIs(SubClass[key], sjl.classOf(mergedProps[key]))).to.equal(true);
                 expect(SubClass[key]).to.equal(mergedProps[key]);
@@ -130,7 +130,7 @@ describe('#defineSubClass', function () {
         });
 
         it('should return a subclass with methods of parent and those passed in to inherit.', function () {
-            var mergedProps = Object.assign({}, methods1, methods2, methods3);
+            var mergedProps = sjl.extend({}, methods1, methods2, methods3);
             concatKeys(methods1, methods2, methods3).forEach(function (key) {
                 expect(sjl.classOfIs(SubClass.prototype[key], Function)).to.equal(true);
                 expect(SubClass.prototype[key]).to.equal(mergedProps[key]);
