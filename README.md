@@ -581,21 +581,23 @@ See './tests/for-browser'.
  right now it is not apparent to people that this is the default behaviour).  Moved to version 0.5.0.
 
 ### MVP for 0.5.0:
-- [ ] - Write docs for all validator classes.
-- [ ] - Write tests for:
+- [X] - ~~Write docs for all validator classes.~~  Validator classes moving to their own repo.
+- [X] - Write tests for:
     - [X] - `sjl.SjlMap`.
     - [X] - `sjl.SjlSet`.
-    - [ ] - `sjl.package`
-    - [ ] - Write tests for all validator classes:
-        - [ ] - `sjl.NumberValidator`.
-        - [ ] - `sjl.AlphaNumValidator`.
-- [ ] - Write a filter chain class.
-- [ ] - Change interface check to check for 'isValid' and 'messages'
+    - [X] - `sjl.package`
+    - [X] - Write tests for all validator classes:
+        - [X] - `sjl.NumberValidator`.
+        - [X] - `sjl.AlphaNumValidator`.
+- [X] - ~~Write a filter chain class.~~ Implementations was performed but package moving to it's own repo.
+- [X] - Change interface check to check for 'isValid' and 'messages'
     properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
-- [ ] - Review entirety of library and look for places that could be refactored.
-- [ ] - Refactor the `input` package
-- [ ] - Refactor the `validator` package
-- [ ] - `sjl.empty` to `sjl.isempty` (maybe for version 0.5.50).
+- [X] - Review entirety of library and look for places that could be refactored.
+      - Findings:
+        - Going to export `validator`, `input` and `filter` packages to their own repo.
+- [X] - ~~Refactor the `input` package~~ Refactor was performed in separate folder (src/sjl/refactor) though package will move to it's own repo.
+- [X] - ~~Refactor the `validator` package~~ Refactor was performed in separate folder (src/sjl/refactor) though package will move to it's own repo.
+- [X] - ~~`sjl.empty` to `sjl.isempty` (maybe for version 0.5.50).~~  Going to keep `sjl.empty` as is.
 - [X] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
  right now it is not apparent to people that this is the default behaviour).
 - [X] - Remove `attrs` method from `sjl.Attributable`.
@@ -623,13 +625,14 @@ their properties to eliminate alternate schemes to hide access to their internal
 - [X] - ~~Remove all overloaded methods in exchange for Object.defineProperty and Object.defineProperties getters and setters.~~
 Overloaded methods will remain on the classes that have them inorder to not break backward functionality which isn't browser specific.
 - [X] - Add file hashes to minified files and add a unix time stamp instead of a utc time stamp to the file.
-- [ ] - Define all methods on `sjl` directly in it's object definition when it is defined instead of define every property separately;  
+- [X] - Define all methods on `sjl` directly in it's object definition when it is defined instead of define every property separately;  
     E.g., `sjl = {prop1: ..., prop2: ..., etc.} /** instead of **/ sjl.prop1 = ...; sjl.prop2 = ...;, etc.`;  Also this'll save a couple o' bytes haha!!!
 - [X] - Either remove changelog functionality or generate it correctly (in descending order (from actual commit logs 2x thumbsup)
  (to eliminate having to write double commit messages (one in the changelog and one in the commit blarghhh)).
     - **Update**:  Changelog is temporarily not going to be included in as part of the readme.  If you would like to see
     the old changelogs look at './changelog.md'.  Also if you want to see the latest changes/changelog like summaries 
     view the release notes as they are provided.
+- [X] - Added tests for `defineSubClass` and added statics inheritance from parent (which was missing before).
      
 ### MVP for 0.6.0
 - [ ] - Remove use of `eval` from tests.
