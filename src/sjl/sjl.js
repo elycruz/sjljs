@@ -661,6 +661,22 @@
                                    methods,     // Instance methods: copied to prototype
                                    statics)     // Class properties: copied to constructor
     {
+
+        // Statics for snatching static methods from superclass if it is a constructor
+        var __statics;
+
+        // If superclass is a Constructor snatch statics
+        if (classOfIs(superclass, Function)) {
+            // Set statics for snatching statics
+            __statics = {};
+
+            // Snatch each static member from `superclass` to use later
+            Object.keys(superclass).forEach(function (key) {
+                if (key === 'extend') { return; }
+                __statics[key] = superclass[key];
+            });
+        }
+
         // Resolve superclass
         superclass = superclass || Object.create(Object.prototype);
 
@@ -716,8 +732,11 @@
         // Copy the methods and statics as we would for a regular class
         if (methods) extend(constructor.prototype, methods);
 
+        // If internally snatched static functions from `superclass` exists then set them on subclass
+        if (__statics) extend(constructor, __statics, true);
+
         // If static functions set them
-        if (statics) extend(constructor, statics);
+        if (statics) extend(constructor, statics, true);
 
         // @note To bypass this functionality just name your toString method as is being done
         //  here (with a name of your choosing or even the name used below).

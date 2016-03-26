@@ -31,7 +31,8 @@ function processFiles(files, dir, allowedFileExts, self) {
                 get: function () {
                     return require(path.join(dir, file));
                 },
-                set: function () {}
+                set: function () {},
+                enumerable: true
             });
         }
         else {
