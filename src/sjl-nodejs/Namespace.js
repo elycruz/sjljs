@@ -9,20 +9,24 @@
 var path = require('path'),
     fs = require('fs');
 
-function Namespace(dir, allowedFileExts) {
+function Namespace(dir, allowedFileExts, ignoredDirs) {
+    ignoredDirs = Array.isArray(ignoredDirs) ? ignoredDirs : null;
     if (this instanceof Namespace === false) {
-        return new Namespace(dir, allowedFileExts);
+        return new Namespace(dir, allowedFileExts, ignoredDirs);
     }
     var self = this,
         files = fs.readdirSync(dir);
     allowedFileExts = allowedFileExts || ['.js', '.json'];
     if (files && Array.isArray(files) && files.length > 0) {
-        processFiles(files, dir, allowedFileExts, self);
+        processFiles(files, dir, allowedFileExts, ignoredDirs, self);
     }
 }
 
-function processFiles(files, dir, allowedFileExts, self) {
+function processFiles(files, dir, allowedFileExts, ignoredDirs, self) {
     files.forEach(function (file) {
+        if (ignoredDirs && ingoredDirs.indexOf(file) > -1) {
+            return;
+        }
         if (fs.statSync(path.join(dir, file)).isDirectory()) {
             self[file] = new Namespace(path.join(dir, file));
         }
