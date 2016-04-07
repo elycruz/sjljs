@@ -759,15 +759,17 @@
      * @param funcKey {String} - Key to set package function to.  E.g., 'package'
      * @param altFuncKey {String} - Alternate (usually shorter) key to set package function to.  E.g., 'ns'
      * @param dirPath {String} - If using NodeJs only.  Optional.  Default `__dirname`.
+     * @param pathsToIgnore {Array} - If using NodeJs only.  Causes the namespacer to
+     *  ignore passed in paths as namespaces.  Optional.  Default `null`.
      * @return {Object|*} - Returns passed in `obj`.
      */
-    function createTopLevelPackage (obj, funcKey, altFuncKey, dirPath) {
+    function createTopLevelPackage (obj, funcKey, altFuncKey, dirPath, pathsToIgnore) {
         funcKey = funcKey || 'package';
         altFuncKey = altFuncKey || 'ns';
         if (isNodeEnv) {
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
-                require('../sjl-nodejs/Namespace.js')(dirPath);
+                require('../sjl-nodejs/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
             return obj;
         }
         return (function () {

@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 0.5.42 
+/**! sjl-minimal.js 5.0.0 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: a2ec0e107387ae04218e1ef370918b8f 
- * | Built-on: Wed Apr 06 2016 23:32:38 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: 55884ad0f5b617851062af50b966819d 
+ * | Built-on: Wed Apr 06 2016 23:39:56 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -764,15 +764,17 @@
      * @param funcKey {String} - Key to set package function to.  E.g., 'package'
      * @param altFuncKey {String} - Alternate (usually shorter) key to set package function to.  E.g., 'ns'
      * @param dirPath {String} - If using NodeJs only.  Optional.  Default `__dirname`.
+     * @param pathsToIgnore {Array} - If using NodeJs only.  Causes the namespacer to
+     *  ignore passed in paths as namespaces.  Optional.  Default `null`.
      * @return {Object|*} - Returns passed in `obj`.
      */
-    function createTopLevelPackage (obj, funcKey, altFuncKey, dirPath) {
+    function createTopLevelPackage (obj, funcKey, altFuncKey, dirPath, pathsToIgnore) {
         funcKey = funcKey || 'package';
         altFuncKey = altFuncKey || 'ns';
         if (isNodeEnv) {
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
-                require('../sjl-nodejs/Namespace.js')(dirPath);
+                require('../sjl-nodejs/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
             return obj;
         }
         return (function () {
