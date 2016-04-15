@@ -2,11 +2,10 @@
  * Created by elydelacruz on 3/25/16.
  */
 
-
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
 
 // Get chai.expect
@@ -148,11 +147,10 @@ describe('#defineSubClass', function () {
  * Created by elydelacruz on 3/1/16.
  */
 
-
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
 
 // Get chai.expect
@@ -231,7 +229,7 @@ describe('#`getValueFromObj`', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined' && typeof chai === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
 
 // Get chai.expect
@@ -563,7 +561,7 @@ describe('Sjl Utils', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
 
 // Get chai.expect
@@ -658,7 +656,7 @@ describe('Sjl#`namespace`', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
 
 // Get chai.expect
@@ -749,7 +747,7 @@ describe('Sjl Reflection', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
 
 // Get chai.expect
@@ -869,7 +867,7 @@ describe('Sjl Set Functions', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
 
 // Get chai.expect

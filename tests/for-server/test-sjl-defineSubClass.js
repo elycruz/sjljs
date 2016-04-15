@@ -2,17 +2,17 @@
  * Created by elydelacruz on 3/25/16.
  */
 
-
+// ~~~ STRIP ~~~
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl.js');
+    var sjl = require('./../../src/sjl');
 }
-
 // Get chai.expect
 if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
+// ~~~ /STRIP ~~~
 
 describe('#defineSubClass', function () {
     'use strict';
