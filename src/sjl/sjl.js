@@ -631,7 +631,7 @@
      * @returns {*} - Cloned object.
      */
     function clone (obj) {
-        return extend(true, {}, obj);
+        return extend({}, obj, true);
     }
 
     /**

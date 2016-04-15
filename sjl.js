@@ -1,7 +1,7 @@
-/**! sjljs 5.0.0
+/**! sjljs 5.0.1
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 5c77e7ee374b9e77359223421e728f57
- * | Built-on: Wed Apr 06 2016 23:39:57 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: 6f6745406e27117f665b3611a55284e8
+ * | Built-on: Fri Apr 15 2016 17:37:38 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module.
  * @module {Object} sjl
@@ -635,7 +635,7 @@
      * @returns {*} - Cloned object.
      */
     function clone (obj) {
-        return extend(true, {}, obj);
+        return extend({}, obj, true);
     }
 
     /**

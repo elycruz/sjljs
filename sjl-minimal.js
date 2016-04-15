@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 5.0.0 
+/**! sjl-minimal.js 5.0.1 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 55884ad0f5b617851062af50b966819d 
- * | Built-on: Wed Apr 06 2016 23:39:56 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: c11ed3a916779674783943ed8eb9c8ad 
+ * | Built-on: Fri Apr 15 2016 17:37:38 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -636,7 +636,7 @@
      * @returns {*} - Cloned object.
      */
     function clone (obj) {
-        return extend(true, {}, obj);
+        return extend({}, obj, true);
     }
 
     /**
