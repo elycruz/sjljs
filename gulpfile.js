@@ -20,8 +20,10 @@ var packageJson = require('./package.json'),
     jsHintPipe  = lazypipe()
         .pipe(jshint)
         .pipe(duration, chalk.cyan("jshint duration"))
-        .pipe(jshint.reporter, 'jshint-stylish');
+        .pipe(jshint.reporter, 'jshint-stylish'),
         //.pipe(jshint.reporter, 'fail');
+
+    gulpConfig  = require('./gulpconfig');
 
 // Builds './changelog.md'
 gulp.task('changelog', function () {
@@ -73,29 +75,7 @@ gulp.task('clean', function () {
 
 // Builds './sjl.js'
 gulp.task('concat', function () {
-    return gulp.src([
-        'src/sjl/sjl.js',
-        'src/sjl/stdlib/Extendable.js',
-        'src/sjl/stdlib/Attributable.js',
-        'src/sjl/stdlib/Optionable.js',
-        'src/sjl/stdlib/Iterator.js',
-        'src/sjl/stdlib/ObjectIterator.js',
-        'src/sjl/stdlib/iterable.js',
-        'src/sjl/stdlib/SjlSet.js',
-        'src/sjl/stdlib/SjlMap.js',
-        'src/sjl/stdlib/PriorityList.js',
-        'src/sjl/validator/BaseValidator.js',
-        'src/sjl/validator/ValidatorChain.js',
-        'src/sjl/validator/AlphaNumValidator.js',
-        'src/sjl/validator/EmptyValidator.js',
-        'src/sjl/validator/InRangeValidator.js',
-        'src/sjl/validator/RegexValidator.js',
-        'src/sjl/validator/EmailValidator.js',
-        'src/sjl/validator/NumberValidator.js',
-        'src/sjl/validator/PostCodeValidator.js',
-        'src/sjl/input/Input.js',
-        'src/sjl/input/InputFilter.js'
-    ])
+    return gulp.src(gulpConfig.sjlSrcFiles)
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
         .pipe(fncallback(function (file, enc, cb) {
@@ -135,7 +115,7 @@ gulp.task('uglify', ['concat'], function () {
 // Builds './sjl-minimal.js'
 gulp.task('minimal', function () {
     return gulp.src([
-        'src/sjl/sjl.js'
+        'src/sjl.js'
     ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.js'))

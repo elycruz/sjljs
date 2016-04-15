@@ -8,7 +8,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
 
-        sjl = isNodeEnv ? require('../src/sjl/sjl.js') : window.sjl || {},
+        sjl = isNodeEnv ? require('../src/sjl.js') : window.sjl || {},
 
         SjlMap = sjl.ns.stdlib.SjlMap,
 

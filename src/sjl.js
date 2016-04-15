@@ -769,7 +769,7 @@
         if (isNodeEnv) {
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
-                require('../sjl-nodejs/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
+                require('./nodejs-specific/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
             return obj;
         }
         return (function () {

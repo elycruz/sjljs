@@ -7,7 +7,7 @@
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../src/sjl/sjl.js') : window.sjl || {},
+        sjl = isNodeEnv ? require('./../src/sjl.js') : window.sjl || {},
         RegexValidator = sjl.ns.refactor.validator.RegexValidator,
         EmailValidator = function EmailValidator(/**...options {Object}**/) {
 

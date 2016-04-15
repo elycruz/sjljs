@@ -6,7 +6,7 @@
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -152,7 +152,7 @@ describe('#defineSubClass', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -228,172 +228,10 @@ describe('#`getValueFromObj`', function () {
 
 });
 
-/**
- * Created by edelacruz on 7/28/2014.
- */
-/**
- * Created by edelacruz on 7/28/2014.
- */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
-}
-
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-
-describe('Sjl Input', function () {
-
-    "use strict";
-
-    var Input = sjl.ns.input.Input;
-
-    describe('Should have the appropriate interface', function () {
-        var input = new Input(),
-            propNames = [
-                'allowEmpty',
-                'breakOnFailure',
-                'errorMessage',
-                'filterChain',
-                'name',
-                'required',
-                'validatorChain',
-                'messages',
-                'value'
-            ],
-            getAndSetMethodNames = [],
-            otherMethodNames = [ 'isValid', 'merge' ],
-            methodNames = [],
-            method,
-            prop;
-
-        // Get prop setter and getter names
-        for (prop in propNames) {
-            prop = propNames[prop];
-            getAndSetMethodNames.push('set' + sjl.ucaseFirst(prop));
-            getAndSetMethodNames.push('get' + sjl.ucaseFirst(prop));
-        }
-
-        // Check methods exist
-        methodNames = otherMethodNames.concat(getAndSetMethodNames);
-
-        // Check methods exist
-        for (method in methodNames) {
-            method = methodNames[method];
-            it('should have a `' + method + '` method.', function () {
-                expect(typeof input[method]).to.equal('function');
-            });
-        }
-    });
-
-    describe('Should return a valid ValidatorChain via it\'s getter.', function () {
-
-    });
-
-});
-
-/**
- * Created by edelacruz on 7/28/2014.
- */
-/**
- * Created by edelacruz on 7/28/2014.
- */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
-}
-
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-
-describe('Sjl InputFilter', function () {
-
-    "use strict";
-
-    var RegexValidator = sjl.ns.validator.RegexValidator,
-        InputFilter = sjl.ns.input.InputFilter;
-
-    describe ('Should have the appropriate interface', function () {
-        var inputFilter = new InputFilter(),
-            methods = [
-                'add', 'get','has',
-                'remove', 'setData', 'getData',
-                'isValid', 'getInvalidInputs',
-                'getValidInputs', 'getValue',
-                'getValues', 'getRawValue',
-                'getRawValues',
-                'getMessages'
-            ],
-            method;
-
-        for (method in methods) {
-            method = methods[method];
-            it ('it should a `' + method + '`.', function () {
-                expect(typeof inputFilter[method]).to.equal('function');
-            });
-        }
-    });
-
-    it ('Should have a static method "factory"', function () {
-        expect (typeof InputFilter.factory).to.equal('function');
-    });
-
-    describe ('Should create an auto-populated instance via it\'s static method "factory"', function () {
-        var inputFilter;
-
-        before(function (done) {
-            inputFilter = InputFilter.factory({
-                inputs: {
-                    id: {
-                        validators: [
-                            new RegexValidator({pattern: /^\d{1,20}$/})
-                        ]
-                    },
-                    // @todo fix the required attribute within the `InputFilter` class as it is overriding populated
-                    // values and forcing validation to be skipped
-                    alias: {
-                        validators: [
-                            new RegexValidator({pattern: /^[a-z\-_\d]{1,55}$/i})
-                        ]
-                    }
-                }
-            });
-
-            done();
-        });
-
-        it ('should have 2 new created inputs', function () {
-            //expect(Object.keys(inputFilter.getInputs()).length).to.equal(2);
-        });
-
-        it ('should validate to true on valid values', function () {
-            // Set data
-            inputFilter.setData({id: '999', alias: 'hello-world'});
-            expect(inputFilter.isValid()).to.equal(true);
-            expect(Object.keys(inputFilter.getMessages()).length).to.equal(0);
-        });
-
-        it ('should validate to false on invalid values and should have error messages for each input datum', function () {
-            // Set data
-            inputFilter.setData({id: '99abc', alias: 'hello -world'});
-            expect(inputFilter.isValid()).to.equal(false);
-            expect(Object.keys(inputFilter.getMessages()).length).to.equal(2);
-        });
-
-    });
-
-});
-
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined' && typeof chai === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -725,7 +563,7 @@ describe('Sjl Utils', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -816,10 +654,11 @@ describe('Sjl#`namespace`', function () {
     });
 
 });
+
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -910,7 +749,7 @@ describe('Sjl Reflection', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -1030,7 +869,7 @@ describe('Sjl Set Functions', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -1096,13 +935,14 @@ describe ('Sjl String', function () {
     });
 
 });
+
 /**
  * Created by Ely on 7/8/2015.
  */
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -1174,7 +1014,7 @@ describe('Iterator', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -1352,7 +1192,7 @@ describe('Sjl Optionable', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -1620,7 +1460,7 @@ describe('PriorityList', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -1889,7 +1729,7 @@ describe('SjlMap', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -2094,7 +1934,7 @@ describe('SjlSet', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect
@@ -2174,7 +2014,7 @@ describe('Sjl Attributable', function () {
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
     var chai = require('chai');
-    var sjl = require('./../../src/sjl/sjl.js');
+    var sjl = require('./../../src/sjl.js');
 }
 
 // Get chai.expect

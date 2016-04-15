@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 5.0.1 
+/**! sjl-minimal.js 5.0.2 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: c11ed3a916779674783943ed8eb9c8ad 
- * | Built-on: Fri Apr 15 2016 17:37:38 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: 399cca1905816a9d7a040226099f467e 
+ * | Built-on: Fri Apr 15 2016 17:52:36 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -774,7 +774,7 @@
         if (isNodeEnv) {
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
-                require('../sjl-nodejs/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
+                require('./nodejs-specific/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
             return obj;
         }
         return (function () {
