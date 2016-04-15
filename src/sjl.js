@@ -1,12 +1,13 @@
 /**
  * The `sjl` module.
- * @module {Object} sjl
+ * @module sjl {Object}
  * @created by Ely on 5/29/2015.
  * @todo add extract value from array if of type (only extract at array start or end).
  * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
  * @todo Cleanup jsdocs and make them more readable where possible (some of the jsdoc definitions in sjljs's source files are old and need to be written using es5 and es6 kind of language to make them more readable to the user (also since most of the functionality is es5/es6ish makes sense to perform this upgrade).
  * @todo add default value returns for isset, issetMulti, empty and their variations (makes code more functional and adds syntactical sugar).
  * @todo add a `pluck` method that allows you to pluck values from a `Set`, `Array`, `Map` or `Object` based on parameters passed in.
+ * @todo Add readme entry for this function (`extractFromArrayAt`).
  */
 (function (undefined) {
 
@@ -54,21 +55,23 @@
      * @param array {Array} - Array to operate on.
      * @param index {Number} - Index of element to look for in `array`.
      * @param type {String} - Optional.
+     * @param makeCopyOfArray {Boolean|Undefined} - Whether to make a copy of the array or not.  Default `true`.
      * @returns {Array<*,Array>|Null} - If passed in array has an element at `index` (and alternately) element
      *  matches `type` then returns an array with found index and resulting array of extraction of said value.
      *  Else returns `null`.
-     * @todo Add readme entry for this function (`extractFromArrayAt`).
      */
     function extractFromArrayAt (array, index, type, makeCopyOfArray) {
         var retVal = null,
             matchesType, foundElement;
+        sjl.throwTypeErrorIfNotOfType('sjl', 'extractFromArrayAt', 'array', array, Array);
+        sjl.throwTypeErrorIfNotOfType('sjl', 'extractFromArrayAt', 'index', index, Number);
         makeCopyOfArray = classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
         if (array.hasOwnProperty(index + '')) {
             if (makeCopyOfArray) {
                 array = array.concat([]);
             }
             foundElement = array[index];
-            matchesType = isset(type) ? classOfIs(foundElement, type) : true;
+            matchesType = issetAndOfType(type, String) ? classOfIs(foundElement, type) : true;
             foundElement = array.splice(index, 1);
             if (matchesType) {
                 retVal = [foundElement, array];
@@ -80,6 +83,7 @@
     /**
      * Checks to see if value passed in is set (not undefined and not null).
      * @function module:sjl.isset
+     * @param value {*} - Value to check.
      * @returns {Boolean}
      */
     function isset (value) {
@@ -88,12 +92,13 @@
 
     /**
      * Checks if one or more parameters are set (not null and not undefined).
+     * @params {*} - One or more values to check of any type.
      * @returns {Boolean} - True if all params passed in are not null or undefined.
      */
-    function issetMulti (/** arg... **/) {
-        return argsToArray(arguments).some(function (value) {
+    function issetMulti () {
+        return !argsToArray(arguments).some(function (value) {
             return !isset(value);
-        }) ? false : true;
+        });
     }
 
     /**
@@ -161,6 +166,42 @@
             );
     }
 
+    function isNumber (value) {
+        return classOfIs(value, Number);
+    }
+
+    function isFunction (value) {
+        return classOfIs(value, Function);
+    }
+
+    function isArray (value) {
+        return Array.isArray(value);
+    }
+
+    function isBoolean (value) {
+        return classOfIs(value, Boolean);
+    }
+
+    function isObject (value) {
+        return classOfIs(value, Object);
+    }
+
+    function isString(value) {
+        return classOfIs(value, String);
+    }
+
+    function isUndefined (value) {
+        return classOfIs(value, 'Undefined');
+    }
+
+    function isNull (value) {
+        return classOfIs(value, 'Null');
+    }
+
+    function isSymbol (value) {
+        return classOfIs(value, 'Symbol');
+    }
+
     /**
      * Checks object's own properties to see if it is empty (Object.keys check).
      * @function module:sjl.isEmptyObj
@@ -204,9 +245,10 @@
 
     /**
      * Checks to see if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string}.
+     * @params {*} - One or more params of any type.
      * @returns {Boolean} - Returns true if any of the values passed
      */
-    function emptyMulti (/** arg... **/) {
+    function emptyMulti () {
         return argsToArray(arguments).some(function (value) {
             return isEmpty(value);
         });
@@ -215,12 +257,23 @@
     /**
      * Retruns a boolean based on whether a key on an object has an empty value or is empty (not set, undefined, null)
      * @function module:sjl.isEmptyOrNotOfType
-     * @param obj {Object} - Object to search on.
+     * @param value {Object} - Object to search on.
      * @param type {String} - Optional. Type Name to check for match for;  E.g., 'Number', 'Array', 'HTMLMediaElement' etc..
+     * @deprecated - Will be removed in version 6.0.0.  Use `notEmptyAndOfType` instead.
      * @returns {Boolean}
      */
     function isEmptyOrNotOfType (value, type) {
         return isEmpty(value) || isset(type) ? !classOfIs(value, type) : false;
+    }
+
+    /**
+     * Returns true if an element is not empty and is of type.
+     * @param value {*} - Value to check.
+     * @param type {String|Function} - Type to check against (string name or actual constructor).
+     * @returns {Boolean}
+     */
+    function notEmptyAndOfType (value, type) {
+        return !isEmpty(value) && classOfIs(value, type);
     }
 
     /**
@@ -249,24 +302,21 @@
      * @param ns_string {String} - The namespace you wish to fetch
      * @param objToSearch {Object} - The object to search for namespace on
      * @param valueToSet {Object} - Optional.  A value to set on the key (last key if key string (a.b.c.d = value)).
+     * @note For just checking the namespace and not creating it, use `searchObj` instead.
      * @returns {Object}
      */
     function naiveNamespace (ns_string, objToSearch, valueToSet) {
-        var parts = ns_string.split('.'),
-            parent = objToSearch,
-            shouldSetValue = !classOfIs(valueToSet, 'Undefined'),
-            i;
-
-        for (i = 0; i < parts.length; i += 1) {
-            if (parts[i] in parent === false || classOfIs(parent[parts[i]], 'Undefined')) {
-                parent[parts[i]] = {};
+        var parent = objToSearch,
+            shouldSetValue = !classOfIs(valueToSet, 'Undefined');
+        ns_string.split('.').forEach(function (part, index, parts) {
+            if (part in parent === false || classOfIs(parent[part], 'Undefined')) {
+                parent[part] = {};
             }
-            if (i === parts.length - 1 && shouldSetValue) {
-                parent[parts[i]] = valueToSet;
+            if (index === parts.length - 1 && shouldSetValue) {
+                parent[part] = valueToSet;
             }
-            parent = parent[parts[i]];
-        }
-
+            parent = parent[part];
+        });
         return parent;
     }
 
@@ -282,7 +332,7 @@
      * @param ns_string {String} - The namespace you wish to fetch
      * @param objToSearch {Object} - The object to search for namespace on
      * @param valueToSet {Object} - Optional.  A value to set on the key (last key if key string (a.b.c.d = value)).
-     * @deprecated
+     * @deprecated - Will be removed in sjl v6.0.0.  Use `naiveNamespace` instead.
      * @returns {Object}
      */
     function namespace (ns_string, objToSearch, valueToSet) {
@@ -325,22 +375,21 @@
     function camelCase (str, upperFirst, replaceStrRegex) {
         upperFirst = upperFirst || false;
         replaceStrRegex = replaceStrRegex || /[^a-z\d]/i;
-        var newStr = '', i,
+        var newStr = '',
 
         // Get clean string
             parts = str.split(replaceStrRegex);
 
         // Upper Case First char for parts
-        for (i = 0; i < parts.length; i += 1) {
-
+        parts.forEach(function (part) {
             // If alpha chars
-            if (/[a-z\d]/.test(parts[i])) {
+            if (/[a-z\d]/.test(part)) {
 
                 // ucase first char and append to new string,
                 // if part is a digit just gets returned by `ucaseFirst`
-                newStr += ucaseFirst(parts[i]);
+                newStr += ucaseFirst(part);
             }
-        }
+        });
 
         // If should not be upper case first
         if (!upperFirst) {
@@ -401,7 +450,7 @@
      * @returns {Boolean}
      */
     function hasMethod (obj, method) {
-        return !isEmptyOrNotOfType(obj[method], 'Function');
+        return notEmptyAndOfType(obj[method], 'Function');
     }
 
     /**
@@ -415,7 +464,6 @@
      * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
      * @param useLegacyGetters {Boolean} - Default false.
      *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
-     *
      * @returns {*}
      */
     function getValueFromObj (key, obj, args, raw, useLegacyGetters) {
@@ -459,10 +507,14 @@
      * separated string 'all.your.base' will traverse {all: {your: {base: {...}}})
      * @param value {*} - Value to set on obj
      * @param obj {Object} - Object to set key to value on
+     * @param useLegacyGetters {Boolean} - Default false.
+     *  Whether to use legacy getters to fetch the value ( {obj}.get{key}() or overloaded {obj}{key}() )
      * @returns {*|Object} returns result of setting key to value on obj or obj
-     * if no value resulting from set operation
+     * if no value results from operation.
      */
-    function setValueOnObj (key, value, obj) {
+    function setValueOnObj (key, value, obj, useLegacyGetters) {
+        useLegacyGetters = !isset(useLegacyGetters) ? false : useLegacyGetters;
+
         // Get qualified setter function name
         var overloadedSetterFunc = camelCase(key, false),
             setterFunc = 'set' + camelCase(key, true),
@@ -473,10 +525,10 @@
             retVal = naiveNamespace(key, obj, value);
         }
         // If obj has a setter function for key, call it
-        else if (hasMethod(obj, setterFunc)) {
+        else if (useLegacyGetters && hasMethod(obj, setterFunc)) {
             retVal = obj[setterFunc](value);
         }
-        else if (hasMethod(obj, overloadedSetterFunc)) {
+        else if (useLegacyGetters && hasMethod(obj, overloadedSetterFunc)) {
             retVal = obj[overloadedSetterFunc](value);
         }
         else {
@@ -486,43 +538,6 @@
         // Return result of setting value on obj, else return obj
         return retVal;
     }
-
-    /** Idea:
-     * Have hydrators for different hydration strategies (but simplified ones! jeje look at Zf's hydration stuff pretty cool
-     * but a bit too granular for javascript: http://framework.zend.com/apidoc/2.4/namespaces/Zend.Stdlib.Hydrator.html
-
-     // Hydration method
-     sjl.hydrate = function () {
-        var lastParam = sjl.extractFromArrayAt(arguments, arguments.length - 1),
-            retVal;
-        switch (lastParam) {
-            case sjl.hydrate.BY_OVERLOADED_METHODS:
-                break;
-            case sjl.hydrate.BY_LEGACY_GETTERS_AND_SETTERS:
-                break;
-            case sjl.hydrate.BY_OWN_PROPS:
-            default:
-                sjl.extend();
-                break;
-        }
-        return retVal;
-     };
-
-     // Strategy for hydration
-     sjl.hydrateByOwnProps = function (obj, inheritFrom, deep) {};
-
-     // Stategy for hydration
-     sjl.hydrateByMethods = function (obj, inheritFrom, deep) {};
-
-     // Constants representing different hydration strategies
-     Object.defineProperties(sjl.hydrate, {
-        BY_OWN_PROPS: {value: 0},
-        BY_OVERLOADED_METHODS: {value: 1},
-        BY_LEGACY_GETTERS_AND_SETTERS: {value: 2}
-     });
-
-     * Not pursuing idea just jotting it down here for future reference.
-     */
 
     /**
      * Copy the enumerable properties of p to o, and return o.
@@ -571,8 +586,9 @@
             }
             else if (useLegacyGettersAndSetters) {
                 setValueOnObj(prop,
-                    getValueFromObj(prop, p, null, true, useLegacyGettersAndSetters),
-                    o);
+                    getValueFromObj(prop,
+                        p, null, true, useLegacyGettersAndSetters
+                    ), o);
             }
             // Else set
             else {
@@ -607,7 +623,6 @@
         if (arguments.length === 0) {
             return null;
         }
-
         var args = argsToArray(arguments),
             deep = extractBoolFromArrayStart(args),
             useLegacyGettersAndSetters = extractBoolFromArrayEnd(args),
@@ -642,6 +657,24 @@
      */
     function jsonClone (obj) {
         return JSON.parse(JSON.stringify(obj));
+    }
+
+    /**
+     * Generates a 'stand-in' constructor that calls `superClass` internally.
+     * Used in methods that require a super class or constructor as a parameter
+     * and none is given.
+     * @param superClass {Function} - Super class constructor.  Required.
+     * @returns {StandInConstructor}
+     */
+    function standInConstructor(superClass) {
+        return function StandInConstructor() {
+            console.warn(
+                'An anonymous constructor was used!  Please ' +
+                'replace it with a named constructor for best ' +
+                'interoperability.'
+            );
+            superClass.apply(this, arguments);
+        }
     }
 
     /**
@@ -680,18 +713,8 @@
         // Resolve superclass
         superclass = superclass || Object.create(Object.prototype);
 
-        // Helper for missing constructors.
-        function StandInConstructor() {
-            console.warn(
-                'An anonymous constructor was used!  Please ' +
-                'replace it with a named constructor for best ' +
-                'interoperability.'
-            );
-            superclass.apply(this, arguments);
-        }
-
         // If `constructor` param is an object then
-        if (classOfIs(constructor, Object)) {
+        if (isObject(constructor)) {
 
             // Set static methods, if any
             statics = methods;
@@ -708,7 +731,7 @@
         }
 
         // Ensure a constructor is set
-        constructor = isset(constructor) ? constructor : StandInConstructor;
+        constructor = isset(constructor) ? constructor : standInConstructor(superclass);
 
         // Set up the prototype object of the subclass
         constructor.prototype = Object.create(superclass.prototype);
@@ -727,7 +750,7 @@
         };
 
         // Define constructor's constructor
-        constructor.prototype.constructor = constructor;
+        Object.defineProperty(constructor.prototype, 'constructor', {value: constructor});
 
         // Copy the methods and statics as we would for a regular class
         if (methods) extend(constructor.prototype, methods);
@@ -831,7 +854,7 @@
      * @returns {{}} - Sjl.
      */
     function throwTypeErrorIfNotOfType (contextName, paramName, value, type, fixHint) {
-        type = classOfIs(type, 'String') ? type : type.name;
+        type = isString(type) ? type : type.name;
         var classOfValue = classOf(value);
         if (classOfValue !== type) {
             throw new TypeError('#`' + contextName + '`.`' + paramName
@@ -843,16 +866,16 @@
 
     /**
      * Returns value if it is set and of type else returns `defaultValue`
-     * @function module:sjl.value
+     * @function module:sjl.valueOrDefault
      * @param value {*} - Value to pass through.
      * @param defaultValue {*} - Optional.  Value to use as default value if value is not set.  Default `null`.
      * @param type {String|Function} - Optional.  Constructor or string representation of type;  E.g., String or 'String'
      */
-    function value (value, defaultValue, type) {
+    function valueOrDefault (value, defaultValue, type) {
         defaultValue = typeof defaultValue === _undefined ? null : defaultValue;
         var retVal;
         if (isset(type)) {
-            retVal = issetAndOfType(value) ? value : defaultValue;
+            retVal = issetAndOfType(value, type) ? value : defaultValue;
         }
         else {
             retVal = isset(value) ? value : defaultValue;
@@ -862,14 +885,14 @@
 
     /**
      * Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
-     * @function module:sjl.makeNotSettableProp
+     * @function module:sjl.defineEnumProp
      * @param obj {Object}
      * @param key {String}
      * @param value {*}
      * @param enumerable {Boolean} - Default `false`.
      * @return {Void}
      */
-    function makeNotSettableProp(obj, key, value, enumerable) {
+    function defineEnumProp(obj, key, value, enumerable) {
         Object.defineProperty(obj, key, {
             value: value,
             enumerable: classOfIs(enumerable, Boolean) ? enumerable : false
@@ -885,19 +908,18 @@
      * @private
      */
     function unConfigurableNamespace(ns_string, objToSearch, valueToSet) {
-        var parts = ns_string.split('.'),
-            parent = objToSearch,
+        var parent = objToSearch,
             shouldSetValue = typeof valueToSet !== _undefined,
             hasOwnProperty;
 
-        parts.forEach(function (key, i) {
+        ns_string.split('.').forEach(function (key, i, parts) {
             hasOwnProperty = parent.hasOwnProperty(key);
             if (i === parts.length - 1
                 && shouldSetValue && !hasOwnProperty) {
-                makeNotSettableProp(parent, key, valueToSet, true);
+                defineEnumProp(parent, key, valueToSet, true);
             }
             else if (typeof parent[key] === _undefined && !hasOwnProperty) {
-                makeNotSettableProp(parent, key, {}, true);
+                defineEnumProp(parent, key, {}, true);
             }
             parent = parent[key];
         });
@@ -952,11 +974,12 @@
      */
     function extractBoolFromArray(array, startOrEndBln) {
         var expectedBool = startOrEndBln ? array[0] : array[array.length - 1],
-            retVal = false;
-        if (classOfIs(expectedBool, 'Boolean')) {
+            classOfExpectedBool = classOf(expectedBool),
+            retVal;
+        if (classOfExpectedBool === 'Boolean') {
             retVal = startOrEndBln ? array.shift() : array.pop();
         }
-        else if (classOfIs(expectedBool, 'undefined')) {
+        else if (classOfExpectedBool === 'Undefined') {
             if (startOrEndBln) {
                 array.shift();
             }
@@ -990,39 +1013,49 @@
 
     sjl = {
         argsToArray: argsToArray,
-        restArgs: restArgs,
+        camelCase: camelCase,
+        classOf: classOf,
+        classOfIs: classOfIs,
+        clone: clone,
+        constrainPointerWithinBounds: constrainPointerWithinBounds,
+        createTopLevelPackage: createTopLevelPackage,
+        defineSubClass: defineSubClass,
+        defineEnumProp: defineEnumProp,
+        empty: isEmpty,
+        emptyMulti: emptyMulti,
+        extend: extendMulti,
+        extractBoolFromArrayEnd: extractBoolFromArrayEnd,
+        extractBoolFromArrayStart: extractBoolFromArrayStart,
         extractFromArrayAt: extractFromArrayAt,
+        getValueFromObj: getValueFromObj,
+        hasMethod: hasMethod,
+        implode: implode,
         isset: isset,
         issetMulti: issetMulti,
         issetAndOfType: issetAndOfType,
-        classOf: classOf,
-        classOfIs: classOfIs,
-        empty: isEmpty,
-        emptyMulti: emptyMulti,
         isEmptyObj: isEmptyObj,
         isEmptyOrNotOfType: isEmptyOrNotOfType,
-        unset: unset,
+        isArray: isArray,
+        isBoolean: isBoolean,
+        isFunction: isFunction,
+        isNull: isNull,
+        isNumber: isNumber,
+        isObject: isObject,
+        isString: isString,
+        isSymbol: isSymbol,
+        isUndefined: isUndefined,
+        jsonClone: jsonClone,
+        lcaseFirst: lcaseFirst,
         naiveNamespace: naiveNamespace,
         namespace: naiveNamespace,
-        lcaseFirst: lcaseFirst,
+        notEmptyAndOfType: notEmptyAndOfType,
+        restArgs: restArgs,
         ucaseFirst: ucaseFirst,
-        camelCase: camelCase,
-        implode: implode,
+        unset: unset,
         searchObj: searchObj,
-        hasMethod: hasMethod,
-        getValueFromObj: getValueFromObj,
         setValueOnObj: setValueOnObj,
-        extend: extendMulti,
-        clone: clone,
-        jsonClone: jsonClone,
-        defineSubClass: defineSubClass,
-        createTopLevelPackage: createTopLevelPackage,
-        makeNotSettableProp: makeNotSettableProp,
-        extractBoolFromArrayEnd: extractBoolFromArrayEnd,
-        extractBoolFromArrayStart: extractBoolFromArrayStart,
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
-        value: value,
-        constrainPointerWithinBounds: constrainPointerWithinBounds,
+        valueOrDefault: valueOrDefault,
         wrapPointerWithinBounds: wrapPointerWithinBounds
     };
 
@@ -1043,30 +1076,6 @@
 
         // Set lib src root path to be used in node env by `sjl.package`
         libSrcRootPath = __dirname;
-
-        // Allow all members from `sjl.ns.stdlib` to live and be accesible directly on `sjl`
-        var path = require('path'),
-            fs = require('fs'),
-            stdlibPath = path.join(libSrcRootPath, 'stdlib');
-
-        // Loop through files in 'sjl/stdlib'
-        fs.readdirSync(stdlibPath).forEach(function (file) {
-            var filePath = path.join(stdlibPath, file);
-
-            // If file is not a directory, of either *.js or *.json file format, and a constructor
-            // then make it accessible on `sjl`
-            if (!fs.statSync(filePath).isDirectory()
-                && ['.js', '.json'].indexOf(path.extname(file)) > -1
-                && file[0].toUpperCase() === file[0]) {
-
-                // Allow module to be fetched as a getter
-                Object.defineProperty(sjl, file.substr(0, file.lastIndexOf('.')), {
-                    get: function () {
-                        return require(filePath);
-                    }
-                });
-            }
-        });
     }
 
     // Create top level frontend package.
