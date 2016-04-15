@@ -26,7 +26,7 @@ gulp.task('changelog', function () {
 });
 
 gulp.task('readme', ['changelog'], function () {
-    gulp.src(['readme-fragments/README-fragment.md'])
+    gulp.src(['markdown-frags/README-fragment.md'])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });
@@ -164,8 +164,8 @@ gulp.task('watch', function () {
     // Watch readme for 'jsdoc' task
     gulp.watch(['README.md'] /*['jsdoc']*/);
 
-    // Watch changelog-fragments and readme-fragments for 'readme' task
-    gulp.watch(['readme-fragments/*.md', 'changelog-fragments/*.md'], ['readme']);
+    // Watch changelog-fragments and markdown-frags for 'readme' task
+    gulp.watch(['markdown-frags/*.md', 'changelog-fragments/*.md'], ['readme']);
 
 });
 
