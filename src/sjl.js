@@ -990,6 +990,14 @@
         return retVal;
     }
 
+    // function extractBoolFromArray(array, startOrEndBln) {
+    //     // Extract boolean from array but don't make a copy of passed in array
+    //     var extractionOpResult = extractFromArrayAt(array,
+    //         (startOrEndBln ? 0 : array.length - 1), Boolean, false),
+    //         expectedBoolean = extractionOpResult[0];
+    //     return sjl.isset(expectedBoolean) ? expectedBoolean : false;
+    // }
+
     /**
      * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
      * @function module:sjl.extractBoolFromArrayStart
