@@ -1,6 +1,3 @@
-/**
- * Created by elydelacruz on 3/1/16.
- */
 // ~~~ STRIP ~~~
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {

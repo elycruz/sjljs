@@ -1,7 +1,3 @@
-/**
- * Created by elydelacruz on 3/25/16.
- */
-
 // ~~~ STRIP ~~~
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
@@ -15,6 +11,7 @@ if (typeof expect === 'undefined') {
 // ~~~ /STRIP ~~~
 
 describe('#defineSubClass', function () {
+    
     'use strict';
 
     /**
