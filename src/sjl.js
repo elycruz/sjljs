@@ -62,18 +62,17 @@
      */
     function extractFromArrayAt (array, index, type, makeCopyOfArray) {
         var retVal = null,
-            matchesType, foundElement;
-        sjl.throwTypeErrorIfNotOfType('sjl', 'extractFromArrayAt', 'array', array, Array);
-        sjl.throwTypeErrorIfNotOfType('sjl', 'extractFromArrayAt', 'index', index, Number);
+            matchesType, foundElement,
+            splicedArray;
         makeCopyOfArray = classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
         if (array.hasOwnProperty(index + '')) {
             if (makeCopyOfArray) {
                 array = array.concat([]);
             }
-            foundElement = array[index];
-            matchesType = issetAndOfType(type, String) ? classOfIs(foundElement, type) : true;
-            foundElement = array.splice(index, 1);
+            matchesType = issetAndOfType(type, String) ? classOfIs(array[index], type) : true;
             if (matchesType) {
+                splicedArray = array.splice(index, 1);
+                foundElement = splicedArray.length > 0 ? splicedArray[0] : null;
                 retVal = [foundElement, array];
             }
         }
