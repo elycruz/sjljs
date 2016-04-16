@@ -1,7 +1,3 @@
-/**
- * Created by elydelacruz on 3/25/16.
- */
-
 // ~~~ STRIP ~~~
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
@@ -15,6 +11,7 @@ if (typeof expect === 'undefined') {
 // ~~~ /STRIP ~~~
 
 describe('#defineSubClass', function () {
+    
     'use strict';
 
     /**
@@ -144,9 +141,6 @@ describe('#defineSubClass', function () {
 
 });
 
-/**
- * Created by elydelacruz on 3/1/16.
- */
 // ~~~ STRIP ~~~
 // Make test suite directly interoperable with the browser
 if (typeof window === 'undefined') {
@@ -314,34 +308,7 @@ describe('Sjl Utils', function () {
         return newObj;
     }
 
-    describe('#`argsToArray`', function () {
-
-        var helloFunc = function hello () {},
-            helloArray = ['a', 'b', 'c'];
-
-        it ('should return an array for an arguments object.', function () {
-            expect(Array.isArray(sjl.argsToArray(arguments))).to.equal(true);
-        });
-
-        describe ('when passed in args are [1, 2, "3", '
-            + helloFunc + ', [' + helloArray + ']]', function () {
-            var valuesToTest,
-                valuesToPassIn = [1, 2, '3', helloFunc, helloArray];
-
-            // Get values to test
-            (function () {
-                valuesToTest = sjl.argsToArray(arguments);
-            })(1, 2, '3', helloFunc, helloArray);
-
-            valuesToTest.forEach(function (val, i) {
-                it ('Returned array should contain value "' + valuesToPassIn[i]
-                    + '" of type "' + sjl.classOf(valuesToPassIn[i]) + '".', function () {
-                    expect(val).to.equal(valuesToPassIn[i]);
-                });
-            });
-        });
-
-    });
+    
 
     describe('#`isset`', function () {
         it('should return false for null value.', function () {

@@ -1,7 +1,7 @@
 /**! sjljs 5.0.3
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: cdcad0cccad8bf47b2ad4909fe54b528
- * | Built-on: Fri Apr 15 2016 20:16:04 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: b8ba2dd457e792e57635cc52813c574f
+ * | Built-on: Sat Apr 16 2016 12:53:14 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module.
  * @module sjl {Object}
@@ -65,19 +65,18 @@
      *  Else returns `null`.
      */
     function extractFromArrayAt (array, index, type, makeCopyOfArray) {
-        var retVal = null,
-            matchesType, foundElement;
-        sjl.throwTypeErrorIfNotOfType('sjl', 'extractFromArrayAt', 'array', array, Array);
-        sjl.throwTypeErrorIfNotOfType('sjl', 'extractFromArrayAt', 'index', index, Number);
+        var retVal = [null, array],
+            matchesType, foundElement,
+            splicedArray;
         makeCopyOfArray = classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
         if (array.hasOwnProperty(index + '')) {
             if (makeCopyOfArray) {
                 array = array.concat([]);
             }
-            foundElement = array[index];
-            matchesType = issetAndOfType(type, String) ? classOfIs(foundElement, type) : true;
-            foundElement = array.splice(index, 1);
+            matchesType = issetAndOfType(type, String) ? classOfIs(array[index], type) : true;
             if (matchesType) {
+                splicedArray = array.splice(index, 1);
+                foundElement = splicedArray.length > 0 ? splicedArray[0] : null;
                 retVal = [foundElement, array];
             }
         }

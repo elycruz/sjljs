@@ -61,7 +61,7 @@
      *  Else returns `null`.
      */
     function extractFromArrayAt (array, index, type, makeCopyOfArray) {
-        var retVal = null,
+        var retVal = [null, array],
             matchesType, foundElement,
             splicedArray;
         makeCopyOfArray = classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
