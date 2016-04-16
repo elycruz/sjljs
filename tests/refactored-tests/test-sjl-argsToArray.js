@@ -2,35 +2,43 @@
 // This part gets stripped out when
 // generating browser version of test(s).
 var chai = require('chai'),
-sjl = require('./../../src/sjl'),
-expect = chai.expect;
+    sjl = require('./../../src/sjl'),
+    expect = chai.expect;
 // ~~~ /STRIP ~~~
-describe('#`sjl.argsToArray`', function () {
+describe('#sjl.argsToArray', function () {
 
     'use strict';
-
-    var helloFunc = function hello() {},
-        helloArray = ['a', 'b', 'c'];
 
     it('should return an array for an arguments object.', function () {
         expect(Array.isArray(sjl.argsToArray(arguments))).to.equal(true);
     });
 
-    describe('when passed in args are [1, 2, "3", '
-        + helloFunc + ', [' + helloArray + ']]', function () {
-        var valuesToTest,
-            valuesToPassIn = [1, 2, '3', helloFunc, helloArray];
+    it('should return an array for an array.', function () {
+        var subjectArray = [['hello'].true, function () {}, {}, 'Hello World'],
+            operationResult = sjl.argsToArray(subjectArray);
+        expect(Array.isArray(operationResult)).to.equal(true);
+    });
+
+    it('should return an array of the exact same length as the array like object passed (Array|Arguments).', function () {
+        var subjectArray = [['hello'].true, function () {
+            }, {}, 'Hello World'],
+            operationResult = sjl.argsToArray(subjectArray);
+        expect(operationResult.length).to.equal(subjectArray.length);
+    });
+
+    it('Returned array should contain passed in values.', function () {
+        var operationResult = null,
+            subjectParams = [['hello'], true, function () {}, {}, 'Hello World'];
 
         // Get values to test
         (function () {
-            valuesToTest = sjl.argsToArray(arguments);
-        })(1, 2, '3', helloFunc, helloArray);
+            operationResult = sjl.argsToArray(arguments);
+        })
+            .apply(null, subjectParams);
 
-        valuesToTest.forEach(function (val, i) {
-            it('Returned array should contain value "' + valuesToPassIn[i]
-                + '" of type "' + sjl.classOf(valuesToPassIn[i]) + '".', function () {
-                expect(val).to.equal(valuesToPassIn[i]);
-            });
+        // Test operation result
+        operationResult.forEach(function (value, i) {
+            expect(value).to.equal(subjectParams[i]);
         });
     });
 
