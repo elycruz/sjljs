@@ -674,7 +674,7 @@
                 'interoperability.'
             );
             superClass.apply(this, arguments);
-        }
+        };
     }
 
     /**
@@ -724,7 +724,7 @@
 
             // Decide whether to use a stand in constructor or the user supplied one
             constructor = !( methods.constructor instanceof Function )
-                ? StandInConstructor : methods.constructor;
+                ? standInConstructor(superclass) : methods.constructor;
 
             // Unset the constructor from the methods hash since we have a pointer to it
             unset(methods, 'constructor');

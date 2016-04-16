@@ -13,19 +13,14 @@ var packageJson = require('./package.json'),
     lazypipe = require('lazypipe'),
     chalk = require('chalk'),
     crypto = require('crypto'),
+    requirejs = require('gulp-requirejs'),
     del = require('del'),
     jsHintPipe = lazypipe()
         .pipe(jshint)
         .pipe(duration, chalk.cyan("jshint duration"))
         .pipe(jshint.reporter, 'jshint-stylish');
 
-gulp.task('changelog', function () {
-    return gulp.src('changelog-fragments/*.md')
-        .pipe(concat('changelog.md'))
-        .pipe(gulp.dest('./'));
-});
-
-gulp.task('readme', ['changelog'], function () {
+gulp.task('readme', function () {
     gulp.src(['markdown-frags/README-fragment.md'])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
@@ -137,11 +132,13 @@ gulp.task('minimal-min', ['minimal'], function () {
 });
 
 gulp.task('make-browser-test-suite', function () {
-    gulp.src(['tests/for-server/**/*.js'])
+    return gulp.src(['tests/for-server/**/*.js'])
         .pipe(jsHintPipe())
         .pipe(concat('tests/for-browser/test-suite.js'))
         .pipe(gulp.dest('./'));
 });
+
+gulp.task('mbts', ['make-browser-test-suite']);
 
 gulp.task('jshint', function () {
     return gulp.src('src/**/*.js')
@@ -165,7 +162,7 @@ gulp.task('watch', function () {
     gulp.watch(['README.md'] /*['jsdoc']*/);
 
     // Watch changelog-fragments and markdown-frags for 'readme' task
-    gulp.watch(['markdown-frags/*.md', 'changelog-fragments/*.md'], ['readme']);
+    gulp.watch(['markdown-frags/*.md'], ['readme']);
 
 });
 

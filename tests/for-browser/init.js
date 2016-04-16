@@ -15,10 +15,10 @@ require.config({
     },
 
     paths: {
-        sjl: '../../../sjl',
-        chai:  '../../../node_modules/chai/chai',
-        mocha: '../../../node_modules/mocha/mocha',
-        'test-suite': '../test-suite'
+        sjl: '../../src/sjl',
+        chai:  '../../node_modules/chai/chai',
+        mocha: '../../node_modules/mocha/mocha',
+        'test-suite': 'test-suite'
     }
 
 });

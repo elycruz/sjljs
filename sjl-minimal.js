@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 5.0.3 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: e64f6c391df9236b70329e8502de648d 
- * | Built-on: Fri Apr 15 2016 19:29:28 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: cdcad0cccad8bf47b2ad4909fe54b528 
+ * | Built-on: Fri Apr 15 2016 20:16:04 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -679,7 +679,7 @@
                 'interoperability.'
             );
             superClass.apply(this, arguments);
-        }
+        };
     }
 
     /**
@@ -729,7 +729,7 @@
 
             // Decide whether to use a stand in constructor or the user supplied one
             constructor = !( methods.constructor instanceof Function )
-                ? StandInConstructor : methods.constructor;
+                ? standInConstructor(superclass) : methods.constructor;
 
             // Unset the constructor from the methods hash since we have a pointer to it
             unset(methods, 'constructor');

@@ -24,7 +24,7 @@ function Namespace(dir, allowedFileExts, ignoredDirs) {
 
 function processFiles(files, dir, allowedFileExts, ignoredDirs, self) {
     files.forEach(function (file) {
-        if (ignoredDirs && ingoredDirs.indexOf(file) > -1) {
+        if (ignoredDirs && ignoredDirs.indexOf(file) > -1) {
             return;
         }
         if (fs.statSync(path.join(dir, file)).isDirectory()) {
