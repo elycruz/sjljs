@@ -14,12 +14,12 @@ describe ('#sjl.restArgs', function () {
     'use strict';
 
     it('should return an array when receiving an `arguments` object.', function () {
-        expect(Array.isArray(sjl.restArgs(arguments))).to.true;
+        expect(Array.isArray(sjl.restArgs(arguments))).to.be.true();
     });
 
     it ('should return args from 0 to `end`.', function () {
         (function () {
-            let args = arguments,
+            var args = arguments,
                 restArgs = sjl.restArgs(args, 0, 3);
             restArgs.forEach(function (arg, index) {
                 expect(args[index]).to.equal(arg);
@@ -30,7 +30,7 @@ describe ('#sjl.restArgs', function () {
 
     it ('should return args from 0 to end when no `end` is passed in.', function () {
         (function () {
-            let args = arguments,
+            var args = arguments,
                 restArgs = sjl.restArgs(args, 0);
             restArgs.forEach(function (arg, index) {
                 expect(args[index]).to.equal(arg);
@@ -40,9 +40,9 @@ describe ('#sjl.restArgs', function () {
     });
 
     describe ('should work with plain arrays.', function () {
-        let testArray = [null, undefined, true, false, function () {}, []];
+        var testArray = [null, undefined, true, false, function () {}, []];
         it ('should return args from 0 to `end`.', function () {
-            let args = testArray,
+            var args = testArray,
                 restArgs = sjl.restArgs(args, 0, 3);
             restArgs.forEach(function (arg, index) {
                 expect(args[index]).to.equal(arg);
@@ -51,7 +51,7 @@ describe ('#sjl.restArgs', function () {
         });
 
         it ('should return args from 0 to end when no `end` is passed in.', function () {
-            let args = testArray,
+            var args = testArray,
                 restArgs = sjl.restArgs(args, 0);
             restArgs.forEach(function (arg, index) {
                 expect(args[index]).to.equal(arg);

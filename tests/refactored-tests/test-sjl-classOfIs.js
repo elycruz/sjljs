@@ -8,27 +8,51 @@ var chai = require('chai'),
     sjl = require('./../../src/sjl'),
     expect = chai.expect;
 // ~~~ /STRIP ~~~
-describe ('#sjl.classOf', function () {
-    // Test generic-types/primitives
-    [
-        [[],        Array.name, '[]'],
-        [true,      Boolean.name, 'true'],
-        [false,     Boolean.name, 'false'],
-        [() => {},  Function.name, '() => {}'],
-        [{},        Object.name, '{}'],
-        [new Map(), Map.name, 'new Map()'],
-        [new Set(), Set.name, 'new Set()'],
-        [null,      'Null', 'null'],
-        [undefined, 'Undefined', 'undefined'],
-    ]
-    .forEach(function (args) {
-        it ('should return "' + args[1] + '" for value `' + args[2] + '`.', function () {
-            expect(sjl.classOf(args[0])).to.equal(args[1]);
-        });
+describe('#sjl.classOfIs', function () {
+
+    describe('truthy checks', function () {
+        // Test generic-types/primitives
+        [
+            [[], Array.name, '[]'],
+            [true, Boolean.name, 'true'],
+            [false, Boolean.name, 'false'],
+            [function () {
+            }, Function.name, 'function () {}'],
+            [99, Number.name, '99'],
+            [{}, Object.name, '{}'],
+            [null, 'Null', 'null'],
+            [undefined, 'Undefined', 'undefined']
+        ]
+            .forEach(function (args) {
+                it('should return `true` for value args [' + args[2] + ', ' + args[1] + '] .', function () {
+                    expect(sjl.classOfIs(args[0], args[1])).to.equal(true);
+                });
+            });
     });
 
-    it ('should return "Undefined" when no value is passed.', function () {
-        expect(sjl.classOf()).to.equal('Undefined');
+    describe('falsy checks', function () {
+        // Test generic-types/primitives for non-matching type checks
+        [
+            [[], Boolean.name, '[]'],
+            [true, Array.name, 'true'],
+            [false, Array.name, 'false'],
+            [function () {
+            }, Number.name, 'function () {}'],
+            [99, Function.name, '99'],
+            [{}, 'Null', '{}'],
+            [null, Object.name, 'null'],
+            [undefined, Array.name, 'undefined']
+        ]
+            .forEach(function (args) {
+                it('should return `false` for value args [' + args[2] + ', ' + args[1] + '] .', function () {
+                    expect(sjl.classOfIs(args[0], args[1])).to.equal(false);
+                });
+            });
+
+    });
+
+    it('should return `false` when no value is passed.', function () {
+        expect(sjl.classOfIs()).to.equal(false);
     });
 
 });

@@ -21,4 +21,7 @@ describe ('#sjl.isset', function () {
             expect(sjl.isset(value)).to.equal(true);
         });
     });
+    it('should return `false` when called without arguments.', function () {
+        expect(sjl.isset()).to.be.false();
+    });
 });

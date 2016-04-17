@@ -1,13 +1,12 @@
 // ~~~ STRIP ~~~
 // This part gets stripped out when
 // generating browser version of test(s).
+'use strict';
 var chai = require('chai'),
     sjl = require('./../../src/sjl'),
     expect = chai.expect;
 // ~~~ /STRIP ~~~
 describe('#sjl.argsToArray', function () {
-
-    'use strict';
 
     it('should return an array for an arguments object.', function () {
         expect(Array.isArray(sjl.argsToArray(arguments))).to.equal(true);
