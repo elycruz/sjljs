@@ -1036,6 +1036,8 @@
         isset: isset,
         issetMulti: issetMulti,
         issetAndOfType: issetAndOfType,
+        isEmpty: isEmpty,
+        isEmptyMulti: emptyMulti,
         isEmptyObj: isEmptyObj,
         isEmptyOrNotOfType: isEmptyOrNotOfType,
         isArray: isArray,

@@ -8,6 +8,7 @@
  * @todo add default value returns for isset, issetMulti, empty and their variations (makes code more functional and adds syntactical sugar).
  * @todo add a `pluck` method that allows you to pluck values from a `Set`, `Array`, `Map` or `Object` based on parameters passed in.
  * @todo Add readme entry for this function (`extractFromArrayAt`).
+ * @todo evaluate the cost of add error throwing to all functions when used incorrectly (bigger evaluation necessary though seems like a 'con' rather than a 'pro').
  */
 (function (undefined) {
 
