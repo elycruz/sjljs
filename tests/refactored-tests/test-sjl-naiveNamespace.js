@@ -57,6 +57,15 @@ describe('#sjl.naiveNamespace', function () {
         expect(subject.all).to.equal(oldValue);
     });
 
+    it ('should throw a type error when second parameter isn\'t an object or an instance of `Function`.', function () {
+        try {
+            sjl.naiveNamespace('all', 99);
+        }
+        catch (e) {
+            expect(e).to.be.instanceof(TypeError);
+        }
+    });
+
     it ('should throw a type error when no params are passed in.', function () {
         try {
             sjl.naiveNamespace();
