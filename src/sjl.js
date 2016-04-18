@@ -433,15 +433,21 @@
      * Searches an object for namespace string.
      * @param ns_string {String} - Namespace string;  E.g., 'all.your.base'
      * @param objToSearch {*}
-     * @returns {*} - If property chain is not found then returns `null`.
+     * @returns {*} - Found value.  If no found value returns `undefined`.
      */
     function searchObj (ns_string, objToSearch) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
+            classOfObj = classOf(objToSearch),
             i;
+        throwTypeErrorIfNotOfType('sjl', 'searchObj', 'ns_string', ns_string, String);
+        if (classOfObj && !(objToSearch instanceof Function)) {
+            throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
+                'or an instance of `Function`.  Type received: ' + classOfObj);
+        }
         for (i = 0; i < parts.length; i += 1) {
             if (parts[i] in parent === false || classOfIs(parent[parts[i]], 'Undefined')) {
-                parent = null;
+                parent = undefined;
                 break;
             }
             parent = parent[parts[i]];
@@ -955,7 +961,7 @@
         search = str.search(/[a-z]/i);
 
         // If alpha char
-        if (classOfIs(search, 'Number') && search > -1) {
+        if (classOfIs(search, Number) && search > -1) {
 
             // Make it lower case
             char = str.substr(search, 1)[func]();
