@@ -25,19 +25,23 @@ describe('#sjl.ucaseFirst', function () {
 
     it ('should throw a `TypeError` error when no params are passed in' +
         'or when param is not of type `String`.', function () {
+        var caughtError;
         try {
             sjl.ucaseFirst();
         }
         catch (e) {
-            expect(e).to.be.instanceof(TypeError);
+            caughtError = e;
         }
+        expect(caughtError).to.be.instanceof(TypeError);
+        caughtError = undefined;
 
         try {
             sjl.ucaseFirst(99);
         }
         catch (e) {
-            expect(e).to.be.instanceof(TypeError);
+            caughtError = e;
         }
+        expect(caughtError).to.be.instanceof(TypeError);
     });
 
 });

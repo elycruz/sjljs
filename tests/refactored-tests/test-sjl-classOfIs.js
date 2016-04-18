@@ -50,12 +50,14 @@ describe('#sjl.classOfIs', function () {
     });
 
     it('should throw a type error when no `type` parameter is passed in or when no types are passed in.', function () {
+        var caughtError = false;
         try {
             sjl.classOfIs();
         }
         catch (e) {
-            expect(e).to.be.instanceof(TypeError);
+            caughtError = e;
         }
+        expect(caughtError).to.be.instanceof(TypeError);
     });
 
 });

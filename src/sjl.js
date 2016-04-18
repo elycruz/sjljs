@@ -440,8 +440,8 @@
             parent = objToSearch,
             classOfObj = classOf(objToSearch),
             i;
-        throwTypeErrorIfNotOfType('sjl', 'searchObj', 'ns_string', ns_string, String);
-        if (classOfObj && !(objToSearch instanceof Function)) {
+        throwTypeErrorIfNotOfType('sjl.searchObj', 'ns_string', ns_string, String);
+        if (classOfObj !== Object.name && !(objToSearch instanceof Function)) {
             throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
                 'or an instance of `Function`.  Type received: ' + classOfObj);
         }

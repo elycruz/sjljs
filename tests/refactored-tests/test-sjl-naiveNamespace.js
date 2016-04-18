@@ -58,21 +58,25 @@ describe('#sjl.naiveNamespace', function () {
     });
 
     it ('should throw a type error when second parameter isn\'t an object or an instance of `Function`.', function () {
+        var caughtError;
         try {
             sjl.naiveNamespace('all', 99);
         }
         catch (e) {
-            expect(e).to.be.instanceof(TypeError);
+            caughtError = e;
         }
+        expect(caughtError).to.be.instanceof(TypeError);
     });
 
     it ('should throw a type error when no params are passed in.', function () {
+        var caughtError;
         try {
             sjl.naiveNamespace();
         }
         catch (e) {
-            expect(e).to.be.instanceof(TypeError);
+            caughtError = e;
         }
+        expect(caughtError).to.be.instanceof(TypeError);
     });
 
 });

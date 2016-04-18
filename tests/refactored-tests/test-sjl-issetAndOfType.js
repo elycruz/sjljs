@@ -75,24 +75,19 @@ describe('#sjl.issetAndOfType', function () {
                 ['Hello World']
             ];
         argsForTest.forEach(function (args) {
+            var caughtError;
             try {
                 sjl.issetAndOfType(args);
             }
             catch (e) {
-                expect(e).to.be.instanceof(TypeError);
-                count += 1;
+                caughtError = e;
             }
+            expect(caughtError).to.be.instanceof(TypeError);
         });
-        expect(count).to.equal(argsForTest.length);
     });
 
-    it('should throw a type error when no arguments are passed in.', function () {
-        try {
-            sjl.issetAndOfType();
-        }
-        catch (e) {
-            expect(e).to.equal(false);
-        }
+    it('should return false when no arguments are passed in.', function () {
+        expect(sjl.issetAndOfType()).to.be.false();
     });
 
 });

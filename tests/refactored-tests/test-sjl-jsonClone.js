@@ -41,12 +41,14 @@ describe('#sjl.jsonClone', function () {
     });
 
     it ('should return a syntax error when no params are passed in.', function () {
+        var caughtError;
         try {
             sjl.jsonClone();
         }
         catch (e) {
-            expect(e).to.be.instanceof(SyntaxError);
+            caughtError = e;
         }
+        expect(caughtError).to.be.instanceof(SyntaxError);
     });
 
 });

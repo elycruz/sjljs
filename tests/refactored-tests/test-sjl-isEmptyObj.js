@@ -28,23 +28,25 @@ describe('#sjl.isEmptyObj', function () {
     ]
         .forEach(function (args) {
             // Pass through or check error type
+            var caughtError = false;
             try {
-                sjl.isEmptyObj(args[0])
+                sjl.classOfIs(args[0]);
             }
             catch (e) {
-                it('should throw an `TypeError` when trying to check a `' + args[1] + '`.', function () {
-                    expect(e).to.be.instanceof(TypeError);
-                });
+                caughtError = e;
             }
+            expect(caughtError).to.be.instanceof(TypeError);
         });
 
     it ('should throw an `TypeError` when called with no params.', function () {
+        var caughtError = false;
         try {
             sjl.isEmptyObj();
         }
         catch (e) {
-            expect(e).to.be.instanceof(TypeError);
+            caughtError = e;
         }
+        expect(caughtError).to.be.instanceof(TypeError);
     });
 
 });
