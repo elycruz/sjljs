@@ -36,8 +36,7 @@ describe('#sjl.classOfIs', function () {
             [[], Boolean.name, '[]'],
             [true, Array.name, 'true'],
             [false, Array.name, 'false'],
-            [function () {
-            }, Number.name, 'function () {}'],
+            [function () {}, Number.name, 'function () {}'],
             [99, Function.name, '99'],
             [{}, 'Null', '{}'],
             [null, Object.name, 'null'],
@@ -48,11 +47,15 @@ describe('#sjl.classOfIs', function () {
                     expect(sjl.classOfIs(args[0], args[1])).to.equal(false);
                 });
             });
-
     });
 
-    it('should return `false` when no value is passed.', function () {
-        expect(sjl.classOfIs()).to.equal(false);
+    it('should throw a type error when no `type` parameter is passed in or when no types are passed in.', function () {
+        try {
+            sjl.classOfIs();
+        }
+        catch (e) {
+            expect(e).to.be.instanceof(TypeError);
+        }
     });
 
 });

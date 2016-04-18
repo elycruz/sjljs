@@ -159,10 +159,13 @@
      * Code cleanliness at it's finest!!!  Hahaha!!
      */
     function classOfIs (obj, type) {
+        var classOfType = classOf(type);
+        if (classOfType !== String.name && !(type instanceof Function)) {
+            throw new TypeError('sjl.classOfIs expects it\'s `type` parameter to' +
+                'be of type `String` or an instance of `Function`.  Type recieved: ' + classOfType + '.');
+        }
         return classOf(obj) === (
-                classOf(type) === String.name ? type : (
-                    type instanceof Function ? type.name : null
-                )
+                classOfType === String.name ? type : type.name
             );
     }
 
@@ -263,7 +266,7 @@
      * @returns {Boolean}
      */
     function isEmptyOrNotOfType (value, type) {
-        return isEmpty(value) || isset(type) ? !classOfIs(value, type) : false;
+        return isEmpty(value) || !classOfIs(value, type);
     }
 
     /**

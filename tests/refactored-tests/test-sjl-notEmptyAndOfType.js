@@ -35,7 +35,7 @@ function generateRandomPrimitiveName (notName) {
     return name;
 }
 
-describe('#sjl.isEmptyOrNotOfType', function () {
+describe('#sjl.notEmptyAndOfType', function () {
     var emptyTestArgs = [
             [[], '[]', Array],
             [{}, '{}', Object],
@@ -61,21 +61,15 @@ describe('#sjl.isEmptyOrNotOfType', function () {
             return args[1];
         });
 
-    it('should return true for empty values [' + emptyValueReps.join(',') + '].', function () {
+    it('should return false for empty values [' + emptyValueReps.join(',') + '] even though they match the passed in `type`.', function () {
         emptyTestArgs.forEach(function (args) {
-            expect(sjl.isEmptyOrNotOfType(args[0], args[2])).to.be.true();
+            expect(sjl.notEmptyAndOfType(args[0], args[2])).to.be.false();
         });
     });
 
-    it('should return false for non empty values [' + nonEmptyValueReps.join(',') + '].', function () {
+    it ('should return true for values that are not empty and match the passed in `type`.', function () {
         nonEmptyTestArgs.forEach(function (args) {
-            expect(sjl.isEmptyOrNotOfType(args[0], args[2])).to.be.false();
-        });
-    });
-
-    it ('should return false for values that are not empty and match the passed in `type`.', function () {
-        nonEmptyTestArgs.forEach(function (args) {
-            expect(sjl.isEmptyOrNotOfType(args[0], args[2])).to.be.false();
+            expect(sjl.notEmptyAndOfType(args[0], args[2])).to.be.true();
         });
     });
 
@@ -84,18 +78,13 @@ describe('#sjl.isEmptyOrNotOfType', function () {
             var valueType = sjl.classOf(args[0]);
             return args[2] = generateRandomPrimitiveName(valueType);
         });
-        // Ensure a function case is in the test args since JSON.stringify will
-        // remove all properties that have a function value.
-        argsForTest.push([function () {}, 'function () {}', String]);
-
-        // Run tests
         argsForTest.forEach(function (args) {
-            expect(sjl.isEmptyOrNotOfType(args[0], args[2])).to.be.true();
+            expect(sjl.notEmptyAndOfType(args[0], args[2])).to.be.false();
         });
     });
 
     it('should return true when no params are passed in.', function () {
-        expect(sjl.isEmptyOrNotOfType()).to.equal(true);
+        expect(sjl.notEmptyAndOfType()).to.equal(false);
     });
 
 });
