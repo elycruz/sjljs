@@ -21,7 +21,7 @@ var packageJson = require('./package.json'),
         .pipe(jshint.reporter, 'jshint-stylish');
 
 gulp.task('readme', function () {
-    gulp.src(['markdown-frags/README-fragment.md'])
+    gulp.src(['markdown-fragments/README-fragment.md'])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });
@@ -161,8 +161,8 @@ gulp.task('watch', function () {
     // Watch readme for 'jsdoc' task
     gulp.watch(['README.md'] /*['jsdoc']*/);
 
-    // Watch changelog-fragments and markdown-frags for 'readme' task
-    gulp.watch(['markdown-frags/*.md'], ['readme']);
+    // Watch changelog-fragments and markdown-fragments for 'readme' task
+    gulp.watch(['markdown-fragments/*.md'], ['readme']);
 
 });
 
