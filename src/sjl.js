@@ -306,8 +306,13 @@
      * @returns {Object}
      */
     function naiveNamespace (ns_string, objToSearch, valueToSet) {
+        //throwTypeErrorIfNotOfType('sjl', 'naiveNamespace', 'ns_string', ns_string, String);
         var parent = objToSearch,
+            classOfObjToSearch = classOf(objToSearch),
             shouldSetValue = !classOfIs(valueToSet, 'Undefined');
+        //if (classOfObjToSearch !== 'Object' || objToSearch instanceof Function) {
+        //    throw TypeError ('sjl.naiveNamespace expects a Constructor or an instance obj to search on.')
+        //}
         ns_string.split('.').forEach(function (part, index, parts) {
             if (part in parent === false || classOfIs(parent[part], 'Undefined')) {
                 parent[part] = {};
