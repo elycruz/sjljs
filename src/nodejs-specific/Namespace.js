@@ -41,7 +41,7 @@ function processFiles(files, dir, allowedFileExts, ignoredDirs, self) {
         }
         else {
             throw new Error('The file representing the requested alias "' + file + '" is not of ' +
-                'the allowed type(s): "[' + (allowedFileExts.join('", "')) + ']');
+                'the allowed namespacable type(s): "[' + (allowedFileExts.join('", "')) + ']');
         }
     });
 }

@@ -527,12 +527,12 @@
      * if no value results from operation.
      */
     function setValueOnObj (key, value, obj, useLegacyGetters) {
-        useLegacyGetters = !isset(useLegacyGetters) ? false : useLegacyGetters;
+        useLegacyGetters = !issetAndOfType(useLegacyGetters, Boolean) ? false : useLegacyGetters;
 
         // Get qualified setter function name
         var overloadedSetterFunc = camelCase(key, false),
             setterFunc = 'set' + camelCase(key, true),
-            retVal = obj;
+            retVal;
 
         // Else set the value on the obj
         if (key.indexOf('.') !== -1) {
@@ -547,10 +547,23 @@
         }
         else {
             obj[key] = typeof value !== _undefined ? value : null;
+            retVal = obj;
         }
 
         // Return result of setting value on obj, else return obj
         return retVal;
+    }
+
+    function migrateValue (prop, from, to, useLegacyGettersAndSetters) {
+        if (useLegacyGettersAndSetters) {
+            setValueOnObj(prop,
+                getValueFromObj(prop, from, true, useLegacyGettersAndSetters),
+                to);
+        }
+        else {
+            to[prop] = from[prop];
+        }
+        return to;
     }
 
     /**
@@ -589,24 +602,12 @@
                     && !isEmptyObj(p[prop])) {
                     extend(o[prop], p[prop], deep);
                 }
-                else if (useLegacyGettersAndSetters) {
-                    setValueOnObj(prop,
-                        getValueFromObj(prop, p, true, useLegacyGettersAndSetters),
-                        o);
-                }
                 else {
-                    o[prop] = p[prop];
+                    migrateValue(prop, p, o, useLegacyGettersAndSetters);
                 }
             }
-            else if (useLegacyGettersAndSetters) {
-                setValueOnObj(prop,
-                    getValueFromObj(prop,
-                        p, true, useLegacyGettersAndSetters
-                    ), o);
-            }
-            // Else set
             else {
-                o[prop] = p[prop];
+                migrateValue(prop, p, o, useLegacyGettersAndSetters);
             }
         });
 
@@ -827,6 +828,7 @@
 
             // Return passed in obj
             return obj;
+
         }());
     }
 

@@ -10,7 +10,7 @@ if (typeof expect === 'undefined') {
 }
 // ~~~ /STRIP ~~~
 
-describe('#`getValueFromObj`', function () {
+describe('#sjl.getValueFromObj', function () {
 
     var objToTest = {
             numberValue: 1,

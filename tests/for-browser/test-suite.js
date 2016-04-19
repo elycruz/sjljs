@@ -10,7 +10,7 @@ if (typeof expect === 'undefined') {
 }
 // ~~~ /STRIP ~~~
 
-describe('#defineSubClass', function () {
+describe('#sjl.defineSubClass', function () {
     
     'use strict';
 
