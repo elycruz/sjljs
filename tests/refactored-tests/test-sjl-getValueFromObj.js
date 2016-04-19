@@ -13,67 +13,113 @@ if (typeof expect === 'undefined') {
 describe('#`getValueFromObj`', function () {
 
     var objToTest = {
-            'NumberValue': -1,
-            'NumberValue2': 0,
-            'NumberValue3': 1,
-            'NumberValue4': 99,
-            'StringValue': 'hello world',
-            'FunctionValue': function () {console.log('some function call here.')},
-            'ArrayValue': [1, 2, 3],
-            'ObjectValue': {all: {your: {base: '...'}}},
-            'BooleanValue': true,
-            'BooleanValue2': false,
-            'getFunctionValue': function () { objToTest.FunctionValue.__hello = 'hello'; return objToTest.FunctionValue; },
-            'getBooleanValue2': function () { return objToTest.BooleanValue2; },
-            '_overloadedProp': {somePropProp: 'value'},
-            'overloadedProp': function (value) {
+            numberValue: 1,
+            arrayValue: ['hello-world', 1, 2, 3],
+            stringValue: 'hello world',
+            objectValue: {all: {your: {base: '...'}},
+                someFunction: function () { console.log('some-function'); },
+                fib: function (end) {
+                    var a = 0,
+                        b = 1,
+                        out = [a, b];
+                    while (a < end) {
+                        a = a + b;
+                        if (a >= end) {
+                            break;
+                        }
+                        out.push(a);
+                        b = a + b;
+                        if (b < end) {
+                            out.push(b);
+                        }
+                    }
+                    return out;
+                }
+            },
+            booleanValue: true,
+            _overloadedFunctionValue: function () {},
+            overloadedFunctionValue: function (value) {
                 if (typeof value === 'undefined') {
-                    console.log('returning _overloadedProp');
+                    return objToTest._overloadedFunctionValue;
+                }
+                else {
+                    objToTest._overloadedFunctionValue = value;
+                    return this;
+                }
+            },
+            _overloadedProp: {somePropProp: 'value'},
+            _otherFunctionProp: function () {console.log('hello world'); },
+            overloadedProp: function (value) {
+                if (typeof value === 'undefined') {
                     return objToTest._overloadedProp;
                 }
                 else {
                     objToTest._overloadedProp = value;
                     return this;
                 }
+            },
+            getOtherFunctionProp: function () {
+                return objToTest._otherFunctionProp;
+            },
+            getBooleanValue: function () {
+                return objToTest.booleanValue;
             }
         },
 
         objKeys = Object.keys(objToTest),
         objValues = objKeys.map(function (key) {
             return objToTest[key];
+        }),
+        objValueTypes = objKeys.map(function (key) {
+            return sjl.classOf(objKeys[key]);
         });
 
-    // @todo separate these tests into separate `it` statements so that is more opaque in tests list.
-    it('Should be able to get a any value from an object.', function () {
-
-        // Loop through object keys and validate proper functionality for function
-        objKeys.forEach(function (key, index) {
-            var retVal;
-
-            // Ensure preliminary values used for test match those of test subject
-            expect(objToTest[key] === objValues[index]).to.equal(true);
-
-            // Ensure we can get all values from test subject
-            expect(sjl.getValueFromObj(key, objToTest)).to.equal(objValues[index]);
-
-            // Ensure functions are called when `raw` is false
-            if (typeof objToTest[key] === 'function') {
-                expect(sjl.getValueFromObj(key, objToTest, null, false)).to.equal(objValues[index]());
-            }
-
-            // Check result of getting value via legacy getter if available
-            retVal = sjl.getValueFromObj(key, objToTest, null, null, true);
-
-            // Ensure getters are called when `useLegacyGetters` is true
-            if (typeof retVal === 'function') {
-                expect(retVal.__hello).to.equal('hello');
-            }
-            // Else ensure that other props/objects do not have the '__hello' property
-            else {
-                expect(retVal.hasOwnProperty('__hello')).to.equal(false);
-            }
-
+    it('should be able to get a value from an object by key.', function () {
+        objKeys.forEach(function (key) {
+            expect(sjl.getValueFromObj(key, objToTest)).to.equal(objToTest[key]);
         });
+    });
+
+    it('should be able to get a value from an object by namespace string.', function () {
+        expect(sjl.getValueFromObj('objectValue.all', objToTest)).to.equal(objToTest.objectValue.all);
+        expect(sjl.getValueFromObj('objectValue.all.your', objToTest)).to.equal(objToTest.objectValue.all.your);
+        expect(sjl.getValueFromObj('objectValue.all.your.base', objToTest)).to.equal(objToTest.objectValue.all.your.base);
+        expect(sjl.getValueFromObj('objectValue.all.someFunction', objToTest)).to.equal(objToTest.objectValue.all.someFunction);
+    });
+
+    it('should be able to automatically call functions and get their ' +
+        'return value when `raw` is `false`.', function () {
+        expect(sjl.getValueFromObj('getBooleanValue', objToTest, false))
+            .to.equal(objToTest.booleanValue);
+    });
+
+    it('should be able automatically call functions and get their return values.  ' +
+        'when passing in `args` and setting `raw` to `false`.', function () {
+        // Args for nested function call
+        var args = [5],
+
+            // Get value from obj
+            result = sjl.getValueFromObj('objectValue.fib', objToTest, false, null, args);
+
+        // Check that fibonacci series numbers got returned
+        expect(result[0]).to.equal(0);
+        expect(result[1]).to.equal(1);
+        expect(result[2]).to.equal(1);
+        expect(result[3]).to.equal(2);
+        expect(result[4]).to.equal(3);
+
+        // Check result length (should be five when asking for fib up to five)
+        expect(result.length).to.equal(5);
+
+        // Check that result is an array as we are expecting one from
+        // the `fib` function being called.
+        expect(Array.isArray(result)).to.be.true();
+    });
+
+    it('should be able to call legacy getters when ' +
+        '`useLegacyGetters` is `true`.', function () {
+        expect(sjl.getValueFromObj('otherFunctionProp', objToTest, null, true))
+            .to.equal(objToTest._otherFunctionProp);
     });
 
 });

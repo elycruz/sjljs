@@ -473,13 +473,13 @@
      * @function module:sjl.getValueFromObj
      * @param key {String} The hash key to search for
      * @param obj {Object} the hash to search within
-     * @param args {Array} optional the array to pass to value if it is a function
      * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
      * @param useLegacyGetters {Boolean} - Default false.
+     * @param args {Array} optional the array to pass to value if it is a function
      *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
      * @returns {*}
      */
-    function getValueFromObj (key, obj, args, raw, useLegacyGetters) {
+    function getValueFromObj (key, obj, raw, useLegacyGetters, args) {
         args = args || null;
         raw = isset(raw) ? raw : true;
         useLegacyGetters = !isset(useLegacyGetters) ? false : useLegacyGetters;
@@ -487,7 +487,7 @@
         // Get qualified getter function names
         var overloadedGetterFunc = camelCase(key, false),
             getterFunc = 'get' + camelCase(key, true),
-            retVal = null;
+            retVal;
 
         // Resolve return value
         if (key.indexOf('.') !== -1) {
@@ -500,13 +500,14 @@
         else if (useLegacyGetters && hasMethod(obj, overloadedGetterFunc)) {
             retVal = obj[overloadedGetterFunc]();
         }
-        else if (typeof obj[key] !== _undefined) {
+        else if (!isUndefined(obj[key])) {
             retVal = obj[key];
         }
 
-        // Decide what to do if return value is a function
-        if (classOfIs(retVal, 'Function') && isEmpty(raw)) {
-            retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
+        // If return value is a function and `raw` is false call the function and capture
+        // it's return value
+        if (isFunction(retVal) && isEmpty(raw)) {
+            retVal = args ? retVal.apply(obj, args) : retVal.call(obj);
         }
 
         // Return result of setting value on obj, else return obj
@@ -590,7 +591,7 @@
                 }
                 else if (useLegacyGettersAndSetters) {
                     setValueOnObj(prop,
-                        getValueFromObj(prop, p, null, true, useLegacyGettersAndSetters),
+                        getValueFromObj(prop, p, true, useLegacyGettersAndSetters),
                         o);
                 }
                 else {
@@ -600,7 +601,7 @@
             else if (useLegacyGettersAndSetters) {
                 setValueOnObj(prop,
                     getValueFromObj(prop,
-                        p, null, true, useLegacyGettersAndSetters
+                        p, true, useLegacyGettersAndSetters
                     ), o);
             }
             // Else set
