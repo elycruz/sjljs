@@ -10,7 +10,7 @@
  * @todo Add readme entry for this function (`extractFromArrayAt`).
  * @todo evaluate the cost of add error throwing to all functions when used incorrectly (bigger evaluation necessary though seems like a 'con' rather than a 'pro').
  */
-(function (undefined) {
+(function () {
 
     'use strict';
 
