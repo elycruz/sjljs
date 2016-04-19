@@ -100,20 +100,30 @@ describe('#`setValueOnObj`', function () {
             _otherFunctionProp: function () {console.log('hello world'); },
         },
 
-        objKeys = Object.keys(objToTest);
+        objKeys = Object.keys(objToTest),
+
+        subject = sjl.jsonClone(objToTest);
+
+    // Re-set function value keys since json takes them away via json clone
+    objKeys.forEach(function (key) {
+        if (sjl.isFunction(objToTest[key])) {
+            subject[key] = objToTest[key];
+            newObjValuesToUse[key] = objToTest[key];
+        }
+    });
 
     it('should be able to set a value from an object by key.', function () {
-        var subject = sjl.jsonClone(objToTest);
         objKeys.forEach(function (key) {
-            // Re-set function value keys since json takes them away via json clone
-            if (sjl.isFunction(objToTest[key])) {
-                subject[key] = objToTest[key];
-                newObjValuesToUse[key] = objToTest[key];
-            }
             // Re-set function keys since we did a json clone on subject
             var result = sjl.setValueOnObj(key, newObjValuesToUse[key], subject);
             expect(result[key]).to.equal(newObjValuesToUse[key]);
         });
+    });
+
+    it ('should be able to set a value via namespace string.', function () {
+        expect(sjl.setValueOnObj('objectValue.all', newObjValuesToUse.objectValue.all, subject)).to.equal(newObjValuesToUse.objectValue.all);
+        expect(sjl.setValueOnObj('objectValue.all.your', newObjValuesToUse.objectValue.all.your, subject)).to.equal(newObjValuesToUse.objectValue.all.your);
+        expect(sjl.setValueOnObj('objectValue.all.your.base', newObjValuesToUse.objectValue.all.your.base, subject)).to.equal(newObjValuesToUse.objectValue.all.your.base);
     });
 
 });
