@@ -532,7 +532,7 @@
         // Get qualified setter function name
         var overloadedSetterFunc = camelCase(key, false),
             setterFunc = 'set' + camelCase(key, true),
-            retVal;
+            retVal = obj;
 
         // Else set the value on the obj
         if (key.indexOf('.') !== -1) {
@@ -547,7 +547,6 @@
         }
         else {
             obj[key] = typeof value !== _undefined ? value : null;
-            retVal = obj;
         }
 
         // Return result of setting value on obj, else return obj

@@ -4,6 +4,7 @@
 // ~~~ STRIP ~~~
 // This part gets stripped out when
 // generating browser version of test(s).
+'use strict';
 var chai = require('chai'),
     sjl = require('./../../src/sjl'),
     expect = chai.expect;
