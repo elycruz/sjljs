@@ -898,8 +898,8 @@
             issetType = isset(type);
 
         // If `type` itself is not of the allowed types throw an error
-        if (issetType && !isString(type) && !isFunction()) {
-            throw new TypeError('`sjl.throwTypeErrorIfNotOfType.type` only accepts strings, functions (constructors),' +
+        if (issetType && !isString(type) && !isFunction(type)) {
+            throw new TypeError('`sjl.throwTypeErrorIfEmpty.type` only accepts strings, functions (constructors),' +
                 'null, or undefined.  ' +
                 'Type received: `' + classOf(type) + '`.');
         }
@@ -907,14 +907,14 @@
         // Proceed with type check
         if (issetType && !classOfIs(value, type)) {
             throw new TypeError('#`' + prefix + '`.`' + paramName
-                + '` is not of type "' + type + '".  ' + (fixHint || '')
+                + '` is not of type "' + type + '".  ' + (suffix || '')
                 + '  Type received: `' + classOfValue + '`.');
         }
 
         // Proceed with empty check
         if (isEmpty(value)) {
             throw new TypeError('#`' + prefix + '`.`' + paramName
-                + '` Cannot be empty.  ' + (fixHint || '')
+                + '` Cannot be empty.  ' + (suffix || '')
                 + '  Value received: `' + value + '`.  '
                 + '  Type recieved: ' + classOfValue + '`.');
         }
@@ -1120,6 +1120,7 @@
         searchObj: searchObj,
         setValueOnObj: setValueOnObj,
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
+        throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
         valueOrDefault: valueOrDefault,
         wrapPointerWithinBounds: wrapPointerWithinBounds
     };
