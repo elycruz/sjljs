@@ -553,11 +553,11 @@
         return retVal;
     }
 
-    function migrateValue (prop, from, to, useLegacyGettersAndSetters) {
+    function migratePropValue (prop, from, to, useLegacyGettersAndSetters) {
         if (useLegacyGettersAndSetters) {
             setValueOnObj(prop,
                 getValueFromObj(prop, from, true, useLegacyGettersAndSetters),
-                to);
+                to, useLegacyGettersAndSetters);
         }
         else {
             to[prop] = from[prop];
@@ -602,11 +602,11 @@
                     extend(o[prop], p[prop], deep);
                 }
                 else {
-                    migrateValue(prop, p, o, useLegacyGettersAndSetters);
+                    migratePropValue(prop, p, o, useLegacyGettersAndSetters);
                 }
             }
             else {
-                migrateValue(prop, p, o, useLegacyGettersAndSetters);
+                migratePropValue(prop, p, o, useLegacyGettersAndSetters);
             }
         });
 
@@ -859,24 +859,65 @@
     }
 
     /**
-     * Throws a type error if value is not of type and prepends the contextName and
+     * Throws a type error if value is not of type and prepends the prefix and
      * paramName/variable-name to the message (removes type checking boilerplate where required).
-     * @param contextName {String} - The context name of where this function is being called.  Prefixed to the error message.
+     * @param prefix {String} - Context name and function name to prefix to error message if it is thrown.
      * @param paramName {String} - Param name of the value being passed in.
      * @param value {*} - Value to inspect.
      * @param type {String|Function} - Expected type constructor or constructor name.
-     * @param fixHint {String} - A hint to user or a way to fix the error.
+     * @param suffix {String} - A hint to user or a way to fix the error;  Message to suffix to error message.
      * @returns {{}} - Sjl.
      */
-    function throwTypeErrorIfNotOfType (contextName, paramName, value, type, fixHint) {
-        type = isString(type) ? type : type.name;
+    function throwTypeErrorIfNotOfType (prefix, paramName, value, type, fixHint) {
         var classOfValue = classOf(value);
-        if (classOfValue !== type) {
-            throw new TypeError('#`' + contextName + '`.`' + paramName
-                + '` is not of type "' + type + '".  ' + (fixHint || '')
-                + '  Type received: "' + classOfValue);
+
+        // If `type` itself is not of the allowed types throw an error
+        if (!isString(type) && !isFunction(type)) {
+            throw new TypeError('`sjl.throwTypeErrorIfNotOfType` only accepts strings or constructors.  ' +
+                'Type received: `' + classOf(type) + '`.');
         }
-        return sjl;
+
+        // Proceed with type check
+        if (!classOfIs(value, type)) {
+            throw new TypeError('#`' + prefix + '`.`' + paramName
+                + '` is not of type "' + type + '".  ' + (fixHint || '')
+                + '  Type received: `' + classOfValue + '`.');
+        }
+    }
+
+    /**
+     * Throws an error if passed in `value` is empty (0, null, undefined, false, empty {}, or empty []).
+     * @param prefix {String} - String to prefix to message.
+     * @param paramName {String} - Param that expected a non empty value (hint for user).
+     * @param value {*} - Value to check.
+     * @param type {String|Function|undefined|null} - Type to check against.  Optional.
+     * @param suffix {*} - String to append to message.
+     */
+    function throwTypeErrorIfEmpty (prefix, paramName, value, type, suffix) {
+        var classOfValue = classOf(value),
+            issetType = isset(type);
+
+        // If `type` itself is not of the allowed types throw an error
+        if (issetType && !isString(type) && !isFunction()) {
+            throw new TypeError('`sjl.throwTypeErrorIfNotOfType.type` only accepts strings, functions (constructors),' +
+                'null, or undefined.  ' +
+                'Type received: `' + classOf(type) + '`.');
+        }
+
+        // Proceed with type check
+        if (issetType && !classOfIs(value, type)) {
+            throw new TypeError('#`' + prefix + '`.`' + paramName
+                + '` is not of type "' + type + '".  ' + (fixHint || '')
+                + '  Type received: `' + classOfValue + '`.');
+        }
+
+        // Proceed with empty check
+        if (isEmpty(value)) {
+            throw new TypeError('#`' + prefix + '`.`' + paramName
+                + '` Cannot be empty.  ' + (fixHint || '')
+                + '  Value received: `' + value + '`.  '
+                + '  Type recieved: ' + classOfValue + '`.');
+        }
     }
 
     /**

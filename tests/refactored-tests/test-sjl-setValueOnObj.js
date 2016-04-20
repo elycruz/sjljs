@@ -167,7 +167,6 @@ describe('#sjl.setValueOnObj', function () {
             //console.log('_' + key, newObjToTest['_' + key]);
             expect(result['_' + key]).to.equal(newObjToTest['_' + key]);
         });
-
     });
 
     it ('should throw a type error when no values are passed in.', function () {
