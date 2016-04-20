@@ -9,6 +9,7 @@
  * @todo add a `pluck` method that allows you to pluck values from a `Set`, `Array`, `Map` or `Object` based on parameters passed in.
  * @todo Add readme entry for this function (`extractFromArrayAt`).
  * @todo evaluate the cost of add error throwing to all functions when used incorrectly (bigger evaluation necessary though seems like a 'con' rather than a 'pro').
+ * @todo Add `issetAndOfTypeMulti` (check to see if value isset and of one of the multiple types passed). and optionally change `issetAndOfType` to allow this behavior.
  */
 (function () {
 
