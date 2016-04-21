@@ -4,3 +4,9 @@ npm-debug.log
 .tmp
 bower_components
 node_modules
+
+# Blocking folders from accidental add for upcoming version of sjljs
+src/sjl-stdlib
+src/sjl-validator
+src/stdlib
+src/validator
