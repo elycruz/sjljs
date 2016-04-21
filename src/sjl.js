@@ -106,11 +106,11 @@
      * Checks whether a value isset and if it's type is the same as the type name passed in.
      * @function module:sjl.issetAndOfType
      * @param value {*} - Value to check on.
-     * @param type {String|Function} - Constructor name string or Constructor.  You can pass multiple types.
+     * @param type {String|Function} - Constructor name string or Constructor.  You can pass one or more types.
      * @returns {Boolean}
      */
-    function issetAndOfType (value, type) {
-        return isset(value) && classOfIs.apply(null, arguments);
+    function issetAndOfType (value, type/**, type...**/) {
+        return isset(value) && classOfIsMulti.apply(null, arguments);
     }
 
     /**
@@ -178,7 +178,7 @@
      */
     function classOfIsMulti (value, type /**[,type...] **/) {
         return (sjl.restArgs(arguments, 1)).some(function (_type) {
-            return classOf(value, _type);
+            return classOfIs(value, _type);
         });
     }
 
@@ -279,7 +279,7 @@
      * @returns {Boolean}
      */
     function isEmptyOrNotOfType (value, type) {
-        return isEmpty(value) || !classOfIs(value, type);
+        return isEmpty(value) || !classOfIsMulti.apply(null, arguments);
     }
 
     /**
@@ -289,7 +289,7 @@
      * @returns {Boolean}
      */
     function notEmptyAndOfType (value, type) {
-        return !isEmpty(value) && classOfIs(value, type);
+        return !isEmpty(value) && classOfIsMulti.apply(null, arguments);
     }
 
     /**
@@ -324,12 +324,14 @@
     function naiveNamespace (ns_string, objToSearch, valueToSet) {
         //throwTypeErrorIfNotOfType('sjl', 'naiveNamespace', 'ns_string', ns_string, String);
         var parent = objToSearch,
-            shouldSetValue = !classOfIs(valueToSet, 'Undefined');
-        if (classOf(objToSearch) !== 'Object' && objToSearch instanceof Function) {
-            throw TypeError ('sjl.naiveNamespace expects a Constructor or an instance obj to search on.')
+            shouldSetValue = !isUndefined(valueToSet),
+            classOfObjToSearch = classOf(objToSearch);
+        if (classOfObjToSearch !== 'Object' && classOfObjToSearch !== 'Function') {
+            throw TypeError ('sjl.naiveNamespace expects a Constructor or an instance obj to search on.' +
+                'Value received: `' + classOfObjToSearch + '`.');
         }
         ns_string.split('.').forEach(function (part, index, parts) {
-            if (part in parent === false || classOfIs(parent[part], 'Undefined')) {
+            if (part in parent === false || isUndefined(parent[part])) {
                 parent[part] = {};
             }
             if (index === parts.length - 1 && shouldSetValue) {
@@ -429,7 +431,7 @@
      */
     function implode (list, separator) {
         var retVal = '';
-        if (classOfIs(list, 'Array')) {
+        if (isArray(list)) {
             retVal = list.join(separator);
         }
         else if (list.constructor.name === 'Set' || list.constructor.name === 'SjlSet') {
@@ -454,12 +456,12 @@
             classOfObj = classOf(objToSearch),
             i;
         throwTypeErrorIfNotOfType('sjl.searchObj', 'ns_string', ns_string, String);
-        if (classOfObj !== Object.name && !(objToSearch instanceof Function)) {
+        if (classOfObj !== Object.name && classOfObj !== 'Function') {
             throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
                 'or an instance of `Function`.  Type received: ' + classOfObj);
         }
         for (i = 0; i < parts.length; i += 1) {
-            if (parts[i] in parent === false || classOfIs(parent[parts[i]], 'Undefined')) {
+            if (parts[i] in parent === false || isUndefined(parent[parts[i]])) {
                 parent = undefined;
                 break;
             }
@@ -658,7 +660,7 @@
         // Extend object `0` with other objects
         args.forEach(function (arg) {
             // Extend `arg0` if `arg` is an object
-            if (classOfIs(arg, 'Object')) {
+            if (isObject(arg)) {
                 extend(arg0, arg, deep, useLegacyGettersAndSetters);
             }
         });
@@ -750,7 +752,7 @@
             methods = constructor;
 
             // Decide whether to use a stand in constructor or the user supplied one
-            constructor = !( methods.constructor instanceof Function )
+            constructor = ! isFunction(methods.constructor)
                 ? standInConstructor(superclass) : methods.constructor;
 
             // Unset the constructor from the methods hash since we have a pointer to it
@@ -780,7 +782,7 @@
         Object.defineProperty(constructor.prototype, 'constructor', {value: constructor});
 
         // Copy the methods and statics as we would for a regular class
-        if (methods) extend(constructor.prototype, methods);
+        if (methods) extend(constructor.prototype, methods, true);
 
         // If internally snatched static functions from `superclass` exists then set them on subclass
         if (__statics) extend(constructor, __statics, true);
@@ -944,7 +946,7 @@
         defaultValue = typeof defaultValue === _undefined ? null : defaultValue;
         var retVal;
         if (isset(type)) {
-            retVal = issetAndOfType(value, type) ? value : defaultValue;
+            retVal = issetAndOfType.apply(null, [value].concat(sjl.restArgs(2))) ? value : defaultValue;
         }
         else {
             retVal = isset(value) ? value : defaultValue;
@@ -1017,7 +1019,7 @@
         search = str.search(/[a-z]/i);
 
         // If alpha char
-        if (classOfIs(search, Number) && search > -1) {
+        if (isNumber(search) && search > -1) {
 
             // Make it lower case
             char = str.substr(search, 1)[func]();
@@ -1060,14 +1062,6 @@
         return retVal;
     }
 
-    // function extractBoolFromArray(array, startOrEndBln) {
-    //     // Extract boolean from array but don't make a copy of passed in array
-    //     var extractionOpResult = extractFromArrayAt(array,
-    //         (startOrEndBln ? 0 : array.length - 1), Boolean, false),
-    //         expectedBoolean = extractionOpResult[0];
-    //     return sjl.isset(expectedBoolean) ? expectedBoolean : false;
-    // }
-
     /**
      * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
      * @function module:sjl.extractBoolFromArrayStart
@@ -1086,17 +1080,6 @@
      */
     function extractBoolFromArrayEnd (array) {
         return extractBoolFromArray(array, false);
-    }
-
-
-    function contrainClassTypeParameter (prefix, type, suffix) {
-        var classOfType = classOf(type);
-        if (classOfType !== String.name && !(type instanceof Function)) {
-            throw new TypeError(prefix + ' expects it\'s `type` parameter to' +
-                'be of type `String` or an instance of `Function`.  Type recieved: ' + classOfType + '.' +
-                (isset(suffix) ? ' ' + suffix : '')
-            );
-        }
     }
 
     sjl = {

@@ -65,24 +65,16 @@ describe('#sjl.issetAndOfType', function () {
             });
     });
 
-    it('should throw a type error when no `type` param is passed in.', function () {
+    it('should return `false` when no `type` param is passed in.', function () {
         var count = 0,
             argsForTest = [
                 [['hello']],
                 [false],
-                [function () {
-                }],
+                [function () {}],
                 ['Hello World']
             ];
         argsForTest.forEach(function (args) {
-            var caughtError;
-            try {
-                sjl.issetAndOfType(args);
-            }
-            catch (e) {
-                caughtError = e;
-            }
-            expect(caughtError).to.be.instanceof(TypeError);
+            expect(sjl.issetAndOfType(args)).to.be.false();
         });
     });
 

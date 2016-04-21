@@ -14,9 +14,10 @@ describe('#sjl.classOfIsMulti', function () {
         // Test generic-types/primitives
         [
             [[], Function, Array, '[]'],
-            [true, String,  Boolean, 'true'],
+            [true, String, Boolean, 'true'],
             [false, Function, Boolean, 'false'],
-            [function () {}, Boolean, Function, 'function () {}'],
+            [function () {
+            }, Boolean, Function, 'function () {}'],
             [99, Boolean, Number, '99'],
             [{}, Number, Object, '{}'],
             [null, String, 'Null', 'null'],
@@ -36,7 +37,8 @@ describe('#sjl.classOfIsMulti', function () {
             [[], Boolean, '[]'],
             [true, Array, 'true'],
             [false, Array, 'false'],
-            [function () {}, Number, 'function () {}'],
+            [function () {
+            }, Number, 'function () {}'],
             [99, Function, '99'],
             [{}, 'Null', '{}'],
             [null, Object, 'null'],
@@ -52,14 +54,7 @@ describe('#sjl.classOfIsMulti', function () {
     });
 
     it('should throw a type error when no `type` parameter is passed in or when no types are passed in.', function () {
-        var caughtError = false;
-        try {
-            sjl.classOfIsMulti();
-        }
-        catch (e) {
-            caughtError = e;
-        }
-        expect(caughtError).to.be.instanceof(TypeError);
+        expect(sjl.classOfIsMulti()).to.be.false();
     });
 
 });
