@@ -1,18 +1,18 @@
 /**
  * Created by elydelacruz on 4/16/16.
- * @note This method will be deprecate in next version of library (v6.0.0)
  */
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-'use strict';
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect,
-    should = chai.should;
-// ~~~ /STRIP ~~~
+describe('#sjl.isEmpty', function () {
 
-describe('#sjl.empty', function () {
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
+
     var emptyTestArgs = [
         [[], '[]'],
         [{}, '{}'],
@@ -40,18 +40,18 @@ describe('#sjl.empty', function () {
 
     it ('should return true for empty values [' + emptyValueReps.join(',') + '].', function () {
         emptyTestArgs.forEach(function (args) {
-            expect(sjl.empty(args[0])).to.be.true();
+            expect(sjl.isEmpty(args[0])).to.be.true();
         });
     });
 
     it ('should return false for non empty values [' + nonEmptyValueReps.join(',') + '].', function () {
         nonEmptyTestArgs.forEach(function (args) {
-            expect(sjl.empty(args[0])).to.be.false();
+            expect(sjl.isEmpty(args[0])).to.be.false();
         });
     });
 
     it ('should return true when no params are passed in.', function () {
-        expect(sjl.empty()).to.equal(true);
+        expect(sjl.isEmpty()).to.equal(true);
     });
 
 });

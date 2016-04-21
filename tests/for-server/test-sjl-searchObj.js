@@ -1,22 +1,25 @@
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-'use strict';
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
 describe('#sjl.searchObj', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
+
     var argsForTests = [
             [{
                 all: {your: {base: {are: {belong: {to: {us: false}}}}}},
                 arrayProp1: [],
-                arrayProp2: ["how are you"],
+                arrayProp2: ['how are you'],
                 booleanProp: true,
                 functionProp: function () {},
                 numberProp: 99,
                 objectProp: {},
-                stringProp: "Hello World"
+                stringProp: 'Hello World'
             }]
         ],
         subject = argsForTests[0][0];

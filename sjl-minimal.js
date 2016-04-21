@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 5.0.3 
+/**! sjl-minimal.js 5.5.3 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: b8ba2dd457e792e57635cc52813c574f 
- * | Built-on: Sat Apr 16 2016 12:53:14 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: b6cb8cd428f804d6de864578160cc203 
+ * | Built-on: Thu Apr 21 2016 13:28:28 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -13,8 +13,10 @@
  * @todo add default value returns for isset, issetMulti, empty and their variations (makes code more functional and adds syntactical sugar).
  * @todo add a `pluck` method that allows you to pluck values from a `Set`, `Array`, `Map` or `Object` based on parameters passed in.
  * @todo Add readme entry for this function (`extractFromArrayAt`).
+ * @todo evaluate the cost of add error throwing to all functions when used incorrectly (bigger evaluation necessary though seems like a 'con' rather than a 'pro').
+ * @todo Add `issetAndOfTypeMulti` (check to see if value isset and of one of the multiple types passed). and optionally change `issetAndOfType` to allow this behavior.
  */
-(function (undefined) {
+(function () {
 
     'use strict';
 
@@ -48,7 +50,7 @@
      * @returns {Array}
      */
     function restArgs (args, start, end) {
-        start = typeof start === _undefined ? 0 : start;
+        start = !isNumber(start) ? 0 : start;
         end = end || args.length;
         return slice.call(args, start, end);
     }
@@ -109,11 +111,11 @@
      * Checks whether a value isset and if it's type is the same as the type name passed in.
      * @function module:sjl.issetAndOfType
      * @param value {*} - Value to check on.
-     * @param type {String|Function} - Type name to check for;  E.g., 'Number', 'Array', 'HTMLMediaElement' etc.
+     * @param type {String|Function} - Constructor name string or Constructor.  You can pass one or more types.
      * @returns {Boolean}
      */
-    function issetAndOfType (value, type) {
-        return isset(value) && classOfIs(value, type);
+    function issetAndOfType (value, type/**, type...**/) {
+        return isset(value) && classOfIsMulti.apply(null, arguments);
     }
 
     /**
@@ -163,11 +165,26 @@
      * Code cleanliness at it's finest!!!  Hahaha!!
      */
     function classOfIs (obj, type) {
+        var classOfType = classOf(type);
+        if (classOfType !== String.name && !(type instanceof Function)) {
+            throw new TypeError('sjl.classOfIs expects it\'s `type` parameter to' +
+                'be of type `String` or an instance of `Function`.  Type recieved: ' + classOfType + '.');
+        }
         return classOf(obj) === (
-                classOf(type) === String.name ? type : (
-                    type instanceof Function ? type.name : null
-                )
+                classOfType === String.name ? type : type.name
             );
+    }
+
+    /**
+     * Check if `value` is of one of the passed in types.
+     * @param value {*}
+     * @param type {Function|String} - Constructor or string.
+     * @returns {boolean}
+     */
+    function classOfIsMulti (value, type /**[,type...] **/) {
+        return (sjl.restArgs(arguments, 1)).some(function (_type) {
+            return classOfIs(value, _type);
+        });
     }
 
     function isNumber (value) {
@@ -267,7 +284,7 @@
      * @returns {Boolean}
      */
     function isEmptyOrNotOfType (value, type) {
-        return isEmpty(value) || isset(type) ? !classOfIs(value, type) : false;
+        return isEmpty(value) || !classOfIsMulti.apply(null, arguments);
     }
 
     /**
@@ -277,7 +294,7 @@
      * @returns {Boolean}
      */
     function notEmptyAndOfType (value, type) {
-        return !isEmpty(value) && classOfIs(value, type);
+        return !isEmpty(value) && classOfIsMulti.apply(null, arguments);
     }
 
     /**
@@ -310,10 +327,16 @@
      * @returns {Object}
      */
     function naiveNamespace (ns_string, objToSearch, valueToSet) {
+        //throwTypeErrorIfNotOfType('sjl', 'naiveNamespace', 'ns_string', ns_string, String);
         var parent = objToSearch,
-            shouldSetValue = !classOfIs(valueToSet, 'Undefined');
+            shouldSetValue = !isUndefined(valueToSet),
+            classOfObjToSearch = classOf(objToSearch);
+        if (classOfObjToSearch !== 'Object' && classOfObjToSearch !== 'Function') {
+            throw new TypeError ('sjl.naiveNamespace expects a Constructor or an instance obj to search on.' +
+                'Value received: `' + classOfObjToSearch + '`.');
+        }
         ns_string.split('.').forEach(function (part, index, parts) {
-            if (part in parent === false || classOfIs(parent[part], 'Undefined')) {
+            if (part in parent === false || isUndefined(parent[part])) {
                 parent[part] = {};
             }
             if (index === parts.length - 1 && shouldSetValue) {
@@ -322,25 +345,6 @@
             parent = parent[part];
         });
         return parent;
-    }
-
-    /**
-     * Takes a namespace string and fetches that location out from
-     * an object/Map.  If the namespace doesn't exists it is created then
-     * returned.
-     * @example
-     * // will create/fetch within `obj`: hello: { world: { how: { are: { you: { doing: {} } } } } }
-     * namespace('hello.world.how.are.you.doing', obj)
-     *
-     * @function module:sjl.namespace
-     * @param ns_string {String} - The namespace you wish to fetch
-     * @param objToSearch {Object} - The object to search for namespace on
-     * @param valueToSet {Object} - Optional.  A value to set on the key (last key if key string (a.b.c.d = value)).
-     * @deprecated - Will be removed in sjl v6.0.0.  Use `naiveNamespace` instead.
-     * @returns {Object}
-     */
-    function namespace (ns_string, objToSearch, valueToSet) {
-        return naiveNamespace(ns_string, objToSearch, valueToSet);
     }
 
     /**
@@ -413,7 +417,7 @@
      */
     function implode (list, separator) {
         var retVal = '';
-        if (classOfIs(list, 'Array')) {
+        if (isArray(list)) {
             retVal = list.join(separator);
         }
         else if (list.constructor.name === 'Set' || list.constructor.name === 'SjlSet') {
@@ -430,15 +434,21 @@
      * Searches an object for namespace string.
      * @param ns_string {String} - Namespace string;  E.g., 'all.your.base'
      * @param objToSearch {*}
-     * @returns {*} - If property chain is not found then returns `null`.
+     * @returns {*} - Found value.  If no found value returns `undefined`.
      */
     function searchObj (ns_string, objToSearch) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
+            classOfObj = classOf(objToSearch),
             i;
+        throwTypeErrorIfNotOfType('sjl.searchObj', 'ns_string', ns_string, String);
+        if (classOfObj !== Object.name && classOfObj !== 'Function') {
+            throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
+                'or an instance of `Function`.  Type received: ' + classOfObj);
+        }
         for (i = 0; i < parts.length; i += 1) {
-            if (parts[i] in parent === false || classOfIs(parent[parts[i]], 'Undefined')) {
-                parent = null;
+            if (parts[i] in parent === false || isUndefined(parent[parts[i]])) {
+                parent = undefined;
                 break;
             }
             parent = parent[parts[i]];
@@ -464,13 +474,13 @@
      * @function module:sjl.getValueFromObj
      * @param key {String} The hash key to search for
      * @param obj {Object} the hash to search within
-     * @param args {Array} optional the array to pass to value if it is a function
      * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
      * @param useLegacyGetters {Boolean} - Default false.
+     * @param args {Array} optional the array to pass to value if it is a function
      *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
      * @returns {*}
      */
-    function getValueFromObj (key, obj, args, raw, useLegacyGetters) {
+    function getValueFromObj (key, obj, raw, useLegacyGetters, args) {
         args = args || null;
         raw = isset(raw) ? raw : true;
         useLegacyGetters = !isset(useLegacyGetters) ? false : useLegacyGetters;
@@ -478,7 +488,7 @@
         // Get qualified getter function names
         var overloadedGetterFunc = camelCase(key, false),
             getterFunc = 'get' + camelCase(key, true),
-            retVal = null;
+            retVal;
 
         // Resolve return value
         if (key.indexOf('.') !== -1) {
@@ -491,13 +501,14 @@
         else if (useLegacyGetters && hasMethod(obj, overloadedGetterFunc)) {
             retVal = obj[overloadedGetterFunc]();
         }
-        else if (typeof obj[key] !== _undefined) {
+        else if (!isUndefined(obj[key])) {
             retVal = obj[key];
         }
 
-        // Decide what to do if return value is a function
-        if (classOfIs(retVal, 'Function') && isEmpty(raw)) {
-            retVal = args ? retVal.apply(obj, args) : retVal.apply(obj);
+        // If return value is a function and `raw` is false call the function and capture
+        // it's return value
+        if (isFunction(retVal) && isEmpty(raw)) {
+            retVal = args ? retVal.apply(obj, args) : retVal.call(obj);
         }
 
         // Return result of setting value on obj, else return obj
@@ -517,7 +528,7 @@
      * if no value results from operation.
      */
     function setValueOnObj (key, value, obj, useLegacyGetters) {
-        useLegacyGetters = !isset(useLegacyGetters) ? false : useLegacyGetters;
+        useLegacyGetters = !issetAndOfType(useLegacyGetters, Boolean) ? false : useLegacyGetters;
 
         // Get qualified setter function name
         var overloadedSetterFunc = camelCase(key, false),
@@ -541,6 +552,18 @@
 
         // Return result of setting value on obj, else return obj
         return retVal;
+    }
+
+    function migratePropValue (prop, from, to, useLegacyGettersAndSetters) {
+        if (useLegacyGettersAndSetters) {
+            setValueOnObj(prop,
+                getValueFromObj(prop, from, true, useLegacyGettersAndSetters),
+                to, useLegacyGettersAndSetters);
+        }
+        else {
+            to[prop] = from[prop];
+        }
+        return to;
     }
 
     /**
@@ -579,24 +602,12 @@
                     && !isEmptyObj(p[prop])) {
                     extend(o[prop], p[prop], deep);
                 }
-                else if (useLegacyGettersAndSetters) {
-                    setValueOnObj(prop,
-                        getValueFromObj(prop, p, null, true, useLegacyGettersAndSetters),
-                        o);
-                }
                 else {
-                    o[prop] = p[prop];
+                    migratePropValue(prop, p, o, useLegacyGettersAndSetters);
                 }
             }
-            else if (useLegacyGettersAndSetters) {
-                setValueOnObj(prop,
-                    getValueFromObj(prop,
-                        p, null, true, useLegacyGettersAndSetters
-                    ), o);
-            }
-            // Else set
             else {
-                o[prop] = p[prop];
+                migratePropValue(prop, p, o, useLegacyGettersAndSetters);
             }
         });
 
@@ -635,7 +646,7 @@
         // Extend object `0` with other objects
         args.forEach(function (arg) {
             // Extend `arg0` if `arg` is an object
-            if (classOfIs(arg, 'Object')) {
+            if (isObject(arg)) {
                 extend(arg0, arg, deep, useLegacyGettersAndSetters);
             }
         });
@@ -727,7 +738,7 @@
             methods = constructor;
 
             // Decide whether to use a stand in constructor or the user supplied one
-            constructor = !( methods.constructor instanceof Function )
+            constructor = ! isFunction(methods.constructor)
                 ? standInConstructor(superclass) : methods.constructor;
 
             // Unset the constructor from the methods hash since we have a pointer to it
@@ -757,7 +768,7 @@
         Object.defineProperty(constructor.prototype, 'constructor', {value: constructor});
 
         // Copy the methods and statics as we would for a regular class
-        if (methods) extend(constructor.prototype, methods);
+        if (methods) extend(constructor.prototype, methods, true);
 
         // If internally snatched static functions from `superclass` exists then set them on subclass
         if (__statics) extend(constructor, __statics, true);
@@ -817,6 +828,7 @@
 
             // Return passed in obj
             return obj;
+
         }());
     }
 
@@ -848,24 +860,65 @@
     }
 
     /**
-     * Throws a type error if value is not of type and prepends the contextName and
+     * Throws a type error if value is not of type and prepends the prefix and
      * paramName/variable-name to the message (removes type checking boilerplate where required).
-     * @param contextName {String} - The context name of where this function is being called.  Prefixed to the error message.
+     * @param prefix {String} - Context name and function name to prefix to error message if it is thrown.
      * @param paramName {String} - Param name of the value being passed in.
      * @param value {*} - Value to inspect.
      * @param type {String|Function} - Expected type constructor or constructor name.
-     * @param fixHint {String} - A hint to user or a way to fix the error.
+     * @param suffix {String} - A hint to user or a way to fix the error;  Message to suffix to error message.
      * @returns {{}} - Sjl.
      */
-    function throwTypeErrorIfNotOfType (contextName, paramName, value, type, fixHint) {
-        type = isString(type) ? type : type.name;
+    function throwTypeErrorIfNotOfType (prefix, paramName, value, type, fixHint) {
         var classOfValue = classOf(value);
-        if (classOfValue !== type) {
-            throw new TypeError('#`' + contextName + '`.`' + paramName
-                + '` is not of type "' + type + '".  ' + (fixHint || '')
-                + '  Type received: "' + classOfValue);
+
+        // If `type` itself is not of the allowed types throw an error
+        if (!isString(type) && !isFunction(type)) {
+            throw new TypeError('`sjl.throwTypeErrorIfNotOfType` only accepts strings or constructors.  ' +
+                'Type received: `' + classOf(type) + '`.');
         }
-        return sjl;
+
+        // Proceed with type check
+        if (!classOfIs(value, type)) {
+            throw new TypeError('#`' + prefix + '`.`' + paramName
+                + '` is not of type "' + type + '".  ' + (fixHint || '')
+                + '  Type received: `' + classOfValue + '`.');
+        }
+    }
+
+    /**
+     * Throws an error if passed in `value` is empty (0, null, undefined, false, empty {}, or empty []).
+     * @param prefix {String} - String to prefix to message.
+     * @param paramName {String} - Param that expected a non empty value (hint for user).
+     * @param value {*} - Value to check.
+     * @param type {String|Function|undefined|null} - Type to check against.  Optional.
+     * @param suffix {*} - String to append to message.
+     */
+    function throwTypeErrorIfEmpty (prefix, paramName, value, type, suffix) {
+        var classOfValue = classOf(value),
+            issetType = isset(type);
+
+        // If `type` itself is not of the allowed types throw an error
+        if (issetType && !isString(type) && !isFunction(type)) {
+            throw new TypeError('`sjl.throwTypeErrorIfEmpty.type` only accepts strings, functions (constructors),' +
+                'null, or undefined.  ' +
+                'Type received: `' + classOf(type) + '`.');
+        }
+
+        // Proceed with type check
+        if (issetType && !classOfIs(value, type)) {
+            throw new TypeError('#`' + prefix + '`.`' + paramName
+                + '` is not of type "' + type + '".  ' + (suffix || '')
+                + '  Type received: `' + classOfValue + '`.');
+        }
+
+        // Proceed with empty check
+        if (isEmpty(value)) {
+            throw new TypeError('#`' + prefix + '`.`' + paramName
+                + '` Cannot be empty.  ' + (suffix || '')
+                + '  Value received: `' + value + '`.  '
+                + '  Type recieved: ' + classOfValue + '`.');
+        }
     }
 
     /**
@@ -879,7 +932,7 @@
         defaultValue = typeof defaultValue === _undefined ? null : defaultValue;
         var retVal;
         if (isset(type)) {
-            retVal = issetAndOfType(value, type) ? value : defaultValue;
+            retVal = issetAndOfType.apply(null, [value].concat(sjl.restArgs(2))) ? value : defaultValue;
         }
         else {
             retVal = isset(value) ? value : defaultValue;
@@ -952,7 +1005,7 @@
         search = str.search(/[a-z]/i);
 
         // If alpha char
-        if (classOfIs(search, 'Number') && search > -1) {
+        if (isNumber(search) && search > -1) {
 
             // Make it lower case
             char = str.substr(search, 1)[func]();
@@ -1020,6 +1073,7 @@
         camelCase: camelCase,
         classOf: classOf,
         classOfIs: classOfIs,
+        classOfIsMulti: classOfIsMulti,
         clone: clone,
         constrainPointerWithinBounds: constrainPointerWithinBounds,
         createTopLevelPackage: createTopLevelPackage,
@@ -1037,6 +1091,7 @@
         isset: isset,
         issetMulti: issetMulti,
         issetAndOfType: issetAndOfType,
+        isEmpty: isEmpty,
         isEmptyObj: isEmptyObj,
         isEmptyOrNotOfType: isEmptyOrNotOfType,
         isArray: isArray,
@@ -1051,7 +1106,6 @@
         jsonClone: jsonClone,
         lcaseFirst: lcaseFirst,
         naiveNamespace: naiveNamespace,
-        namespace: naiveNamespace,
         notEmptyAndOfType: notEmptyAndOfType,
         restArgs: restArgs,
         ucaseFirst: ucaseFirst,
@@ -1059,6 +1113,7 @@
         searchObj: searchObj,
         setValueOnObj: setValueOnObj,
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
+        throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
         valueOrDefault: valueOrDefault,
         wrapPointerWithinBounds: wrapPointerWithinBounds
     };

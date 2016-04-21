@@ -33,6 +33,7 @@ gulp.task('tests', function () {
 
 gulp.task('clean', function () {
     return del([
+        './tests/for-browser/test-suite.js',
         'sjl.js',
         'sjl.min.js',
         'sjl-minimal.js',

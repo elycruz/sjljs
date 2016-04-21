@@ -327,7 +327,7 @@
             shouldSetValue = !isUndefined(valueToSet),
             classOfObjToSearch = classOf(objToSearch);
         if (classOfObjToSearch !== 'Object' && classOfObjToSearch !== 'Function') {
-            throw TypeError ('sjl.naiveNamespace expects a Constructor or an instance obj to search on.' +
+            throw new TypeError ('sjl.naiveNamespace expects a Constructor or an instance obj to search on.' +
                 'Value received: `' + classOfObjToSearch + '`.');
         }
         ns_string.split('.').forEach(function (part, index, parts) {
@@ -340,25 +340,6 @@
             parent = parent[part];
         });
         return parent;
-    }
-
-    /**
-     * Takes a namespace string and fetches that location out from
-     * an object/Map.  If the namespace doesn't exists it is created then
-     * returned.
-     * @example
-     * // will create/fetch within `obj`: hello: { world: { how: { are: { you: { doing: {} } } } } }
-     * namespace('hello.world.how.are.you.doing', obj)
-     *
-     * @function module:sjl.namespace
-     * @param ns_string {String} - The namespace you wish to fetch
-     * @param objToSearch {Object} - The object to search for namespace on
-     * @param valueToSet {Object} - Optional.  A value to set on the key (last key if key string (a.b.c.d = value)).
-     * @deprecated - Will be removed in sjl v6.0.0.  Use `naiveNamespace` instead.
-     * @returns {Object}
-     */
-    function namespace (ns_string, objToSearch, valueToSet) {
-        return naiveNamespace(ns_string, objToSearch, valueToSet);
     }
 
     /**
@@ -1120,7 +1101,6 @@
         jsonClone: jsonClone,
         lcaseFirst: lcaseFirst,
         naiveNamespace: naiveNamespace,
-        namespace: naiveNamespace,
         notEmptyAndOfType: notEmptyAndOfType,
         restArgs: restArgs,
         ucaseFirst: ucaseFirst,

@@ -2,17 +2,17 @@
  * Created by Ely on 4/15/2016.
  * File: test-sjl-restArgs.js
  */
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-'use strict';
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
 describe ('#sjl.restArgs', function () {
 
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
     'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     it('should return an array when receiving an `arguments` object.', function () {
         expect(Array.isArray(sjl.restArgs(arguments))).to.be.true();
@@ -59,5 +59,5 @@ describe ('#sjl.restArgs', function () {
             });
             expect(restArgs.length).to.equal(args.length);
         });
-    })
+    });
 });

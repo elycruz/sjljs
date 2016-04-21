@@ -1,13 +1,14 @@
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-'use strict';
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
-
 describe('#sjl.throwTypeErrorIfNotOfType', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     it ('should throw a type error when `value` is not of passed in `type`.', function () {
         [
@@ -47,6 +48,6 @@ describe('#sjl.throwTypeErrorIfNotOfType', function () {
             }
             expect(caughtError).to.be.undefined();
         });
-    })
+    });
 
 });

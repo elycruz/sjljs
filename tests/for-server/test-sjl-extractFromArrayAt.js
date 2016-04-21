@@ -2,17 +2,17 @@
  * Created by Ely on 4/15/2016.
  * File: test-sjl-restArgs.js
  */
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
-
 describe('#sjl.extractFromArrayAt', function () {
 
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
     'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     describe('When passing in only `array` and `index`.', function () {
         var testArray = ['a', 'b', 'c', 'd', 'e'],
@@ -43,8 +43,7 @@ describe('#sjl.extractFromArrayAt', function () {
         var testArray = [
                 [Array, ['hello']],
                 [Boolean, true],
-                [Function, (function () {
-                })],
+                [Function, function () {}],
                 [Object, {someObjectName: 'some-object-name'}],
                 [String, 'hello-world']
             ],
@@ -83,8 +82,8 @@ describe('#sjl.extractFromArrayAt', function () {
         var testArray = [
                 [Array, ['hello']],
                 [Boolean, true],
-                [Function, (function () {
-                })],
+                [Function, function () {
+                }],
                 [Object, {someObjectName: 'some-object-name'}],
                 [String, 'hello-world']
             ],
@@ -108,7 +107,7 @@ describe('#sjl.extractFromArrayAt', function () {
                     expect(splicedArray.length).to.equal(testArrayValues.length);
                     expect(result.length).to.equal(2);
                 });
-            })
+            });
         });
     });
 
@@ -118,8 +117,8 @@ describe('#sjl.extractFromArrayAt', function () {
         var testArray = [
                 [Array, ['hello']],
                 [Boolean, true],
-                [Function, (function () {
-                })],
+                [Function, function () {
+                }],
                 [Object, {someObjectName: 'some-object-name'}],
                 [String, 'hello-world']
             ],

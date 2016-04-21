@@ -1,17 +1,17 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
-
 describe('#sjl.issetAndOfType', function () {
 
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
     'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     it('should return true for values that are `set` and are of the passed `type`.', function () {
         // Args to test
@@ -66,8 +66,7 @@ describe('#sjl.issetAndOfType', function () {
     });
 
     it('should return `false` when no `type` param is passed in.', function () {
-        var count = 0,
-            argsForTest = [
+        var argsForTest = [
                 [['hello']],
                 [false],
                 [function () {}],

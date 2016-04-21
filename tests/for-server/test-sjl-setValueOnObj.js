@@ -1,13 +1,14 @@
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-'use strict';
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
-
 describe('#sjl.setValueOnObj', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     var objToTest = {
             numberValue: 1,
@@ -75,7 +76,7 @@ describe('#sjl.setValueOnObj', function () {
             arrayValue: ['hello-world', 1, 2, 3],
             stringValue: 'hello world',
             objectValue: {all: {your: {base: 'are belong to us'}},
-                someFunction: function () {console.log('new function value.')},
+                someFunction: function () {console.log('new function value.');},
                 fib: function (end) {
                     var a = 0,
                         b = 1,

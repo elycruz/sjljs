@@ -1,16 +1,16 @@
-// ~~~ STRIP ~~~
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('./../../src/sjl');
-}
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-// ~~~ /STRIP ~~~
+
 
 describe('#sjl.getValueFromObj', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     var objToTest = {
             numberValue: 1,
@@ -66,13 +66,7 @@ describe('#sjl.getValueFromObj', function () {
             }
         },
 
-        objKeys = Object.keys(objToTest),
-        objValues = objKeys.map(function (key) {
-            return objToTest[key];
-        }),
-        objValueTypes = objKeys.map(function (key) {
-            return sjl.classOf(objKeys[key]);
-        });
+        objKeys = Object.keys(objToTest);
 
     it('should be able to get a value from an object by key.', function () {
         objKeys.forEach(function (key) {

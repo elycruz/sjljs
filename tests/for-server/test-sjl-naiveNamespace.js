@@ -1,25 +1,28 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-'use strict';
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
 describe('#sjl.naiveNamespace', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
+
     var argsForTests = [
         [{
             all: {your: {base: {are: {belong: {to: {us: false}}}}}},
             arrayProp1: [],
-            arrayProp2: ["how are you"],
+            arrayProp2: ['how are you'],
             booleanProp: true,
             functionProp: function () {},
             numberProp: 99,
             objectProp: {},
-            stringProp: "Hello World"
+            stringProp: 'Hello World'
         }]
     ],
     subject = argsForTests[0][0];
@@ -32,29 +35,27 @@ describe('#sjl.naiveNamespace', function () {
 
     it ('should be able to set a value within nested object.', function () {
         var replacementValue = 'are belong to us',
-            oldValue = subject.all.your.base,
-            result = sjl.naiveNamespace('all.your.base', subject, replacementValue),
-            result2;
+            oldValue = subject.all.your.base;
 
         // Replace value
+        sjl.naiveNamespace('all.your.base', subject, replacementValue);
         expect(subject.all.your.base).to.equal(replacementValue);
 
         // Re inject old value
-        result2 = sjl.naiveNamespace('all.your.base', subject, oldValue);
+        sjl.naiveNamespace('all.your.base', subject, oldValue);
         expect(subject.all.your.base).to.equal(oldValue);
     });
 
     it ('should be able to set a value on object.', function () {
         var replacementValue = 'your base are belong to us',
-            oldValue = subject.all,
-            result = sjl.naiveNamespace('all', subject, replacementValue),
-            result2;
+            oldValue = subject.all;
 
         // Replace value
+        sjl.naiveNamespace('all', subject, replacementValue);
         expect(subject.all).to.equal(replacementValue);
 
         // Re inject old value
-        result2 = sjl.naiveNamespace('all', subject, oldValue);
+        sjl.naiveNamespace('all', subject, oldValue);
         expect(subject.all).to.equal(oldValue);
     });
 

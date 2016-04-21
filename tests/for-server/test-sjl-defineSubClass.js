@@ -1,18 +1,14 @@
-// ~~~ STRIP ~~~
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('./../../src/sjl');
-}
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-// ~~~ /STRIP ~~~
-
 describe('#sjl.defineSubClass', function () {
-    
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
     'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     /**
      * Returns one array of all keys of objects passed in
@@ -52,8 +48,10 @@ describe('#sjl.defineSubClass', function () {
             someOtherOtherStaticProperty: 'some other other static property'
         };
 
-    var Extendable = sjl.defineSubClass(Function, function Extendable() {}, methods1, statics1),
-        SomeConstructor = sjl.defineSubClass(Extendable, function SomeConstructor() {}, methods2, statics2);
+    var Extendable = sjl.defineSubClass(Function, function Extendable() {
+        }, methods1, statics1),
+        SomeConstructor = sjl.defineSubClass(Extendable, function SomeConstructor() {
+        }, methods2, statics2);
 
     it('should return a Constructor with all `statics` properties from parent.', function () {
         Object.keys(statics1).forEach(function (key) {
@@ -88,7 +86,8 @@ describe('#sjl.defineSubClass', function () {
     describe('returned subclass via parent\'s static `extend` method', function () {
 
         // Subclass from extend method
-        var SubClass = SomeConstructor.extend(function SubClass() {}, methods3, statics3);
+        var SubClass = SomeConstructor.extend(function SubClass() {
+        }, methods3, statics3);
 
         it('should have return subclass with statics of parent and those passed in to inherit', function () {
             var mergedProps = sjl.extend({}, statics1, statics2, statics3);
@@ -111,12 +110,13 @@ describe('#sjl.defineSubClass', function () {
         });
     });
 
-    describe ('returned subclass via parent\'s `extend` method with constructor via `constructor` key', function () {
+    describe('returned subclass via parent\'s `extend` method with constructor via `constructor` key', function () {
 
         // Subclass from extend method via with constructor via constructor key
         var SubClass = SomeConstructor.extend(sjl.extend({
-                constructor: function SubClass() {}
-            }, methods3), statics3);
+            constructor: function SubClass() {
+            }
+        }, methods3), statics3);
 
         it('should have return subclass with statics of parent and those passed in to inherit', function () {
             var mergedProps = sjl.extend({}, statics1, statics2, statics3);

@@ -1,14 +1,18 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
+
 describe('#sjl.classOfIsMulti', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     describe('truthy checks', function () {
         // Test generic-types/primitives
@@ -47,7 +51,7 @@ describe('#sjl.classOfIsMulti', function () {
             .forEach(function (args) {
                 it('should return `false` for value args [' + args.pop() + ', ' + args[1] + '] .', function () {
                     var result = sjl.classOfIsMulti.apply(sjl, args);
-                    console.log(args, result);
+                    //console.log(args, result);
                     expect(result).to.equal(false);
                 });
             });

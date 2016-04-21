@@ -1,13 +1,16 @@
-// ~~~ STRIP ~~~
-// This part gets stripped out when
-// generating browser version of test(s).
-'use strict';
-var chai = require('chai'),
-    sjl = require('./../../src/sjl'),
-    expect = chai.expect;
-// ~~~ /STRIP ~~~
+
 
 describe('#sjl.throwTypeErrorIfEmpty', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
 
     it('should throw a type error if `value` is empty ([0, null, undefined, [], {}, "", false]).', function () {
         [
@@ -58,7 +61,7 @@ describe('#sjl.throwTypeErrorIfEmpty', function () {
             [[1, 2, 3], Function],
             [true, String],
             ['hello-world', Object],
-            [function () {}, Array]
+            [function () {}, Array],
 
             // Empty values
             [0, Number],
