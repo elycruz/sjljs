@@ -32,7 +32,6 @@ See release notes for release 0.5.0.
 - [Todos](#todos)
 - [Notes](#notes)
 - [License](#license)
-- [Changelogs](#changelogs)
 
 ## Getting Started:
 Include either the full library './sjl[.min].js' or the minimal version './sjl-minimal[.min].js' (the minimal version
