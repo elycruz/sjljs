@@ -430,8 +430,7 @@ directly if none of the above are found.
 1.)  Run `npm install` in project root.
 - Tests for all components listed under "Utilities" above.
 - Tests to be run on server.  See './tests/for-server'.
-- Tests to be run in browser (requires running `bower install` in root directory of this project).
-See './tests/for-browser'.
+- Tests to be run in browser.  See './tests/for-browser'.
 
 ## Requirements:
 - Javascript versions ecmascript 5+
@@ -444,7 +443,7 @@ See './tests/for-browser'.
 ### MVP for 6.0.0
 - [ ] - Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.
     - @note jsdoc is currently undergoing a refactor by the jsdoc folks.  It is currently in alpha.
-- [ ] - Include all sub items for components included as sub nav in readme.
+- [ ] - List all methods that live on `sjl` under components -> utilities up top.
 
 ## License:
 [GPL v2+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") AND
