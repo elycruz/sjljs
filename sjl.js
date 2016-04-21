@@ -1,7 +1,7 @@
 /**! sjljs 5.5.3
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: b6cb8cd428f804d6de864578160cc203
- * | Built-on: Thu Apr 21 2016 13:28:28 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: 5f267a1a8e47d94dd017e351cc6591dd
+ * | Built-on: Thu Apr 21 2016 13:59:17 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module.
  * @module sjl {Object}
@@ -1139,10 +1139,8 @@
     // Create top level frontend package.
     sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
-    // Export sjl globally g(the node global export will be deprecated at a later version)
-    Object.defineProperty(globalContext, 'sjl', {
-        value: sjl
-    });
+    // Export sjl globally (the node global export will be deprecated at a later version)
+    globalContext.sjl = sjl;
 
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {

@@ -1135,10 +1135,8 @@
     // Create top level frontend package.
     sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
-    // Export sjl globally g(the node global export will be deprecated at a later version)
-    Object.defineProperty(globalContext, 'sjl', {
-        value: sjl
-    });
+    // Export sjl globally (the node global export will be deprecated at a later version)
+    globalContext.sjl = sjl;
 
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {

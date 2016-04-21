@@ -1,16 +1,17 @@
+/**
+ * Created by Ely on 4/21/2016.
+ * File: test-header.js
+ * @todo Ensure all included files in test suite have a description in the header comment and ensure that they have header comments.
+ */
+// Use strict globally for our test page
+'use strict';
+
+// Require `sjljs` (get's set on `window` so no need to put it in a variable).
+require('sjl');
+
 describe('#sjl.argsToArray', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it('should return an array for an arguments object.', function () {
+        it('should return an array for an arguments object.', function () {
         expect(Array.isArray(sjl.argsToArray(arguments))).to.equal(true);
     });
 
@@ -51,17 +52,7 @@ describe('#sjl.argsToArray', function () {
 
 describe ('#sjl.classOf', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    // Test generic-types/primitives
+        // Test generic-types/primitives
     [
         [[],                Array.name,     '[]'],
         [true,              Boolean.name,   'true'],
@@ -90,17 +81,7 @@ describe ('#sjl.classOf', function () {
 
 describe('#sjl.classOfIs', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    describe('truthy checks', function () {
+        describe('truthy checks', function () {
         // Test generic-types/primitives
         [
             [[], Array.name, '[]'],
@@ -158,17 +139,7 @@ describe('#sjl.classOfIs', function () {
 
 describe('#sjl.classOfIsMulti', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    describe('truthy checks', function () {
+        describe('truthy checks', function () {
         // Test generic-types/primitives
         [
             [[], Function, Array, '[]'],
@@ -219,17 +190,7 @@ describe('#sjl.classOfIsMulti', function () {
 
 describe('#sjl.defineSubClass', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    /**
+        /**
      * Returns one array of all keys of objects passed in
      * @returns {Array<String>}
      */
@@ -366,17 +327,7 @@ describe('#sjl.defineSubClass', function () {
  */
 describe('#sjl.empty', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var emptyTestArgs = [
+        var emptyTestArgs = [
         [[], '[]'],
         [{}, '{}'],
         ['', '""'],
@@ -425,17 +376,7 @@ describe('#sjl.empty', function () {
  */
 describe('#sjl.extractFromArrayAt', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    describe('When passing in only `array` and `index`.', function () {
+        describe('When passing in only `array` and `index`.', function () {
         var testArray = ['a', 'b', 'c', 'd', 'e'],
             stringOfTestArray = '[' + testArray.join(',') + ']';
 
@@ -586,17 +527,7 @@ describe('#sjl.extractFromArrayAt', function () {
 
 describe('#sjl.getValueFromObj', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var objToTest = {
+        var objToTest = {
             numberValue: 1,
             arrayValue: ['hello-world', 1, 2, 3],
             stringValue: 'hello world',
@@ -707,17 +638,7 @@ describe('#sjl.getValueFromObj', function () {
  */
 describe('#sjl.isEmpty', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var emptyTestArgs = [
+        var emptyTestArgs = [
         [[], '[]'],
         [{}, '{}'],
         ['', '""'],
@@ -765,17 +686,7 @@ describe('#sjl.isEmpty', function () {
  */
 describe('#sjl.isEmptyObj', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it ('should return true for empty objects.', function () {
+        it ('should return true for empty objects.', function () {
         expect(sjl.isEmptyObj({})).to.be.true();
     });
 
@@ -818,17 +729,7 @@ describe('#sjl.isEmptyObj', function () {
  */
 describe('#sjl.isEmptyOrNotOfType', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    function randNum(start, end) {
+        function randNum(start, end) {
         return Math.floor(Math.random() * end + start);
     }
 
@@ -922,17 +823,7 @@ describe('#sjl.isEmptyOrNotOfType', function () {
  */
 describe ('#sjl.isset', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it('should return false for null value.', function () {
+        it('should return false for null value.', function () {
         expect(sjl.isset(null)).to.equal(false);
     });
     it('should return false for undefined value.', function () {
@@ -954,17 +845,7 @@ describe ('#sjl.isset', function () {
  */
 describe('#sjl.issetAndOfType', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it('should return true for values that are `set` and are of the passed `type`.', function () {
+        it('should return true for values that are `set` and are of the passed `type`.', function () {
         // Args to test
         [
             [['hello'], Array],
@@ -1039,17 +920,7 @@ describe('#sjl.issetAndOfType', function () {
  */
 describe('#sjl.issetMulti', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var falsyArgSets = [
+        var falsyArgSets = [
             [null, undefined],
             [null, 'hello', undefined, {}, []],
             [undefined, 'hello', function () {}],
@@ -1074,17 +945,7 @@ describe('#sjl.issetMulti', function () {
  */
 describe('#sjl.jsonClone', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var argsForTests = [
+        var argsForTests = [
         [{
             all: {your: {base: {are: {belong: {to: {us: false}}}}}},
             arrayProp1: [],
@@ -1133,17 +994,7 @@ describe('#sjl.jsonClone', function () {
  */
 describe('#sjl.lcaseFirst', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var argsForTruthyTests = [
+        var argsForTruthyTests = [
         ['HelloWorld', 'helloWorld'],
         [String.name, 'string'],
         ['world-wide-web', 'world-wide-web'],
@@ -1184,17 +1035,7 @@ describe('#sjl.lcaseFirst', function () {
  */
 describe('#sjl.naiveNamespace', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var argsForTests = [
+        var argsForTests = [
         [{
             all: {your: {base: {are: {belong: {to: {us: false}}}}}},
             arrayProp1: [],
@@ -1269,17 +1110,7 @@ describe('#sjl.naiveNamespace', function () {
  */
 describe('#sjl.notEmptyAndOfType', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    function randNum(start, end) {
+        function randNum(start, end) {
         return Math.floor(Math.random() * end + start);
     }
 
@@ -1360,17 +1191,7 @@ describe('#sjl.notEmptyAndOfType', function () {
  */
 describe ('#sjl.restArgs', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it('should return an array when receiving an `arguments` object.', function () {
+        it('should return an array when receiving an `arguments` object.', function () {
         expect(Array.isArray(sjl.restArgs(arguments))).to.be.true();
     });
 
@@ -1420,17 +1241,7 @@ describe ('#sjl.restArgs', function () {
 
 describe('#sjl.searchObj', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var argsForTests = [
+        var argsForTests = [
             [{
                 all: {your: {base: {are: {belong: {to: {us: false}}}}}},
                 arrayProp1: [],
@@ -1493,17 +1304,7 @@ describe('#sjl.searchObj', function () {
 
 describe('#sjl.setValueOnObj', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var objToTest = {
+        var objToTest = {
             numberValue: 1,
             arrayValue: ['hello-world', 1, 2, 3],
             stringValue: 'hello world',
@@ -1680,17 +1481,7 @@ describe('#sjl.setValueOnObj', function () {
 
 describe('#sjl.throwTypeErrorIfEmpty', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it('should throw a type error if `value` is empty ([0, null, undefined, [], {}, "", false]).', function () {
+        it('should throw a type error if `value` is empty ([0, null, undefined, [], {}, "", false]).', function () {
         [
             [0, String],
             [null, Function],
@@ -1786,17 +1577,7 @@ describe('#sjl.throwTypeErrorIfEmpty', function () {
 
 describe('#sjl.throwTypeErrorIfNotOfType', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it ('should throw a type error when `value` is not of passed in `type`.', function () {
+        it ('should throw a type error when `value` is not of passed in `type`.', function () {
         [
             [0, String],
             [null, Function],
@@ -1843,17 +1624,7 @@ describe('#sjl.throwTypeErrorIfNotOfType', function () {
  */
 describe('#sjl.ucaseFirst', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    var argsForTruthyTests = [
+        var argsForTruthyTests = [
         ['helloWorld', 'HelloWorld'],
         [String.name, 'String'],
         ['world-wide-web', 'World-wide-web'],
@@ -1895,17 +1666,7 @@ describe('#sjl.ucaseFirst', function () {
  */
 describe('#sjl.unset', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    it ('should remove a property from an object.', function () {
+        it ('should remove a property from an object.', function () {
         var helloWorld = {name: 'hello-world-object', message: 'hello-world'};
         expect(sjl.unset(helloWorld, 'message').hasOwnProperty('message')).to.be.false();
     });
@@ -1926,17 +1687,7 @@ describe('#sjl.unset', function () {
  */
 describe('#sjl.wrapPointerWithinBounds', function () {
 
-    // ~~~ STRIP ~~~
-    // This part gets stripped out when
-    // generating browser version of test(s).
-    'use strict';
-    var chai = require('chai'),
-        sjl = require('./../../src/sjl'),
-        expect = chai.expect;
-    // These variables get set at the top IIFE in the browser.
-    // ~~~ /STRIP ~~~
-
-    [
+        [
         // pointer : min : max : {result-of-wrap {Number}}
         [0, 0, 100, 0],
         [-1, 0, 100, 100],

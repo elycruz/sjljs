@@ -12,6 +12,7 @@ var packageJson = require('./package.json'),
     fncallback = require('gulp-fncallback'),
     lazypipe = require('lazypipe'),
     chalk = require('chalk'),
+    replace = require('gulp-replace'),
     crypto = require('crypto'),
     requirejs = require('gulp-requirejs'),
     del = require('del'),
@@ -133,8 +134,11 @@ gulp.task('minimal-min', ['minimal'], function () {
 });
 
 gulp.task('make-browser-test-suite', function () {
-    return gulp.src(['tests/for-server/**/*.js'])
+    return gulp.src([
+        'tests/for-browser/tests-header.js',
+        'tests/for-server/**/*.js'])
         .pipe(jsHintPipe())
+        .pipe(replace(/\/\/ ~~~ STRIP ~~~[^~]+\/\/ ~~~ \/STRIP ~~~[\n\r\f]+/gim, ''))
         .pipe(concat('tests/for-browser/test-suite.js'))
         .pipe(gulp.dest('./'));
 });
