@@ -1,6 +1,0 @@
-[submodule "src/stdlib"]
-	path = src/stdlib
-	url = https://github.com/elycruz/sjl-stdlib.git
-[submodule "src/validator"]
-	path = src/validator
-	url = https://github.com/elycruz/sjl-validator.git

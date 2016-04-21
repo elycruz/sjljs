@@ -1123,6 +1123,9 @@
         sjl.Symbol = Symbol;
     }
 
+    // Create top level frontend package.
+    sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+
     // Node specific code
     if (isNodeEnv) {
         // Export `sjl`
@@ -1131,12 +1134,10 @@
         // Set lib src root path to be used in node env by `sjl.package`
         libSrcRootPath = __dirname;
     }
-
-    // Create top level frontend package.
-    sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
-
-    // Export sjl globally (the node global export will be deprecated at a later version)
-    globalContext.sjl = sjl;
+    else {
+        // Export sjl globally
+        globalContext.sjl = sjl;
+    }
 
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {
