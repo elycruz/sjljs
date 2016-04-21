@@ -45,7 +45,7 @@
      * @returns {Array}
      */
     function restArgs (args, start, end) {
-        start = typeof start === _undefined ? 0 : start;
+        start = !isNumber(start) ? 0 : start;
         end = end || args.length;
         return slice.call(args, start, end);
     }
@@ -106,11 +106,11 @@
      * Checks whether a value isset and if it's type is the same as the type name passed in.
      * @function module:sjl.issetAndOfType
      * @param value {*} - Value to check on.
-     * @param type {String|Function} - Type name to check for;  E.g., 'Number', 'Array', 'HTMLMediaElement' etc.
+     * @param type {String|Function} - Constructor name string or Constructor.  You can pass multiple types.
      * @returns {Boolean}
      */
     function issetAndOfType (value, type) {
-        return isset(value) && classOfIs(value, type);
+        return isset(value) && classOfIs.apply(null, arguments);
     }
 
     /**
@@ -168,6 +168,18 @@
         return classOf(obj) === (
                 classOfType === String.name ? type : type.name
             );
+    }
+
+    /**
+     * Check if `value` is of one of the passed in types.
+     * @param value {*}
+     * @param type {Function|String} - Constructor or string.
+     * @returns {boolean}
+     */
+    function classOfIsMulti (value, type /**[,type...] **/) {
+        return (sjl.restArgs(arguments, 1)).some(function (_type) {
+            return classOf(value, _type);
+        });
     }
 
     function isNumber (value) {
@@ -1076,11 +1088,23 @@
         return extractBoolFromArray(array, false);
     }
 
+
+    function contrainClassTypeParameter (prefix, type, suffix) {
+        var classOfType = classOf(type);
+        if (classOfType !== String.name && !(type instanceof Function)) {
+            throw new TypeError(prefix + ' expects it\'s `type` parameter to' +
+                'be of type `String` or an instance of `Function`.  Type recieved: ' + classOfType + '.' +
+                (isset(suffix) ? ' ' + suffix : '')
+            );
+        }
+    }
+
     sjl = {
         argsToArray: argsToArray,
         camelCase: camelCase,
         classOf: classOf,
         classOfIs: classOfIs,
+        classOfIsMulti: classOfIsMulti,
         clone: clone,
         constrainPointerWithinBounds: constrainPointerWithinBounds,
         createTopLevelPackage: createTopLevelPackage,
