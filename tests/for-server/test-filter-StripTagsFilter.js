@@ -1,14 +1,22 @@
 /**
  * Created by Ely on 3/30/2016.
  */
-'use strict';
 
-var expect = require('chai').expect,
-    sjl = require('./../../src/sjl'),
-    ns = sjl.ns,
-    StripTagsFilter = ns.filter.StripTagsFilter;
 
 describe('sjl.filter.StripTagsFilter', function () {
+
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
+
+    var StripTagsFilter = sjl.filter.StripTagsFilter;
+
     it ('should be an instance of StripTagsFilter constructor.', function () {
         expect(new StripTagsFilter()).to.be.instanceOf(StripTagsFilter);
     });
