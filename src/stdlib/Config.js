@@ -18,24 +18,29 @@
                     return this;
                 }
                 sjl.throwTypeErrorIfNotOfType(contextName, 'get(keyOrNsKey)', keyOrNsKey, String);
-                return sjl.getValueFromObj(keyOrNsKey, this, true, true);
+                return sjl.searchObj(keyOrNsKey, this);
             },
 
             set: function (keyOrNsKey, value) {
-                var classOfKey = sjl.classOf(keyOrNsKey),
-                    self = this;
+                var self = this;
                 if (isObject(keyOrNsKey)) {
                     sjl.extend.apply(sjl, [true, self].concat(sjl.argsToArray(arguments)));
                 }
-                else if (sjl.isset(keyOrNsKey)) {
-                    sjl.throwTypeErrorIfNotOfType(contextName, 'set(keyOrNsKey, value)', keyOrNsKey, String);
-                    sjl.setValueOnObj(keyOrNsKey, value, self, true);
+                else if (isString(keyOrNsKey)) {
+                    sjl.autoNamespace(keyOrNsKey, self, value);
+                }
+                else {
+                    throw new TypeError(contextName + '.set only allows strings or objects as it\'s first parameter.  ' +
+                        'Param type received: `' + sjl.classOf(keyOrNsKey) + '`.');
                 }
                 return self;
             },
 
-            has: function (keyOrNsString/*, type*/) {
-                return sjl.isset(sjl.searchObj(keyOrNsString, this));
+            has: function (keyOrNsString/*, type{String|Function}...*/) {
+                var searchResult = sjl.searchObj(keyOrNsString, this);
+                return arguments.length > 1 ?
+                    sjl.isset(searchResult) :
+                    sjl.issetAndOfType.apply(sjl, [searchResult].concat(sjl.restArgs(1)));
             },
 
             /**
@@ -44,8 +49,10 @@
              * @returns {*|Config}
              */
             toJSON: function (keyOrNsString) {
-                return sjl.isEmptyOrNotOfType(keyOrNsString, String) ?
-                    this : sjl.clone(sjl.getValueFromObj(keyOrNsString, this));
+                return sjl.jsonClone(
+                    sjl.notEmptyAndOfType(keyOrNsString, String) ?
+                       sjl.searchObj(keyOrNsString, this) : this
+                );
             }
         });
 

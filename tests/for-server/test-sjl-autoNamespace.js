@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-describe('#sjl.naiveNamespace', function () {
+describe('#sjl.autoNamespace', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when
@@ -28,9 +28,9 @@ describe('#sjl.naiveNamespace', function () {
     subject = argsForTests[0][0];
 
     it ('should be able to fetch any nested value within a nested object.', function () {
-        expect(sjl.naiveNamespace('all', subject)).to.equal(subject.all);
-        expect(sjl.naiveNamespace('all.your', subject)).to.equal(subject.all.your);
-        expect(sjl.naiveNamespace('all.your.base', subject)).to.equal(subject.all.your.base);
+        expect(sjl.autoNamespace('all', subject)).to.equal(subject.all);
+        expect(sjl.autoNamespace('all.your', subject)).to.equal(subject.all.your);
+        expect(sjl.autoNamespace('all.your.base', subject)).to.equal(subject.all.your.base);
     });
 
     it ('should be able to set a value within nested object.', function () {
@@ -38,11 +38,11 @@ describe('#sjl.naiveNamespace', function () {
             oldValue = subject.all.your.base;
 
         // Replace value
-        sjl.naiveNamespace('all.your.base', subject, replacementValue);
+        sjl.autoNamespace('all.your.base', subject, replacementValue);
         expect(subject.all.your.base).to.equal(replacementValue);
 
         // Re inject old value
-        sjl.naiveNamespace('all.your.base', subject, oldValue);
+        sjl.autoNamespace('all.your.base', subject, oldValue);
         expect(subject.all.your.base).to.equal(oldValue);
     });
 
@@ -51,18 +51,18 @@ describe('#sjl.naiveNamespace', function () {
             oldValue = subject.all;
 
         // Replace value
-        sjl.naiveNamespace('all', subject, replacementValue);
+        sjl.autoNamespace('all', subject, replacementValue);
         expect(subject.all).to.equal(replacementValue);
 
         // Re inject old value
-        sjl.naiveNamespace('all', subject, oldValue);
+        sjl.autoNamespace('all', subject, oldValue);
         expect(subject.all).to.equal(oldValue);
     });
 
     it ('should throw a type error when second parameter isn\'t an object or an instance of `Function`.', function () {
         var caughtError;
         try {
-            sjl.naiveNamespace('all', 99);
+            sjl.autoNamespace('all', 99);
         }
         catch (e) {
             caughtError = e;
@@ -73,7 +73,7 @@ describe('#sjl.naiveNamespace', function () {
     it ('should throw a type error when no params are passed in.', function () {
         var caughtError;
         try {
-            sjl.naiveNamespace();
+            sjl.autoNamespace();
         }
         catch (e) {
             caughtError = e;
