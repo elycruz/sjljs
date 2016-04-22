@@ -3,7 +3,7 @@
  */
 'use strict';
 
-let expect = require('chai').expect,
+var expect = require('chai').expect,
     sjl = require('./../../src/sjl'),
     ns = sjl.ns,
     StripTagsFilter = ns.filter.StripTagsFilter;
