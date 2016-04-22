@@ -8,9 +8,9 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
-        contextName = 'sjl.ns.filter.FilterChain',
-        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
-        Filter = sjl.ns.filter.Filter,
+        contextName = 'sjl.filter.FilterChain',
+        ObjectIterator = sjl.stdlib.ObjectIterator,
+        Filter = sjl.filter.Filter,
         FilterChain = function FilterChain(/*...options {Object}*/) {
             var _filters = [];
             Object.defineProperties(this, {
@@ -26,7 +26,7 @@
             });
         };
 
-    FilterChain = sjl.ns.stdlib.Extendable.extend(FilterChain, {
+    FilterChain = sjl.stdlib.Extendable.extend(FilterChain, {
 
         filter: function (value) {
             return [value].concat(this.filters).reduce(function (_value, filter) {

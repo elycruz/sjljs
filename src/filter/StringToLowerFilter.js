@@ -7,7 +7,7 @@
 
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
-        StringToLowerFilter = sjl.ns.filter.Filter.extend({
+        StringToLowerFilter = sjl.filter.Filter.extend({
             constructor: function StringToLowerFilter(value) {
                 if (!sjl.isset(this)) {
                     return StringToLowerFilter.filter(value);

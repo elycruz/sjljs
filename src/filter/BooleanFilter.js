@@ -7,7 +7,7 @@
 
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
-        Filter = sjl.ns.filter.Filter,
+        Filter = sjl.filter.Filter,
 
         BooleanFilter = Filter.extend({
             constructor: function BooleanFilter(valueOrOptions) {

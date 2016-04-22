@@ -8,8 +8,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
-        RegexValidator = sjl.ns.validator.RegexValidator,
-        contextName = 'sjl.ns.validator.DigitValidator',
+        RegexValidator = sjl.validator.RegexValidator,
+        contextName = 'sjl.validator.DigitValidator',
         DigitValidator = function DigitValidator (/**...options {Object}**/) {
             RegexValidator.apply(this, [{
                 pattern: /^\d+$/,

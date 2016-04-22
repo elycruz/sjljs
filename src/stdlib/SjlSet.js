@@ -5,7 +5,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        stdlib = sjl.ns.stdlib,
+        stdlib = sjl.stdlib,
         Extendable = stdlib.Extendable,
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
@@ -59,8 +59,8 @@
      * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
      * `valid` methods (@see sjl.Iterator)
      * @constructor SjlSet
-     * @memberof namespace:sjl.ns.stdlib
-     * @extends sjl.ns.stdlib.Extendable
+     * @memberof namespace:sjl.stdlib
+     * @extends sjl.stdlib.Extendable
      * @param iterable {Array}
      */
     SjlSet = Extendable.extend(SjlSet, {

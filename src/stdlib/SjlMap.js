@@ -10,11 +10,11 @@
 
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
 
-        Extendable = sjl.ns.stdlib.Extendable,
+        Extendable = sjl.stdlib.Extendable,
 
-        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
+        ObjectIterator = sjl.stdlib.ObjectIterator,
 
-        makeIterable = sjl.ns.stdlib.iterable,
+        makeIterable = sjl.stdlib.iterable,
 
         // Constructor to augment
         SjlMap = function SjlMap (iterable) {
@@ -83,12 +83,12 @@
      *
      * @param iterable {Array|Object} - The object to populate itself from (either an `Array<[[key, value]]>`
      *  or an `Object` hash).
-     * @constructor sjl.ns.stdlib.SjlMap
+     * @constructor sjl.stdlib.SjlMap
      */
     SjlMap = Extendable.extend(SjlMap, {
         /**
          * Clears the `SjlMap` object of all data that has been set on it.
-         * @method sjl.ns.stdlib.SjlMap#clear
+         * @method sjl.stdlib.SjlMap#clear
          * @returns {SjlMap}
          */
         clear: function () {
@@ -103,7 +103,7 @@
 
         /**
          * Deletes an entry in the `SjlMap`.
-         * @method sjl.ns.stdlib.SjlMap#delete
+         * @method sjl.stdlib.SjlMap#delete
          * @param key {String} - Key of key-value pair to remove.
          * @returns {SjlMap}
          */
@@ -119,8 +119,8 @@
         /**
          * Returns the entries in this `SjlMap` as a valid es6 iterator to iterate over (usable in
          *  older versions of javascript).
-         * @method sjl.ns.stdlib.SjlMap#entries
-         * @returns {sjl.ns.stdlib.ObjectIterator}
+         * @method sjl.stdlib.SjlMap#entries
+         * @returns {sjl.stdlib.ObjectIterator}
          */
         entries: function () {
                 return new ObjectIterator(this._keys, this._values, 0);
@@ -129,7 +129,7 @@
         /**
          * Iterates through all key value pairs in itself and passes them to `callback`
          *  on each iteration.
-         * @method sjl.ns.stdlib.SjlMap#forEach
+         * @method sjl.stdlib.SjlMap#forEach
          * @param callback {Function} - Required.
          * @param context {Object} - Optional.
          * @returns {SjlMap}
@@ -144,7 +144,7 @@
 
         /**
          * Returns whether a `key` is set on this `SjlMap`.
-         * @method sjl.ns.stdlib.SjlMap#has
+         * @method sjl.stdlib.SjlMap#has
          * @param key {String} - Required.
          * @returns {boolean}
          */
@@ -155,8 +155,8 @@
         /**
          * Returns the keys in this `SjlMap` as a valid es6 iterator object to iterate over (usable in
          *  older versions of javascript).
-         * @method sjl.ns.stdlib.SjlMap#keys
-         * @returns {sjl.ns.stdlib.Iterator}
+         * @method sjl.stdlib.SjlMap#keys
+         * @returns {sjl.stdlib.Iterator}
          */
         keys: function () {
             return this._keys[sjl.Symbol.iterator]();
@@ -165,8 +165,8 @@
         /**
          * Returns the values in this `SjlMap` as a valid es6 iterator object to iterate over (usable in
          *  older versions of javascript).
-         * @method sjl.ns.stdlib.SjlMap#values
-         * @returns {sjl.ns.stdlib.Iterator}
+         * @method sjl.stdlib.SjlMap#values
+         * @returns {sjl.stdlib.Iterator}
          */
         values: function () {
             return this._values[sjl.Symbol.iterator]();
@@ -174,7 +174,7 @@
 
         /**
          * Returns the value "set" for a key in instance.
-         * @method sjl.ns.stdlib.SjlMap#get
+         * @method sjl.stdlib.SjlMap#get
          * @param key {String}
          * @returns {*}
          */
@@ -185,7 +185,7 @@
 
         /**
          * Sets a key-value pair in this instance.
-         * @method sjl.ns.stdlib.SjlMap#set
+         * @method sjl.stdlib.SjlMap#set
          * @param key {String} - Key to set.
          * @param value {*} - Value to set.
          * @returns {SjlMap}
@@ -210,7 +210,7 @@
 
         /**
          * Adds key-value array pairs in an array to this instance.
-         * @method sjl.ns.stdlib.SjlMap#addFromArray
+         * @method sjl.stdlib.SjlMap#addFromArray
          * @param array {Array<Array<*, *>>} - Array of key-value array entries to parse.
          * @returns {SjlMap}
          */
@@ -231,7 +231,7 @@
 
         /**
          * Add all the `object`'s instance's own property key-value pairs to this instance.
-         * @method sjl.ns.stdlib.SjlMap#addFromObject
+         * @method sjl.stdlib.SjlMap#addFromObject
          * @param object {Object} - Object to operate on.
          * @returns {SjlMap}
          */
@@ -251,8 +251,8 @@
         /**
          * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
          *  (same as `SjlMap#entries`).
-         * @method sjl.ns.stdlib.SjlMap#iterator
-         * @returns {sjl.ns.stdlib.ObjectIterator}
+         * @method sjl.stdlib.SjlMap#iterator
+         * @returns {sjl.stdlib.ObjectIterator}
          */
         iterator: function () {
             return this.entries();
@@ -260,7 +260,7 @@
 
         /**
          * Shallow to json method.
-         * @method sjl.ns.stdlib.SjlMap#toJSON
+         * @method sjl.stdlib.SjlMap#toJSON
          * @returns {{}}
          */
         toJSON: function () {

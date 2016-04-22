@@ -1,9 +1,9 @@
 /**
  * @constructor Filter
- * @extends sjl.ns.stdlib.Extendable
- * @memberof module:sjl.ns.filter
+ * @extends sjl.stdlib.Extendable
+ * @memberof module:sjl.filter
  * @requires sjl
- * @requires sjl.ns.stdlib.Extendable
+ * @requires sjl.stdlib.Extendable
  */
 (function () {
 
@@ -11,7 +11,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl,
-        Extendable = sjl.ns.stdlib.Extendable,
+        Extendable = sjl.stdlib.Extendable,
 
     Filter = Extendable.extend({
         constructor: function Filter (/** ...options {Object} **/) {

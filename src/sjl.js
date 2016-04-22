@@ -741,8 +741,8 @@
 
         /**
          * Extends a new copy of self with passed in parameters.
-         * @memberof class:sjl.ns.stdlib.Extendable
-         * @static sjl.ns.stdlib.Extendable.extend
+         * @memberof class:sjl.stdlib.Extendable
+         * @static sjl.stdlib.Extendable.extend
          * @param constructor {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
          *  the `statics` param (as if this param is an Object then it can contain methods within itself).
          * @param methods {Object|undefined} - Methods.  Optional.

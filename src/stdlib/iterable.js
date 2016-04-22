@@ -9,8 +9,8 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = sjl.ns.stdlib.Iterator,
-        ObjectIterator = sjl.ns.stdlib.ObjectIterator;
+        Iterator = sjl.stdlib.Iterator,
+        ObjectIterator = sjl.stdlib.ObjectIterator;
 
     /**
      * Turns an array into an iterable.

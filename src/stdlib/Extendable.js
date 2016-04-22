@@ -12,9 +12,9 @@
         Extendable = function Extendable () {};
 
     /**
-     * The `sjl.ns.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-     * @class module:sjl.ns.stdlib.Extendable
-     * @memberof namespace:sjl.ns.stdlib
+     * The `sjl.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
+     * @class module:sjl.stdlib.Extendable
+     * @memberof namespace:sjl.stdlib
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
 
@@ -32,7 +32,7 @@
     }
 
     /**
-     * @static class:sjl.ns.stdlib.Extendable#extend
+     * @static class:sjl.stdlib.Extendable#extend
      */
 
 })();

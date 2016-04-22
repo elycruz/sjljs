@@ -24,9 +24,9 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
-        Validator = sjl.ns.validator.Validator,
-        contextName = 'sjl.ns.validator.NumberValidator',
-        //InRangeValidator = sjl.ns.validator.InRangeValidator,
+        Validator = sjl.validator.Validator,
+        contextName = 'sjl.validator.NumberValidator',
+        //InRangeValidator = sjl.validator.InRangeValidator,
         NumberValidator = function NumberValidator(/** ...options {Object}**/) {
             // Apply Validator to self
             Validator.apply(this);

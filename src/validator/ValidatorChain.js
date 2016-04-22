@@ -8,9 +8,9 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
-        contextName = 'sjl.ns.validator.ValidatorChain',
-        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
-        Validator = sjl.ns.validator.Validator,
+        contextName = 'sjl.validator.ValidatorChain',
+        ObjectIterator = sjl.stdlib.ObjectIterator,
+        Validator = sjl.validator.Validator,
         ValidatorChain = function ValidatorChain(/*...options {Object}*/) {
             var _breakChainOnFailure = false,
                 _validators = [];

@@ -7,8 +7,8 @@
 
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
-        contextName = 'sjl.ns.filter.StripTagsFilter',
-        StripTagsFilter = sjl.ns.filter.Filter.extend({
+        contextName = 'sjl.filter.StripTagsFilter',
+        StripTagsFilter = sjl.filter.Filter.extend({
             constructor: function StripTagsFilter(value, options) {
                 if (!sjl.isset(this)) {
                     return StripTagsFilter.filter.apply(null, arguments);

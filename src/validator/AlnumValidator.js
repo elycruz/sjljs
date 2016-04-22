@@ -8,7 +8,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
-        Validator = sjl.ns.validator.Validator,
+        Validator = sjl.validator.Validator,
         AlnumValidator = function AlnumValidator (/**...options {Object}**/) {
 
             // Set defaults and extend with Base validator

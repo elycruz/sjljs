@@ -14,19 +14,19 @@
 
     /**
      * @class Attributable
-     * @extends sjl.ns.stdlib.Extendable
-     * @memberof module:sjl.ns.stdlib
+     * @extends sjl.stdlib.Extendable
+     * @memberof module:sjl.stdlib
      * @param attributes {Object} - Attributes to set on instantiation of the Attributable.  Optional.
      * @deprecated This class is going to be removed for version `0.6.0`.
      * @type {void|Object|*}
      */
-    Attributable = sjl.ns.stdlib.Extendable.extend(Attributable, {
+    Attributable = sjl.stdlib.Extendable.extend(Attributable, {
 
         /**
          * Gets or sets a collection of attributes.
-         * @method sjl.ns.stdlib.Attributable#attr
+         * @method sjl.stdlib.Attributable#attr
          * @param attr {mixed|Array|Object} - Attributes to set or get from object
-         * @returns {sjl.ns.stdlib.Attributable}
+         * @returns {sjl.stdlib.Attributable}
          */
         attr: function (attr) {
             var self = this,
@@ -64,7 +64,7 @@
 
         /**
          * Gets a set of attributes hash for queried attributes.
-         * @method sjl.ns.stdlib.Attributable#_getAttribs
+         * @method sjl.stdlib.Attributable#_getAttribs
          * @param attribsList {Array} - Attributes list to return
          * @returns {*}
          * @private

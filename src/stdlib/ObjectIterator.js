@@ -8,8 +8,8 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = sjl.ns.stdlib.Iterator,
-        contextName = 'sjl.ns.stdlib.ObjectIterator',
+        Iterator = sjl.stdlib.Iterator,
+        contextName = 'sjl.stdlib.ObjectIterator',
 
         /**
          * Constructor for ObjectIterator.
@@ -65,18 +65,18 @@
         };
 
     /**
-     * @class sjl.ns.stdlib.ObjectIterator
-     * @extends sjl.ns.stdlib.Iterator
+     * @class sjl.stdlib.ObjectIterator
+     * @extends sjl.stdlib.Iterator
      * @name ObjectIterator
      * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
      * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else pointer.
      * @param pointer {Number} - Optional.
-     * @type {sjl.ns.stdlib.ObjectIterator}
+     * @type {sjl.stdlib.ObjectIterator}
      */
     ObjectIterator = Iterator.extend(ObjectIterator, {
         /**
          * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.ns.stdlib.Iterator#current
+         * @method sjl.stdlib.Iterator#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         current: function () {
@@ -93,7 +93,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.ns.stdlib.Iterator#next
+         * @method sjl.stdlib.Iterator#next
          * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         next: function () {
@@ -116,7 +116,7 @@
 
         /**
          * Overloaded getter/setter method for internal `keys` property.
-         * @returns {sjl.ns.stdlib.ObjectIterator|Array<*>}
+         * @returns {sjl.stdlib.ObjectIterator|Array<*>}
          */
         keys: function (keys) {
             var retVal = this;
@@ -134,7 +134,7 @@
          * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
          * @param callback {Function}
          * @param context {Object}
-         * @returns {sjl.ns.stdlib.Iterator}
+         * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {
             var self = this,

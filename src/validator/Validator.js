@@ -9,7 +9,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
-        contextName = 'sjl.ns.validator.Validator',
+        contextName = 'sjl.validator.Validator',
         Validator = function Validator(/** ...options {Object} **/) {
             var _messages = [],
                 _messagesMaxLength = 100,
@@ -74,7 +74,7 @@
             sjl.extend.apply(sjl, [true, this].concat(sjl.argsToArray(arguments)));
         };
 
-    Validator = sjl.ns.stdlib.Extendable.extend(Validator, {
+    Validator = sjl.stdlib.Extendable.extend(Validator, {
 
         /**
          * @todo change this method name to `addErrorByKeyOrCallback` or just add `addErrorByCallback` method

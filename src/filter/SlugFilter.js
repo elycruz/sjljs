@@ -7,7 +7,7 @@
 
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
-        SlugFilter = sjl.ns.filter.Filter.extend({
+        SlugFilter = sjl.filter.Filter.extend({
             constructor: function SlugFilter(value) {
                 if (!sjl.isset(this)) {
                     return SlugFilter.filter(value);

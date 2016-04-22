@@ -11,9 +11,9 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
-        ValidatorChain = sjl.ns.validator.ValidatorChain,
-        FilterChain = sjl.ns.filter.FilterChain,
-        Extendable = sjl.ns.stdlib.Extendable,
+        ValidatorChain = sjl.validator.ValidatorChain,
+        FilterChain = sjl.filter.FilterChain,
+        Extendable = sjl.stdlib.Extendable,
         Input = function Input(options) {
             var _allowEmpty = false,
                 _continueIfEmpty = false,

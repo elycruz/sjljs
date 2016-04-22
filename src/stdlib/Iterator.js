@@ -8,7 +8,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        errorContextName = 'sjl.ns.stdlib.Iterator',
+        errorContextName = 'sjl.stdlib.Iterator',
 
         Iterator = function Iterator(values, pointer) {
             var _values,
@@ -64,14 +64,14 @@
         };
 
     /**
-     * @class sjl.ns.stdlib.Iterator
-     * @extends sjl.ns.stdlib.Extendable
+     * @class sjl.stdlib.Iterator
+     * @extends sjl.stdlib.Extendable
      * @type {void|Object|*}
      */
-    Iterator = sjl.ns.stdlib.Extendable.extend(Iterator, {
+    Iterator = sjl.stdlib.Extendable.extend(Iterator, {
         /**
          * Returns the current value that `pointer` is pointing to.
-         * @method sjl.ns.stdlib.Iterator#current
+         * @method sjl.stdlib.Iterator#current
          * @returns {{done: boolean, value: *}}
          */
         current: function () {
@@ -87,7 +87,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.ns.stdlib.Iterator#next
+         * @method sjl.stdlib.Iterator#next
          * @returns {{done: boolean, value: *}}
          */
         next: function () {
@@ -105,8 +105,8 @@
 
         /**
          * Rewinds the iterator.
-         * @method sjl.ns.stdlib.Iterator#rewind
-         * @returns {sjl.ns.stdlib.Iterator}
+         * @method sjl.stdlib.Iterator#rewind
+         * @returns {sjl.stdlib.Iterator}
          */
         rewind: function () {
             return this.pointer(0);
@@ -114,7 +114,7 @@
 
         /**
          * Returns whether the iterator has reached it's end.
-         * @method sjl.ns.stdlib.Iterator#valid
+         * @method sjl.stdlib.Iterator#valid
          * @returns {boolean}
          */
         valid: function () {
@@ -124,7 +124,7 @@
         /**
          * Overloaded getter and setter for `_pointer` property.
          * @param pointer {Number|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.ns.stdlib.Iterator}
+         * @returns {sjl.stdlib.Iterator}
          * @throws {TypeError} - If `pointer` is set and is not of type `Number`.
          */
         pointer: function (pointer) {
@@ -144,7 +144,7 @@
         /**
          * Overloaded getter and setter for `_values` property.
          * @param values {Array|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.ns.stdlib.Iterator}
+         * @returns {sjl.stdlib.Iterator}
          * @throws {TypeError} - If `values` is set and is not of type `Array`.
          */
         values: function (values) {
@@ -166,7 +166,7 @@
          * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
          * @param callback {Function}
          * @param context {Object}
-         * @returns {sjl.ns.stdlib.Iterator}
+         * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {
             this._values.forEach(callback, context);
@@ -182,7 +182,7 @@
         sjl.ns('stdlib.Iterator', Iterator);
         sjl.defineEnumProp(sjl, 'Iterator', Iterator);
         if (window.__isAmd) {
-            return sjl.ns.stdlib.Iterator;
+            return sjl.stdlib.Iterator;
         }
     }
 

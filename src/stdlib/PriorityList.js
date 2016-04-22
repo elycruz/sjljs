@@ -8,9 +8,9 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
-        Extendable = sjl.ns.stdlib.Extendable,
-        ObjectIterator = sjl.ns.stdlib.ObjectIterator,
-        SjlMap = sjl.ns.stdlib.SjlMap,
+        Extendable = sjl.stdlib.Extendable,
+        ObjectIterator = sjl.stdlib.ObjectIterator,
+        SjlMap = sjl.stdlib.SjlMap,
         priorityItemSerial = 0,
         PriorityListItem = function PriorityListItem (key, value, priority) {
             var _priority;
@@ -147,7 +147,7 @@
         // -------------------------------------------
         /**
          * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.ns.stdlib.PriorityList#current
+         * @method sjl.stdlib.PriorityList#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         current: function () {
@@ -159,7 +159,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.ns.stdlib.PriorityList#next
+         * @method sjl.stdlib.PriorityList#next
          * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         next: function () {
@@ -178,8 +178,8 @@
 
         /**
          * Rewinds the iterator.
-         * @method sjl.ns.stdlib.PriorityList#rewind
-         * @returns {sjl.ns.stdlib.PriorityList}
+         * @method sjl.stdlib.PriorityList#rewind
+         * @returns {sjl.stdlib.PriorityList}
          */
         rewind: function () {
             this.itemsMap.rewind();
@@ -189,7 +189,7 @@
         /**
          * Overloaded getter and setter for internal maps `_pointer` property.
          * @param pointer {Number|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.ns.stdlib.PriorityList}
+         * @returns {sjl.stdlib.PriorityList}
          * @throws {TypeError} - If `pointer` is set and is not of type `Number`.
          */
         pointer: function (pointer) {
@@ -217,7 +217,7 @@
             this.sort();
             var keys = this.itemsMap._keys.concat([]),
                 values = this.itemsMap._values.concat([]);
-            return new sjl.ns.stdlib.ObjectIterator(keys, values);
+            return new sjl.stdlib.ObjectIterator(keys, values);
         },
         forEach: function (callback, context) {
             return this.sort().itemsMap.forEach(callback, context);
@@ -233,7 +233,7 @@
             this.sort().itemsMap.forEach(function (value, key) {
                 out.push(value);
             });
-            return new sjl.ns.stdlib.Iterator(out);
+            return new sjl.stdlib.Iterator(out);
         },
         get: function (key) {
             var item = this.itemsMap.get(key);
@@ -254,7 +254,7 @@
 
         /**
          * Adds key-value array pairs in an array to this instance.
-         * @method sjl.ns.stdlib.PriorityList#addFromArray
+         * @method sjl.stdlib.PriorityList#addFromArray
          * @param array {Array<Array<*, *>>} - Array of key-value array entries to parse.
          * @returns {PriorityList}
          */
@@ -275,7 +275,7 @@
 
         /**
          * Add all the `object`'s instance's own property key-value pairs to this instance.
-         * @method sjl.ns.stdlib.PriorityList#addFromObject
+         * @method sjl.stdlib.PriorityList#addFromObject
          * @param object {Object} - Object to operate on.
          * @returns {PriorityList}
          */
@@ -295,8 +295,8 @@
         /**
          * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
          *  (same as `PriorityList#entries`).
-         * @method sjl.ns.stdlib.PriorityList#iterator
-         * @returns {sjl.ns.stdlib.ObjectIterator}
+         * @method sjl.stdlib.PriorityList#iterator
+         * @returns {sjl.stdlib.ObjectIterator}
          */
         iterator: function () {
             return this.entries();

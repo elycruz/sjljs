@@ -7,7 +7,7 @@
 
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
-        StringTrimFilter = sjl.ns.filter.Filter.extend({
+        StringTrimFilter = sjl.filter.Filter.extend({
             constructor: function StringTrimFilter(value) {
                 if (!sjl.isset(this)) {
                     return StringTrimFilter.filter(value);
