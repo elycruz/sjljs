@@ -115,22 +115,6 @@
         },
 
         /**
-         * Overloaded getter/setter method for internal `keys` property.
-         * @returns {sjl.stdlib.ObjectIterator|Array<*>}
-         */
-        keys: function (keys) {
-            var retVal = this;
-            if (typeof keys === _undefined) {
-                retVal = this.keys;
-            }
-            else {
-                // Type validated by property definition `this._keys`
-                this.keys = keys;
-            }
-            return retVal;
-        },
-
-        /**
          * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
          * @param callback {Function}
          * @param context {Object}
@@ -141,11 +125,17 @@
                 values = self.values;
             context = context || self;
             self.keys.forEach(function (key, index, keys) {
-                callback.call(context, values[index], key, self);
+                callback.call(context, values[index], key, keys);
             });
             return this;
         }
 
+    }, {
+        forEach: function (obj, callback, context) {
+            return Object.keys(obj).forEach(function (key) {
+                callback.call(context, obj[key], key, obj);
+            });
+        }
     });
 
     if (isNodeEnv) {

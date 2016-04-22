@@ -91,7 +91,7 @@
             return this;
         },
         has: function (value) {
-            return this._values.indexOf(value) > -1 ? true : false;
+            return this._values.indexOf(value) > -1;
         },
         keys: function () {
             return this._values[sjl.Symbol.iterator]();

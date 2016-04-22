@@ -129,6 +129,7 @@
          * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {
+            context = context || this;
             this.values.forEach(callback, context);
             return this;
         }

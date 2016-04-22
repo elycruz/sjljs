@@ -7,14 +7,12 @@
 
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
-
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
 
-        Extendable = sjl.stdlib.Extendable,
-
-        ObjectIterator = sjl.stdlib.ObjectIterator,
-
-        makeIterable = sjl.stdlib.iterable,
+        // Constructors for composition
+        Extendable =        sjl.stdlib.Extendable,
+        ObjectIterator =    sjl.stdlib.ObjectIterator,
+        makeIterable =      sjl.stdlib.iterable,
 
         // Constructor to augment
         SjlMap = function SjlMap (iterable) {
