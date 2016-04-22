@@ -795,7 +795,7 @@
         if (isNodeEnv) {
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
-                require('./nodejs-specific/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
+                require('./nodejs/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
             return obj;
         }
         return (function () {
@@ -1116,9 +1116,6 @@
         sjl.Symbol = Symbol;
     }
 
-    // Create top level frontend package.
-    sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
-
     // Node specific code
     if (isNodeEnv) {
         // Export `sjl`
@@ -1131,6 +1128,14 @@
         // Export sjl globally
         globalContext.sjl = sjl;
     }
+
+    // Create top level frontend package.
+    sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+
+    // Short cut to namespaces
+    Object.keys(sjl.ns).forEach(function (key) {
+        sjl[key] = sjl.ns[key];
+    });
 
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {

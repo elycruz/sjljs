@@ -444,6 +444,8 @@ directly if none of the above are found.
 - [ ] - Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.
     - @note jsdoc is currently undergoing a refactor by the jsdoc folks.  It is currently in alpha.
 - [ ] - List all methods that live on `sjl` under components -> utilities up top.
+- [ ] - Add a feature for adding third party filter and validator namespaces to search on when using factory methods 
+    for generating `InputFilter` and `Input` instances.
 
 ## License:
 [GPL v2+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") AND
