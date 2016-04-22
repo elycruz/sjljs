@@ -28,7 +28,7 @@
   },
   "dependencies": {},
   "scripts": {
-    "test": "mocha tests/for-server --harmony"
+    "test": "mocha tests/for-server"
   },
   "repository": {
     "type": "git",
