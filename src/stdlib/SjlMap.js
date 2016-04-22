@@ -104,12 +104,12 @@
         /**
          * Deletes an entry in the `SjlMap`.
          * @method sjl.stdlib.SjlMap#delete
-         * @param key {String} - Key of key-value pair to remove.
+         * @param key {*} - Key of key-value pair to remove.
          * @returns {SjlMap}
          */
         delete: function (key) {
-                var _index = this._keys.indexOf(key);
                 if (this.has(key)) {
+                    var _index = this._keys.indexOf(key);
                     this._values.splice(_index, 1);
                     this._keys.splice(_index, 1);
                 }
@@ -145,7 +145,7 @@
         /**
          * Returns whether a `key` is set on this `SjlMap`.
          * @method sjl.stdlib.SjlMap#has
-         * @param key {String} - Required.
+         * @param key {*} - Required.
          * @returns {boolean}
          */
         has: function (key) {
@@ -175,7 +175,7 @@
         /**
          * Returns the value "set" for a key in instance.
          * @method sjl.stdlib.SjlMap#get
-         * @param key {String}
+         * @param key {*}
          * @returns {*}
          */
         get: function (key) {
@@ -186,7 +186,7 @@
         /**
          * Sets a key-value pair in this instance.
          * @method sjl.stdlib.SjlMap#set
-         * @param key {String} - Key to set.
+         * @param key {*} - Key to set.
          * @param value {*} - Value to set.
          * @returns {SjlMap}
          */
@@ -200,7 +200,6 @@
                 this._keys.push(key);
                 this._values.push(value);
             }
-            index = null;
             return this;
         },
 

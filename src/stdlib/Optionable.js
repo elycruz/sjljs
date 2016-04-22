@@ -11,8 +11,8 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Optionable = function Optionable(/*[, options]*/) {
-            this.options = new sjl.stdlib.Attributable();
-            this.merge.apply(this, arguments);
+            this.options = new sjl.stdlib.Config();
+            this.set.apply(this, arguments);
         };
 
     /**
@@ -25,63 +25,6 @@
      * @type {void|sjl.stdlib.Optionable}
      */
     Optionable = sjl.stdlib.Extendable.extend(Optionable, {
-        /**
-         * Sets an option on Optionable's `options` using `sjl.setValueOnObj`;
-         *  E.g., `optionable.options = value`;
-         * @deprecated - Will be removed in version 1.0.0
-         * @method sjl.stdlib.Optionable#setOption
-         * @param key
-         * @param value
-         * @returns {sjl.stdlib.Optionable}
-         */
-        setOption: function (key, value) {
-            sjl.setValueOnObj(key, value, this.options);
-            return this;
-        },
-
-        /**
-         * Sets each key value pair to  Optionable's `options` using
-         *  `sjl.Attributable`'s `attr` function;
-         *  E.g., `optionable.optioattr(Object);
-         * @deprecated - Will be removed in version 1.0.0
-         * @method sjl.stdlib.Optionable#setOptions
-         * @param key {String}
-         * @param value {Object}
-         * @returns {sjl.stdlib.Optionable}
-         */
-        setOptions: function (options) {
-            if (sjl.classOfIs(options, 'Object')) {
-                this.optioattr(options);
-            }
-            return this;
-        },
-
-        /**
-         * Gets an options value by key.
-         * @deprecated - Slotted for removal in version 1.0.0
-         * @method sjl.stdlib.Optionable#getOption
-         * @param key {String}
-         * @returns {*}
-         */
-        getOption: function (key) {
-            return sjl.getValueFromObj(key, this.options);
-        },
-
-        /**
-         * Gets options by either array or just by key.
-         * @deprecated - Slotted for removal in version 1.0.0
-         * @method sjl.stdlib.Optionable#getOptions
-         * @param options {Array|String}
-         * @returns {*}
-         */
-        getOptions: function (options) {
-            var classOfOptions = sjl.classOf(options),
-                retVal = this.options;
-            if (classOfOptions === 'Array' || classOfOptions === 'String') {
-                retVal = this.optioattr(options);
-            }
-            return retVal;
-        },
 
         /**
          * Gets one or many option values.
@@ -90,7 +33,7 @@
          * @returns {*}
          */
         get: function (keyOrArray) {
-            return this.getOptions(keyOrArray);
+            return this.options.get(keyOrArray);
         },
 
         /**
@@ -102,16 +45,8 @@
          * @returns {sjl.stdlib.Optionable}
          */
         set: function () {
-            var self = this,
-                args = arguments,
-                typeOfArgs0 = sjl.classOf(args[0]);
-            if (typeOfArgs0 === 'String') {
-                self.setOption(args[0], args[1]);
-            }
-            else if (typeOfArgs0 === 'Object') {
-                self.setOptions(args[0]);
-            }
-            return self;
+            this.options.set.apply(this.options, arguments);
+            return this;
         },
 
         /**
@@ -122,20 +57,9 @@
          * @returns {Boolean}
          */
         has: function (nsString) {
-            return sjl.isset(sjl.searchObj(nsString, this.options));
-        },
-
-        /**
-         * Merges all objects passed in to `options`.
-         * @method sjl.stdlib.Optionable#merge
-         * @param ...options {Object} - Any number of `Object`s passed in.
-         * @param useLegacyGettersAndSetters {Object|Boolean|undefined}
-         * @returns {sjl.stdlib.Optionable}
-         */
-        merge: function (options) {
-            sjl.extend.apply(sjl, [true, this.options].concat(sjl.argsToArray(arguments)));
-            return this;
+            return this.options.has(nsString);
         }
+
     });
 
     if (isNodeEnv) {
