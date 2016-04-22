@@ -14,7 +14,7 @@ if (typeof expect === 'undefined') {
 
 var Validator = sjl.ns.validator.Validator;
 
-describe('sjl.ns.validator.Validator', function () {
+describe('sjl.validator.Validator', function () {
 
     var expectedPropertyAndTypes = {
         messages: 'Array',

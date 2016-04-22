@@ -11,7 +11,25 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Optionable = function Optionable(/*[, options]*/) {
-            this.options = new sjl.stdlib.Config();
+            var arg0 = arguments[0],
+                _optionsKeyname = '_options';
+
+            // If options key name is set set it
+            if (sjl.isObject(arg0) && sjl.issetAndOfType(arg0.optionsKeyName, String)) {
+                _optionsKeyname = arg0.optionsKeyName;
+            }
+
+            // Define options key name property
+            Object.defineProperty(this, 'optionsKeyName', {
+                optionsKeyName: {
+                    value: _optionsKeyname
+                }
+            });
+
+            // Get the options store
+            this[this.optionsKeyName] = new sjl.stdlib.Config();
+
+            // Merge all options in to options store
             this.set.apply(this, arguments);
         };
 
@@ -25,7 +43,6 @@
      * @type {void|sjl.stdlib.Optionable}
      */
     Optionable = sjl.stdlib.Extendable.extend(Optionable, {
-
         /**
          * Gets one or many option values.
          * @method sjl.stdlib.Optionable#get
@@ -33,7 +50,7 @@
          * @returns {*}
          */
         get: function (keyOrArray) {
-            return this.options.get(keyOrArray);
+            return this._getOptions().get(keyOrArray);
         },
 
         /**
@@ -41,11 +58,12 @@
          * based on what's passed in.
          * @method sjl.stdlib.Optionable#set
          * @param0 {String|Object}
-         * @param1 {*}
+         * @param1 {*} - One or more objects to merge in if `param0` is an `Object`.  Else it is the value you want
+         * to set the `param0` key to;  E.g., optionable.set('someKey', 'some-value-here');.
          * @returns {sjl.stdlib.Optionable}
          */
         set: function () {
-            this.options.set.apply(this.options, arguments);
+            this._getOptions().set.apply(this.options, arguments);
             return this;
         },
 
@@ -57,7 +75,11 @@
          * @returns {Boolean}
          */
         has: function (nsString) {
-            return this.options.has(nsString);
+            return this._getOptions().has(nsString);
+        },
+
+        _getOptions: function () {
+            return this[this.optionsKeyName];
         }
 
     });
@@ -67,7 +89,6 @@
     }
     else {
         sjl.ns('stdlib.Optionable', Optionable);
-        sjl.defineEnumProp(sjl, 'Optionable', Optionable);
         if (window.__isAmd) {
             return Optionable;
         }

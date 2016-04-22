@@ -1,4 +1,4 @@
-describe('#sjl.throwTypeErrorIfNotOfType', function () {
+describe('sjl.throwTypeErrorIfNotOfType', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

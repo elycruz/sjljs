@@ -48,7 +48,6 @@
     }
     else {
         sjl.ns('stdlib.iterable', sjl.iterable);
-        sjl.defineEnumProp(sjl, 'iterable', sjl.iterable);
         if (window.__isAmd) {
             return sjl.iterable;
         }

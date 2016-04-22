@@ -2,7 +2,7 @@
  * Created by elydelacruz on 4/16/16.
  */
 
-describe ('#sjl.classOf', function () {
+describe ('sjl.classOf', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

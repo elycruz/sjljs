@@ -1,6 +1,6 @@
 
 
-describe('#sjl.throwTypeErrorIfEmpty', function () {
+describe('sjl.throwTypeErrorIfEmpty', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

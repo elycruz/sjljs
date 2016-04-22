@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-describe('#sjl.lcaseFirst', function () {
+describe('sjl.lcaseFirst', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when
@@ -18,7 +18,7 @@ describe('#sjl.lcaseFirst', function () {
         [String.name, 'string'],
         ['world-wide-web', 'world-wide-web'],
         ['99-World-wide-web', '99-world-wide-web'],
-        ['#$(*@&#(*$---WORLD', '#$(*@&#(*$---wORLD']
+        ['$(*@&#(*$---WORLD', '$(*@&#(*$---wORLD']
     ];
 
     it('should return a new string with the first alpha character lower cased.', function () {

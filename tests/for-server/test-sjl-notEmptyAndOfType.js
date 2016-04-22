@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-describe('#sjl.notEmptyAndOfType', function () {
+describe('sjl.notEmptyAndOfType', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

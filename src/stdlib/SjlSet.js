@@ -130,7 +130,6 @@
     }
     else {
         sjl.ns('stdlib.SjlSet', SjlSet);
-        sjl.defineEnumProp(sjl, 'SjlSet', SjlSet);
         if (window.__isAmd) {
             return SjlSet;
         }

@@ -196,12 +196,12 @@
             var retVal = this;
             // If is a getter call get the value
             if (typeof pointer === _undefined) {
-                retVal = this.itemsMap._pointer;
+                retVal = this.itemsMap.pointer;
             }
             // If is a setter call
             else {
                 // Set and validate pointer (validated via `_pointer` getter property definition)
-                this.itemsMap._pointer = pointer;
+                this.itemsMap.pointer = pointer;
             }
             return retVal;
         },
@@ -311,9 +311,6 @@
     else {
         // Export class to namespace
         sjl.ns('stdlib.PriorityList', PriorityList);
-
-        // Set shortcut to class on `sjl`
-        sjl.defineEnumProp(sjl, 'PriorityList', PriorityList);
 
         // If `Amd` return the class
         if (window.__isAmd) {

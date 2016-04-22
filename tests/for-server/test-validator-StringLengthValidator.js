@@ -17,7 +17,7 @@ if (typeof expect === 'undefined') {
 var StringLengthValidator = ns.validator.StringLengthValidator,
     Validator = ns.validator.Validator;
 
-describe('sjl.ns.validator.StringLengthValidator', function () {
+describe('sjl.validator.StringLengthValidator', function () {
     var generalValidator = new StringLengthValidator();
 
     it ('should be a subclass of `Validator`.', function () {
@@ -56,7 +56,7 @@ describe('sjl.ns.validator.StringLengthValidator', function () {
         expect(validator.messages.length).to.equal(0);
     });
 
-    describe ('#isValid with set min and max values', function () {
+    describe ('isValid with set min and max values', function () {
         var validator = new StringLengthValidator({min: 0, max: 55}),
             values = [
                 [true, 'within', 'helloworld'],

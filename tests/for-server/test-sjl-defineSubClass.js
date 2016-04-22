@@ -1,4 +1,4 @@
-describe('#sjl.defineSubClass', function () {
+describe('sjl.defineSubClass', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

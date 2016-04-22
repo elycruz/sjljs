@@ -1032,6 +1032,14 @@
         sjl[key] = sjl.ns[key];
     });
 
+    // Set all 'stdlib' members on sjl for backward compatability
+    // (will be removed at a later date/version).
+    Object.keys(sjl.stdlib).forEach(function (key) {
+        sjl[key] = sjl.stdlib[key];
+    });
+
+
+
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {
         return sjl;

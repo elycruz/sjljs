@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-describe('#sjl.issetAndOfType', function () {
+describe('sjl.issetAndOfType', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

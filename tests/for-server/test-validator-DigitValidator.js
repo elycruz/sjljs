@@ -17,7 +17,7 @@ if (typeof expect === 'undefined') {
 var DigitValidator = ns.validator.DigitValidator,
     Validator = ns.validator.Validator;
 
-describe('sjl.ns.validator.DigitValidator', function () {
+describe('sjl.validator.DigitValidator', function () {
     var generalValidator = new DigitValidator();
 
     it ('should be a subclass of `Validator`.', function () {

@@ -2,7 +2,7 @@
  * Created by elydelacruz on 4/16/16.
  * @note This method will be deprecate in next version of library (v6.0.0)
  */
-describe('#sjl.empty', function () {
+describe('sjl.empty', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

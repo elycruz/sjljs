@@ -1,4 +1,4 @@
-describe('#sjl.searchObj', function () {
+describe('sjl.searchObj', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

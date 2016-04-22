@@ -25,7 +25,6 @@
     }
     else {
         sjl.ns('stdlib.Extendable', Extendable);
-        sjl.defineEnumProp(sjl, 'Extendable', Extendable);
         if (window.__isAmd) {
             return Extendable;
         }

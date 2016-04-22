@@ -62,9 +62,9 @@ function invalidFilterCandidateProvider() {
 }
 
 describe(
-    '#filter.SlugFilter,' +
-    ' #filter.SlugFilter#filter,' +
-    ' #filter.SlugFilter.filter', function () {
+    'sjl.filter.SlugFilter,' +
+    'sjl.filter.SlugFilter#filter,' +
+    'sjl.filter.SlugFilter.filter', function () {
     var filter = new SlugFilter();
     filterDataProvider().forEach(function (args) {
         var filteredValue = args[0].filtered,

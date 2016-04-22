@@ -1,4 +1,4 @@
-describe('#sjl.argsToArray', function () {
+describe('sjl.argsToArray', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

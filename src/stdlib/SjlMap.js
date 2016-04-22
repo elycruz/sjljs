@@ -279,9 +279,6 @@
         // Export class to namespace
         sjl.ns('stdlib.SjlMap', SjlMap);
 
-        // Set shortcut to class on `sjl`
-        sjl.defineEnumProp(sjl, 'SjlMap', SjlMap);
-
         // If `Amd` return the class
         if (window.__isAmd) {
             return SjlMap;

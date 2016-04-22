@@ -16,7 +16,7 @@
 
             // Define properties before setting values
             Object.defineProperties(this, {
-                _values: {
+                values: {
                     /**
                      * @returns {Array}
                      */
@@ -33,10 +33,10 @@
                     set: function (values) {
                         sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, Array);
                         _values = values;
-                        this._pointer = _pointer; // Force pointer within bounds (if it is out of bounds)
+                        this.pointer = _pointer; // Force pointer within bounds (if it is out of bounds)
                     }
                 },
-                _pointer: {
+               pointer: {
                     /**
                      * @returns {Number}
                      */
@@ -60,7 +60,7 @@
             }); // End of properties define
 
             // Set values
-            this._values = values || [];
+            this.values = values || [];
         };
 
     /**
@@ -78,7 +78,7 @@
             var self = this;
             return self.valid() ? {
                 done: false,
-                value: self._values[self._pointer]
+                value: self.values[self.pointer]
             } : {
                 done: true
             };
@@ -92,14 +92,14 @@
          */
         next: function () {
             var self = this,
-                pointer = self._pointer,
+                pointer = self.pointer,
                 retVal = self.valid() ? {
                     done: false,
-                    value: self._values[pointer]
+                    value: self.values[pointer]
                 } : {
                     done: true
                 };
-            self._pointer += 1;
+            self.pointer += 1;
             return retVal;
         },
 
@@ -109,7 +109,8 @@
          * @returns {sjl.stdlib.Iterator}
          */
         rewind: function () {
-            return this.pointer(0);
+            this.pointer = 0;
+            return this;
         },
 
         /**
@@ -118,48 +119,7 @@
          * @returns {boolean}
          */
         valid: function () {
-            return this._pointer < this._values.length;
-        },
-
-        /**
-         * Overloaded getter and setter for `_pointer` property.
-         * @param pointer {Number|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.stdlib.Iterator}
-         * @throws {TypeError} - If `pointer` is set and is not of type `Number`.
-         */
-        pointer: function (pointer) {
-            var retVal = this;
-            // If is a getter call get the value
-            if (typeof pointer === _undefined) {
-                retVal = this._pointer;
-            }
-            // If is a setter call
-            else {
-                // Set and validate pointer (validated via `_pointer` getter property definition)
-                this._pointer = pointer;
-            }
-            return retVal;
-        },
-
-        /**
-         * Overloaded getter and setter for `_values` property.
-         * @param values {Array|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.stdlib.Iterator}
-         * @throws {TypeError} - If `values` is set and is not of type `Array`.
-         */
-        values: function (values) {
-            var retVal = this;
-            // If is a getter call get the value
-            if (typeof values === _undefined) {
-                retVal = this._values;
-            }
-            // If is a setter call
-            else {
-                // Set and check if value is of expected type and throw error if
-                // it is not (done via `_values` property definition).
-                this._values = values;
-            }
-            return retVal;
+            return this.pointer < this.values.length;
         },
 
         /**
@@ -169,7 +129,7 @@
          * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {
-            this._values.forEach(callback, context);
+            this.values.forEach(callback, context);
             return this;
         }
 
@@ -180,11 +140,9 @@
     }
     else {
         sjl.ns('stdlib.Iterator', Iterator);
-        sjl.defineEnumProp(sjl, 'Iterator', Iterator);
         if (window.__isAmd) {
             return sjl.stdlib.Iterator;
         }
     }
-
 
 }());

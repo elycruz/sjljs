@@ -15,7 +15,7 @@ if (typeof expect === 'undefined') {
 var Validator = sjl.ns.validator.Validator,
     RegexValidator = sjl.ns.validator.RegexValidator;
 
-describe('sjl.ns.validator.RegexValidator`', function () {
+describe('sjl.validator.RegexValidator`', function () {
 
     "use strict";
 

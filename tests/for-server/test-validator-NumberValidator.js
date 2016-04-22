@@ -15,7 +15,7 @@ if (typeof expect === 'undefined') {
 var Validator = sjl.ns.validator.Validator,
     NumberValidator = sjl.ns.validator.NumberValidator;
 
-describe('sjl.ns.validator.NumberValidator`', function () {
+describe('sjl.validator.NumberValidator`', function () {
 
     "use strict";
 
@@ -70,7 +70,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         expect((new NumberValidator()) instanceof NumberValidator).to.equal(true);
     });
 
-    describe('#`_validateHex`', function () {
+    describe('`_validateHex`', function () {
         it('should return an array of [1, Number] when hex value is a valid hex value.', function () {
             var vals = fib(1000).map(function (value) {
                     return [value, numToHex(value), 1];
@@ -118,7 +118,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_validateSigned', function () {
+    describe('`_validateSigned', function () {
         it ('should return [-1, value] when value is a signed number.', function () {
             var validator = new NumberValidator({allowSigned: false}),
                 values = [
@@ -137,7 +137,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_validateComma', function () {
+    describe('`_validateComma', function () {
         it ('should return [-1, value] when value contains comma(s) and `allowComma` is `false`.', function () {
             var validator = new NumberValidator(),
                 valuesWithCommas = [[-1, ',1,000,000,000', 1000000000], [-1, ',', ','], [-1, '1,000,000', 1000000], [-1, '+100,000', 100000]],
@@ -163,7 +163,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_validateFloat', function () {
+    describe('`_validateFloat', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowFloat` is `false`.', function () {
             var validator = new NumberValidator({allowFloat: false}),
                 valuesWithFloats = [[-1, ',1,000,000,000.00'], [-1, '.', '.'], [-1, '1,000,000.00'], [-1, '+100,000.00']],
@@ -189,7 +189,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_validateBinary', function () {
+    describe('`_validateBinary', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowBinary` is `false`.', function () {
             var validator = new NumberValidator({allowBinary: false}),
                 binaryValues = [[-1, 'abcdefg'], [-1, '0b98345'], [-1, '0b111'], [0, '9999'], [0, 9999], [-1, 'bb010101'], [-1, '0b01010101']],
@@ -219,7 +219,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_validateOctal', function () {
+    describe('`_validateOctal', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowOctal` is `false`.', function () {
             var validator = new NumberValidator({allowOctal: false}),
                 octalValues = [[0, '999'], [0, 999], [0, '0b111'], [-1, '0777'], [-1, '0757']],
@@ -248,7 +248,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_validateScientific', function () {
+    describe('`_validateScientific', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowScientific` is `false`.', function () {
             var validator = new NumberValidator({allowScientific: false}),
                 scientificValues = [[0, '999'], [0, 999], [0, '0b111'], [-1, '10e10'], [-1, '-29.01e+29'], [-1, '29.01e-29'], [-1, '29.01e29'], [-1, '29e29']],
@@ -277,7 +277,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_validateRange', function () {
+    describe('`_validateRange', function () {
         it ('should return [-1, value] when value contains a decimal point and `allowRange` is `false`.', function () {
             var validator = new NumberValidator({checkRange: false}),
                 rangeValues = [[0, 999], [0, 100], [0, 'abc']],
@@ -305,7 +305,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe('#`_parseValidationFunctions`', function () {
+    describe('`_parseValidationFunctions`', function () {
         var validator = new NumberValidator({
             allowHex: true,
             allowBinary: true,
@@ -342,7 +342,7 @@ describe('sjl.ns.validator.NumberValidator`', function () {
         });
     });
 
-    describe ('#`isValid`', function () {
+    describe ('`isValid`', function () {
         var validator = new NumberValidator({
                 allowFloat: true,
                 allowHex: true,

@@ -2,7 +2,7 @@
  * Created by elydelacruz on 4/16/16.
  */
 
-describe('#sjl.classOfIsMulti', function () {
+describe('sjl.classOfIsMulti', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-describe ('#sjl.isset', function () {
+describe ('sjl.isset', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-describe('#sjl.unset', function () {
+describe('sjl.unset', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

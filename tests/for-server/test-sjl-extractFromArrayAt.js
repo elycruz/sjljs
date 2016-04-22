@@ -2,7 +2,7 @@
  * Created by Ely on 4/15/2016.
  * File: test-sjl-restArgs.js
  */
-describe('#sjl.extractFromArrayAt', function () {
+describe('sjl.extractFromArrayAt', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

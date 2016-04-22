@@ -46,9 +46,9 @@ function filterDataProvider() {
 }
 
 describe(
-    '#filter.StringToLowerFilter,' +
-    ' #filter.StringToLowerFilter#filter,' +
-    ' #filter.StringToLowerFilter.filter', function () {
+    'sjl.filter.StringToLowerFilter,' +
+    'sjl.filter.StringToLowerFilter#filter,' +
+    'sjl.filter.StringToLowerFilter.filter', function () {
     var filter = new StringToLowerFilter();
     filterDataProvider().forEach(function (args) {
         var filteredValue = args[0].filtered,

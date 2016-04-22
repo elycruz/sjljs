@@ -15,7 +15,7 @@ if (typeof expect === 'undefined') {
 var AlnumValidator = sjl.ns.validator.AlnumValidator,
     Validator = sjl.ns.validator.Validator;
 
-describe('sjl.ns.validator.AlnumValidator', function () {
+describe('sjl.validator.AlnumValidator', function () {
 
     it ('should be a subclass of `Validator`.', function () {
         var validator = new AlnumValidator();

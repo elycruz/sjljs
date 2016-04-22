@@ -61,7 +61,6 @@
     }
     else {
         sjl.ns('stdlib.Config', Config);
-        sjl.defineEnumProp(sjl, 'Config', Config);
         if (window.__isAmd) {
             return Config;
         }

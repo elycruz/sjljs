@@ -2,7 +2,7 @@
  * Created by Ely on 4/15/2016.
  * File: test-sjl-restArgs.js
  */
-describe ('#sjl.restArgs', function () {
+describe ('sjl.restArgs', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

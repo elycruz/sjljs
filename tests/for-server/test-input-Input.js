@@ -12,7 +12,7 @@ if (typeof expect === 'undefined') {
     var expect = chai.expect;
 }
 
-describe ('#input.Input', function () {
+describe ('sjl.input.Input', function () {
 
     "use strict";
 

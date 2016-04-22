@@ -15,7 +15,7 @@ if (typeof expect === 'undefined') {
 var NotEmptyValidator = sjl.ns.validator.NotEmptyValidator,
     Validator = sjl.ns.validator.Validator;
 
-describe('sjl.ns.validator.NotEmptyValidator', function () {
+describe('sjl.validator.NotEmptyValidator', function () {
 
     it ('should be a subclass of `Validator`.', function () {
         var validator = new NotEmptyValidator();

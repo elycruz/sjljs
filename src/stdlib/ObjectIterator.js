@@ -52,7 +52,7 @@
 
             // Define other own properties
             Object.defineProperties(this, {
-                _keys: {
+                keys: {
                     get: function () {
                         return _keys;
                     },
@@ -81,10 +81,10 @@
          */
         current: function () {
             var self = this,
-                pointer = self.pointer();
+                pointer = self.pointer;
             return self.valid() ? {
                 done: false,
-                value: [self._keys[pointer], self.values[pointer]]
+                value: [self.keys[pointer], self.values[pointer]]
             } : {
                 done: true
             };
@@ -98,10 +98,10 @@
          */
         next: function () {
             var self = this,
-                pointer = self.pointer(),
+                pointer = self.pointer,
                 retVal = self.valid() ? {
                     done: false,
-                    value: [self._keys[pointer], self._values[pointer]]
+                    value: [self.keys[pointer], self.values[pointer]]
                 } : {
                     done: true
                 };
@@ -110,8 +110,8 @@
         },
 
         valid: function () {
-            var pointer = this._pointer;
-            return pointer < this._values.length && pointer < this._keys.length;
+            var pointer = this.pointer;
+            return pointer < this.values.length && pointer < this.keys.length;
         },
 
         /**
@@ -121,11 +121,11 @@
         keys: function (keys) {
             var retVal = this;
             if (typeof keys === _undefined) {
-                retVal = this._keys;
+                retVal = this.keys;
             }
             else {
                 // Type validated by property definition `this._keys`
-                this._keys = keys;
+                this.keys = keys;
             }
             return retVal;
         },
@@ -138,9 +138,9 @@
          */
         forEach: function (callback, context) {
             var self = this,
-                values = self._values;
+                values = self.values;
             context = context || self;
-            self._keys.forEach(function (key, index, keys) {
+            self.keys.forEach(function (key, index, keys) {
                 callback.call(context, values[index], key, self);
             });
             return this;
@@ -153,7 +153,6 @@
     }
     else {
         sjl.ns('stdlib.ObjectIterator', ObjectIterator);
-        sjl.defineEnumProp(sjl, 'ObjectIterator', ObjectIterator);
         if (window.__isAmd) {
             return ObjectIterator;
         }

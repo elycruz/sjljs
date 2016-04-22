@@ -19,7 +19,7 @@ var Validator =         sjl.ns.validator.Validator,
     NotEmptyValidator = sjl.ns.validator.NotEmptyValidator,
     AlnumValidator =    sjl.ns.validator.AlnumValidator;
 
-describe('sjl.ns.validator.ValidatorChain', function () {
+describe('sjl.validator.ValidatorChain', function () {
 
     'use strict';
 
@@ -53,7 +53,7 @@ describe('sjl.ns.validator.ValidatorChain', function () {
         });
     });
 
-    describe('#`isValidator`', function () {
+    describe('`isValidator`', function () {
         it('should return true when object is a validator and false when it isn\'t.', function () {
             var validatorChain = new ValidatorChain(),
                 regexValidator = new RegexValidator({pattern: /^\d+$/});
@@ -62,7 +62,7 @@ describe('sjl.ns.validator.ValidatorChain', function () {
         });
     });
 
-    describe('#`isValidatorChain`', function () {
+    describe('`isValidatorChain`', function () {
         it('should return true when object is a validator chain and false when it isn\'t.', function () {
             var validatorChain = new ValidatorChain(),
                 otherValidatorChain = new ValidatorChain();
@@ -71,7 +71,7 @@ describe('sjl.ns.validator.ValidatorChain', function () {
         });
     });
 
-    describe('#`addValidator`', function () {
+    describe('`addValidator`', function () {
         it('should be able to add a validator to it\'s validator list.', function () {
             var validatorChain = new ValidatorChain(),
                 regexValidator = new RegexValidator({pattern: /^\d+$/});
@@ -81,7 +81,7 @@ describe('sjl.ns.validator.ValidatorChain', function () {
         });
     });
 
-    describe('#`addValidators`', function () {
+    describe('`addValidators`', function () {
         it('should be able to add a multiple validators from an array or from an object.', function () {
             var validatorChain = new ValidatorChain(),
 
@@ -125,17 +125,17 @@ describe('sjl.ns.validator.ValidatorChain', function () {
             expect(validatorChain.addValidators(objOfValidators)).to.equal(validatorChain);
 
             // Expect added all validators in list
-            expect(validatorChain.validators.length).to.equal(objectIterator.values().length);
+            expect(validatorChain.validators.length).to.equal(objectIterator.values.length);
 
             // Validate additions
-            objectIterator.values().forEach(function (validator, index) {
+            objectIterator.values.forEach(function (validator, index) {
                 expect(validatorChain.validators[index]).to.equal(validator);
             });
 
         });
     });
 
-    describe('#`prependValidator`', function () {
+    describe('`prependValidator`', function () {
         it('should be able to add a multiple validators from an array or from an object.', function () {
             var validatorChain = new ValidatorChain(),
                 validatorToPrepend = new NumberValidator(),
@@ -158,7 +158,7 @@ describe('sjl.ns.validator.ValidatorChain', function () {
         });
     });
 
-    describe('#`mergeValidatorChain`', function () {
+    describe('`mergeValidatorChain`', function () {
         it('should be able to add a multiple validators from an array or from an object.', function () {
             var // Array to add validators from
                 arrayOfValidators = [
@@ -203,7 +203,7 @@ describe('sjl.ns.validator.ValidatorChain', function () {
 
     });
 
-    describe('#`isValid`', function () {
+    describe('`isValid`', function () {
         var // Array to add validators from
             arrayOfValidators = [
                 new NotEmptyValidator(),

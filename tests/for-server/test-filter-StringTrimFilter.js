@@ -27,9 +27,9 @@ function filterDataProvider() {
 }
 
 describe(
-    '#filter.StringTrimFilter,' +
-    ' #filter.StringTrimFilter#filter,' +
-    ' #filter.StringTrimFilter.filter', function () {
+    'sjl.filter.StringTrimFilter,' +
+    'sjl.filter.StringTrimFilter#filter,' +
+    'sjl.filter.StringTrimFilter.filter', function () {
     var filter = new StringTrimFilter();
     filterDataProvider().forEach(function (args) {
         var filteredValue = args[0].filtered,

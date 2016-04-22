@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/16/16.
  */
-describe('#sjl.ucaseFirst', function () {
+describe('sjl.ucaseFirst', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when
@@ -18,7 +18,7 @@ describe('#sjl.ucaseFirst', function () {
         [String.name, 'String'],
         ['world-wide-web', 'World-wide-web'],
         ['99-world-wide-web', '99-World-wide-web'],
-        ['#$(*@&#(*$---wORLD', '#$(*@&#(*$---WORLD']
+        ['$(*@&#(*$---wORLD', '$(*@&#(*$---WORLD']
     ];
 
     it('should return a new string with the first alpha character upper cased.', function () {

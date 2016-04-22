@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/20/16.
  */
-describe('#sjl.wrapPointerWithinBounds', function () {
+describe('sjl.wrapPointerWithinBounds', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when
