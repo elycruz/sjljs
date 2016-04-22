@@ -37,20 +37,20 @@ describe(
                     'filtered': 'unaffected-value'
                 }],
                 [{
-                    'unfiltered': "some' other' value",
-                    'filtered': "some' other' value"
+                    'unfiltered': 'some" other" value',
+                    'filtered': 'some" other" value'
                 }],
                 [{
-                    'unfiltered': " \\ \\ \\ \\ ",
-                    'filtered': " \\ \\ \\ \\ "
+                    'unfiltered': ' \\ \\ \\ \\ ',
+                    'filtered': ' \\ \\ \\ \\ '
                 }],
                 [{
-                    'unfiltered': "All your base are belong to us.",
-                    'filtered': "all your base are belong to us."
+                    'unfiltered': 'All your base are belong to us.',
+                    'filtered': 'all your base are belong to us.'
                 }],
                 [{
-                    'unfiltered': ";All ;your ;base ;are ;belong ;to ;us.",
-                    'filtered': ";all ;your ;base ;are ;belong ;to ;us."
+                    'unfiltered': ';All ;your ;base ;are ;belong ;to ;us.',
+                    'filtered': ';all ;your ;base ;are ;belong ;to ;us.'
                 }]
             ];
         }

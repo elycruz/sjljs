@@ -1,20 +1,13 @@
-/**! sjl-minimal.js 5.5.3 
+/**! sjl-minimal.js 5.6.0 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 5f267a1a8e47d94dd017e351cc6591dd 
- * | Built-on: Thu Apr 21 2016 13:59:17 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: be88cac512aedb0cef003108416a692b 
+ * | Built-on: Fri Apr 22 2016 19:13:33 GMT-0400 (EDT) 
  **/
 /**
  * The `sjl` module.
  * @module sjl {Object}
  * @created by Ely on 5/29/2015.
- * @todo add extract value from array if of type (only extract at array start or end).
- * @todo Ensure that all methods in library classes return a value ({self|*}) (makes for a more functional library).
  * @todo Cleanup jsdocs and make them more readable where possible (some of the jsdoc definitions in sjljs's source files are old and need to be written using es5 and es6 kind of language to make them more readable to the user (also since most of the functionality is es5/es6ish makes sense to perform this upgrade).
- * @todo add default value returns for isset, issetMulti, empty and their variations (makes code more functional and adds syntactical sugar).
- * @todo add a `pluck` method that allows you to pluck values from a `Set`, `Array`, `Map` or `Object` based on parameters passed in.
- * @todo Add readme entry for this function (`extractFromArrayAt`).
- * @todo evaluate the cost of add error throwing to all functions when used incorrectly (bigger evaluation necessary though seems like a 'con' rather than a 'pro').
- * @todo Add `issetAndOfTypeMulti` (check to see if value isset and of one of the multiple types passed). and optionally change `issetAndOfType` to allow this behavior.
  */
 (function () {
 
@@ -314,25 +307,29 @@
     /**
      * Takes a namespace string and fetches that location out from
      * an object/Map.  If the namespace doesn't exists it is created then
-     * returned.
+     * returned.  Also allows you to set a value at that namespace (last parameter).
      * @example
      * // will create/fetch within `obj`: hello: { world: { how: { are: { you: { doing: {} } } } } }
-     * namespace('hello.world.how.are.you.doing', obj)
+     * autoNamespace ('hello.world.how.are.you.doing', obj)
      *
-     * @function module:sjl.naiveNamespace
+     * @example
+     * // Will set 'hello.what.is.your.name' to 'whuan'
+     *
+     *
+     * @function module:sjl.autoNamespace
      * @param ns_string {String} - The namespace you wish to fetch
      * @param objToSearch {Object} - The object to search for namespace on
      * @param valueToSet {Object} - Optional.  A value to set on the key (last key if key string (a.b.c.d = value)).
      * @note For just checking the namespace and not creating it, use `searchObj` instead.
      * @returns {Object}
      */
-    function naiveNamespace (ns_string, objToSearch, valueToSet) {
-        //throwTypeErrorIfNotOfType('sjl', 'naiveNamespace', 'ns_string', ns_string, String);
+    function autoNamespace (ns_string, objToSearch, valueToSet) {
+        //throwTypeErrorIfNotOfType('sjl', 'autoNamespace', 'ns_string', ns_string, String);
         var parent = objToSearch,
             shouldSetValue = !isUndefined(valueToSet),
             classOfObjToSearch = classOf(objToSearch);
         if (classOfObjToSearch !== 'Object' && classOfObjToSearch !== 'Function') {
-            throw new TypeError ('sjl.naiveNamespace expects a Constructor or an instance obj to search on.' +
+            throw new TypeError ('sjl.autoNamespace expects a Constructor or an instance obj to search on.' +
                 'Value received: `' + classOfObjToSearch + '`.');
         }
         ns_string.split('.').forEach(function (part, index, parts) {
@@ -468,121 +465,15 @@
     }
 
     /**
-     * Searches obj for key and returns it's value.  If value is a function
-     * calls function if `raw` is set to `false`, with optional `args`, and returns it's return value.
-     * If `raw` is true returns the actual function if value found is a function.
-     * @function module:sjl.getValueFromObj
-     * @param key {String} The hash key to search for
-     * @param obj {Object} the hash to search within
-     * @param raw {Boolean} optional whether to return value even if it is a function.  Default `true`.
-     * @param useLegacyGetters {Boolean} - Default false.
-     * @param args {Array} optional the array to pass to value if it is a function
-     *  Whether to use legacy getters to fetch the value ( get{key}() or overloaded {key}() )
-     * @returns {*}
-     */
-    function getValueFromObj (key, obj, raw, useLegacyGetters, args) {
-        args = args || null;
-        raw = isset(raw) ? raw : true;
-        useLegacyGetters = !isset(useLegacyGetters) ? false : useLegacyGetters;
-
-        // Get qualified getter function names
-        var overloadedGetterFunc = camelCase(key, false),
-            getterFunc = 'get' + camelCase(key, true),
-            retVal;
-
-        // Resolve return value
-        if (key.indexOf('.') !== -1) {
-            retVal = searchObj(key, obj);
-        }
-        // If obj has a getter function for key, call it
-        else if (useLegacyGetters && hasMethod(obj, getterFunc)) {
-            retVal = obj[getterFunc]();
-        }
-        else if (useLegacyGetters && hasMethod(obj, overloadedGetterFunc)) {
-            retVal = obj[overloadedGetterFunc]();
-        }
-        else if (!isUndefined(obj[key])) {
-            retVal = obj[key];
-        }
-
-        // If return value is a function and `raw` is false call the function and capture
-        // it's return value
-        if (isFunction(retVal) && isEmpty(raw)) {
-            retVal = args ? retVal.apply(obj, args) : retVal.call(obj);
-        }
-
-        // Return result of setting value on obj, else return obj
-        return retVal;
-    }
-
-    /**
-     * Sets a key to value on obj.
-     * @function module:sjl.setValueOnObj
-     * @param key {String} - Key to search for (can be a dot
-     * separated string 'all.your.base' will traverse {all: {your: {base: {...}}})
-     * @param value {*} - Value to set on obj
-     * @param obj {Object} - Object to set key to value on
-     * @param useLegacyGetters {Boolean} - Default false.
-     *  Whether to use legacy getters to fetch the value ( {obj}.get{key}() or overloaded {obj}{key}() )
-     * @returns {*|Object} returns result of setting key to value on obj or obj
-     * if no value results from operation.
-     */
-    function setValueOnObj (key, value, obj, useLegacyGetters) {
-        useLegacyGetters = !issetAndOfType(useLegacyGetters, Boolean) ? false : useLegacyGetters;
-
-        // Get qualified setter function name
-        var overloadedSetterFunc = camelCase(key, false),
-            setterFunc = 'set' + camelCase(key, true),
-            retVal = obj;
-
-        // Else set the value on the obj
-        if (key.indexOf('.') !== -1) {
-            retVal = naiveNamespace(key, obj, value);
-        }
-        // If obj has a setter function for key, call it
-        else if (useLegacyGetters && hasMethod(obj, setterFunc)) {
-            retVal = obj[setterFunc](value);
-        }
-        else if (useLegacyGetters && hasMethod(obj, overloadedSetterFunc)) {
-            retVal = obj[overloadedSetterFunc](value);
-        }
-        else {
-            obj[key] = typeof value !== _undefined ? value : null;
-        }
-
-        // Return result of setting value on obj, else return obj
-        return retVal;
-    }
-
-    function migratePropValue (prop, from, to, useLegacyGettersAndSetters) {
-        if (useLegacyGettersAndSetters) {
-            setValueOnObj(prop,
-                getValueFromObj(prop, from, true, useLegacyGettersAndSetters),
-                to, useLegacyGettersAndSetters);
-        }
-        else {
-            to[prop] = from[prop];
-        }
-        return to;
-    }
-
-    /**
      * Copy the enumerable properties of p to o, and return o.
      * If o and p have a property by the same name, o's property is overwritten.
-     * If `useLegacyGettersAndSetters` is set method will inject values to o via
-     * any setters it finds (whether overloaded setters/getters or setters of
-     * the for `set{PropertyName}`).
      * @param o {*} - *object to extend
      * @param p {*} - *object to extend from
      * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
-     * @param useLegacyGettersAndSetters {Boolean} - Whether or not to use legacy getters and setters (`(s|g)et{PropName}`) or overloaded methods ('propName' -> 'propName(in propName)')
      * @returns {*} - returns o
      */
-    function extend(o, p, deep, useLegacyGettersAndSetters) {
+    function extend(o, p, deep) {
         deep = deep || false;
-        useLegacyGettersAndSetters = useLegacyGettersAndSetters || false;
-
-        var propDescription;
 
         // If `o` or `p` are not set bail
         if (!isset(o) || !isset(p)) {
@@ -592,7 +483,7 @@
         // Merge all props from `p` to `o`
         Object.keys(p).forEach(function (prop) { // For all props in p.
             // If property is present on target (o) and is not writable, skip iteration
-            propDescription = Object.getOwnPropertyDescriptor(o, prop);
+            var propDescription = Object.getOwnPropertyDescriptor(o, prop);
             if (propDescription && (!isset(propDescription.get) && !isset(propDescription.set)) && !propDescription.writable) {
                 return;
             }
@@ -603,11 +494,11 @@
                     extend(o[prop], p[prop], deep);
                 }
                 else {
-                    migratePropValue(prop, p, o, useLegacyGettersAndSetters);
+                    o[prop] = p[prop];
                 }
             }
             else {
-                migratePropValue(prop, p, o, useLegacyGettersAndSetters);
+                o[prop] = p[prop];
             }
         });
 
@@ -640,14 +531,13 @@
         }
         var args = argsToArray(arguments),
             deep = extractBoolFromArrayStart(args),
-            useLegacyGettersAndSetters = extractBoolFromArrayEnd(args),
             arg0 = args.shift();
 
         // Extend object `0` with other objects
         args.forEach(function (arg) {
             // Extend `arg0` if `arg` is an object
             if (isObject(arg)) {
-                extend(arg0, arg, deep, useLegacyGettersAndSetters);
+                extend(arg0, arg, deep);
             }
         });
 
@@ -753,8 +643,8 @@
 
         /**
          * Extends a new copy of self with passed in parameters.
-         * @memberof class:sjl.ns.stdlib.Extendable
-         * @static sjl.ns.stdlib.Extendable.extend
+         * @memberof class:sjl.stdlib.Extendable
+         * @static sjl.stdlib.Extendable.extend
          * @param constructor {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
          *  the `statics` param (as if this param is an Object then it can contain methods within itself).
          * @param methods {Object|undefined} - Methods.  Optional.
@@ -807,7 +697,7 @@
         if (isNodeEnv) {
             dirPath = dirPath || __dirname;
             obj[altFuncKey] = obj[funcKey] =
-                require('./namespace/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
+                require('./nodejs/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
             return obj;
         }
         return (function () {
@@ -1085,7 +975,6 @@
         extractBoolFromArrayEnd: extractBoolFromArrayEnd,
         extractBoolFromArrayStart: extractBoolFromArrayStart,
         extractFromArrayAt: extractFromArrayAt,
-        getValueFromObj: getValueFromObj,
         hasMethod: hasMethod,
         implode: implode,
         isset: isset,
@@ -1105,13 +994,12 @@
         isUndefined: isUndefined,
         jsonClone: jsonClone,
         lcaseFirst: lcaseFirst,
-        naiveNamespace: naiveNamespace,
+        autoNamespace: autoNamespace,
         notEmptyAndOfType: notEmptyAndOfType,
         restArgs: restArgs,
         ucaseFirst: ucaseFirst,
         unset: unset,
         searchObj: searchObj,
-        setValueOnObj: setValueOnObj,
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
         throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
         valueOrDefault: valueOrDefault,
@@ -1136,12 +1024,26 @@
         // Set lib src root path to be used in node env by `sjl.package`
         libSrcRootPath = __dirname;
     }
+    else {
+        // Export sjl globally
+        globalContext.sjl = sjl;
+    }
 
     // Create top level frontend package.
     sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
-    // Export sjl globally (the node global export will be deprecated at a later version)
-    globalContext.sjl = sjl;
+    // Short cut to namespaces
+    Object.keys(sjl.ns).forEach(function (key) {
+        sjl[key] = sjl.ns[key];
+    });
+
+    // Set all 'stdlib' members on sjl for backward compatability
+    // (will be removed at a later date/version).
+    Object.keys(sjl.stdlib).forEach(function (key) {
+        sjl[key] = sjl.stdlib[key];
+    });
+
+
 
     // Return sjl if amd is being used
     if (!isNodeEnv && globalContext.__isAmd) {

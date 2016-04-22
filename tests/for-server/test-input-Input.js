@@ -18,19 +18,19 @@ describe ('sjl.input.Input', function () {
 
     describe('Should have the appropriate interface', function () {
         var input = new Input(),
-            propNames = [
-                'allowEmpty',
-                'continueIfEmpty',
-                'breakOnFailure',
-                'fallbackValue',
-                'filterChain',
-                'alias',
-                'required',
-                'validatorChain',
-                'value',
-                'rawValue',
-                'messages'
-            ],
+            //propNames = [
+            //    'allowEmpty',
+            //    'continueIfEmpty',
+            //    'breakOnFailure',
+            //    'fallbackValue',
+            //    'filterChain',
+            //    'alias',
+            //    'required',
+            //    'validatorChain',
+            //    'value',
+            //    'rawValue',
+            //    'messages'
+            //],
             methodNames = [
                 'isValid',
                 'mergeValidatorChain'

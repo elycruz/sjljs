@@ -1,27 +1,25 @@
 /**
  * Created by edelacruz on 7/28/2014.
  */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('./../../src/sjl');
-}
-
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-
-var Validator =         sjl.ns.validator.Validator,
-    ValidatorChain =    sjl.ns.validator.ValidatorChain,
-    RegexValidator =    sjl.ns.validator.RegexValidator,
-    NumberValidator =   sjl.ns.validator.NumberValidator,
-    NotEmptyValidator = sjl.ns.validator.NotEmptyValidator,
-    AlnumValidator =    sjl.ns.validator.AlnumValidator;
 
 describe('sjl.validator.ValidatorChain', function () {
 
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
     'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
+
+    var Validator =         sjl.ns.validator.Validator,
+        ValidatorChain =    sjl.ns.validator.ValidatorChain,
+        RegexValidator =    sjl.ns.validator.RegexValidator,
+        NumberValidator =   sjl.ns.validator.NumberValidator,
+        NotEmptyValidator = sjl.ns.validator.NotEmptyValidator,
+        AlnumValidator =    sjl.ns.validator.AlnumValidator;
 
     it ('should extend `sjl.ns.validator.Validator', function () {
         expect((new ValidatorChain()) instanceof Validator).to.equal(true);
@@ -179,10 +177,10 @@ describe('sjl.validator.ValidatorChain', function () {
                 }),
 
                 // Copy of chain to merge to
-                copyOfValidatorChain = new ValidatorChain({
-                    validators: arrayOfValidators.concat([]),
-                    breakChainOnFailure: false
-                }),
+                //copyOfValidatorChain = new ValidatorChain({
+                //    validators: arrayOfValidators.concat([]),
+                //    breakChainOnFailure: false
+                //}),
 
                 // Chain to merge from
                 validatorChain2 = new ValidatorChain({
@@ -198,6 +196,9 @@ describe('sjl.validator.ValidatorChain', function () {
 
             // Expect merged in `breakChainOnFailure`
             expect(validatorChain.breakChainOnFailure).to.equal(true);
+
+            // Expect original validator chain to be returned
+            expect(resultOfOp).to.equal(validatorChain);
         });
 
 
@@ -249,6 +250,9 @@ describe('sjl.validator.ValidatorChain', function () {
         // @note validator.messages get cleared from within `isValid` before validation occurs
         expect(validatorChain2.isValid(99)).to.equal(true);
         expect(validatorChain2.messages.length).to.equal(0);
+
+        // Expect return value of merge operation to be original validator chain
+        expect(resultOfOp).to.equal(validatorChain);
     });
 
 });

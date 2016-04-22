@@ -16,8 +16,8 @@ describe(
         // These variables get set at the top IIFE in the browser.
         // ~~~ /STRIP ~~~
 
-        var SlugFilter = sjl.filter.SlugFilter,
-            testUtils = sjl.utils.testUtils;
+        var SlugFilter = sjl.filter.SlugFilter;
+            //testUtils = sjl.utils.testUtils;
 
         function filterDataProvider() {
             return [
@@ -38,39 +38,39 @@ describe(
                     'filtered': 'unaffected-value'
                 }],
                 [{
-                    'unfiltered': "some' other' value",
-                    'filtered': "some-other-value"
+                    'unfiltered': 'some" other" value',
+                    'filtered': 'some-other-value'
                 }],
                 [{
-                    'unfiltered': " \\ \\ \\ \\ ",
-                    'filtered': ""
+                    'unfiltered': ' \\ \\ \\ \\ ',
+                    'filtered': ''
                 }],
                 [{
-                    'unfiltered': "Not needing escape.",
-                    'filtered': "not-needing-escape"
+                    'unfiltered': 'Not needing escape.',
+                    'filtered': 'not-needing-escape'
                 }],
                 [{
-                    'unfiltered': "All your base are belong to us.",
-                    'filtered': "all-your-base-are-belong-to-us"
+                    'unfiltered': 'All your base are belong to us.',
+                    'filtered': 'all-your-base-are-belong-to-us'
                 }],
                 [{
-                    'unfiltered': ";All ;your ;base ;are ;belong ;to ;us.",
-                    'filtered': "all-your-base-are-belong-to-us"
+                    'unfiltered': ';All ;your ;base ;are ;belong ;to ;us.',
+                    'filtered': 'all-your-base-are-belong-to-us'
                 }]
             ];
         }
 
-        function invalidFilterCandidateProvider() {
-            return [
-                // Not of correct type for test:  Should throw exception
-                [function () {
-                }],
-                // Not of correct type for test;  Should throw exception
-                [true],
-                // Not of correct type for test;  Should throw exception
-                [99]
-            ];
-        }
+        //function invalidFilterCandidateProvider() {
+        //    return [
+        //        // Not of correct type for test:  Should throw exception
+        //        [function () {
+        //        }],
+        //        // Not of correct type for test;  Should throw exception
+        //        [true],
+        //        // Not of correct type for test;  Should throw exception
+        //        [99]
+        //    ];
+        //}
 
         var filter = new SlugFilter();
         filterDataProvider().forEach(function (args) {

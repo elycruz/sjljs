@@ -1,23 +1,21 @@
 /**
  * Created by edelacruz on 7/28/2014.
  */
-// Make test suite directly interoperable with the browser
-if (typeof window === 'undefined') {
-    var chai = require('chai');
-    var sjl = require('./../../src/sjl');
-}
-
-// Get chai.expect
-if (typeof expect === 'undefined') {
-    var expect = chai.expect;
-}
-
-var Validator = sjl.ns.validator.Validator,
-    NumberValidator = sjl.ns.validator.NumberValidator;
 
 describe('sjl.validator.NumberValidator`', function () {
 
-    "use strict";
+    // ~~~ STRIP ~~~
+    // This part gets stripped out when
+    // generating browser version of test(s).
+    'use strict';
+    var chai = require('chai'),
+        sjl = require('./../../src/sjl'),
+        expect = chai.expect;
+    // These variables get set at the top IIFE in the browser.
+    // ~~~ /STRIP ~~~
+
+    var Validator = sjl.ns.validator.Validator,
+        NumberValidator = sjl.ns.validator.NumberValidator;
 
     // @note got algorithm from http://www.wikihow.com/Convert-from-Decimal-to-Hexadecimal
     const hexMap = [
@@ -168,8 +166,8 @@ describe('sjl.validator.NumberValidator`', function () {
             var validator = new NumberValidator({allowFloat: false}),
                 valuesWithFloats = [[-1, ',1,000,000,000.00'], [-1, '.', '.'], [-1, '1,000,000.00'], [-1, '+100,000.00']],
                 valuesWithFloats2 = [[0, ',1,000,000,000.00'], [0, '.', '.'], [0, '1,000,000.00'], [0, '+100,000.00']],
-                valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
-                values = valuesWithFloats.concat(valuesWithoutFloats),
+                //valuesWithoutFloats = [[0, 99], [0, '123123e10'], [0, 0xff9900]],
+                //values = valuesWithFloats.concat(valuesWithoutFloats),
                 result;
 
             // Test for `allowFloat` is false

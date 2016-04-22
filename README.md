@@ -5,14 +5,23 @@
 sjljs
 =====
 
-A library aiming at giving application and library building (from the ground up) a boost by offering
-strong type checking capabilities and solid classical oop facilities.
+A library for building applications and building libraries from the ground up. 
 
 Not meant to replace popular libraries (Backbone, Underscore, Jquery etc.)
 only meant as a supplement to them.
 
 **Note** 
-This version is in Alpha.
+~~Version 0.5+ removes some backward compatibility.  Namely 
+all classes that were included on `sjl` before our now included 
+via a `sjl.package` and it's alias `sjl.ns`;  E.g.,
+`sjl.Extendable` is now accessible via `sjl.ns.stdlib.Extendable`
+ Also all classes that were available in the root level are 
+now available in the `sjl.ns.stdlib` package.  Also all `sjl.ns.stdlib` classes can also be found at `sjl.{className}` 
+(only when used in browser, for nodejs old functionality remains the same and the only option 
+for dynamically loaded classes).~~
+Classes on `sjl.ns.stdlib.*` are now also available on `sjl.*` on both nodejs and in browsers!
+
+See release notes for release 0.5.0.
 
 ## Sections in Readme:
 - [Getting Started](#getting-started)
@@ -23,6 +32,7 @@ This version is in Alpha.
 - [Todos](#todos)
 - [Notes](#notes)
 - [License](#license)
+- [Changelogs](#changelogs)
 
 ## Getting Started:
 Include either the full library './sjl[.min].js' or the minimal version './sjl-minimal[.min].js' (the minimal version
@@ -35,7 +45,107 @@ only includes the core and no classes or constructors from it's other packages).
 - [OOP Util Functions](#oop-util-functions)
 - [Composition Helpers](#composition-helpers)
 
-### Core:
+### Classes/Constructors
+
+##### sjl.Attributable(attributes {Object|undefined}) :sjl.ns.stdlib.Attributable
+A base attributable constructor which has two methods `attr` and `attrs`
+(for setting and getting multiple attributes jquery style).
+Class also available at **`sjl.ns.stdlib.Attributable`**.
+
+##### sjl.Iterator(values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.Iterator
+A simple iterator constructor which implements the es6 iterator and
+the php `Iterator` classes.
+Class also available at **`sjl.ns.stdlib.Iterator`**.
+
+##### sjl.ObjectIterator(object {Object}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
+One of two constructors calls available for `ObjectIterator`.
+See next section for description object and alternate constructor call.
+Class also available at **`sjl.ns.stdlib.ObjectIterator`**.
+
+##### sjl.ObjectIterator(keys{Array<*>, values {Array<*>|undefined}, pointer {Number|undefined}) :sjl.ns.stdlib.ObjectIterator
+An object iterator;  Iterates similarly to Iterator but takes a set of
+keys and values on construction. Implements the es6 iterator and the php
+`Iterator` classes.
+Class also available at **`sjl.ns.stdlib.ObjectIterator`**.
+
+##### sjl.Extendable(constructor {String|Function}, methods {Object|undefined}, statics {Object|undefined}) :sjl.Extendable
+A base extendable constructor with a static `extend` method that allows
+ you to easily extend constructors/classes; E.g.,
+
+```
+// SomeConstructor.js
+// Using node, requirejs, browserify or some 
+// other AMD/UMD helper (here we'll use nodejs)
+
+var SomeConstructor = function SomeConstructor () {};
+
+// Make `SomeConstructor` extendable
+module.exports = sjl.ns.stdlib.Extendable.extend(SomeConstructor, {
+     someMethod: function () {
+         // Do something here
+     }
+ },
+ {
+     someStaticMethod: function () {
+         // Do something here
+     }
+ });
+
+// SomeOtherSubClass.js
+
+// Bring in 'SomeOtherConstructor'
+var SomeOtherConstructor = require('SomeOtherConstructor'),
+    SomeOtherSubClass = function SomeOtherSubClass () {
+        SomeOtherConstructor.apply(this, arguments);
+    };
+
+// Inherits statics and prototype of SomeOtherConstructor and 
+// is also extendable via the static method `extend` 
+module.exports = SomeOtherConstructor.extend(SomeOtherSubClass, {
+        // methods
+    });
+```
+
+Class also available at **`sjl.ns.stdlib.Extendable`**.
+
+##### sjl.SjlSet(Array<*>) :sjl.ns.stdlib.SjlSet
+A set object that acts just like the es6 `Set` object with two additional convenience methods.
+- `addFromArray(Array<*>) :sjl.ns.stdlib.SjlSet`
+- `iterator() :iterable`
+
+Class also available at **`sjl.ns.stdlib.SjlSet`**.
+
+##### sjl.SjlMap(Array<Array>) :sjl.ns.stdlib.SjlMap
+A map that acts just like the es6 `Map` object with two additional convenience methods:
+- `addFromArray(Array<*>) :sjl.ns.stdlib.SjlMap`
+- `iterator() :iterable`
+
+Class also available at **`sjl.ns.stdlib.SjlMap`**.
+
+##### sjl.Optionable(...obj {Object|undefined}) :sjl.Optionable
+A simple Optionable class with `set`, `get`, `merge`, and `has` methods meant to be similiar to Backbone's Model constructor
+but with some enhanced methods on it and without the ajax stuff (barebones object).
+Class also available at **`sjl.ns.stdlib.Optionable`**.
+
+###### has (value {String}) :Boolean
+Takes a regular string or a namespaced string to find out if value exists on the Optionable's object `options` object.
+
+###### get (key {String}) :{null|*}
+Takes a regular string or a namespaced one ('hello.world.some.key') and pulls out the value from Optionable's `options` object.
+  Returns null if `key` cannot be found on Optionable.
+ 
+###### set (key {String}, value {*}) :Optionable
+Takes a key and a value param or an object (sets multiple key value pairs in this case).  
+Key value can be a namespaced string.  Also if first value is an object then set uses `sjl.setValueOnObj` 
+(see description of this method above) to set values on this Optionable.
+    
+###### merge (obj {Object}, ...obj {Object|undefined}, useLegacySetterAndGetters {Boolean|undefined}) :Optionable
+Merges all `Object`s passed into it to Optionable's `options` object recursively (deeply).  If last param in arguments is a Boolean
+    then checks, extracts this boolean and passes it on to `sjl.extend` (in an attempt to invoke `extend`'s 
+    useLegacyGettersAndSetters` feature if the boolean is true and not invoke the feature to do the merge if the
+     boolean is false).
+
+### Utilities:
 
 ##### sjl.argsToArray(arguments {Arguments}) :Array
 Converts arguments to an array;  E.g., 
@@ -430,22 +540,104 @@ directly if none of the above are found.
 1.)  Run `npm install` in project root.
 - Tests for all components listed under "Utilities" above.
 - Tests to be run on server.  See './tests/for-server'.
-- Tests to be run in browser.  See './tests/for-browser'.
+- Tests to be run in browser (requires running `bower install` in root directory of this project).
+See './tests/for-browser'.
 
 ## Requirements:
 - Javascript versions ecmascript 5+
 
 ## Supported browsers:
-- IE9+, and all other ever-green browsers.
+- ~~ie8+~~ (IE8 support was dropped in version 0.5.0) IE9+, and all other modern day browsers.
 
 ## Todos:
 
-### MVP for 6.0.0
+### MVP Todos:
+- [X] - Write tests for:
+    - [X] - `sjl.Optionable`.
+    - [X] - `sjl.Attributable`.
+    - [X] - `sjl.getValueFromObj`
+    - [X] - `sjl.setValueOnObj`
+    - [X] - `sjl.extend` (for new features)
+    - [X] - `sjl.Iterator`
+
+### Mvp for 0.4.9:
+- [X] - Write tests for:
+    - [X] - `sjl.issetAndOfType`
+    - [X] - `sjl.issetObjKeyAndOfType`
+    - [X] - `sjl.isEmptyObjKey`
+    - [X] - `sjl.isEmptyObjKeyAndOfType`
+    - [X] - `sjl.hasMethod`
+    - [X] - ~~`sjl.hasGetterMethod`~~ Method has been replaced with `sjl.hasMethod`.
+    - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed with `sjl.hasMethod`.
+- [X] - Write doc sections in main readme for:
+    - [X] - `sjl.issetAndOfType`
+    - [X] - `sjl.issetObjKeyAndOfType`
+    - [X] - `sjl.isEmptyObjKeyAndOfType`
+    - [X] - `sjl.hasMethod`
+    - [X] - ~~`sjl.hasGetterMethod`~~ Method has been removed.
+    - [X] - ~~`sjl.hasSetterMethod`~~ Method has been removed.
+- [X] - ~~Change `sjl.empty` to `sjl.isEmpty` (maybe for version 0.5.0)~~ Moved to version 0.5.0.
+- [X] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+ right now it is not apparent to people that this is the default behaviour).  Moved to version 0.5.0.
+
+### MVP for 0.5.0:
+- [X] - ~~Write docs for all validator classes.~~  Validator classes moving to their own repo.
+- [X] - Write tests for:
+    - [X] - `sjl.SjlMap`.
+    - [X] - `sjl.SjlSet`.
+    - [X] - `sjl.package`
+    - [X] - Write tests for all validator classes:
+        - [X] - `sjl.NumberValidator`.
+        - [X] - `sjl.AlphaNumValidator`.
+- [X] - ~~Write a filter chain class.~~ Implementations was performed but package moving to it's own repo.
+- [X] - Change interface check to check for 'isValid' and 'messages'
+    properties on a 'AbstractValidator' class passed to a 'ValidatorChain' class.
+- [X] - Review entirety of library and look for places that could be refactored.
+      - Findings:
+        - Going to export `validator`, `input` and `filter` packages to their own repo.
+- [X] - ~~Refactor the `input` package~~ Refactor was performed in separate folder (src/sjl/refactor) though package will move to it's own repo.
+- [X] - ~~Refactor the `validator` package~~ Refactor was performed in separate folder (src/sjl/refactor) though package will move to it's own repo.
+- [X] - ~~`sjl.empty` to `sjl.isempty` (maybe for version 0.5.50).~~  Going to keep `sjl.empty` as is.
+- [X] - Change `sjl.getValueOnObj`'s `raw` param to have a default `true` (needs to be set to true by default cause
+ right now it is not apparent to people that this is the default behaviour).
+- [X] - Remove `attrs` method from `sjl.Attributable`.
+- [X] - Update readme to a more readable format.
+- [X] - Optimize for file size (maybe put context.sjl into a variable so it can be further minified).
+- [X] - Changelog.
+- [X] - Change the library from being a global for nodejs to being an exported package.
+- [X] - Set all components (constructors) of sjl to be exported when being used in nodejs.
+- [X] - Support for AMD if it is available when used on the frontend.
+- [X] - Remove use of eval option for `defineSubClass`.
+- [X] - Create docs for `sjl.package`.
+- [X] - ~~Shim `sjl.forEach` and `sjl.indexOf`.~~  Removed in version 0.5.4.
+- [X] - Make `sjl.package` work using node (dynamically load class in for every requested namespace/class
+instead of requiring global require).
+- [ ] - Include all sub items for components included as sub nav in readme.
+- [X] - Remove checking against multiple values for util functions (isset, classOfIs, etc. (maybe not classOfIs (have to evaluate common use cases further))).
+- [X] - Change `value !== undefined` check to use typeof instead (safe way for browsers (current check fails in browsers)).
+
+### MVP for 0.5.1+
+- [X] - Add changelog.md in main readme.
+- [X] - Remove all shimming of es5 features and support for older browsers (IE8 etc.).
+    - [ ] - Some features had to remain due to incomplete support of es5 in IE9.  List those features here:
+- [ ] - Update all classes to use Object.defineProperty and Object.defineProperties internally for
+their properties to eliminate alternate schemes to hide access to their internal properties also to make them more functional.
+- [X] - ~~Remove all overloaded methods in exchange for Object.defineProperty and Object.defineProperties getters and setters.~~
+Overloaded methods will remain on the classes that have them inorder to not break backward functionality which isn't browser specific.
+- [X] - Add file hashes to minified files and add a unix time stamp instead of a utc time stamp to the file.
+- [X] - Define all methods on `sjl` directly in it's object definition when it is defined instead of define every property separately;  
+    E.g., `sjl = {prop1: ..., prop2: ..., etc.} /** instead of **/ sjl.prop1 = ...; sjl.prop2 = ...;, etc.`;  Also this'll save a couple o' bytes haha!!!
+- [X] - Either remove changelog functionality or generate it correctly (in descending order (from actual commit logs 2x thumbsup)
+ (to eliminate having to write double commit messages (one in the changelog and one in the commit blarghhh)).
+    - **Update**:  Changelog is temporarily not going to be included in as part of the readme.  If you would like to see
+    the old changelogs look at './changelog.md'.  Also if you want to see the latest changes/changelog like summaries 
+    view the release notes as they are provided.
+- [X] - Added tests for `defineSubClass` and added statics inheritance from parent (which was missing before).
+     
+### MVP for 0.6.0
+- [ ] - Remove use of `eval` from tests.
 - [ ] - Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.
     - @note jsdoc is currently undergoing a refactor by the jsdoc folks.  It is currently in alpha.
-- [ ] - List all methods that live on `sjl` under components -> utilities up top.
-- [ ] - Add a feature for adding third party filter and validator namespaces to search on when using factory methods 
-    for generating `InputFilter` and `Input` instances.
 
 ## License:
 [GPL v2+](http://www.gnu.org/licenses/gpl-2.0.html "http://www.gnu.org/licenses/gpl-2.0.html") AND

@@ -13,7 +13,7 @@
   "newcap"        : true,     // true: Require capitalization of all constructor functions e.g. `new F()`
   "noarg"         : true,     // true: Prohibit use of `arguments.caller` and `arguments.callee`
   "noempty"       : true,     // true: Prohibit use of empty blocks
-  "nonew"         : true,     // true: Prohibit use of constructors for side-effects (without assignment)
+  "nonew"         : false,     // true: Prohibit use of constructors for side-effects (without assignment)
   "plusplus"      : true,     // true: Prohibit use of `++` & `--`
   "quotmark"      : "single", // Quotation mark consistency:
   //   false    : do nothing (default)
@@ -46,7 +46,7 @@
   "lastsemic"     : false,     // true: Tolerate omitting a semicolon for the last statement of a 1-line block
   "laxbreak"      : true,      // true: Tolerate possibly unsafe line breakings
   "laxcomma"      : false,     // true: Tolerate comma-first style coding
-  "loopfunc"      : false,     // true: Tolerate functions being defined in loops
+  "loopfunc"      : true,     // true: Tolerate functions being defined in loops
   "multistr"      : false,     // true: Tolerate multi-line strings
   "proto"         : false,     // true: Tolerate using the `__proto__` property
   "scripturl"     : false,     // true: Tolerate script-targeted URLs
