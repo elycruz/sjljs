@@ -23,13 +23,13 @@
 
             set: function (keyOrNsKey, value) {
                 var self = this;
-                if (isObject(keyOrNsKey)) {
+                if (sjl.isObject(keyOrNsKey)) {
                     sjl.extend.apply(sjl, [true, self].concat(sjl.argsToArray(arguments)));
                 }
-                else if (isString(keyOrNsKey)) {
+                else if (sjl.isString(keyOrNsKey)) {
                     sjl.autoNamespace(keyOrNsKey, self, value);
                 }
-                else {
+                else if (sjl.isset(keyOrNsKey)) {
                     throw new TypeError(contextName + '.set only allows strings or objects as it\'s first parameter.  ' +
                         'Param type received: `' + sjl.classOf(keyOrNsKey) + '`.');
                 }
