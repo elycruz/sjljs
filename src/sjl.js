@@ -323,7 +323,7 @@
         var parent = objToSearch,
             shouldSetValue = !isUndefined(valueToSet),
             classOfObjToSearch = classOf(objToSearch);
-        if (classOfObjToSearch !== 'Object' && classOfObjToSearch !== 'Function') {
+        if (classOfObjToSearch !== 'Object' && objToSearch instanceof Function === false) {
             throw new TypeError ('sjl.autoNamespace expects a Constructor or an instance obj to search on.' +
                 'Value received: `' + classOfObjToSearch + '`.');
         }
@@ -434,7 +434,7 @@
             classOfObj = classOf(objToSearch),
             i;
         throwTypeErrorIfNotOfType('sjl.searchObj', 'ns_string', ns_string, String);
-        if (classOfObj !== Object.name && classOfObj !== 'Function') {
+        if (classOfObj !== 'Object' && objToSearch instanceof Function === false) {
             throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
                 'or an instance of `Function`.  Type received: ' + classOfObj);
         }

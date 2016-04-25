@@ -16,21 +16,26 @@
 
             // If options key name is set set it
             if (sjl.isObject(arg0) && sjl.issetAndOfType(arg0.optionsKeyName, String)) {
-                _optionsKeyname = arg0.optionsKeyName;
+                _optionsKeyname = arg0.optionsKeyName + '';
+                sjl.unset(arg0, 'optionsKeyName');
             }
 
             // Define options key name property
             Object.defineProperty(this, 'optionsKeyName', {
-                optionsKeyName: {
-                    value: _optionsKeyname
-                }
+                value: _optionsKeyname,
+                enumerable: true
             });
 
-            // Get the options store
-            this[this.optionsKeyName] = new sjl.stdlib.Config();
+            // Define options key name property
+            Object.defineProperty(this, this.optionsKeyName, {
+                value: new sjl.stdlib.Config(),
+                enumerable: true
+            });
 
             // Merge all options in to options store
-            this.set.apply(this, arguments);
+            if (arguments.length > 0) {
+                this.set.apply(this, arguments);
+            }
         };
 
     /**
@@ -50,7 +55,7 @@
          * @returns {*}
          */
         get: function (keyOrArray) {
-            return this._getOptions().get(keyOrArray);
+            return this.getStoreHash().get(keyOrArray);
         },
 
         /**
@@ -63,7 +68,8 @@
          * @returns {sjl.stdlib.Optionable}
          */
         set: function () {
-            this._getOptions().set.apply(this.options, arguments);
+            var options = this.getStoreHash();
+            options.set.apply(options, arguments);
             return this;
         },
 
@@ -75,10 +81,10 @@
          * @returns {Boolean}
          */
         has: function (nsString) {
-            return this._getOptions().has(nsString);
+            return this.getStoreHash().has(nsString);
         },
 
-        _getOptions: function () {
+        getStoreHash: function () {
             return this[this.optionsKeyName];
         }
 

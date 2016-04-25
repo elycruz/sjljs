@@ -9,15 +9,15 @@
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         contextName = 'sjl.stdlib.Config',
         Config = sjl.stdlib.Extendable.extend({
-            constructor: function () {
-                this.set.apply(this, arguments);
+            constructor: function Config () {
+                if (arguments.length > 0) {
+                    this.set.apply(this, arguments);
+                }
             },
 
             get: function (keyOrNsKey) {
-                if (!sjl.isset(keyOrNsKey)) {
-                    return this;
-                }
-                sjl.throwTypeErrorIfNotOfType(contextName, 'get(keyOrNsKey)', keyOrNsKey, String);
+                sjl.throwTypeErrorIfNotOfType(contextName + '.get', 'keyOrNsKey', keyOrNsKey, String,
+                    'Also `undefined` or `null` are allowed (used when wanting the object as JSON).');
                 return sjl.searchObj(keyOrNsKey, this);
             },
 
@@ -37,8 +37,9 @@
             },
 
             has: function (keyOrNsString/*, type{String|Function}...*/) {
+                sjl.throwTypeErrorIfNotOfType(contextName + '.has', 'keyOrNsString', keyOrNsString, String);
                 var searchResult = sjl.searchObj(keyOrNsString, this);
-                return arguments.length > 1 ?
+                return arguments.length === 1 ?
                     sjl.isset(searchResult) :
                     sjl.issetAndOfType.apply(sjl, [searchResult].concat(sjl.restArgs(1)));
             },
