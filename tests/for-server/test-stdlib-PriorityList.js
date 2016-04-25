@@ -93,8 +93,8 @@ describe('PriorityList', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(reversedEntries[iterator.pointer() - 1][0]);
-                expect(value.value[1]).to.equal(reversedEntries[iterator.pointer() - 1][1]);
+                expect(value.value[0]).to.equal(reversedEntries[iterator.pointer - 1][0]);
+                expect(value.value[1]).to.equal(reversedEntries[iterator.pointer - 1][1]);
             }
         });
     });

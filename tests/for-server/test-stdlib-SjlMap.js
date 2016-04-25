@@ -84,8 +84,8 @@ describe('SjlMap', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(entries[iterator.pointer() - 1][0]);
-                expect(value.value[1]).to.equal(entries[iterator.pointer() - 1][1]);
+                expect(value.value[0]).to.equal(entries[iterator.pointer - 1][0]);
+                expect(value.value[1]).to.equal(entries[iterator.pointer - 1][1]);
             }
         });
     });
@@ -238,8 +238,8 @@ describe('SjlMap', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(entries[iterator.pointer() - 1][0]);
-                expect(value.value[1]).to.equal(entries[iterator.pointer() - 1][1]);
+                expect(value.value[0]).to.equal(entries[iterator.pointer - 1][0]);
+                expect(value.value[1]).to.equal(entries[iterator.pointer - 1][1]);
             }
         });
     });

@@ -217,6 +217,6 @@ describe('Sjl Optionable', function () {
             expect(optionable.getStoreHash).to.be.instanceof(Function);
             expect(optionable.getStoreHash()).to.be.instanceof(sjl.stdlib.Config);
         });
-    })
+    });
 
 }); // end of Test Suite

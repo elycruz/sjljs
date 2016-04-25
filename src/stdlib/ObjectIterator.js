@@ -75,7 +75,7 @@
      */
     ObjectIterator = Iterator.extend(ObjectIterator, {
         /**
-         * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
+         * Returns the current key and value that `pointer` is pointing to as an array [key, value].
          * @method sjl.stdlib.Iterator#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
@@ -105,7 +105,7 @@
                 } : {
                     done: true
                 };
-            self.pointer(pointer + 1);
+            self.pointer += 1;
             return retVal;
         },
 

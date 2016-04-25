@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 5.6.0 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: be88cac512aedb0cef003108416a692b 
- * | Built-on: Fri Apr 22 2016 19:13:33 GMT-0400 (EDT) 
+ * | md5checksum: 18b4e2ad55e92a345ff0a6555600f0de 
+ * | Built-on: Mon Apr 25 2016 18:42:55 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -328,7 +328,7 @@
         var parent = objToSearch,
             shouldSetValue = !isUndefined(valueToSet),
             classOfObjToSearch = classOf(objToSearch);
-        if (classOfObjToSearch !== 'Object' && classOfObjToSearch !== 'Function') {
+        if (classOfObjToSearch !== 'Object' && objToSearch instanceof Function === false) {
             throw new TypeError ('sjl.autoNamespace expects a Constructor or an instance obj to search on.' +
                 'Value received: `' + classOfObjToSearch + '`.');
         }
@@ -439,7 +439,7 @@
             classOfObj = classOf(objToSearch),
             i;
         throwTypeErrorIfNotOfType('sjl.searchObj', 'ns_string', ns_string, String);
-        if (classOfObj !== Object.name && classOfObj !== 'Function') {
+        if (classOfObj !== 'Object' && objToSearch instanceof Function === false) {
             throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
                 'or an instance of `Function`.  Type received: ' + classOfObj);
         }

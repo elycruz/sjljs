@@ -1398,8 +1398,7 @@ describe('sjl.searchObj', function () {
         subject = argsForTests[0][0];
 
     it ('should be able to search an object by namespace string.', function () {
-        var result = sjl.searchObj('all.your.base', subject);
-        expect(result).to.equal(subject.all.your.base);
+        expect(sjl.searchObj('all.your.base', subject)).to.equal(subject.all.your.base);
     });
 
     it ('should be able to search an object by key name.', function () {
@@ -1671,6 +1670,201 @@ describe('sjl.wrapPointerWithinBounds', function () {
     });
 });
 
+/**
+ * Created by Ely on 12/17/2014.
+ */
+describe('sjl.stdlib.Config', function () {
+
+        var exampleObj = {
+        'Null': null,
+        'Array': ['hello-world'],
+        'String': 'helloworld',
+        'Function': function () {},
+        'Object': {all: {your: {base: 'are.belong.to.us'}}},
+        'Boolean': false
+    },
+        exampleObj2 = {
+            eightiesSaying: {all: {your: {base: {are: {belong: {to: {us: 'All your base are belong to us'}}}}}}}
+        },
+        exampleObjKeys = Object.keys(exampleObj),
+        exampleObj2Keys = Object.keys(exampleObj2),
+        Config = sjl.stdlib.Config;
+
+    it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
+        expect(new sjl.stdlib.Config()).to.be.instanceof(sjl.stdlib.Extendable);
+    });
+
+    it ('should be able to set multiple properties from one object passed int to constructor.', function () {
+        var config = new Config(exampleObj);
+        exampleObjKeys.forEach(function (key) {
+            expect(config[key]).to.equal(exampleObj[key]);
+        });
+    });
+
+    it ('should be able to set multiple properties via multiple objects passed in via the constructor.', function () {
+        var config = new Config(exampleObj, exampleObj2);
+        exampleObjKeys.forEach(function (key) {
+            expect(config[key]).to.equal(exampleObj[key]);
+        });
+        exampleObj2Keys.forEach(function (key) {
+            expect(config[key]).to.equal(exampleObj2[key]);
+        });
+    });
+
+    describe ('#set', function () {
+
+        it ('should be able to set multiple properties from one object passed in and should return self when doing so.', function () {
+            var config = new Config(),
+                result = config.set(exampleObj);
+            expect(result).to.equal(config);
+            exampleObjKeys.forEach(function (key) {
+                expect(config[key]).to.equal(exampleObj[key]);
+            });
+        });
+
+        it ('should be able to set multiple properties via multiple objects passed in and should return self when doing so.', function () {
+            var config = new Config(),
+                result = config.set(exampleObj, exampleObj2);
+            expect(result).to.equal(config);
+            exampleObjKeys.forEach(function (key) {
+                expect(config[key]).to.equal(exampleObj[key]);
+            });
+            exampleObj2Keys.forEach(function (key) {
+                expect(config[key]).to.equal(exampleObj2[key]);
+            });
+        });
+
+        it ('should be able to set one property via "key" and "value" parameters and return self when doing so.', function () {
+            var config = new Config(),
+                result = config.set('hello', 'world');
+            expect(result).to.equal(config);
+            expect(config.hello).to.equal('world');
+        });
+
+        it ('should be able to set a property via namespace string and value parameter and return itself after doing so.', function () {
+            var config = new Config(exampleObj),
+                result;
+            expect(config.all).to.equal(exampleObj.all);
+            result = config.set('all.your.base', exampleObj2.eightiesSaying.all.your.base);
+            expect(result.all.your.base).to.equal(exampleObj2.eightiesSaying.all.your.base);
+        });
+
+        it ('should do nothing and return itself when no params are passed in.', function () {
+            var config = new Config();
+            expect(config.set()).to.equal(config);
+            expect(Object.keys(config).length).to.equal(0);
+        });
+
+        it ('should throw a type error when param `0` is neither of type `String` or of type `Object`.', function () {
+            var caughtError;
+            try {
+                (new Config()).set(function () {}, null);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            try {
+                (new Config()).set(['hello'], null);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+
+    });
+
+    describe ('#get', function () {
+
+        it ('should be able to get a value by key.', function () {
+            var config = new Config(exampleObj);
+            exampleObjKeys.forEach(function (key) {
+                expect(config.get(key)).to.equal(exampleObj[key]);
+            });
+        });
+
+        it ('should be able to get a value by namespace key.', function () {
+            expect((new Config(exampleObj)).get('Object.all.your.base')).to.equal(exampleObj.Object.all.your.base);
+        });
+
+        it ('should throw a type error when passed in key is not a string.', function () {
+            var config = new Config(),
+                caughtError;
+            try {
+                config.get(['hello']);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                config.get(function () {});
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                config.get();
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+
+    });
+
+    describe ('#has', function () {
+
+        it ('should return true if config has a key with a value other than `null` or `undefined`.', function () {
+            var config = new Config(exampleObj);
+            exampleObjKeys.filter(function (key) {
+                return sjl.isset(exampleObj[key]);
+            }).forEach(function (key) {
+                expect(config.has(key)).to.be.true();
+            });
+        });
+
+        it ('should return false if config doesn\'t have a key or key value is `null`.', function () {
+            var config = new Config(exampleObj2);
+            exampleObjKeys.filter(function (key) {
+                return sjl.isset(exampleObj[key]);
+            }).forEach(function (key) {
+                expect(config.has(key)).to.be.false();
+            });
+        });
+
+        it ('should throw a type error when passed in key is not a string.', function () {
+            var config = new Config(),
+                caughtError;
+            try {
+                config.has(['hello']);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                config.has(function () {});
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                config.has();
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+
+    });
+
+}); // end of Test Suite
+
 
 
 describe('Sjl Extendable', function () {
@@ -1773,164 +1967,210 @@ describe('Iterator', function () {
  */
 describe('Sjl Optionable', function () {
 
-        // Some test values
-    var Optionable = sjl.stdlib.Optionable,
-        engToSpaSalutations = {
-            goodafternoon: 'buenas tardes',
-            goodevening: 'buenas noches',
-            goodnight: 'buenas noches'
+        var exampleObj = {
+            'Null': null,
+            'Array': ['hello-world'],
+            'String': 'helloworld',
+            'Function': function () {},
+            'Object': {all: {your: {base: 'are.belong.to.us'}}},
+            'Boolean': false
         },
-
-        jpaToEngSalutations = {
-            konichiwa: 'good afternoon',
-            konbanwa: 'good evening',
-            oyasuminasai: 'good night'
+        exampleObj2 = {
+            eightiesSaying: {all: {your: {base: {are: {belong: {to: {us: 'All your base are belong to us'}}}}}}}
         },
+        exampleObjKeys = Object.keys(exampleObj),
+        exampleObj2Keys = Object.keys(exampleObj2),
+        Optionable = sjl.stdlib.Optionable;
 
-        spaToJpaSalutations = {
-            buenastardes: 'konichiwa',
-            buenasnoches: 'konbanwa|oyasuminasai'
-        },
-        mergedOptions = sjl.extend({}, engToSpaSalutations, spaToJpaSalutations, jpaToEngSalutations),
-        mergedOptionsKeys = Object.keys(mergedOptions),
-        originalValues = mergedOptions,
-        newValues = (function () {
-            var out = {};
-            mergedOptionsKeys.forEach(function (key, i) {
-                out[key] = 'new value ' + (i + 1);
-            });
-            return out;
-        }()),
-        otherValues = (function () {
-            var out = {};
-            mergedOptionsKeys.forEach(function (key, i) {
-                out[key] = 'other value ' + (i + 1);
-            });
-            return out;
-        }()),
+    it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
+        expect(new sjl.stdlib.Optionable()).to.be.instanceof(sjl.stdlib.Extendable);
+    });
 
-        getOptionableObj = function (options) {
-            if (options) {
-                return new Optionable(options);
-            }
-            return new Optionable(
-                engToSpaSalutations,
-                jpaToEngSalutations,
-                spaToJpaSalutations
-            );
-        },
-
-        allYourBase = {all: {your: {base: {are: {belong: {to: {us: {someValue: 99}}}}}}}};
-
-    // Test 1
-    describe ('#`merge`', function () {
-
-        // Test 1.1
-        describe('It should merge all object arguments to the options property of the `Optionable` object being called.', function () {
-            var obj = getOptionableObj();
-            mergedOptionsKeys.forEach(function (key) {
-                it('"' + key + '" key should equal value "' + mergedOptions[key] + '".', function () {
-                    console.log(key);
-                    expect(obj.get(key)).to.equal(mergedOptions[key]);
-                });
-            });
-        }); // end of Test 1.1
-
-        // Test 1.2
-        describe('It should overwrite any existing values on the options property with the ones passed into it.', function () {
-            var obj = getOptionableObj();
-            obj.set(newValues);
-            mergedOptionsKeys.forEach(function (key) {
-                it ('should have a key "' + key + '" with a new value "' + newValues[key] + '"', function () {
-                    expect(obj.get(key)).to.equal(newValues[key]);
-                });
-            });
-        }); // end of Test 1.2
-
-        // Test 1.3
-        describe('It should overwrite all values with the latest values passed in in a set of values.', function () {
-            var obj = getOptionableObj(newValues);
-            obj.set(newValues, originalValues, otherValues);
-            mergedOptionsKeys.forEach(function (key) {
-                it ('should have a key "' + key + '" with an other value "' + otherValues[key] + '"', function () {
-                    expect(obj.get(key)).to.equal(otherValues[key]);
-                });
-            });
-        });
-
-    }); // end of Test 1.0
-
-    // Test 2
-    describe ('#`has`', function () {
-        it ('Should find values by namespace string.', function () {
-            var obj = new Optionable(mergedOptions, allYourBase);
-            expect(obj.has('all.your.base.are.belong.to.us')).to.equal(true);
+    it ('should be able to set multiple properties from one object passed int to constructor.', function () {
+        var optionable = new Optionable(exampleObj),
+            options = optionable.getStoreHash();
+        exampleObjKeys.forEach(function (key) {
+            expect(options[key]).to.equal(exampleObj[key]);
         });
     });
 
-    // Test 3
-    describe ('#`set`', function () {
-
-        // Test 3.1
-        it ('Should be able to set values using a namespace string.', function () {
-            var obj = new Optionable(mergedOptions, allYourBase);
-            obj.set(allYourBase);
-            obj.set('all.your.base.are.belong.to.us', {someNewValue: 100});
-            expect(obj.has('all.your.base.are.belong.to.us')).to.equal(true);
-            expect(obj.get('all.your.base.are.belong.to.us.someNewValue')).to.equal(100);
+    it ('should be able to set multiple properties via multiple objects passed in via the constructor.', function () {
+        var optionable = new Optionable(exampleObj, exampleObj2),
+            options = optionable.getStoreHash();
+        exampleObjKeys.forEach(function (key) {
+            expect(options[key]).to.equal(exampleObj[key]);
         });
-
-        // Test 3.2
-        it ('Should be able to create heirarchichal structures from namespace strings to set an end value.', function () {
-
-            // Empty optionable object
-            var obj = new Optionable();
-
-            // Doesn't have namespaced value
-            expect(obj.has('all.your.base.are.belong.to.us')).to.equal(false);
-
-            // Add namespaced value and set end value
-            obj.set('all.your.base.are.belong.to.us', {someOtherValue: 1000});
-
-            // Should have namespaced value
-            expect(obj.has('all.your.base.are.belong.to.us')).to.equal(true);
-
-            // Should have end value
-            expect(obj.get('all.your.base.are.belong.to.us.someOtherValue')).to.equal(1000);
+        exampleObj2Keys.forEach(function (key) {
+            expect(options[key]).to.equal(exampleObj2[key]);
         });
+    });
 
-        // Tetst 3.3
-        describe ('Should be able to set multiple values from an object.', function () {
-            // Empty optionable object
-            var obj = new Optionable();
-            obj.set(mergedOptions);
-            mergedOptionsKeys.forEach(function (key) {
-                it('It should have a new key "' + key + '" with value "' + mergedOptions[key] + '".', function () {
-                    expect(obj.get(key)).to.equal(mergedOptions[key]);
-                });
+    describe ('#set', function () {
+
+        it ('should be able to set multiple properties from one object passed in and should return self when doing so.', function () {
+            var optionable = new Optionable(),
+                result = optionable.set(exampleObj);
+            expect(result).to.equal(optionable);
+            exampleObjKeys.forEach(function (key) {
+                expect(optionable.getStoreHash()[key]).to.equal(exampleObj[key]);
             });
-
         });
 
-    }); // end of Tetst 3
-
-    // Test 4
-    describe ('#`get`', function () {
-        var obj = new Optionable(mergedOptions, allYourBase);
-
-        // Test 4.1
-        it ('Should be able to get values using a namespace string.', function () {
-            expect(obj.get('all.your.base.are.belong.to.us')).to.equal(obj.options.all.your.base.are.belong.to.us);
+        it ('should be able to set multiple properties via multiple objects passed in and should return self when doing so.', function () {
+            var optionable = new Optionable(),
+                result = optionable.set(exampleObj, exampleObj2),
+                resultOptions = result.getStoreHash();
+            expect(result).to.equal(optionable);
+            exampleObjKeys.forEach(function (key) {
+                expect(resultOptions[key]).to.equal(exampleObj[key]);
+            });
+            exampleObj2Keys.forEach(function (key) {
+                expect(resultOptions[key]).to.equal(exampleObj2[key]);
+            });
         });
 
-        it ('Should be able to get values using a regular string (not a namespaced string).', function () {
-            expect(obj.get('all')).to.equal(obj.options.all);
+        it ('should be able to set one property via "key" and "value" parameters and return self when doing so.', function () {
+            var optionable = new Optionable(),
+                result = optionable.set('hello', 'world'),
+                resultOptions = result.getStoreHash();
+            expect(result).to.equal(optionable);
+            expect(resultOptions.hello).to.equal('world');
         });
 
-        it ('Should return `null` for non-existent keys.', function () {
-            expect(obj.get('helloworld')).to.equal(null);
+        it ('should be able to set a property via namespace string and value parameter and return itself after doing so.', function () {
+            var optionable = new Optionable(exampleObj),
+                result,
+                resultOptions;
+            expect(optionable.all).to.equal(exampleObj.all);
+            result = optionable.set('all.your.base', exampleObj2.eightiesSaying.all.your.base);
+            resultOptions = result.getStoreHash();
+            expect(resultOptions.all.your.base).to.equal(exampleObj2.eightiesSaying.all.your.base);
         });
 
+        it ('should do nothing and return itself when no params are passed in.', function () {
+            var optionable = new Optionable();
+            expect(optionable.set()).to.equal(optionable);
+            expect(Object.keys(optionable.getStoreHash()).length).to.equal(0);
+        });
+
+        it ('should throw a type error when param `0` is neither of type `String` or of type `Object`.', function () {
+            var caughtError;
+            try {
+                (new Optionable()).set(function () {}, null);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            try {
+                (new Optionable()).set(['hello'], null);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+
+    });
+
+    describe ('#get', function () {
+
+        it ('should be able to get a value by key.', function () {
+            var optionable = new Optionable(exampleObj);
+            exampleObjKeys.forEach(function (key) {
+                expect(optionable.get(key)).to.equal(exampleObj[key]);
+            });
+        });
+
+        it ('should be able to get a value by namespace key.', function () {
+            expect((new Optionable(exampleObj)).get('Object.all.your.base')).to.equal(exampleObj.Object.all.your.base);
+        });
+
+        it ('should throw a type error when passed in key is not a string.', function () {
+            var optionable = new Optionable(),
+                caughtError;
+            try {
+                optionable.get(['hello']);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                optionable.get(function () {});
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                optionable.get();
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+
+    });
+
+    describe ('#has', function () {
+
+        it ('should return true if optionable has a key with a value other than `null` or `undefined`.', function () {
+            var optionable = new Optionable(exampleObj);
+            exampleObjKeys.filter(function (key) {
+                return sjl.isset(exampleObj[key]);
+            }).forEach(function (key) {
+                expect(optionable.has(key)).to.be.true();
+            });
+        });
+
+        it ('should return false if optionable doesn\'t have a key or key value is `null`.', function () {
+            var optionable = new Optionable(exampleObj2);
+            exampleObjKeys.filter(function (key) {
+                return sjl.isset(exampleObj[key]);
+            }).forEach(function (key) {
+                expect(optionable.has(key)).to.be.false();
+            });
+        });
+
+        it ('should throw a type error when passed in key is not a string.', function () {
+            var optionable = new Optionable(),
+                caughtError;
+            try {
+                optionable.has(['hello']);
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                optionable.has(function () {});
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+            try {
+                optionable.has();
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+
+    });
+
+    describe ('#getStoreHash', function () {
+        it ('should be a method.', function () {
+            var optionable = new Optionable();
+            expect(optionable.getStoreHash).to.be.instanceof(Function);
+        });
+        it ('should return the options store which should be an instance of `sjl.stdlib.Config`.', function () {
+            var optionable = new Optionable();
+            expect(optionable.getStoreHash).to.be.instanceof(Function);
+            expect(optionable.getStoreHash()).to.be.instanceof(sjl.stdlib.Config);
+        });
     });
 
 }); // end of Test Suite
@@ -2020,8 +2260,8 @@ describe('PriorityList', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(reversedEntries[iterator.pointer() - 1][0]);
-                expect(value.value[1]).to.equal(reversedEntries[iterator.pointer() - 1][1]);
+                expect(value.value[0]).to.equal(reversedEntries[iterator.pointer - 1][0]);
+                expect(value.value[1]).to.equal(reversedEntries[iterator.pointer - 1][1]);
             }
         });
     });
@@ -2268,8 +2508,8 @@ describe('SjlMap', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(entries[iterator.pointer() - 1][0]);
-                expect(value.value[1]).to.equal(entries[iterator.pointer() - 1][1]);
+                expect(value.value[0]).to.equal(entries[iterator.pointer - 1][0]);
+                expect(value.value[1]).to.equal(entries[iterator.pointer - 1][1]);
             }
         });
     });
@@ -2422,8 +2662,8 @@ describe('SjlMap', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(entries[iterator.pointer() - 1][0]);
-                expect(value.value[1]).to.equal(entries[iterator.pointer() - 1][1]);
+                expect(value.value[0]).to.equal(entries[iterator.pointer - 1][0]);
+                expect(value.value[1]).to.equal(entries[iterator.pointer - 1][1]);
             }
         });
     });
@@ -2518,7 +2758,7 @@ describe('SjlSet', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(values[iterator.pointer() - 1]);
+                expect(value.value[0]).to.equal(values[iterator.pointer - 1]);
             }
         });
     });

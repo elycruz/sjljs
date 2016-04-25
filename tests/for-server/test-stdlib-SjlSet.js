@@ -77,7 +77,7 @@ describe('SjlSet', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(values[iterator.pointer() - 1]);
+                expect(value.value[0]).to.equal(values[iterator.pointer - 1]);
             }
         });
     });
