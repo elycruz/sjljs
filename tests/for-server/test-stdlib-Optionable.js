@@ -1,7 +1,7 @@
 /**
  * Created by Ely on 12/17/2014.
  */
-describe('Sjl Optionable', function () {
+describe('sjl.stdlib.Optionable', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

@@ -3,7 +3,7 @@
  * @todo add tests iterator methods
  */
 
-describe('PriorityList', function () {
+describe('sjl.stdlib.PriorityList', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

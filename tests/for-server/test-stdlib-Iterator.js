@@ -1,5 +1,5 @@
 
-describe('Iterator', function () {
+describe('sjl.stdlib.Iterator', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

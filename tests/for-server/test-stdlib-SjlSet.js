@@ -2,7 +2,7 @@
  * Created by Ely on 8/6/2015.
  */
 
-describe('SjlSet', function () {
+describe('sjl.stdlib.SjlSet', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when

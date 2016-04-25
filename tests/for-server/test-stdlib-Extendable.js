@@ -1,6 +1,6 @@
 
 
-describe('Sjl Extendable', function () {
+describe('sjl.stdlib.Extendable', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when
