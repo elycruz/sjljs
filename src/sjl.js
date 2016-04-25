@@ -681,40 +681,25 @@
      * @param obj {Object|*} - Object to set the `package` method on.
      * @param funcKey {String} - Key to set package function to.  E.g., 'package'
      * @param altFuncKey {String} - Alternate (usually shorter) key to set package function to.  E.g., 'ns'
-     * @param dirPath {String} - If using NodeJs only.  Optional.  Default `__dirname`.
-     * @param pathsToIgnore {Array} - If using NodeJs only.  Causes the namespacer to
      *  ignore passed in paths as namespaces.  Optional.  Default `null`.
      * @return {Object|*} - Returns passed in `obj`.
      */
-    function createTopLevelPackage (obj, funcKey, altFuncKey, dirPath, pathsToIgnore) {
+    function createTopLevelPackage (obj, funcKey, altFuncKey) {
         funcKey = funcKey || 'package';
         altFuncKey = altFuncKey || 'ns';
-        if (isNodeEnv) {
-            dirPath = dirPath || __dirname;
-            obj[altFuncKey] = obj[funcKey] =
-                require('./nodejs/Namespace.js')(dirPath, ['.js', '.json'], pathsToIgnore);
-            return obj;
-        }
-        return (function () {
-
-            /**
-             * Returns a property from sjl packages.
-             * @note If `nsString` is undefined returns the protected packages object itself.
-             * @function module:sjl.package
-             * @param propName {String}
-             * @param value {*}
-             * @returns {*}
-             */
-            obj[altFuncKey] =
-                obj[funcKey] = function (nsString, value) {
-                    return typeof nsString === _undefined ? obj[funcKey]
-                        : unConfigurableNamespace(nsString, obj[funcKey], value);
-                };
-
-            // Return passed in obj
-            return obj;
-
-        }());
+        /**
+         * Returns a property from sjl packages.
+         * @note If `nsString` is undefined returns the protected packages object itself.
+         * @function module:sjl.package
+         * @param propName {String}
+         * @param value {*}
+         * @returns {*}
+         */
+        return obj[altFuncKey] =
+            obj[funcKey] = function (nsString, value) {
+                return typeof nsString === _undefined ? obj[funcKey]
+                    : unConfigurableNamespace(nsString, obj[funcKey], value);
+        };
     }
 
     /**
@@ -726,7 +711,7 @@
      * @param max {Number}
      * @returns {Number}
      */
-    function constrainPointerWithinBounds (pointer, min, max) {
+    function constrainPointer (pointer, min, max) {
         return pointer < min ? min : ((pointer > max) ? max : pointer);
     }
 
@@ -740,7 +725,7 @@
      * @param max {Number}
      * @returns {Number}
      */
-    function wrapPointerWithinBounds (pointer, min, max) {
+    function wrapPointer (pointer, min, max) {
         return pointer > max ? min : (pointer < min ? max : pointer);
     }
 
@@ -754,7 +739,7 @@
      * @param suffix {String} - A hint to user or a way to fix the error;  Message to suffix to error message.
      * @returns {{}} - Sjl.
      */
-    function throwTypeErrorIfNotOfType (prefix, paramName, value, type, fixHint) {
+    function throwTypeErrorIfNotOfType (prefix, paramName, value, type, suffix) {
         var classOfValue = classOf(value);
 
         // If `type` itself is not of the allowed types throw an error
@@ -766,7 +751,7 @@
         // Proceed with type check
         if (!classOfIs(value, type)) {
             throw new TypeError('#`' + prefix + '`.`' + paramName
-                + '` is not of type "' + type + '".  ' + (fixHint || '')
+                + '` is not of type "' + type + '".  ' + (suffix || '')
                 + '  Type received: `' + classOfValue + '`.');
         }
     }
@@ -832,12 +817,12 @@
      * @param key {String}
      * @param value {*}
      * @param enumerable {Boolean} - Default `false`.
-     * @return {Void}
+     * @return {void}
      */
-    function defineEnumProp(obj, key, value, enumerable) {
+    function defineEnumProp(obj, key, value) {
         Object.defineProperty(obj, key, {
             value: value,
-            enumerable: classOfIs(enumerable, Boolean) ? enumerable : false
+            enumerable: true
         });
     }
 
@@ -858,10 +843,10 @@
             hasOwnProperty = parent.hasOwnProperty(key);
             if (i === parts.length - 1
                 && shouldSetValue && !hasOwnProperty) {
-                defineEnumProp(parent, key, valueToSet, true);
+                defineEnumProp(parent, key, valueToSet);
             }
             else if (typeof parent[key] === _undefined && !hasOwnProperty) {
-                defineEnumProp(parent, key, {}, true);
+                defineEnumProp(parent, key, {});
             }
             parent = parent[key];
         });
@@ -953,6 +938,7 @@
         return extractBoolFromArray(array, false);
     }
 
+    // Define `sjl`
     sjl = {
         argsToArray: argsToArray,
         camelCase: camelCase,
@@ -960,7 +946,7 @@
         classOfIs: classOfIs,
         classOfIsMulti: classOfIsMulti,
         clone: clone,
-        constrainPointerWithinBounds: constrainPointerWithinBounds,
+        constrainPointer: constrainPointer,
         createTopLevelPackage: createTopLevelPackage,
         defineSubClass: defineSubClass,
         defineEnumProp: defineEnumProp,
@@ -998,10 +984,10 @@
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
         throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
         valueOrDefault: valueOrDefault,
-        wrapPointerWithinBounds: wrapPointerWithinBounds
+        wrapPointer: wrapPointer
     };
 
-    // Ensure we have access to the `Symbol`
+    // Ensure we have access to es6 `Symbol` object
     if (typeof Symbol === _undefined) {
         sjl.Symbol = {
             iterator: '@@iterator'
@@ -1013,36 +999,41 @@
 
     // Node specific code
     if (isNodeEnv) {
+        // Set package namespace and alias for it
+        sjl.package =
+            sjl.ns =
+                require('./nodejs/Namespace.js')(__dirname, ['.js', '.json']);
+
+        // Short cut to namespaces
+        Object.keys(sjl.ns).forEach(function (key) {
+            sjl[key] = sjl.ns[key];
+        });
+
+        // Method not needed for NodeJs environment
+        sjl.unset(sjl, 'createTopLevelPackage');
+
         // Export `sjl`
         module.exports = sjl;
-
-        // Set lib src root path to be used in node env by `sjl.package`
-        libSrcRootPath = __dirname;
     }
     else {
+        // Create top level frontend package.
+        createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+
+        // Instantiate known namespaces and set them directly on `sjl` for ease of use;
+        // E.g., Accessing `sjl.ns.stdlib.Extendable` now becomes `sjl.stdlib.Extendable`
+        defineEnumProp(sjl,     'filter',       sjl.ns('filter'));
+        defineEnumProp(sjl,     'input',        sjl.ns('input'));
+        defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
+        defineEnumProp(sjl,     'utils',        sjl.ns('utils'));
+        defineEnumProp(sjl,     'validator',    sjl.ns('validator'));
+
         // Export sjl globally
         globalContext.sjl = sjl;
-    }
 
-    // Create top level frontend package.
-    sjl = createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
-
-    // Short cut to namespaces
-    Object.keys(sjl.ns).forEach(function (key) {
-        sjl[key] = sjl.ns[key];
-    });
-
-    // Set all 'stdlib' members on sjl for backward compatability
-    // (will be removed at a later date/version).
-    Object.keys(sjl.stdlib).forEach(function (key) {
-        sjl[key] = sjl.stdlib[key];
-    });
-
-
-
-    // Return sjl if amd is being used
-    if (!isNodeEnv && globalContext.__isAmd) {
-        return sjl;
+        // Return sjl if amd is being used
+        if (globalContext.__isAmd) {
+            return sjl;
+        }
     }
 
 }());

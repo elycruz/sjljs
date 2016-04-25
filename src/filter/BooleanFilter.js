@@ -91,6 +91,18 @@
         }
     }
 
+    function castNull (value) {
+
+    }
+
+    function castEmptyArray (value) {
+
+    }
+    function castEmptyObject () {}
+    function castByJavascriptCast () {}
+    function castFalseString () {}
+    function castYesNo () {}
+
     Object.defineProperties(BooleanFilter, {
         castingRules: {
             value: {
@@ -103,7 +115,7 @@
                 castEmptyObject: castEmptyObject,
                 castByJavascriptCast: castByJavascriptCast,
                 castFalseString: castFalseString,
-                castYesAndNo: castYesAndNo,
+                castYesNo: castYesNo,
             }
         },
         filter: {

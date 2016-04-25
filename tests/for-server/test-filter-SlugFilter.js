@@ -17,7 +17,6 @@ describe(
         // ~~~ /STRIP ~~~
 
         var SlugFilter = sjl.filter.SlugFilter;
-            //testUtils = sjl.utils.testUtils;
 
         function filterDataProvider() {
             return [

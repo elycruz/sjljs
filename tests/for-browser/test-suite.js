@@ -18,7 +18,6 @@ describe(
     'sjl.filter.SlugFilter.filter', function () {
 
                 var SlugFilter = sjl.filter.SlugFilter;
-            //testUtils = sjl.utils.testUtils;
 
         function filterDataProvider() {
             return [
@@ -1652,7 +1651,7 @@ describe('sjl.unset', function () {
 /**
  * Created by elydelacruz on 4/20/16.
  */
-describe('sjl.wrapPointerWithinBounds', function () {
+describe('sjl.wrapPointer', function () {
 
         [
         // pointer : min : max : {result-of-wrap {Number}}
@@ -1664,7 +1663,7 @@ describe('sjl.wrapPointerWithinBounds', function () {
     .forEach(function (args) {
         var expectedValue = args.pop();
         it ('should return ' + expectedValue + ' when args are [' + args.join(', ') + '].', function () {
-            var result = sjl.wrapPointerWithinBounds.apply(sjl, args);
+            var result = sjl.wrapPointer.apply(sjl, args);
             expect(result).to.equal(expectedValue);
         });
     });
@@ -1867,7 +1866,7 @@ describe('sjl.stdlib.Config', function () {
 
 
 
-describe('Sjl Extendable', function () {
+describe('sjl.stdlib.Extendable', function () {
 
         var Extendable = sjl.ns.stdlib.Extendable,
         Iterator = sjl.ns.stdlib.Iterator;
@@ -1906,7 +1905,7 @@ describe('Sjl Extendable', function () {
 });
 
 
-describe('Iterator', function () {
+describe('sjl.stdlib.Iterator', function () {
 
         var interfaceKeys = [
         'current', 'next', 'rewind', 'valid'
@@ -1965,7 +1964,7 @@ describe('Iterator', function () {
 /**
  * Created by Ely on 12/17/2014.
  */
-describe('Sjl Optionable', function () {
+describe('sjl.stdlib.Optionable', function () {
 
         var exampleObj = {
             'Null': null,
@@ -2180,7 +2179,7 @@ describe('Sjl Optionable', function () {
  * @todo add tests iterator methods
  */
 
-describe('PriorityList', function () {
+describe('sjl.stdlib.PriorityList', function () {
 
         var PriorityList = sjl.ns.stdlib.PriorityList;
 
@@ -2436,7 +2435,7 @@ describe('PriorityList', function () {
  * Created by Ely on 8/6/2015.
  */
 
-describe('SjlMap', function () {
+describe('sjl.stdlib.SjlMap', function () {
 
         var SjlMap = sjl.ns.stdlib.SjlMap;
 
@@ -2693,7 +2692,7 @@ describe('SjlMap', function () {
  * Created by Ely on 8/6/2015.
  */
 
-describe('SjlSet', function () {
+describe('sjl.stdlib.SjlSet', function () {
 
         var SjlSet = sjl.ns.stdlib.SjlSet;
 
@@ -3425,15 +3424,19 @@ describe('sjl.validator.RegexValidator`', function () {
 /**
  * Created by elyde on 1/15/2016.
  */
-
-
-
 describe('sjl.validator.StringLengthValidator', function () {
 
         var StringLengthValidator = sjl.validator.StringLengthValidator,
         Validator = sjl.validator.Validator,
-        testUtils = sjl.utils.testUtils,
         generalValidator = new StringLengthValidator();
+
+    function repeatStr(str, times) {
+        var out = '';
+        while (out.length < times) {
+            out += str;
+        }
+        return out;
+    }
 
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);
@@ -3479,8 +3482,8 @@ describe('sjl.validator.StringLengthValidator', function () {
                 [true, 'within', 'sallysellsseashellsdownbytheseashore'],
                 [true, 'within', 'hello[]world'],
                 [true, 'within', '99 bottles of beer on the wall'],
-                [false, 'without', testUtils.repeatStr('a', 56)],
-                [false, 'without', testUtils.repeatStr('b', 99)]
+                [false, 'without', repeatStr('a', 56)],
+                [false, 'without', repeatStr('b', 99)]
             ];
 
         // Validate values and expect value[0] to be return value of validation check

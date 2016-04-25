@@ -1,0 +1,30 @@
+{
+  "sjl": [
+    "./src/sjl.js",
+    "./src/stdlib/Extendable.js",
+    "./src/stdlib/Config.js",
+    "./src/stdlib/Optionable.js",
+    "./src/stdlib/Iterator.js",
+    "./src/stdlib/ObjectIterator.js",
+    "./src/stdlib/iterable.js",
+    "./src/stdlib/SjlSet.js",
+    "./src/stdlib/SjlMap.js",
+    "./src/stdlib/PriorityList.js",
+    "./src/validator/Validator.js",
+    "./src/validator/ValidatorChain.js",
+    "./src/validator/NotEmptyValidator.js",
+    "./src/validator/RegexValidator.js",
+    "./src/validator/NumberValidator.js",
+    "./src/validator/AlnumValidator.js",
+    "./src/validator/DigitValidator.js",
+    "./src/validator/StringLengthValidator.js",
+    "./src/filter/Filter.js",
+    "./src/filter/FilterChain.js",
+    "./src/filter/BooleanFilter.js",
+    "./src/filter/SlugFilter.js",
+    "./src/filter/StringToLowerFilter.js",
+    "./src/filter/StringTrimFilter.js",
+    "./src/filter/StripTagsFilter.js",
+    "./src/input/Input.js"
+  ]
+}

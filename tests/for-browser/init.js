@@ -15,7 +15,7 @@ require.config({
     },
 
     paths: {
-        sjl: '../../src/sjl',
+        sjl: '../../sjl',
         chai:  '../../node_modules/chai/chai',
         mocha: '../../node_modules/mocha/mocha',
         'test-suite': 'test-suite'

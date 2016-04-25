@@ -1,7 +1,8 @@
 /**
  * Created by edelacruz on 4/14/14.
  */
-var packageJson = require('./package.json'),
+var packageJson = require('./package'),
+    gulpConfig = require('./gulpconfig'),
     gulp = require('gulp'),
     concat = require('gulp-concat'),
     header = require('gulp-header'),
@@ -56,7 +57,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('concat', function () {
-    return gulp.src('./src/sjl.js')
+    return gulp.src(gulpConfig.sjl)
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
         .pipe(fncallback(function (file, enc, cb) {
@@ -94,7 +95,7 @@ gulp.task('uglify', ['concat'], function () {
 
 gulp.task('minimal', function () {
     return gulp.src([
-            'src/sjl.js'
+            './src/sjl.js'
         ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.js'))
@@ -153,7 +154,7 @@ gulp.task('jshint', function () {
 gulp.task('watch', function () {
 
     // Watch all javascript files
-    gulp.watch(['./tests/for-server/*', './src/**/*'], [
+    gulp.watch(['./tests/for-server/*', './src/**/*', './node_modules/**/*'], [
         'jshint',
         //'jsdoc',
         'concat',

@@ -1,9 +1,6 @@
 /**
  * Created by elyde on 1/15/2016.
  */
-
-
-
 describe('sjl.validator.StringLengthValidator', function () {
 
     // ~~~ STRIP ~~~
@@ -18,8 +15,15 @@ describe('sjl.validator.StringLengthValidator', function () {
 
     var StringLengthValidator = sjl.validator.StringLengthValidator,
         Validator = sjl.validator.Validator,
-        testUtils = sjl.utils.testUtils,
         generalValidator = new StringLengthValidator();
+
+    function repeatStr(str, times) {
+        var out = '';
+        while (out.length < times) {
+            out += str;
+        }
+        return out;
+    }
 
     it ('should be a subclass of `Validator`.', function () {
         expect(generalValidator instanceof Validator).to.equal(true);
@@ -65,8 +69,8 @@ describe('sjl.validator.StringLengthValidator', function () {
                 [true, 'within', 'sallysellsseashellsdownbytheseashore'],
                 [true, 'within', 'hello[]world'],
                 [true, 'within', '99 bottles of beer on the wall'],
-                [false, 'without', testUtils.repeatStr('a', 56)],
-                [false, 'without', testUtils.repeatStr('b', 99)]
+                [false, 'without', repeatStr('a', 56)],
+                [false, 'without', repeatStr('b', 99)]
             ];
 
         // Validate values and expect value[0] to be return value of validation check

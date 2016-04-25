@@ -1,7 +1,7 @@
 /**
  * Created by elydelacruz on 4/20/16.
  */
-describe('sjl.wrapPointerWithinBounds', function () {
+describe('sjl.wrapPointer', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when
@@ -23,7 +23,7 @@ describe('sjl.wrapPointerWithinBounds', function () {
     .forEach(function (args) {
         var expectedValue = args.pop();
         it ('should return ' + expectedValue + ' when args are [' + args.join(', ') + '].', function () {
-            var result = sjl.wrapPointerWithinBounds.apply(sjl, args);
+            var result = sjl.wrapPointer.apply(sjl, args);
             expect(result).to.equal(expectedValue);
         });
     });

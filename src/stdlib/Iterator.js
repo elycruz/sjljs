@@ -49,7 +49,7 @@
                      */
                     set: function (pointer) {
                         sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', pointer, Number);
-                        _pointer = sjl.constrainPointerWithinBounds(pointer, 0, _values.length);
+                        _pointer = sjl.constrainPointer(pointer, 0, _values.length);
                     }
                 },
                 size: {
