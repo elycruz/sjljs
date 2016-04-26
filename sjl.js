@@ -1,7 +1,7 @@
-/**! sjljs 5.6.0
+/**! sjljs 5.6.34
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: cd1cdfba77c9434675b40d4f049cf7b3
- * | Built-on: Mon Apr 25 2016 19:40:32 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: 1057e036fa31cdc5e66454c460fae3ff
+ * | Built-on: Tue Apr 26 2016 17:06:17 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module.
  * @module sjl {Object}
@@ -3690,6 +3690,7 @@
 
 /**
  * Created by elydelacruz on 3/25/16.
+ * @todo finish the class (BooleanFilter).
  */
 (function () {
 

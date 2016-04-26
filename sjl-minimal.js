@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 5.6.0 
+/**! sjl-minimal.js 5.6.34 
  * | License: GPL-2.0+ AND MIT 
  * | md5checksum: 72c11152c6f92d5d7b063f49bf2ef3e6 
- * | Built-on: Mon Apr 25 2016 19:40:31 GMT-0400 (Eastern Daylight Time) 
+ * | Built-on: Tue Apr 26 2016 17:06:16 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -17,7 +17,8 @@
         _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         slice = Array.prototype.slice,
-        globalContext = isNodeEnv ? global : window;
+        globalContext = isNodeEnv ? global : window,
+        libSrcRootPath = null;
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
@@ -568,7 +569,7 @@
      * Used in methods that require a super class or constructor as a parameter
      * and none is given.
      * @param superClass {Function} - Super class constructor.  Required.
-     * @returns {Function}
+     * @returns {StandInConstructor}
      */
     function standInConstructor(superClass) {
         return function StandInConstructor() {
@@ -644,17 +645,17 @@
          * Extends a new copy of self with passed in parameters.
          * @memberof class:sjl.stdlib.Extendable
          * @static sjl.stdlib.Extendable.extend
-         * @param constructor_ {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
+         * @param constructor {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
          *  the `statics` param (as if this param is an Object then it can contain methods within itself).
-         * @param methods_ {Object|undefined} - Methods.  Optional.
-         * @param statics_ {Object|undefined} - Static methods.  Optional.
+         * @param methods {Object|undefined} - Methods.  Optional.
+         * @param statics {Object|undefined} - Static methods.  Optional.
          */
         constructor.extend = function (constructor_, methods_, statics_) {
             return defineSubClass(constructor, constructor_, methods_, statics_);
         };
 
         // Define constructor's constructor
-        defineEnumProp(constructor.prototype, 'constructor', {value: constructor});
+        Object.defineProperty(constructor.prototype, 'constructor', {value: constructor});
 
         // Copy the methods and statics as we would for a regular class
         if (methods) extend(constructor.prototype, methods, true);
@@ -740,7 +741,7 @@
      * @param paramName {String} - Param name of the value being passed in.
      * @param value {*} - Value to inspect.
      * @param type {String|Function} - Expected type constructor or constructor name.
-     * @param suffix {String|Undefined} - A hint to user or a way to fix the error;  Message to suffix to error message.  Optional.
+     * @param suffix {String} - A hint to user or a way to fix the error;  Message to suffix to error message.
      * @returns {{}} - Sjl.
      */
     function throwTypeErrorIfNotOfType (prefix, paramName, value, type, suffix) {
@@ -820,10 +821,11 @@
      * @param obj {Object}
      * @param key {String}
      * @param value {*}
-     * @return {*} - Passed in object.
+     * @param enumerable {Boolean} - Default `false`.
+     * @return {void}
      */
     function defineEnumProp(obj, key, value) {
-        return Object.defineProperty(obj, key, {
+        Object.defineProperty(obj, key, {
             value: value,
             enumerable: true
         });
@@ -1020,7 +1022,7 @@
     }
     else {
         // Create top level frontend package.
-        createTopLevelPackage(sjl, 'package', 'ns');
+        createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
 
         // Instantiate known namespaces and set them directly on `sjl` for ease of use;
         // E.g., Accessing `sjl.ns.stdlib.Extendable` now becomes `sjl.stdlib.Extendable`

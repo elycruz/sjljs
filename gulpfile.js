@@ -36,20 +36,8 @@ gulp.task('package-member-list-markdown', function () {
         .pipe(fs.createWriteStream(filePath));
 });
 
-// Shortcut for testing
-gulp.task('pmlmd', ['package-member-list-markdown']);
-
 gulp.task('readme', ['package-member-list-markdown'], function () {
-    gulp.src([
-        'markdown-fragments/readme-header.md',
-        'markdown-fragments/readme-sections/sections.md',
-        'markdown-fragments/readme-sections/getting-started.md',
-        'markdown-fragments/readme-sections/packages-and-members.md',
-        'markdown-fragments/generated/packages-and-members-list.md',
-        'markdown-fragments/package-and-member-docs/*.md',
-        'markdown-fragments/readme-sections/tests.md',
-        'markdown-fragments/readme-footer.md',
-    ])
+    gulp.src(gulpConfig.readme)
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });
@@ -115,7 +103,8 @@ gulp.task('uglify', ['concat'], function () {
             cb();
         }))
         .pipe(uglify())
-        .pipe(header('/**! sjljs <%= version %> | License: <%= license %> | md5checksum: <%= fileHash %> | Built-on: <%= (new Date()) %> **/', packageJson))
+        .pipe(header('/**! sjljs <%= version %> | License: <%= license %> | ' +
+            'md5checksum: <%= fileHash %> | Built-on: <%= (new Date()) %> **/', packageJson))
         .pipe(gulp.dest('./'));
 });
 
@@ -169,8 +158,6 @@ gulp.task('make-browser-test-suite', function () {
         .pipe(concat('tests/for-browser/test-suite.js'))
         .pipe(gulp.dest('./'));
 });
-
-gulp.task('mbts', ['make-browser-test-suite']);
 
 gulp.task('jshint', function () {
     return gulp.src('src/**/*.js')
