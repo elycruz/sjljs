@@ -1,5 +1,6 @@
 /**
  * Created by elydelacruz on 3/25/16.
+ * @todo finish the class (BooleanFilter).
  */
 (function () {
 
