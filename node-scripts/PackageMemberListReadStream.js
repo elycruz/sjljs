@@ -39,12 +39,16 @@ function renderNode(dir, file, stat, padLeft) {
         href = renderHref(typeForHref.replace(/\s/g, '-') + name),
 
     // ~~ REMOVE FROM HERE ~~
+        // Added this here temporarily but this should be pushed to it's own stream
+        // and should be contained in an appropriate function and/or class.
         fileName = (type + name).replace(/\s/g, '-'),
-        docFilePath = './markdown-fragments/package-and-member-docs/' + fileName + '.md';
+        docFilePath = './markdown-fragments/generated/' + fileName + '.md';
+    // If doc file doesn't exist, generate an empty file for it
     if (!fs.existsSync(docFilePath)) {
         fs.writeFileSync(docFilePath,
             '### ' + label.replace(/[\[\]]/g, '') + '\n' +
-            '@todo - Added documentation here.\n');
+            '@todo - Added documentation here.\n' +
+            '[Back to package and member list.](#packages-and-members)\n');
     }
     // ~~ /REMOVE FROM HERE ~~
 
