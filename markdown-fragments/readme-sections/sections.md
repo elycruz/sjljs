@@ -1,8 +1,8 @@
 ## Sections in Readme:
 - [Getting Started](#getting-started)
-- [Packages and Members](#packagesandmembers)
+- [Packages and Members](#packages-and-members)
 - [Tests](#tests)
 - [Requirements](#requirements)
-- [Supported Platforms](#supported-platformss)
+- [Supported Platforms](#supported-platforms)
 - [Todos](#todos)
 - [License](#license)
