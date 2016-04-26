@@ -42,7 +42,7 @@ function renderNode(dir, file, stat, padLeft) {
         // Added this here temporarily but this should be pushed to it's own stream
         // and should be contained in an appropriate function and/or class.
         fileName = (type + name).replace(/\s/g, '-'),
-        docFilePath = './markdown-fragments/generated/' + fileName + '.md';
+        docFilePath = './markdown-fragments/package-and-member-docs/' + fileName + '.md';
     // If doc file doesn't exist, generate an empty file for it
     if (!fs.existsSync(docFilePath)) {
         fs.writeFileSync(docFilePath,

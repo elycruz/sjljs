@@ -1,4 +1,5 @@
 npm-debug.log
+**/.keepdir
 .idea
 .sass-cache
 .tmp
