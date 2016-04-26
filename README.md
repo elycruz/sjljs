@@ -29,47 +29,143 @@ Include either the full library './sjl[.min].js' or the minimal version './sjl-m
 only includes the core and no classes or constructors from it's other packages).
 
 ## Packages and members:
-**Legend** 
+#### Legend 
 - **(m)** - Member prefix.  Denotes item is a member;  E.g., A constructor, method or a property.
 - **(p)** - Package prefix.  Denotes item is a package.
 
-- [(p) sjl.filter](#psjlfilter)
-  - [(m) sjl.filter.BooleanFilter](#msjlfilterbooleanfilter)
-  - [(m) sjl.filter.Filter](#msjlfilterfilter)
-  - [(m) sjl.filter.FilterChain](#msjlfilterfilterchain)
-  - [(m) sjl.filter.SlugFilter](#msjlfilterslugfilter)
-  - [(m) sjl.filter.StringToLowerFilter](#msjlfilterstringtolowerfilter)
-  - [(m) sjl.filter.StringTrimFilter](#msjlfilterstringtrimfilter)
-  - [(m) sjl.filter.StripTagsFilter](#msjlfilterstriptagsfilter)
-- [(p) sjl.input](#psjlinput)
-  - [(m) sjl.input.Input](#msjlinputinput)
-- [(p) sjl.nodejs](#psjlnodejs)
-  - [(m) sjl.nodejs.Namespace](#msjlnodejsnamespace)
-- [(m) sjl](#msjl)
-- [(p) sjl.stdlib](#psjlstdlib)
-  - [(m) sjl.stdlib.Config](#msjlstdlibconfig)
-  - [(m) sjl.stdlib.Extendable](#msjlstdlibextendable)
-  - [(m) sjl.stdlib.iterable](#msjlstdlibiterable)
-  - [(m) sjl.stdlib.Iterator](#msjlstdlibiterator)
-  - [(m) sjl.stdlib.ObjectIterator](#msjlstdlibobjectiterator)
-  - [(m) sjl.stdlib.Optionable](#msjlstdliboptionable)
-  - [(m) sjl.stdlib.PriorityList](#msjlstdlibprioritylist)
-  - [(m) sjl.stdlib.SjlMap](#msjlstdlibsjlmap)
-  - [(m) sjl.stdlib.SjlSet](#msjlstdlibsjlset)
-- [(p) sjl.validator](#psjlvalidator)
-  - [(m) sjl.validator.AlnumValidator](#msjlvalidatoralnumvalidator)
-  - [(m) sjl.validator.DigitValidator](#msjlvalidatordigitvalidator)
-  - [(m) sjl.validator.NotEmptyValidator](#msjlvalidatornotemptyvalidator)
-  - [(m) sjl.validator.NumberValidator](#msjlvalidatornumbervalidator)
-  - [(m) sjl.validator.RegexValidator](#msjlvalidatorregexvalidator)
-  - [(m) sjl.validator.StringLengthValidator](#msjlvalidatorstringlengthvalidator)
-  - [(m) sjl.validator.Validator](#msjlvalidatorvalidator)
-  - [(m) sjl.validator.ValidatorChain](#msjlvalidatorvalidatorchain)
-  
-#### (p) sjl.filter
-This is just a test.
+#### Packages and Members List:
 
-### Tests:
+- [(p) sjl.filter](#p-sjlfilter)
+  - [(m) sjl.filter.BooleanFilter](#m-sjlfilterbooleanfilter)
+  - [(m) sjl.filter.Filter](#m-sjlfilterfilter)
+  - [(m) sjl.filter.FilterChain](#m-sjlfilterfilterchain)
+  - [(m) sjl.filter.SlugFilter](#m-sjlfilterslugfilter)
+  - [(m) sjl.filter.StringToLowerFilter](#m-sjlfilterstringtolowerfilter)
+  - [(m) sjl.filter.StringTrimFilter](#m-sjlfilterstringtrimfilter)
+  - [(m) sjl.filter.StripTagsFilter](#m-sjlfilterstriptagsfilter)
+- [(p) sjl.input](#p-sjlinput)
+  - [(m) sjl.input.Input](#m-sjlinputinput)
+- [(p) sjl.nodejs](#p-sjlnodejs)
+  - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
+- [(m) sjl](#m-sjl)
+- [(p) sjl.stdlib](#p-sjlstdlib)
+  - [(m) sjl.stdlib.Config](#m-sjlstdlibconfig)
+  - [(m) sjl.stdlib.Extendable](#m-sjlstdlibextendable)
+  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
+  - [(m) sjl.stdlib.Iterator](#m-sjlstdlibiterator)
+  - [(m) sjl.stdlib.ObjectIterator](#m-sjlstdlibobjectiterator)
+  - [(m) sjl.stdlib.Optionable](#m-sjlstdliboptionable)
+  - [(m) sjl.stdlib.PriorityList](#m-sjlstdlibprioritylist)
+  - [(m) sjl.stdlib.SjlMap](#m-sjlstdlibsjlmap)
+  - [(m) sjl.stdlib.SjlSet](#m-sjlstdlibsjlset)
+- [(p) sjl.validator](#p-sjlvalidator)
+  - [(m) sjl.validator.AlnumValidator](#m-sjlvalidatoralnumvalidator)
+  - [(m) sjl.validator.DigitValidator](#m-sjlvalidatordigitvalidator)
+  - [(m) sjl.validator.NotEmptyValidator](#m-sjlvalidatornotemptyvalidator)
+  - [(m) sjl.validator.NumberValidator](#m-sjlvalidatornumbervalidator)
+  - [(m) sjl.validator.RegexValidator](#m-sjlvalidatorregexvalidator)
+  - [(m) sjl.validator.StringLengthValidator](#m-sjlvalidatorstringlengthvalidator)
+  - [(m) sjl.validator.Validator](#m-sjlvalidatorvalidator)
+  - [(m) sjl.validator.ValidatorChain](#m-sjlvalidatorvalidatorchain)
+
+
+### (m) sjl.filter.BooleanFilter
+@todo - Added documentation here.
+
+### (m) sjl.filter.Filter
+@todo - Added documentation here.
+
+### (m) sjl.filter.FilterChain
+@todo - Added documentation here.
+
+### (m) sjl.filter.SlugFilter
+@todo - Added documentation here.
+
+### (m) sjl.filter.StringToLowerFilter
+@todo - Added documentation here.
+
+### (m) sjl.filter.StringTrimFilter
+@todo - Added documentation here.
+
+### (m) sjl.filter.StripTagsFilter
+@todo - Added documentation here.
+
+### (m) sjl.input.Input
+@todo - Added documentation here.
+
+### (m) sjl
+@todo - Added documentation here.
+
+### (m) sjl.nodejs.Namespace
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.Config
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.Extendable
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.Iterator
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.ObjectIterator
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.Optionable
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.PriorityList
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.SjlMap
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.SjlSet
+@todo - Added documentation here.
+
+### (m) sjl.stdlib.iterable
+@todo - Added documentation here.
+
+### (m) sjl.validator.AlnumValidator
+@todo - Added documentation here.
+
+### (m) sjl.validator.DigitValidator
+@todo - Added documentation here.
+
+### (m) sjl.validator.NotEmptyValidator
+@todo - Added documentation here.
+
+### (m) sjl.validator.NumberValidator
+@todo - Added documentation here.
+
+### (m) sjl.validator.RegexValidator
+@todo - Added documentation here.
+
+### (m) sjl.validator.StringLengthValidator
+@todo - Added documentation here.
+
+### (m) sjl.validator.Validator
+@todo - Added documentation here.
+
+### (m) sjl.validator.ValidatorChain
+@todo - Added documentation here.
+
+### (p) sjl.filter
+@todo - Added documentation here.
+
+### (p) sjl.input
+@todo - Added documentation here.
+
+### (p) sjl.nodejs
+@todo - Added documentation here.
+
+### (p) sjl.stdlib
+@todo - Added documentation here.
+
+### (p) sjl.validator
+@todo - Added documentation here.
+
+## Tests:
 1.)  Run `npm install` in project root.
 - Tests for all components listed under "Utilities" above.
 - Tests to be run on server.  See './tests/for-server'.

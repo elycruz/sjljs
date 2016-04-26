@@ -48,6 +48,7 @@ gulp.task('readme', ['package-member-list-markdown'], function () {
         'markdown-fragments/readme-sections/getting-started.md',
         'markdown-fragments/readme-sections/packages-and-members.md',
         'markdown-fragments/generated/packages-and-members-list.md',
+        'markdown-fragments/package-and-member-docs/*.md',
         'markdown-fragments/readme-sections/tests.md',
         'markdown-fragments/readme-footer.md',
     ])

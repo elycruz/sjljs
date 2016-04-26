@@ -35,7 +35,19 @@ function renderNode(dir, file, stat, padLeft) {
         name = renderLabelNodeName(dir, basename),
         type = renderType(stat),
         label = renderLabel(type + name),
-        href = renderHref(type.replace(/[\(\)\s]+/g, '') + name);
+        typeForHref = type.replace(/[\(\)]+/g, ''),
+        href = renderHref(typeForHref.replace(/\s/g, '-') + name),
+
+    // ~~ REMOVE FROM HERE ~~
+        fileName = (type + name).replace(/\s/g, '-'),
+        docFilePath = './markdown-fragments/package-and-member-docs/' + fileName + '.md';
+    if (!fs.existsSync(docFilePath)) {
+        fs.writeFileSync(docFilePath,
+            '### ' + label.replace(/[\[\]]/g, '') + '\n' +
+            '@todo - Added documentation here.\n');
+    }
+    // ~~ /REMOVE FROM HERE ~~
+
     return renderMdLi(label + href, padLeft);
 }
 
@@ -119,6 +131,7 @@ sjl.extend(PackageMemberListReadStream.prototype, {
             this.createPackageMemberList(this._pathToRead);
         }
         else {
+            this.push('\n');
             this.push(null);
         }
     },
