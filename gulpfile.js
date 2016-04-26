@@ -44,10 +44,10 @@ gulp.task('pmlmd', ['package-member-list-markdown']);
 gulp.task('readme', ['package-member-list-markdown'], function () {
     gulp.src([
         'markdown-fragments/readme-header.md',
-        'markdown-fragments/readme-sections/getting-started.md',
-        'markdown-fragments/readme-sections/packages-and-members-section.md',
-        'markdown-fragments/generated/packages-and-members-list.md',
         'markdown-fragments/readme-sections/sections.md',
+        'markdown-fragments/readme-sections/getting-started.md',
+        'markdown-fragments/readme-sections/packages-and-members.md',
+        'markdown-fragments/generated/packages-and-members-list.md',
         'markdown-fragments/readme-sections/tests.md',
         'markdown-fragments/readme-footer.md',
     ])

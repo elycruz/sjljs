@@ -1,4 +1,3 @@
-
 - [(p) sjl.filter](#psjlfilter)
   - [(m) sjl.filter.BooleanFilter](#msjlfilterbooleanfilter)
   - [(m) sjl.filter.Filter](#msjlfilterfilter)

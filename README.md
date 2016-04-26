@@ -15,10 +15,23 @@ functional programming.
 ~~See release notes for release 5.6.0.~~
 ## Warning:  This is branch is in alhpa.
 
+## Sections in Readme:
+- [Getting Started](#getting-started)
+- [Packages and Members](#packagesandmembers)
+- [Tests](#tests)
+- [Requirements](#requirements)
+- [Supported Platforms](#supported-platformss)
+- [Todos](#todos)
+- [License](#license)
+
 ## Getting Started:
 Include either the full library './sjl[.min].js' or the minimal version './sjl-minimal[.min].js' (the minimal version
 only includes the core and no classes or constructors from it's other packages).
 
+## Packages and members:
+**Legend** 
+- **(m)** - Member prefix.  Denotes item is a member;  E.g., A constructor, method or a property.
+- **(p)** - Package prefix.  Denotes item is a package.
 
 - [(p) sjl.filter](#psjlfilter)
   - [(m) sjl.filter.BooleanFilter](#msjlfilterbooleanfilter)
@@ -52,14 +65,9 @@ only includes the core and no classes or constructors from it's other packages).
   - [(m) sjl.validator.StringLengthValidator](#msjlvalidatorstringlengthvalidator)
   - [(m) sjl.validator.Validator](#msjlvalidatorvalidator)
   - [(m) sjl.validator.ValidatorChain](#msjlvalidatorvalidatorchain)
-## Sections in Readme:
-- [Getting Started](#getting-started)
-- [Packages and Members](#packagesandmembers)
-- [Tests](#tests)
-- [Requirements](#requirements)
-- [Supported Platforms](#supported-platformss)
-- [Todos](#todos)
-- [License](#license)
+  
+#### (p) sjl.filter
+This is just a test.
 
 ### Tests:
 1.)  Run `npm install` in project root.

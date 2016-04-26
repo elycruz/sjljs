@@ -59,7 +59,7 @@ function renderHref(innerText) {
 
 function renderMdLi(innerText, padLeft) {
     padLeft = repeatStr(' ', getEvenNumber(padLeft)) + '';
-    return '\n' + padLeft + '- ' + innerText;
+    return padLeft + '- ' + innerText + '\n';
 }
 
 function createPackageMemberList(dir, levelsDeep) {
