@@ -1,7 +1,8 @@
 /**
  * Created by Ely on 4/25/2016.
  * Description: Readable stream for outputting markdown friendly list
- * of packages and members on 'sjljs' project.
+ * of packages and members for 'sjljs' project.  It also outputs any missing
+ * doc files for any particular member or package.
  * @exports PackageMemberListReadStream
  */
 
