@@ -17,13 +17,40 @@ var packageJson = require('./package'),
     crypto = require('crypto'),
     requirejs = require('gulp-requirejs'),
     del = require('del'),
+    fs = require('fs'),
+    util = require('util'),
     jsHintPipe = lazypipe()
         .pipe(jshint)
         .pipe(duration, chalk.cyan("jshint duration"))
-        .pipe(jshint.reporter, 'jshint-stylish');
+        .pipe(jshint.reporter, 'jshint-stylish'),
+    PackageMemberListReadStream = require('./node-scripts/PackageMemberListReadStream.js');
 
-gulp.task('readme', function () {
-    gulp.src(['markdown-fragments/README-fragment.md'])
+gulp.task('package-member-list-markdown', function () {
+    var outputDir = './markdown-fragments/generated',
+        filePath = outputDir + '/packages-and-members-list.md',
+        ws;
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir);
+    }
+    fs.writeFileSync(filePath, '');
+    ws = fs.createWriteStream(filePath);
+    return (new PackageMemberListReadStream('./src'))
+        .pipe(ws);
+});
+
+// Shortcut for testing
+gulp.task('pmlmd', ['package-member-list-markdown']);
+
+gulp.task('readme', ['package-member-list-markdown'], function () {
+    gulp.src([
+        'markdown-fragments/readme-header.md',
+        'markdown-fragments/readme-sections/getting-started.md',
+        'markdown-fragments/readme-sections/packages-and-members-section.md',
+        'markdown-fragments/generated/packages-and-members-list.md',
+        'markdown-fragments/readme-sections/sections.md',
+        'markdown-fragments/readme-sections/tests.md',
+        'markdown-fragments/readme-footer.md',
+    ])
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
 });
@@ -164,11 +191,11 @@ gulp.task('watch', function () {
         'make-browser-test-suite'
     ]);
 
-    // Watch readme for 'jsdoc' task
+    // Watch readme-sections for 'jsdoc' task
     gulp.watch(['README.md'] /*['jsdoc']*/);
 
-    // Watch changelog-fragments and markdown-fragments for 'readme' task
-    gulp.watch(['markdown-fragments/*.md'], ['readme']);
+    // Watch changelog-fragments and markdown-fragments-fragments for 'readme-sections' task
+    gulp.watch(['markdown-fragments-fragments/*.md'], ['readme']);
 
 });
 
