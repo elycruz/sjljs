@@ -12,7 +12,8 @@ Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc.
 or as a supplement to applications requiring quick ramp up, some semblance of cohesion, and/or applications requiring 
 functional programming.
 
-See release notes for release 5.6.0.
+~~See release notes for release 5.6.0.~~
+## Warning:  This is branch is in alhpa.
 
 ## Sections in Readme:
 - [Getting Started](#getting-started)
