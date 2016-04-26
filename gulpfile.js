@@ -27,15 +27,13 @@ var packageJson = require('./package'),
 
 gulp.task('package-member-list-markdown', function () {
     var outputDir = './markdown-fragments/generated',
-        filePath = outputDir + '/packages-and-members-list.md',
-        ws;
+        filePath = outputDir + '/packages-and-members-list.md';
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir);
     }
     fs.writeFileSync(filePath, '');
-    ws = fs.createWriteStream(filePath);
     return (new PackageMemberListReadStream('./src'))
-        .pipe(ws);
+        .pipe(fs.createWriteStream(filePath));
 });
 
 // Shortcut for testing
