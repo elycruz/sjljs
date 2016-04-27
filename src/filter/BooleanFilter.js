@@ -99,9 +99,13 @@
     function castEmptyArray (value) {
 
     }
+    
     function castEmptyObject () {}
+    
     function castByJavascriptCast () {}
+    
     function castFalseString () {}
+    
     function castYesNo () {}
 
     Object.defineProperties(BooleanFilter, {
