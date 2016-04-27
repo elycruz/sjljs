@@ -15,9 +15,9 @@
                 if (!sjl.isset(this)) {
                     return BooleanFilter.filter(valueOrOptions);
                 }
-                var _allowCasting = true,
-                    _translations = {}, // Object<String, Boolean>
-                    _conversionRules = []; // Array<String>
+                var _allowCasting = true,       // Boolean
+                    _translations = {},         // Object<String, Boolean>
+                    _conversionRules = [];      // Array<String>
                 Object.defineProperties(this, {
                     allowCasting: {
                         get: function () {
@@ -50,83 +50,157 @@
                 Filter.apply(this, arguments);
             },
             filter: function (value) {
-                return BooleanFilter.filter(value);
+                return BooleanFilter.filter(
+                    this.allowCasting ? castValue(value, this.conversionRules) : value
+                );
             }
         });
 
-    function castValue(value, castingRules) {
-        var out;
-        castingRules.forEach(function (rule) {
-            if (rule in BooleanFilter.castingRules) {
-                BooleanFilter.castingRules['cast' + sjl.ucaseFirst(rule)](value);
+    function loopThroughTranslations(value, translations) {
+        var retVal,
+            translationKeys = Object.keys(translations),
+            keysLen = translationKeys.length,
+            i, key;
+        for (i = 0; i < keysLen; i += 1) {
+            key = translationKeys[i];
+            if (value.toLowerCase() === key.toLowerCase()) {
+                retVal = translations[key];
+                break;
             }
-        });
-        return out;
+        }
+        return retVal;
+    }
+
+    function loopThroughConversionRules (value, conversionRules, translations) {
+        var retVal,
+            result, i, rule,
+            rulesLength,
+            castFuncName,
+            conversionRuleKeys;
+
+        // If 'all' was passed in
+        if (sjl.isString(conversionRules) && conversionRules.toLowerCase() === 'all') {
+            conversionRuleKeys = Object.keys(BooleanFilter.castingRules);
+            conversionRules = (new sjl.stdlib.SjlSet(conversionRuleKeys)).delete('byNative').toJSON();
+        }
+
+        // If conversion rules are empty validate by native cast
+        if (sjl.empty(conversionRules)) {
+            retVal = castByNative(value);
+        }
+        else {
+            rulesLength = conversionRules.length;
+            for (i = 0; i < rulesLength; i += 1) {
+                rule = conversionRules[i];
+                if (rule in BooleanFilter.castingRules === false) {
+                    continue;
+                }
+                castFuncName = 'cast' + sjl.ucaseFirst(rule);
+                args = castFuncName === 'string' ? [value, translations] : [value];
+                result = BooleanFilter.castingRules[castFuncName].apply(BooleanFilter, args);
+                if (sjl.issetAndOfType(result, Boolean)) {
+                    retVal = result;
+                    break;
+                }
+            }
+        }
+        return retVal;
+    }
+
+    function castValue(value, allowCasting, conversionRules, translations) {
+        var retVal;
+        if (sjl.isBoolean(allowCasting) && !allowCasting) {
+            retVal = value;
+        }
+        else if (arguments.length === 1) {
+            retVal = castByNative(value);
+        }
+        else if (sjl.notEmptyAndOfType(conversionRules, Array)) {
+            retVal = loopThroughConversionRules(value, conversionRules);
+        }
+        return retVal;
     }
 
     function castBoolean(value) {
-        if (sjl.classOfIs(value, Boolean)) {
-            return value;
-        }
+        return sjl.isBoolean(value) ? value : undefined;
     }
 
     function castInteger(value) {
-        if (sjl.classOfIs(value, Number)) {
-            return value !== 0;
-        }
+        return sjl.isNumber(value) ? value !== 0 : undefined;
     }
 
     function castFloat(value) {
-        if (sjl.classOfIs(value, Number)) {
-            return value !== 0.0;
-        }
+        return sjl.isNumber(value) ? Number(value.toFixed(1)) !== 0.0 : undefined;
     }
 
-    function castString(value, someValue ) {
-        if (!sjl.classOfIs(value, 'String')) {
-            return;
+    function castString(value, translations) {
+        var retVal;
+        if (sjl.notEmptyAndOfType(value, String) &&
+            sjl.notEmptyAndOfType(translations, Object)) {
+            retVal = loopThroughTranslations(value, translations);
         }
-        if (!sjl.isEmptyOrNotOfType(translations, Object)) {
-            Object.keys(translations).some(function (key) {
-            })
-        }
+        return retVal;
     }
 
     function castNull (value) {
-
+        return value === null ? false : undefined;
     }
 
-    function castEmptyArray (value) {
-
+    function castArray (value) {
+        var retVal;
+        if (Array.isArray(value)) {
+            retVal = value.length !== 0;
+        }
+        return retVal;
     }
     
-    function castEmptyObject () {}
+    function castObject (value) {
+        var retVal;
+        if (sjl.isObject(value)) {
+            retVal = Object.keys(value).length !== 0;
+        }
+        return retVal;
+    }
     
-    function castByJavascriptCast () {}
+    function castByNative (value) {
+        return Boolean(value);
+    }
     
-    function castFalseString () {}
+    function castFalseString (value) {
+        var retVal;
+        if (sjl.notEmptyAndOfType(value, String)) {
+            retVal = ['null', 'false', 'undefined', '0'].indexOf(value) === -1
+        }
+        return retVal;
+    }
     
-    function castYesNo () {}
+    function castYesNo (value, translations) {
+        var retVal,
+            defaultTrans = {yes: true, no: false};
+        if (sjl.notEmptyAndOfType(value, String)) {
+            retVal = loopThroughTranslations(value, sjl.extend(defaultTrans, translations));
+        }
+        return retVal;
+    }
 
     Object.defineProperties(BooleanFilter, {
         castingRules: {
             value: {
-                castBoolean: castBoolean,
-                castInteger: castInteger,
-                castFloat: castFloat,
-                castString: castString,
-                castNull: castNull,
-                castEmptyArray: castEmptyArray,
-                castEmptyObject: castEmptyObject,
-                castByJavascriptCast: castByJavascriptCast,
-                castFalseString: castFalseString,
-                castYesNo: castYesNo,
+                boolean: castBoolean,
+                integer: castInteger,
+                float: castFloat,
+                string: castString,
+                null: castNull,
+                array: castArray,
+                object: castObject,
+                byNative: castByNative,
+                falseString: castFalseString,
+                yesNo: castYesNo
             }
         },
         filter: {
-            value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.BooleanFilter', 'value', value, String);
-                return value.toLowerCase();
+            value: function filter (value, allowCastring, conversionRules, translations) {
+                return castValue(value, allowCastring, conversionRules, translations);
             },
             enumerable: true
         }
