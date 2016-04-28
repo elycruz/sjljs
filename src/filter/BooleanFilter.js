@@ -91,8 +91,6 @@
         var retVal,
             result, i, rule,
             rulesLength,
-            conversionRuleKeys,
-            args,
             rules = normalizeConversionRules(conversionRules);
 
         // If conversion rules are empty validate by native cast
@@ -181,7 +179,7 @@
     function castFalseString (value) {
         var retVal;
         if (sjl.notEmptyAndOfType(value, String)) {
-            retVal = ['null', 'false', 'undefined', '0', '[]', '{}'].indexOf(value) === -1
+            retVal = ['null', 'false', 'undefined', '0', '[]', '{}'].indexOf(value) === -1;
         }
         return retVal;
     }

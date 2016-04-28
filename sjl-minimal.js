@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 5.6.34 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 72c11152c6f92d5d7b063f49bf2ef3e6 
- * | Built-on: Tue Apr 26 2016 17:06:16 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: bf0283a6d9b16eb3360077f6423be59f 
+ * | Built-on: Thu Apr 28 2016 01:47:21 GMT-0400 (EDT) 
  **/
 /**
  * The `sjl` module.
@@ -700,11 +700,14 @@
          * @param value {*}
          * @returns {*}
          */
-        return obj[altFuncKey] =
+        obj[altFuncKey] =
             obj[funcKey] = function (nsString, value) {
                 return typeof nsString === _undefined ? obj[funcKey]
                     : unConfigurableNamespace(nsString, obj[funcKey], value);
-        };
+            };
+
+        // Return namespace function
+        return obj[funcKey];
     }
 
     /**

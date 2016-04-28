@@ -1,7 +1,7 @@
 /**! sjljs 5.6.34
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 1057e036fa31cdc5e66454c460fae3ff
- * | Built-on: Tue Apr 26 2016 17:06:17 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: 1456810164700340f6290d18b4fcc15d
+ * | Built-on: Thu Apr 28 2016 01:47:23 GMT-0400 (EDT)
  **//**
  * The `sjl` module.
  * @module sjl {Object}
@@ -699,11 +699,14 @@
          * @param value {*}
          * @returns {*}
          */
-        return obj[altFuncKey] =
+        obj[altFuncKey] =
             obj[funcKey] = function (nsString, value) {
                 return typeof nsString === _undefined ? obj[funcKey]
                     : unConfigurableNamespace(nsString, obj[funcKey], value);
-        };
+            };
+
+        // Return namespace function
+        return obj[funcKey];
     }
 
     /**
@@ -3402,7 +3405,6 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
         RegexValidator = sjl.validator.RegexValidator,
-        contextName = 'sjl.validator.DigitValidator',
         DigitValidator = function DigitValidator (/**...options {Object}**/) {
             RegexValidator.apply(this, [{
                 pattern: /^\d+$/,
@@ -3611,7 +3613,7 @@
 
         filter: function (value) {
             return [value].concat(this.filters).reduce(function (_value, filter) {
-                return filter.filter(_value)
+                return filter.filter(_value);
             });
         },
 
@@ -3698,6 +3700,7 @@
 
     var isNodeJs = typeof window === 'undefined',
         sjl = isNodeJs ? require('./../../src/sjl') : window.sjl,
+        contextName = 'sjl.filter.Filter',
         Filter = sjl.filter.Filter,
 
         BooleanFilter = Filter.extend({
@@ -3705,9 +3708,9 @@
                 if (!sjl.isset(this)) {
                     return BooleanFilter.filter(valueOrOptions);
                 }
-                var _allowCasting = true,
-                    _translations = {}, // Object<String, Boolean>
-                    _conversionRules = []; // Array<String>
+                var _allowCasting = true,       // Boolean
+                    _translations = {},         // Object<String, Boolean>
+                    _conversionRules = 'all';      // Array<String>
                 Object.defineProperties(this, {
                     allowCasting: {
                         get: function () {
@@ -3732,7 +3735,11 @@
                             return _conversionRules;
                         },
                         set: function (value) {
-                            sjl.throwTypeErrorIfNotOfType(contextName, 'conversionRules', value, Array);
+                            if (value === 'all' && sjl.isEmptyOrNotOfType(value, Array)) {
+                                throw new TypeError (contextName + '.conversionRules must be either equal to ' +
+                                    'string "all" or an of array of string rule names.' +
+                                    '  Type Received:' + sjl.classOf(value) + ';  Value received: ' + value);
+                            }
                             _conversionRules = value;
                         }
                     }
@@ -3740,79 +3747,162 @@
                 Filter.apply(this, arguments);
             },
             filter: function (value) {
-                return BooleanFilter.filter(value);
+                return BooleanFilter.filter(value, this.allowCasting, this.conversionRules, this.translations);
             }
         });
 
-    function castValue(value, castingRules) {
-        var out;
-        castingRules.forEach(function (rule) {
-            if (rule in BooleanFilter.castingRules) {
-                BooleanFilter.castingRules['cast' + sjl.ucaseFirst(rule)](value);
+    function loopThroughTranslations(value, translations) {
+        var retVal,
+            translationKeys = Object.keys(translations),
+            keysLen = translationKeys.length,
+            i, key;
+        for (i = 0; i < keysLen; i += 1) {
+            key = translationKeys[i];
+            if (value.toLowerCase() === key.toLowerCase()) {
+                retVal = translations[key];
+                break;
             }
-        });
-        return out;
+        }
+        return retVal;
+    }
+
+    function normalizeConversionRules (rules) {
+        var conversionRuleKeys,
+            conversionRules;
+
+        // If 'all' was passed in
+        if ((sjl.isArray(rules) && rules.indexOf('all') > -1) ||
+            (sjl.isString(rules) && rules.toLowerCase() === 'all')) {
+            conversionRuleKeys = Object.keys(BooleanFilter.castingRules);
+            conversionRules = (new sjl.stdlib.SjlSet(conversionRuleKeys)).delete('byNative').toJSON();
+        }
+        return conversionRules || rules;
+    }
+
+    function loopThroughConversionRules (value, conversionRules, translations) {
+        var retVal,
+            result, i, rule,
+            rulesLength,
+            rules = normalizeConversionRules(conversionRules);
+
+        // If conversion rules are empty validate by native cast
+        if (sjl.empty(rules)) {
+            retVal = castByNative(value);
+        }
+        else {
+            rulesLength = rules.length;
+            for (i = 0; i < rulesLength; i += 1) {
+                rule = rules[i];
+                if (rule in BooleanFilter.castingRules === false) {
+                    continue;
+                }
+                result = BooleanFilter.castingRules[rule].apply(BooleanFilter, [value, translations]);
+                if (sjl.issetAndOfType(result, Boolean)) {
+                    retVal = result;
+                    break;
+                }
+            }
+        }
+        return sjl.issetAndOfType(retVal, Boolean) ? retVal : false;
+    }
+
+    function castValue(value, allowCasting, conversionRules, translations) {
+        var retVal;
+        if (sjl.isBoolean(value)) {
+            retVal = value;
+        }
+        else if (sjl.isBoolean(allowCasting) && !allowCasting) {
+            retVal = value;
+        }
+        else if (arguments.length === 1) {
+            retVal = castByNative(value);
+        }
+        else if (conversionRules === 'all' || sjl.notEmptyAndOfType(conversionRules, Array)) {
+            retVal = loopThroughConversionRules(value, conversionRules, translations);
+        }
+        return retVal;
     }
 
     function castBoolean(value) {
-        if (sjl.classOfIs(value, Boolean)) {
-            return value;
-        }
+        return sjl.isBoolean(value) ? value : undefined;
     }
 
     function castInteger(value) {
-        if (sjl.classOfIs(value, Number)) {
-            return value !== 0;
-        }
+        return sjl.isNumber(value) ? value !== 0 : undefined;
     }
 
     function castFloat(value) {
-        if (sjl.classOfIs(value, Number)) {
-            return value !== 0.0;
-        }
+        return sjl.isNumber(value) ? Number(value.toFixed(1)) !== 0.0 : undefined;
     }
 
-    function castString(value, someValue ) {
-        if (!sjl.classOfIs(value, 'String')) {
-            return;
+    function castString(value, translations) {
+        var retVal;
+        if (sjl.notEmptyAndOfType(value, String) &&
+            sjl.notEmptyAndOfType(translations, Object)) {
+            retVal = loopThroughTranslations(value, translations);
         }
-        if (!sjl.isEmptyOrNotOfType(translations, Object)) {
-            Object.keys(translations).some(function (key) {
-            })
-        }
+        return retVal;
     }
 
     function castNull (value) {
-
+        return value === null ? false : undefined;
     }
 
-    function castEmptyArray (value) {
-
+    function castArray (value) {
+        var retVal;
+        if (Array.isArray(value)) {
+            retVal = value.length !== 0;
+        }
+        return retVal;
     }
-    function castEmptyObject () {}
-    function castByJavascriptCast () {}
-    function castFalseString () {}
-    function castYesNo () {}
+
+    function castObject (value) {
+        var retVal;
+        if (sjl.isObject(value)) {
+            retVal = Object.keys(value).length !== 0;
+        }
+        return retVal;
+    }
+
+    function castByNative (value) {
+        return Boolean(value);
+    }
+
+    function castFalseString (value) {
+        var retVal;
+        if (sjl.notEmptyAndOfType(value, String)) {
+            retVal = ['null', 'false', 'undefined', '0', '[]', '{}'].indexOf(value) === -1;
+        }
+        return retVal;
+    }
+
+    function castYesNo (value, translations) {
+        var retVal,
+            defaultTrans = {yes: true, no: false};
+        if (sjl.notEmptyAndOfType(value, String)) {
+            retVal = loopThroughTranslations(value, sjl.extend(defaultTrans, translations));
+        }
+        return retVal;
+    }
 
     Object.defineProperties(BooleanFilter, {
         castingRules: {
             value: {
-                castBoolean: castBoolean,
-                castInteger: castInteger,
-                castFloat: castFloat,
-                castString: castString,
-                castNull: castNull,
-                castEmptyArray: castEmptyArray,
-                castEmptyObject: castEmptyObject,
-                castByJavascriptCast: castByJavascriptCast,
-                castFalseString: castFalseString,
-                castYesNo: castYesNo,
+                boolean: castBoolean,
+                integer: castInteger,
+                float: castFloat,
+                string: castString,
+                null: castNull,
+                array: castArray,
+                object: castObject,
+                byNative: castByNative,
+                falseString: castFalseString,
+                yesNo: castYesNo
             }
         },
         filter: {
-            value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.BooleanFilter', 'value', value, String);
-                return value.toLowerCase();
+            value: function filter (value, allowCastring, conversionRules, translations) {
+                return castValue(value, allowCastring, conversionRules, translations);
             },
             enumerable: true
         }
@@ -4076,8 +4166,7 @@
         else if (!validateAttribs(attribs)) {
             throw new Error ('Attribs mismatch');
         }
-        var out = value,
-            spacePartial = StripTagsFilter.SPACE_REGEX_PARTIAL;
+        var out = value;
         attribs.forEach(function (attrib) {
             var regex = new RegExp(
                         '([\\n\\r\\t\\s]*' + attrib + '=\\"[^\\"]*\\")',
@@ -4129,6 +4218,7 @@
         ValidatorChain = sjl.validator.ValidatorChain,
         FilterChain = sjl.filter.FilterChain,
         Extendable = sjl.stdlib.Extendable,
+        contextName = 'sjl.input.Input',
         Input = function Input(options) {
             var _allowEmpty = false,
                 _continueIfEmpty = false,

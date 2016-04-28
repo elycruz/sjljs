@@ -9,7 +9,6 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../../src/sjl') : window.sjl || {},
         RegexValidator = sjl.validator.RegexValidator,
-        contextName = 'sjl.validator.DigitValidator',
         DigitValidator = function DigitValidator (/**...options {Object}**/) {
             RegexValidator.apply(this, [{
                 pattern: /^\d+$/,

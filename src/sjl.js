@@ -695,11 +695,14 @@
          * @param value {*}
          * @returns {*}
          */
-        return obj[altFuncKey] =
+        obj[altFuncKey] =
             obj[funcKey] = function (nsString, value) {
                 return typeof nsString === _undefined ? obj[funcKey]
                     : unConfigurableNamespace(nsString, obj[funcKey], value);
-        };
+            };
+
+        // Return namespace function
+        return obj[funcKey];
     }
 
     /**

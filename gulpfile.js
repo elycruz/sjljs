@@ -43,7 +43,9 @@ gulp.task('readme', ['package-member-list-markdown'], function () {
 });
 
 gulp.task('tests', function () {
-    gulp.src('tests/for-server/*.js')
+    gulp.src([
+        'tests/for-server/*.js'
+    ])
         .pipe(mocha());
 });
 
@@ -160,7 +162,10 @@ gulp.task('make-browser-test-suite', function () {
 });
 
 gulp.task('jshint', function () {
-    return gulp.src('src/**/*.js')
+    return gulp.src([
+        'src/**/*.js',
+        'tests/for-server/*.js'
+        ])
         .pipe(jsHintPipe());
 });
 

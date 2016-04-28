@@ -14,6 +14,7 @@
         ValidatorChain = sjl.validator.ValidatorChain,
         FilterChain = sjl.filter.FilterChain,
         Extendable = sjl.stdlib.Extendable,
+        contextName = 'sjl.input.Input',
         Input = function Input(options) {
             var _allowEmpty = false,
                 _continueIfEmpty = false,

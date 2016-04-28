@@ -30,7 +30,7 @@
 
         filter: function (value) {
             return [value].concat(this.filters).reduce(function (_value, filter) {
-                return filter.filter(_value)
+                return filter.filter(_value);
             });
         },
 

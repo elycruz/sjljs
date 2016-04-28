@@ -115,8 +115,7 @@
         else if (!validateAttribs(attribs)) {
             throw new Error ('Attribs mismatch');
         }
-        var out = value,
-            spacePartial = StripTagsFilter.SPACE_REGEX_PARTIAL;
+        var out = value;
         attribs.forEach(function (attrib) {
             var regex = new RegExp(
                         '([\\n\\r\\t\\s]*' + attrib + '=\\"[^\\"]*\\")',
