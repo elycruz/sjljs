@@ -49,7 +49,7 @@ function renderNode(dir, file, stat, padLeft) {
         fs.writeFileSync(docFilePath,
             '### ' + label.replace(/[\[\]]/g, '') + '\n' +
             '@todo - Added documentation here.\n' +
-            '[Back to package and member list.](#packages-and-members)\n');
+            '[Back to other packages and members list.](#other-packages-and-members)\n');
     }
     // ~~ /REMOVE FROM HERE ~~
 

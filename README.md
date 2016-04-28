@@ -133,343 +133,343 @@ only includes the core and no classes or constructors from it's other packages).
 
 ### (m) sjl.Symbol
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.argsToArray
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.autoNamespace
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.camelCase
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.classOf
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.classOfIs
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.classOfIsMulti
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.clone
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.constrainPointer
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.defineEnumProp
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.defineSubClass
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.empty
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.emptyMulti
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.extend
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.extractBoolFromArrayEnd
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.extractBoolFromArrayStart
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.extractFromArrayAt
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.filter.BooleanFilter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.filter.Filter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.filter.FilterChain
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.filter.SlugFilter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.filter.StringToLowerFilter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.filter.StringTrimFilter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.filter.StripTagsFilter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.filter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.hasMethod
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.implode
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.input.Input
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.input
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isArray
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isBoolean
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isEmpty
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isEmptyObj
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isEmptyOrNotOfType
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isFunction
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isNull
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isNumber
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isObject
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isString
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isSymbol
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isUndefined
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.isset
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.issetAndOfType
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.issetMulti
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.jsonClone
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.lcaseFirst
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.nodejs.Namespace
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.nodejs
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.notEmptyAndOfType
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.ns
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.package
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.restArgs
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.searchObj
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.sjl
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.stdlib.Config
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.Extendable
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.Iterator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.ObjectIterator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.Optionable
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.PriorityList
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.SjlMap
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.SjlSet
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib.iterable
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.stdlib
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.throwTypeErrorIfEmpty
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.throwTypeErrorIfNotOfType
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.ucaseFirst
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.unset
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.validator.AlnumValidator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator.DigitValidator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator.NotEmptyValidator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator.NumberValidator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator.RegexValidator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator.StringLengthValidator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator.Validator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator.ValidatorChain
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.validator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.valueOrDefault
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.wrapPointer
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (p) sjl.filter
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (p) sjl.input
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (p) sjl.nodejs
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (p) sjl.stdlib
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (p) sjl.validator
 @todo - Added documentation here.
-[Back to package and member list.](#packages-and-members)
+[Back to other packages and members list.](#other-packages-and-members)
 
 ## Unit Tests:
 To run unit tests:

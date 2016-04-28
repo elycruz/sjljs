@@ -42,7 +42,7 @@ function renderNode(memberName, padLeft) {
         fs.writeFileSync(docFilePath,
             '### ' + label.replace(/[\[\]]/g, '') + '\n' +
             '@todo - Added documentation here.\n' +
-            '[Back to package and member list.](#packages-and-members)\n');
+            '[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)\n');
     }
     // ~~ /REMOVE FROM HERE ~~
 
