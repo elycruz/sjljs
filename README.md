@@ -17,7 +17,8 @@ functional programming.
 
 ## Sections in Readme:
 - [Getting Started](#getting-started)
-- [Packages and Members](#packages-and-members)
+- [Sjl Direct Members](#sjl-direct-members)
+- [Other Packages and Members](#other-packages-and-members)
 - [Tests](#tests)
 - [Requirements](#requirements)
 - [Supported Platforms](#supported-platforms)
@@ -89,12 +90,12 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.validator](#m-sjlvalidator)
 
 
-## Packages and members:
+## Other Packages and members:
 #### Legend 
 - **(m)** - Member prefix.  Denotes item is a member;  E.g., A constructor, method or a property.
 - **(p)** - Package prefix.  Denotes item is a package;  E.g., an object with access to package members directly on it.
 
-#### Packages and Members List:
+#### Other Packages and Members List:
 
 - [(p) sjl.filter](#p-sjlfilter)
   - [(m) sjl.filter.BooleanFilter](#m-sjlfilterbooleanfilter)
