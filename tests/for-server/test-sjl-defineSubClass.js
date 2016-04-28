@@ -113,10 +113,10 @@ describe('sjl.defineSubClass', function () {
     describe('returned subclass via parent\'s `extend` method with constructor via `constructor` key', function () {
 
         // Subclass from extend method via with constructor via constructor key
-        var SubClass = SomeConstructor.extend(sjl.extend({
-            constructor: function SubClass() {
-            }
-        }, methods3), statics3);
+        var InitialConstructor = function SubClass() {},
+            SubClass = SomeConstructor.extend(sjl.extend({
+                constructor: InitialConstructor
+            }, methods3), statics3);
 
         it('should have return subclass with statics of parent and those passed in to inherit', function () {
             var mergedProps = sjl.extend({}, statics1, statics2, statics3);
@@ -137,6 +137,10 @@ describe('sjl.defineSubClass', function () {
         it('should return a subclass with a static `extend` method.', function () {
             expect(sjl.classOf(SubClass.extend)).to.equal(Function.name);
         });
+
+        it ('should have it\'s prototype\'s constructor property properly set.', function () {
+            expect(SubClass.prototype.constructor).to.equal(InitialConstructor);
+        })
     });
 
 });
