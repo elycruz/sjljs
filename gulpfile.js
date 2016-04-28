@@ -23,7 +23,8 @@ var packageJson = require('./package'),
         .pipe(jshint)
         .pipe(duration, chalk.cyan("jshint duration"))
         .pipe(jshint.reporter, 'jshint-stylish'),
-    PackageMemberListReadStream = require('./node-scripts/PackageMemberListReadStream.js');
+    PackageMemberListReadStream = require('./node-scripts/PackageMemberListReadStream'),
+    SjlDirectMemberListReadStream = require('./node-scripts/SjlDirectMemberListReadStream');
 
 gulp.task('package-member-list-markdown', function () {
     var outputDir = './markdown-fragments/generated',
@@ -36,7 +37,18 @@ gulp.task('package-member-list-markdown', function () {
         .pipe(fs.createWriteStream(filePath));
 });
 
-gulp.task('readme', ['package-member-list-markdown'], function () {
+gulp.task('sjl-direct-member-list-markdown', function () {
+    var outputDir = './markdown-fragments/generated',
+        filePath = outputDir + '/sjl-direct-members-list.md';
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir);
+    }
+    fs.writeFileSync(filePath, '');
+    return (new SjlDirectMemberListReadStream())
+        .pipe(fs.createWriteStream(filePath));
+});
+
+gulp.task('readme', ['sjl-direct-member-list-markdown', 'package-member-list-markdown'], function () {
     gulp.src(gulpConfig.readme)
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));

@@ -28,6 +28,67 @@ functional programming.
 Include either the full library './sjl[.min].js' or the minimal version './sjl-minimal[.min].js' (the minimal version
 only includes the core and no classes or constructors from it's other packages).
 
+## Sjl direct Members and Methods:
+#### Legend 
+- **(m)** - Member prefix.  Denotes item is a member;  E.g., A method or property.
+
+#### Members/Methods:
+
+- [(m) sjl.argsToArray](#m-sjlargstoarray)
+- [(m) sjl.camelCase](#m-sjlcamelcase)
+- [(m) sjl.classOf](#m-sjlclassof)
+- [(m) sjl.classOfIs](#m-sjlclassofis)
+- [(m) sjl.classOfIsMulti](#m-sjlclassofismulti)
+- [(m) sjl.clone](#m-sjlclone)
+- [(m) sjl.constrainPointer](#m-sjlconstrainpointer)
+- [(m) sjl.defineSubClass](#m-sjldefinesubclass)
+- [(m) sjl.defineEnumProp](#m-sjldefineenumprop)
+- [(m) sjl.empty](#m-sjlempty)
+- [(m) sjl.emptyMulti](#m-sjlemptymulti)
+- [(m) sjl.extend](#m-sjlextend)
+- [(m) sjl.extractBoolFromArrayEnd](#m-sjlextractboolfromarrayend)
+- [(m) sjl.extractBoolFromArrayStart](#m-sjlextractboolfromarraystart)
+- [(m) sjl.extractFromArrayAt](#m-sjlextractfromarrayat)
+- [(m) sjl.hasMethod](#m-sjlhasmethod)
+- [(m) sjl.implode](#m-sjlimplode)
+- [(m) sjl.isset](#m-sjlisset)
+- [(m) sjl.issetMulti](#m-sjlissetmulti)
+- [(m) sjl.issetAndOfType](#m-sjlissetandoftype)
+- [(m) sjl.isEmpty](#m-sjlisempty)
+- [(m) sjl.isEmptyObj](#m-sjlisemptyobj)
+- [(m) sjl.isEmptyOrNotOfType](#m-sjlisemptyornotoftype)
+- [(m) sjl.isArray](#m-sjlisarray)
+- [(m) sjl.isBoolean](#m-sjlisboolean)
+- [(m) sjl.isFunction](#m-sjlisfunction)
+- [(m) sjl.isNull](#m-sjlisnull)
+- [(m) sjl.isNumber](#m-sjlisnumber)
+- [(m) sjl.isObject](#m-sjlisobject)
+- [(m) sjl.isString](#m-sjlisstring)
+- [(m) sjl.isSymbol](#m-sjlissymbol)
+- [(m) sjl.isUndefined](#m-sjlisundefined)
+- [(m) sjl.jsonClone](#m-sjljsonclone)
+- [(m) sjl.lcaseFirst](#m-sjllcasefirst)
+- [(m) sjl.autoNamespace](#m-sjlautonamespace)
+- [(m) sjl.notEmptyAndOfType](#m-sjlnotemptyandoftype)
+- [(m) sjl.restArgs](#m-sjlrestargs)
+- [(m) sjl.ucaseFirst](#m-sjlucasefirst)
+- [(m) sjl.unset](#m-sjlunset)
+- [(m) sjl.searchObj](#m-sjlsearchobj)
+- [(m) sjl.throwTypeErrorIfNotOfType](#m-sjlthrowtypeerrorifnotoftype)
+- [(m) sjl.throwTypeErrorIfEmpty](#m-sjlthrowtypeerrorifempty)
+- [(m) sjl.valueOrDefault](#m-sjlvalueordefault)
+- [(m) sjl.wrapPointer](#m-sjlwrappointer)
+- [(m) sjl.Symbol](#m-sjlsymbol)
+- [(m) sjl.ns](#m-sjlns)
+- [(m) sjl.package](#m-sjlpackage)
+- [(m) sjl.filter](#m-sjlfilter)
+- [(m) sjl.input](#m-sjlinput)
+- [(m) sjl.nodejs](#m-sjlnodejs)
+- [(m) sjl.sjl](#m-sjlsjl)
+- [(m) sjl.stdlib](#m-sjlstdlib)
+- [(m) sjl.validator](#m-sjlvalidator)
+
+
 ## Packages and members:
 #### Legend 
 - **(m)** - Member prefix.  Denotes item is a member;  E.g., A constructor, method or a property.
@@ -69,6 +130,74 @@ only includes the core and no classes or constructors from it's other packages).
   - [(m) sjl.validator.ValidatorChain](#m-sjlvalidatorvalidatorchain)
 
 
+### (m) sjl.Symbol
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.argsToArray
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.autoNamespace
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.camelCase
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.classOf
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.classOfIs
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.classOfIsMulti
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.clone
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.constrainPointer
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.defineEnumProp
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.defineSubClass
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.empty
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.emptyMulti
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.extend
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.extractBoolFromArrayEnd
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.extractBoolFromArrayStart
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.extractFromArrayAt
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
 ### (m) sjl.filter.BooleanFilter
 @todo - Added documentation here.
 [Back to package and member list.](#packages-and-members)
@@ -97,7 +226,91 @@ only includes the core and no classes or constructors from it's other packages).
 @todo - Added documentation here.
 [Back to package and member list.](#packages-and-members)
 
+### (m) sjl.filter
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.hasMethod
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.implode
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
 ### (m) sjl.input.Input
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.input
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isArray
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isBoolean
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isEmpty
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isEmptyObj
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isEmptyOrNotOfType
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isFunction
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isNull
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isNumber
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isObject
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isString
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isSymbol
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isUndefined
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.isset
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.issetAndOfType
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.issetMulti
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.jsonClone
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.lcaseFirst
 @todo - Added documentation here.
 [Back to package and member list.](#packages-and-members)
 
@@ -106,6 +319,34 @@ only includes the core and no classes or constructors from it's other packages).
 [Back to package and member list.](#packages-and-members)
 
 ### (m) sjl.nodejs.Namespace
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.nodejs
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.notEmptyAndOfType
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.ns
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.package
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.restArgs
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.searchObj
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.sjl
 @todo - Added documentation here.
 [Back to package and member list.](#packages-and-members)
 
@@ -145,6 +386,26 @@ only includes the core and no classes or constructors from it's other packages).
 @todo - Added documentation here.
 [Back to package and member list.](#packages-and-members)
 
+### (m) sjl.stdlib
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.throwTypeErrorIfEmpty
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.throwTypeErrorIfNotOfType
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.ucaseFirst
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.unset
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
 ### (m) sjl.validator.AlnumValidator
 @todo - Added documentation here.
 [Back to package and member list.](#packages-and-members)
@@ -174,6 +435,18 @@ only includes the core and no classes or constructors from it's other packages).
 [Back to package and member list.](#packages-and-members)
 
 ### (m) sjl.validator.ValidatorChain
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.validator
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.valueOrDefault
+@todo - Added documentation here.
+[Back to package and member list.](#packages-and-members)
+
+### (m) sjl.wrapPointer
 @todo - Added documentation here.
 [Back to package and member list.](#packages-and-members)
 
