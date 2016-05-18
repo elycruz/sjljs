@@ -19,14 +19,14 @@
             var _allowEmpty = false,
                 _continueIfEmpty = false,
                 _breakOnFailure = false,
-                _fallbackValue = false,
+                _fallbackValue,
                 _filterChain = null,
                 _alias = '',
                 _required = true,
                 _validatorChain = null,
-                _value = null,
-                _rawValue = null,
-                _messages = null,
+                _value,
+                _rawValue,
+                _messages = [],
 
                 // Protect from adding programmatic validators, from within `isValid`, more than once
                 _validationHasRun = false;
@@ -225,6 +225,22 @@
 
         mergeValidatorChain: function (validatorChain) {
             return this.validatorChain.mergeValidatorChain(validatorChain);
+        },
+
+        addFilters: function (filters) {
+            return this.filterChain.addFilters(filters);
+        },
+
+        addFilter: function (filter) {
+            return this.filterChain.addFilter(filter);
+        },
+
+        prependFilter: function (filter) {
+            return this.filterChain.prependFilter(filter);
+        },
+
+        mergeFilterChain: function (filterChain) {
+            return this.filterChain.mergeFilterChain(filterChain);
         }
 
     });
