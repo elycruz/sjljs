@@ -19,8 +19,27 @@ describe ('sjl.input.Input', function () {
         Input =             sjl.input.Input;
 
     describe('Constructor', function () {
-
-
+        it ('should be a subclass of `sjl.stdlib.Extendable`.', function () {
+            expect((new Input())).to.be.instanceof(sjl.stdlib.Extendable);
+        });
+        it ('should construct with no parameters passed.', function () {
+            expect((new Input())).to.be.instanceof(Input);
+        });
+        it ('should construct an instance with the `alias` property populated when first parameter is a string.', function () {
+            var alias = 'hello';
+            expect((new Input(alias)).alias).to.equal(alias);
+        });
+        it ('should populate all properties passed in via hash object.', function () {
+            var options = {
+                alias: 'hello',
+                breakOnFailure: true,
+                fallbackValue: 'hello world'
+            },
+                input = new Input(options);
+            Object.keys(options).forEach(function (key) {
+                expect(input[key]).to.equal(options[key]);
+            });
+        });
     });
 
     describe('Interface', function () {
