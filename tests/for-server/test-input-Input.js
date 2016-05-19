@@ -14,39 +14,48 @@ describe ('sjl.input.Input', function () {
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~
 
-    var Input = sjl.ns.input.Input;
+    var FilterChain =       sjl.filter.FilterChain,
+        ValidatorChain =    sjl.validator.ValidatorChain,
+        Input =             sjl.input.Input;
 
-    describe('Should have the appropriate interface', function () {
-        var input = new Input(),
-            //propNames = [
-            //    'allowEmpty',
-            //    'continueIfEmpty',
-            //    'breakOnFailure',
-            //    'fallbackValue',
-            //    'filterChain',
-            //    'alias',
-            //    'required',
-            //    'validatorChain',
-            //    'value',
-            //    'rawValue',
-            //    'messages'
-            //],
-            methodNames = [
-                'isValid',
-                'mergeValidatorChain'
-            ],
-            method;
+    describe('Constructor', function () {
 
-        // Check methods exist
-        for (method in methodNames) {
-            method = methodNames[method];
+
+    });
+
+    describe('Interface', function () {
+        var input = new Input();
+        [
+            'isValid',
+            'mergeValidatorChain'
+        ].forEach(function (method) {
             it('should have a `' + method + '` method.', function () {
-                expect(typeof input[method]).to.equal('function');
+                expect(input[method]).to.be.instanceof(Function);
             });
-        }
+        });
     });
 
-    describe('Should return a valid ValidatorChain via it\'s getter.', function () {
-
+    describe('Properties.', function () {
+        var input = new Input();
+        [
+            ['allowEmpty', Boolean],
+            ['continueIfEmpty', Boolean],
+            ['breakOnFailure', Boolean],
+            ['fallbackValue', 'Undefined'],
+            ['filterChain', 'Null', FilterChain],
+            ['alias', String],
+            ['required', Boolean],
+            ['validatorChain', 'Null', ValidatorChain],
+            ['value', 'Undefined'],
+            ['rawValue', 'Undefined'],
+            ['messages', Array],
+            ['validationHasRun', Boolean]
+        ].forEach(function (args) {
+            it('should have an `' + args[0] + '` property.', function () {
+                var isValidProp = sjl.classOfIsMulti.apply(sjl, [input[args[0]]].concat(args.slice(1)));
+                expect(isValidProp).to.equal(true);
+            });
+        });
     });
+
 });

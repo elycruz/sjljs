@@ -14,16 +14,21 @@ describe('sjl.filter.FilterChain', function () {
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~
 
-    var Filter =            sjl.filter.Filter,
-        FilterChain =       sjl.filter.FilterChain,
-        BooleanFilter =   sjl.filter.BooleanFilter,
+    var Filter =                sjl.filter.Filter,
+        FilterChain =           sjl.filter.FilterChain,
+        BooleanFilter =         sjl.filter.BooleanFilter,
         StringToLowerFilter =   sjl.filter.StringToLowerFilter,
-        StringTrimFilter =   sjl.filter.StringTrimFilter,
-        SlugFilter =        sjl.filter.SlugFilter,
-        StripTagsFilter =   sjl.filter.StripTagsFilter;
+        StringTrimFilter =      sjl.filter.StringTrimFilter,
+        SlugFilter =            sjl.filter.SlugFilter,
+        StripTagsFilter =       sjl.filter.StripTagsFilter;
 
     it ('should be a subclass of sjl.stdlib.Extendable', function () {
         expect(new FilterChain()).to.be.instanceof(sjl.stdlib.Extendable);
+    });
+
+    it ('should have populated filters when they are passed in on construction.', function () {
+        var filters = [new StripTagsFilter()];
+        expect((new FilterChain(filters)).filters.length).to.equal(filters.length);
     });
 
     it ('should have expected proporties.', function () {
@@ -215,7 +220,6 @@ describe('sjl.filter.FilterChain', function () {
 
         filters1.concat(filters2).forEach(function (filter, index) {
             expect(filterChain1.filters[index]).to.equal(filter);
-            expect(filterChain1.breakChainOnFailure).to.equal(filterChain2.breakChainOnFailure);
         });
     });
 

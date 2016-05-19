@@ -11,7 +11,7 @@
         contextName = 'sjl.filter.FilterChain',
         ObjectIterator = sjl.stdlib.ObjectIterator,
         Filter = sjl.filter.Filter,
-        FilterChain = function FilterChain(/*...options {Object}*/) {
+        FilterChain = function FilterChain(filters) {
             var _filters = [];
             Object.defineProperties(this, {
                 filters: {
@@ -24,6 +24,9 @@
                     }
                 }
             });
+            if (filters) {
+                this.filters = filters.slice();
+            }
         };
 
     FilterChain = sjl.stdlib.Extendable.extend(FilterChain, {
