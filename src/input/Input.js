@@ -82,6 +82,18 @@
                         _filterChain = value;
                     }
                 },
+                validators: {
+                    get: function () {
+                        return this.validatorChain.validators;
+                    },
+                    set: function () {}
+                },
+                filters: {
+                    get: function () {
+                        return this.filterChain.filters;
+                    },
+                    set: function () {}
+                },
                 alias: {
                     get: function () {
                         return _alias;
@@ -198,6 +210,10 @@
             return retVal;
         },
 
+        validate: function (value) {
+            return false;
+        },
+
         filter: function (value) {
             return this.filterChain().filter(value);
         },
@@ -207,40 +223,50 @@
         },
 
         clearMessages: function () {
-            this.messages = [];
+            while (this.messages.length > 0) {
+                this.messages.pop();
+            }
             return this;
         },
 
         addValidators: function (validators) {
-            return this.validatorChain.addValidators(validators);
+            this.validatorChain.addValidators(validators);
+            return this;
         },
 
         addValidator: function (validator) {
-            return this.validatorChain.addValidator(validator);
+            this.validatorChain.addValidator(validator);
+            return this;
         },
 
         prependValidator: function (validator) {
-            return this.validatorChain.prependValidator(validator);
+            this.validatorChain.prependValidator(validator);
+            return this;
         },
 
         mergeValidatorChain: function (validatorChain) {
-            return this.validatorChain.mergeValidatorChain(validatorChain);
+            this.validatorChain.mergeValidatorChain(validatorChain);
+            return this;
         },
 
         addFilters: function (filters) {
-            return this.filterChain.addFilters(filters);
+            this.filterChain.addFilters(filters);
+            return this;
         },
 
         addFilter: function (filter) {
-            return this.filterChain.addFilter(filter);
+            this.filterChain.addFilter(filter);
+            return this;
         },
 
         prependFilter: function (filter) {
-            return this.filterChain.prependFilter(filter);
+            this.filterChain.prependFilter(filter);
+            return this;
         },
 
         mergeFilterChain: function (filterChain) {
-            return this.filterChain.mergeFilterChain(filterChain);
+            this.filterChain.mergeFilterChain(filterChain);
+            return this;
         }
 
     });
