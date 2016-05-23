@@ -164,6 +164,43 @@
     }
 
     /**
+     * For each for array like objects.
+     * @param arrayLike {Array|Set|SjlSet|SjlMap|Map}
+     * @param callback
+     * @param context
+     */
+    function forEach (arrayLike, callback, context) {
+        var classOfArrayLike = sjl.classOf(arrayLike);
+        switch (classOfArrayLike) {
+            case 'Array':
+            case 'Set':
+            case 'SjlSet':
+            case 'SjlMap':
+            case 'Map':
+                arrayLike.forEach(callback, context);
+            break;
+            case 'Object':
+                forEachInObj(arrayLike, callback, context);
+            break;
+            default:
+                throw new TypeError('sjl.forEach takes only ' +
+                    '`Array`, `Object`, `Map`, `Set`, `SjlSet`, and `SjlMap` objects.  ' +
+                    'Type passed in: `' + classOfArrayLike + '`.');
+        }
+    }
+
+    /**
+     * @param obj {Object}
+     * @param callback {Function}
+     * @param context {undefined|Object}
+     */
+    function forEachInObj (obj, callback, context) {
+        Object.keys(obj).forEach(function (key, index) {
+            callback.call(context, obj[key], key, index);
+        });
+    }
+
+    /**
      * Check if `value` is of one of the passed in types.
      * @param value {*}
      * @param type {Function|String} - Constructor or string.
@@ -959,6 +996,8 @@
         extractBoolFromArrayEnd: extractBoolFromArrayEnd,
         extractBoolFromArrayStart: extractBoolFromArrayStart,
         extractFromArrayAt: extractFromArrayAt,
+        forEach: forEach,
+        forEachInObj: forEachInObj,
         hasMethod: hasMethod,
         implode: implode,
         isset: isset,

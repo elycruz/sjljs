@@ -1,7 +1,7 @@
 /**! sjljs 5.6.89
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 1456810164700340f6290d18b4fcc15d
- * | Built-on: Thu Apr 28 2016 02:25:46 GMT-0400 (EDT)
+ * | md5checksum: 668c836ed52660dc087dbcbc0748a58f
+ * | Built-on: Sat May 21 2016 15:01:32 GMT-0400 (EDT)
  **//**
  * The `sjl` module.
  * @module sjl {Object}
@@ -2526,7 +2526,7 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'validators', value, Array);
-                        _validators = value;
+                        _validators = value.slice();
                     }
                 },
                 breakChainOnFailure: {
@@ -3594,7 +3594,7 @@
         contextName = 'sjl.filter.FilterChain',
         ObjectIterator = sjl.stdlib.ObjectIterator,
         Filter = sjl.filter.Filter,
-        FilterChain = function FilterChain(/*...options {Object}*/) {
+        FilterChain = function FilterChain(filters) {
             var _filters = [];
             Object.defineProperties(this, {
                 filters: {
@@ -3607,6 +3607,9 @@
                     }
                 }
             });
+            if (filters) {
+                this.filters = filters.slice();
+            }
         };
 
     FilterChain = sjl.stdlib.Extendable.extend(FilterChain, {
@@ -4223,14 +4226,14 @@
             var _allowEmpty = false,
                 _continueIfEmpty = false,
                 _breakOnFailure = false,
-                _fallbackValue = false,
+                _fallbackValue,
                 _filterChain = null,
                 _alias = '',
                 _required = true,
                 _validatorChain = null,
-                _value = null,
-                _rawValue = null,
-                _messages = null,
+                _value,
+                _rawValue,
+                _messages = [],
 
                 // Protect from adding programmatic validators, from within `isValid`, more than once
                 _validationHasRun = false;
@@ -4285,6 +4288,18 @@
                         sjl.throwTypeErrorIfNotOfType(contextName, 'filterChain', value, FilterChain);
                         _filterChain = value;
                     }
+                },
+                validators: {
+                    get: function () {
+                        return this.validatorChain.validators;
+                    },
+                    set: function () {}
+                },
+                filters: {
+                    get: function () {
+                        return this.filterChain.filters;
+                    },
+                    set: function () {}
                 },
                 alias: {
                     get: function () {
@@ -4402,6 +4417,10 @@
             return retVal;
         },
 
+        validate: function (value) {
+            return false;
+        },
+
         filter: function (value) {
             return this.filterChain().filter(value);
         },
@@ -4411,24 +4430,50 @@
         },
 
         clearMessages: function () {
-            this.messages = [];
+            while (this.messages.length > 0) {
+                this.messages.pop();
+            }
             return this;
         },
 
         addValidators: function (validators) {
-            return this.validatorChain.addValidators(validators);
+            this.validatorChain.addValidators(validators);
+            return this;
         },
 
         addValidator: function (validator) {
-            return this.validatorChain.addValidator(validator);
+            this.validatorChain.addValidator(validator);
+            return this;
         },
 
         prependValidator: function (validator) {
-            return this.validatorChain.prependValidator(validator);
+            this.validatorChain.prependValidator(validator);
+            return this;
         },
 
         mergeValidatorChain: function (validatorChain) {
-            return this.validatorChain.mergeValidatorChain(validatorChain);
+            this.validatorChain.mergeValidatorChain(validatorChain);
+            return this;
+        },
+
+        addFilters: function (filters) {
+            this.filterChain.addFilters(filters);
+            return this;
+        },
+
+        addFilter: function (filter) {
+            this.filterChain.addFilter(filter);
+            return this;
+        },
+
+        prependFilter: function (filter) {
+            this.filterChain.prependFilter(filter);
+            return this;
+        },
+
+        mergeFilterChain: function (filterChain) {
+            this.filterChain.mergeFilterChain(filterChain);
+            return this;
         }
 
     });

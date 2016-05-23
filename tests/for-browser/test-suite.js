@@ -125,6 +125,243 @@ describe('sjl.filter.SlugFilter,', function () {
 });
 
 /**
+ * Created by elydelacruz on 5/18/16.
+ */
+
+describe('sjl.filter.Filter', function () {
+
+        // Get filter constructor
+    var Filter = sjl.filter.Filter;
+
+    it ('should be a subclass of sjl.stdlib.Extendable', function () {
+        expect(new Filter()).to.be.instanceof(sjl.stdlib.Extendable);
+    });
+
+    it ('should have the appropriate interface.', function () {
+        expect((new Filter()).filter).to.be.instanceof(Function);
+    });
+});
+
+/**
+ * Created by elydelacruz on 5/18/16.
+ */
+
+describe('sjl.filter.FilterChain', function () {
+
+        var Filter =                sjl.filter.Filter,
+        FilterChain =           sjl.filter.FilterChain,
+        BooleanFilter =         sjl.filter.BooleanFilter,
+        StringToLowerFilter =   sjl.filter.StringToLowerFilter,
+        StringTrimFilter =      sjl.filter.StringTrimFilter,
+        SlugFilter =            sjl.filter.SlugFilter,
+        StripTagsFilter =       sjl.filter.StripTagsFilter;
+
+    it ('should be a subclass of sjl.stdlib.Extendable', function () {
+        expect(new FilterChain()).to.be.instanceof(sjl.stdlib.Extendable);
+    });
+
+    it ('should have populated filters when they are passed in on construction.', function () {
+        var filters = [new StripTagsFilter()];
+        expect((new FilterChain(filters)).filters.length).to.equal(filters.length);
+    });
+
+    it ('should have expected proporties.', function () {
+        expect((new FilterChain()).filters).to.be.instanceof(Array);
+    });
+
+    it ('should have the appropriate interface.', function () {
+        var filterChain = new FilterChain();
+
+        [   'filter', 'isFilter', 'isFilterChain',
+            'addFilter', 'addFilters', 'prependFilter',
+            'mergeFilterChain'
+        ]
+            .forEach(function (methodName) {
+                expect(filterChain[methodName]).to.be.instanceof(Function);
+            });
+    });
+
+    describe ('#filter', function () {
+        var filter = new FilterChain();
+
+    });
+
+    describe ('#isFilter', function () {
+        var filterChain = new FilterChain();
+        it ('should return false when passed in value is not a filter.', function () {
+            expect(filterChain.isFilter({})).to.equal(false);
+            expect(filterChain.isFilter(function () {})).to.equal(false);
+        });
+        it ('should return true when passed in value is filter.', function () {
+            expect(filterChain.isFilter(new SlugFilter())).to.equal(true);
+            expect(filterChain.isFilter(new StripTagsFilter())).to.equal(true);
+        });
+        it ('should return false when no value is passed in.', function () {
+            expect(filterChain.isFilter()).to.equal(false);
+        });
+    });
+
+    describe ('#isFilterChain', function () {
+        var filterChain = new FilterChain();
+        it ('should return false when passed in value is not a filter chain.', function () {
+            expect(filterChain.isFilterChain({})).to.equal(false);
+            expect(filterChain.isFilterChain(function () {})).to.equal(false);
+        });
+        it ('should return true when passed in value is filter chain.', function () {
+            expect(filterChain.isFilterChain(new FilterChain())).to.equal(true);
+        });
+        it ('should return false when no value is passed in.', function () {
+            expect(filterChain.isFilterChain()).to.equal(false);
+        });
+    });
+
+    describe ('#addFilter', function () {
+        it ('should add a filter to it\'s list of filters and return itself after doing so.', function () {
+            var filterChain = new FilterChain(),
+                filter = new SlugFilter(),
+                result = filterChain.addFilter(filter);
+            expect(filterChain.filters[0]).to.equal(filter);
+            expect(result).to.equal(filterChain);
+        });
+        it ('should throw an error when trying to add non filter values as a filter.', function () {
+            var filterChain = new FilterChain(),
+                caughtError;
+            try {
+                filterChain.addFilter({});
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+        it ('should throw an error when no value is passed in.', function () {
+            var filterChain = new FilterChain(),
+                caughtError;
+            try {
+                filterChain.addFilter();
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+    });
+
+    describe ('#addFilters', function () {
+        it ('should be able to add a list of filters from passed in array of filters.', function () {
+            var filterChain = new FilterChain(),
+                filters = [
+                    new BooleanFilter(),
+                    new SlugFilter(),
+                    new StringToLowerFilter(),
+                    new StringTrimFilter(),
+                    new StripTagsFilter()
+                ],
+                result = filterChain.addFilters(filters);
+
+            filters.forEach(function (filter, index) {
+                expect(filterChain.filters[index]).to.equal(filter);
+            });
+            expect(result).to.equal(filterChain);
+        });
+        it ('should be able to add filters from passed in object of filter key-value pairs.', function () {
+            var filterChain = new FilterChain(),
+                filters = {
+                    blnFilter: new BooleanFilter(),
+                    slugFilter: new SlugFilter(),
+                    strToLowerFilter: new StringToLowerFilter(),
+                    strTrimFilter: new StringTrimFilter(),
+                    stripTagsFilter: new StripTagsFilter()
+                },
+                result = filterChain.addFilters(filters);
+
+            Object.keys(filters).forEach(function (key, index) {
+                expect(filterChain.filters[index]).to.equal(filters[key]);
+            });
+            expect(result).to.equal(filterChain);
+        });
+        it ('should throw an error when passed in value is not an Object or an Array.', function () {
+            var filterChain = new FilterChain();
+            [99, 'hello-world'].forEach(function (value) {
+                var caughtError;
+                try {
+                    filterChain.addFilters(value);
+                }
+                catch (e) {
+                    caughtError = e;
+                }
+                expect(caughtError).to.be.instanceof(TypeError);
+            });
+        });
+        it ('should throw an error when no value is passed in.', function () {
+            var filterChain = new FilterChain(),
+                caughtError;
+            try {
+                filterChain.addFilters();
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+
+    });
+
+    describe ('#prependFilter', function () {
+        it ('should prepend passed in filter and return self after doing so.', function () {
+            var filterChain = new FilterChain([
+                    new StringToLowerFilter(),
+                    new StringTrimFilter(),
+                    new StripTagsFilter()
+                ]),
+                filtersToPrepend = [
+                    new BooleanFilter(),
+                    new SlugFilter()
+                ];
+            filtersToPrepend.forEach(function (filter) {
+                expect(filterChain.prependFilter(filter)).to.equal(filterChain);
+                expect(filterChain.filters[0]).to.equal(filter);
+            });
+        });
+        it ('should throw an error if passed in value is not a filter.', function () {
+            var filterChain = new FilterChain();
+            var caughtError;
+            try {
+                filterChain.prependFilter({});
+            }
+            catch (e) {
+                caughtError = e;
+            }
+            expect(caughtError).to.be.instanceof(TypeError);
+        });
+    });
+
+    describe ('#mergeFilterChain', function () {
+        var filters1 = [
+                new BooleanFilter(),
+                new SlugFilter()
+            ],
+            filterChain1 = new FilterChain(filters1),
+            filters2 = [
+                new StringToLowerFilter(),
+                new StringTrimFilter(),
+                new StripTagsFilter()
+            ],
+            filterChain2 = new FilterChain(filters2),
+            result = filterChain1.mergeFilterChain(filterChain2);
+
+            expect(result).to.equal(filterChain1);
+
+        filters1.concat(filters2).forEach(function (filter, index) {
+            expect(filterChain1.filters[index]).to.equal(filter);
+        });
+    });
+
+
+
+});
+
+/**
  * Created by elydelacruz on 3/25/16.
  */
 describe(
@@ -338,40 +575,267 @@ describe('sjl.filter.StripTagsFilter', function () {
 
 describe ('sjl.input.Input', function () {
 
-        var Input = sjl.ns.input.Input;
+        var FilterChain =       sjl.filter.FilterChain,
+        ValidatorChain =    sjl.validator.ValidatorChain,
+        Input =             sjl.input.Input,
+        RegexValidator =    sjl.validator.RegexValidator,
+        NumberValidator =   sjl.validator.NumberValidator,
+        NotEmptyValidator = sjl.validator.NotEmptyValidator,
+        AlnumValidator =    sjl.validator.AlnumValidator,
+        BooleanFilter =         sjl.filter.BooleanFilter,
+        StringToLowerFilter =   sjl.filter.StringToLowerFilter,
+        StringTrimFilter =      sjl.filter.StringTrimFilter,
+        SlugFilter =            sjl.filter.SlugFilter,
+        StripTagsFilter =       sjl.filter.StripTagsFilter;
 
-    describe('Should have the appropriate interface', function () {
-        var input = new Input(),
-            //propNames = [
-            //    'allowEmpty',
-            //    'continueIfEmpty',
-            //    'breakOnFailure',
-            //    'fallbackValue',
-            //    'filterChain',
-            //    'alias',
-            //    'required',
-            //    'validatorChain',
-            //    'value',
-            //    'rawValue',
-            //    'messages'
-            //],
-            methodNames = [
-                'isValid',
-                'mergeValidatorChain'
-            ],
-            method;
-
-        // Check methods exist
-        for (method in methodNames) {
-            method = methodNames[method];
-            it('should have a `' + method + '` method.', function () {
-                expect(typeof input[method]).to.equal('function');
+    describe('Constructor', function () {
+        it ('should be a subclass of `sjl.stdlib.Extendable`.', function () {
+            expect((new Input())).to.be.instanceof(sjl.stdlib.Extendable);
+        });
+        it ('should construct with no parameters passed.', function () {
+            expect((new Input())).to.be.instanceof(Input);
+        });
+        it ('should construct an instance with the `alias` property populated when first parameter is a string.', function () {
+            var alias = 'hello';
+            expect((new Input(alias)).alias).to.equal(alias);
+        });
+        it ('should populate all properties passed in via hash object.', function () {
+            var options = {
+                alias: 'hello',
+                breakOnFailure: true,
+                fallbackValue: 'hello world'
+            },
+                input = new Input(options);
+            Object.keys(options).forEach(function (key) {
+                expect(input[key]).to.equal(options[key]);
             });
-        }
+        });
     });
 
-    describe('Should return a valid ValidatorChain via it\'s getter.', function () {
+    describe('Interface', function () {
+        var input = new Input();
+        [
+            'isValid',
+            'mergeValidatorChain'
+        ].forEach(function (method) {
+            it('should have a `' + method + '` method.', function () {
+                expect(input[method]).to.be.instanceof(Function);
+            });
+        });
+    });
 
+    describe('Properties.', function () {
+        var input = new Input();
+        [
+            ['allowEmpty', Boolean],
+            ['continueIfEmpty', Boolean],
+            ['breakOnFailure', Boolean],
+            ['fallbackValue', 'Undefined'],
+            ['filterChain', 'Null', FilterChain],
+            ['validators', Array],
+            ['filters', Array],
+            ['alias', String],
+            ['required', Boolean],
+            ['validatorChain', 'Null', ValidatorChain],
+            ['value', 'Undefined'],
+            ['rawValue', 'Undefined'],
+            ['messages', Array],
+            ['validationHasRun', Boolean]
+        ].forEach(function (args) {
+            it('should have an `' + args[0] + '` property.', function () {
+                var isValidProp = sjl.classOfIsMulti.apply(sjl, [input[args[0]]].concat(args.slice(1)));
+                expect(isValidProp).to.equal(true);
+            });
+        });
+    });
+
+    describe ('#isValid', function () {
+
+    });
+
+    describe ('#validate', function () {
+
+    });
+
+    describe ('#filter', function () {
+
+    });
+
+    describe ('#hasFallbackValue', function () {
+        it ('should return false when no fallback value is defined.', function () {
+            expect((new Input()).hasFallbackValue()).to.equal(false);
+        });
+        it ('should return true when a fallback value is defined.', function () {
+            expect((new Input({fallbackValue: null})).hasFallbackValue()).to.equal(true);
+        });
+    });
+
+    describe ('#clearMessages', function () {
+        it ('should return itself and clear any messages when called.', function () {
+            var input = new Input({messages: ['hello']});
+            expect(input.messages.length).to.equal(1);
+            expect(input.clearMessages()).to.equal(input);
+            expect(input.messages.length).to.equal(0);
+        });
+    });
+
+    describe ('#addValidators', function () {
+        it ('should be able to add validators and return itself after doing so.', function () {
+            var validators = [
+                new NotEmptyValidator(),
+                new RegexValidator(),
+                new AlnumValidator()
+            ],
+                input = new Input(),
+                result = input.addValidators(validators);
+            input.validators.forEach(function (validator, index) {
+                expect(validator).to.equal(validators[index]);
+            });
+            expect(result).to.equal(input);
+        });
+    });
+
+    describe ('#addValidator', function () {
+        it ('should be able to add validators and return itself after doing so.', function () {
+            var validators = [
+                    new NotEmptyValidator(),
+                    new RegexValidator(),
+                    new AlnumValidator()
+                ],
+                input = new Input();
+            validators.forEach(function (validator, index) {
+                expect(input.addValidator(validator)).to.equal(input);
+                expect(validator).to.equal(input.validators[index]);
+            });
+        });
+    });
+
+    describe ('#prependValidator', function () {
+        it ('should be able to prepend validators and return itself after doing so.', function () {
+            var validators = [
+                    new NotEmptyValidator(),
+                    new RegexValidator(),
+                    new AlnumValidator()
+                ],
+                input = new Input();
+            validators.forEach(function (validator) {
+                expect(input.prependValidator(validator)).to.equal(input);
+                expect(input.validators[0]).to.equal(validator);
+            });
+        });
+    });
+
+    describe ('#mergeValidatorChain', function () {
+        it('should be able to add a multiple validators from an array or from an object.', function () {
+            var // Array to add validators from
+                arrayOfValidators = [
+                    new NotEmptyValidator(),
+                    new AlnumValidator(),
+                ],
+
+            // Array to add validators from
+                arrayOfValidators2 = [
+                    new NotEmptyValidator(),
+                    new NumberValidator()
+                ],
+
+            // Chain to merge to
+                validatorChain = new ValidatorChain({
+                    validators: arrayOfValidators.slice(),
+                    breakChainOnFailure: false
+                }),
+
+                input1 = new Input({validatorChain: validatorChain}),
+
+            // Chain to merge from
+                validatorChain2 = new ValidatorChain({
+                    validators: arrayOfValidators2.slice(),
+                    breakChainOnFailure: true
+                }),
+
+            // Run op
+                resultOfOp = input1.mergeValidatorChain(validatorChain2);
+
+            // Expect correct length of validators
+            expect(input1.validators.length).to.equal(arrayOfValidators.length + arrayOfValidators2.length);
+
+            // Expect merged in `breakChainOnFailure`
+            expect(input1.validatorChain.breakChainOnFailure).to.equal(true);
+
+            // Expect original validator chain to be returned
+            expect(resultOfOp).to.equal(input1);
+        });
+    });
+
+    describe ('#addFilter', function () {
+        it ('should add a filter to it\'s list of filters and return itself after doing so.', function () {
+            var filter = new SlugFilter(),
+                input = new Input(),
+                result = input.addFilter(filter);
+            expect(input.filters[0]).to.equal(filter);
+            expect(result).to.equal(input);
+        });
+    });
+
+    describe ('#addFilters', function () {
+        it ('should be able to add a list of filters from passed in array of filters.', function () {
+            var input = new Input(),
+                filters = [
+                    new BooleanFilter(),
+                    new SlugFilter(),
+                    new StringToLowerFilter(),
+                    new StringTrimFilter(),
+                    new StripTagsFilter()
+                ],
+                result = input.addFilters(filters);
+
+            filters.forEach(function (filter, index) {
+                expect(input.filters[index]).to.equal(filter);
+            });
+            expect(result).to.equal(input);
+        });
+    });
+
+    describe ('#prependFilter', function () {
+        it ('should prepend passed in filter and return self after doing so.', function () {
+            var filterChain = new FilterChain([
+                    new StringToLowerFilter(),
+                    new StringTrimFilter(),
+                    new StripTagsFilter()
+                ]),
+                input = new Input({filterChain: filterChain}),
+                filtersToPrepend = [
+                    new BooleanFilter(),
+                    new SlugFilter()
+                ];
+            filtersToPrepend.forEach(function (filter) {
+                expect(input.prependFilter(filter)).to.equal(input);
+                expect(input.filters[0]).to.equal(filter);
+            });
+        });
+
+    });
+
+    describe ('#mergeFilterChain', function () {
+        var filters1 = [
+                new BooleanFilter(),
+                new SlugFilter()
+            ],
+            filterChain1 = new FilterChain(filters1),
+            filters2 = [
+                new StringToLowerFilter(),
+                new StringTrimFilter(),
+                new StripTagsFilter()
+            ],
+            filterChain2 = new FilterChain(filters2),
+            input = new Input({filterChain: filterChain1}),
+            result = input.mergeFilterChain(filterChain2);
+
+        expect(result).to.equal(input);
+
+        filters1.concat(filters2).forEach(function (filter, index) {
+            expect(input.filters[index]).to.equal(filter);
+        });
     });
 });
 
