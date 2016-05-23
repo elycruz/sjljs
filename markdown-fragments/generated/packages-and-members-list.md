@@ -8,6 +8,7 @@
   - [(m) sjl.filter.StripTagsFilter](#m-sjlfilterstriptagsfilter)
 - [(p) sjl.input](#p-sjlinput)
   - [(m) sjl.input.Input](#m-sjlinputinput)
+  - [(m) sjl.input.InputFilter](#m-sjlinputinputfilter)
 - [(p) sjl.nodejs](#p-sjlnodejs)
   - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
 - [(m) sjl](#m-sjl)

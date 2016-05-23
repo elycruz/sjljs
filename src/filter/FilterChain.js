@@ -20,7 +20,8 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'filters', value, Array);
-                        _filters = value;
+                        _filters = [];
+                        this.addFilters(value.slice());
                     }
                 }
             });

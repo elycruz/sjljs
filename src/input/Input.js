@@ -86,13 +86,17 @@
                     get: function () {
                         return this.validatorChain.validators;
                     },
-                    set: function () {}
+                    set: function (value) {
+                        this.validatorChain.addValidators(value);
+                    }
                 },
                 filters: {
                     get: function () {
                         return this.filterChain.filters;
                     },
-                    set: function () {}
+                    set: function (value) {
+                        this.filterChain.addFilters(value);
+                    }
                 },
                 alias: {
                     get: function () {
@@ -182,24 +186,37 @@
 
                 // Get the validator chain, value and validate
                 validatorChain = self.validatorChain,
+                isValid,
                 retVal;
 
             // Clear messages
             self.clearMessages();
 
+            // Set value
+            this.value =
+                this.rawValue =
+                    sjl.isUndefined(value) ? this.value : value;
+
             // Check whether we need to add an empty validator
             if (!self.validationHasRun && !self.continueIfEmpty) {
-                validatorChain.addValidator(new sjl.EmptyValidator());
+                validatorChain.addValidator(new sjl.validator.NotEmptyValidator());
             }
 
-            self.rawValue = value;
+            // Get whether is valid or not
+            isValid = validatorChain.isValid(this.rawValue);
 
-            retVal = validatorChain.isValid(value);
-
-            // Fallback value
-            if (retVal === false && self.hasFallbackValue()) {
+            // Run filter if valid
+            if (isValid) {
+                retVal = true;
+                this.value = this.filter();
+            }
+            // Get fallback value if any
+            else if (!isValid && self.hasFallbackValue()) {
                 self.value = self.fallbackValue;
                 retVal = true;
+            }
+            else {
+                retVal = false;
             }
 
             // Protect from adding programmatic validators more than once..
@@ -211,11 +228,11 @@
         },
 
         validate: function (value) {
-            return false;
+            return this.isValid.call(this, value);
         },
 
         filter: function (value) {
-            return this.filterChain().filter(value);
+            return this.filterChain.filter(sjl.isUndefined(value) ? this.rawValue : value);
         },
 
         hasFallbackValue: function () {

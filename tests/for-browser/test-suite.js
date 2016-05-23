@@ -156,136 +156,121 @@ describe('sjl.filter.FilterChain', function () {
         SlugFilter =            sjl.filter.SlugFilter,
         StripTagsFilter =       sjl.filter.StripTagsFilter;
 
-    it ('should be a subclass of sjl.stdlib.Extendable', function () {
-        expect(new FilterChain()).to.be.instanceof(sjl.stdlib.Extendable);
+    describe ('Constructor', function () {
+        it ('should be a subclass of sjl.stdlib.Extendable', function () {
+            expect(new FilterChain()).to.be.instanceof(sjl.stdlib.Extendable);
+        });
+        it ('should have populated filters when they are passed in on construction.', function () {
+            var filters = [new StripTagsFilter()];
+            expect((new FilterChain(filters)).filters.length).to.equal(filters.length);
+        });
     });
 
-    it ('should have populated filters when they are passed in on construction.', function () {
-        var filters = [new StripTagsFilter()];
-        expect((new FilterChain(filters)).filters.length).to.equal(filters.length);
-    });
-
-    it ('should have expected proporties.', function () {
-        expect((new FilterChain()).filters).to.be.instanceof(Array);
-    });
-
-    it ('should have the appropriate interface.', function () {
-        var filterChain = new FilterChain();
-
-        [   'filter', 'isFilter', 'isFilterChain',
-            'addFilter', 'addFilters', 'prependFilter',
-            'mergeFilterChain'
-        ]
-            .forEach(function (methodName) {
-                expect(filterChain[methodName]).to.be.instanceof(Function);
+    describe ('Properties', function () {
+        it ('should have expected proporties.', function () {
+            expect((new FilterChain()).filters).to.be.instanceof(Array);
+        });
+        describe ('#filter', function () {
+            it ('should pass passed in filters through filter adding mechanisms', function () {
+                var filterChain = new FilterChain(),
+                    filters1 = [
+                        new StringToLowerFilter(),
+                        new StringTrimFilter()
+                    ],
+                    filters2 = [
+                        new StringTrimFilter(),
+                        new StringToLowerFilter(),
+                        new BooleanFilter(),
+                    ];
+                filterChain.filters = filters1;
+                expect(filterChain.filters.length).to.equal(filters1.length);
+                filters1.forEach(function (filter, index) {
+                    expect(filterChain.filters[index]).to.equal(filter);
+                });
+                filterChain.filters = filters2;
+                expect(filterChain.filters.length).to.equal(filters2.length);
+                filters2.forEach(function (filter, index) {
+                    expect(filterChain.filters[index]).to.equal(filter);
+                });
             });
-    });
-
-    describe ('#filter', function () {
-        var filter = new FilterChain();
-
-    });
-
-    describe ('#isFilter', function () {
-        var filterChain = new FilterChain();
-        it ('should return false when passed in value is not a filter.', function () {
-            expect(filterChain.isFilter({})).to.equal(false);
-            expect(filterChain.isFilter(function () {})).to.equal(false);
-        });
-        it ('should return true when passed in value is filter.', function () {
-            expect(filterChain.isFilter(new SlugFilter())).to.equal(true);
-            expect(filterChain.isFilter(new StripTagsFilter())).to.equal(true);
-        });
-        it ('should return false when no value is passed in.', function () {
-            expect(filterChain.isFilter()).to.equal(false);
         });
     });
 
-    describe ('#isFilterChain', function () {
-        var filterChain = new FilterChain();
-        it ('should return false when passed in value is not a filter chain.', function () {
-            expect(filterChain.isFilterChain({})).to.equal(false);
-            expect(filterChain.isFilterChain(function () {})).to.equal(false);
-        });
-        it ('should return true when passed in value is filter chain.', function () {
-            expect(filterChain.isFilterChain(new FilterChain())).to.equal(true);
-        });
-        it ('should return false when no value is passed in.', function () {
-            expect(filterChain.isFilterChain()).to.equal(false);
-        });
-    });
+    describe ('Methods', function () {
 
-    describe ('#addFilter', function () {
-        it ('should add a filter to it\'s list of filters and return itself after doing so.', function () {
-            var filterChain = new FilterChain(),
-                filter = new SlugFilter(),
-                result = filterChain.addFilter(filter);
-            expect(filterChain.filters[0]).to.equal(filter);
-            expect(result).to.equal(filterChain);
-        });
-        it ('should throw an error when trying to add non filter values as a filter.', function () {
-            var filterChain = new FilterChain(),
-                caughtError;
-            try {
-                filterChain.addFilter({});
-            }
-            catch (e) {
-                caughtError = e;
-            }
-            expect(caughtError).to.be.instanceof(TypeError);
-        });
-        it ('should throw an error when no value is passed in.', function () {
-            var filterChain = new FilterChain(),
-                caughtError;
-            try {
-                filterChain.addFilter();
-            }
-            catch (e) {
-                caughtError = e;
-            }
-            expect(caughtError).to.be.instanceof(TypeError);
-        });
-    });
-
-    describe ('#addFilters', function () {
-        it ('should be able to add a list of filters from passed in array of filters.', function () {
-            var filterChain = new FilterChain(),
-                filters = [
-                    new BooleanFilter(),
-                    new SlugFilter(),
-                    new StringToLowerFilter(),
-                    new StringTrimFilter(),
-                    new StripTagsFilter()
-                ],
-                result = filterChain.addFilters(filters);
-
-            filters.forEach(function (filter, index) {
-                expect(filterChain.filters[index]).to.equal(filter);
-            });
-            expect(result).to.equal(filterChain);
-        });
-        it ('should be able to add filters from passed in object of filter key-value pairs.', function () {
-            var filterChain = new FilterChain(),
-                filters = {
-                    blnFilter: new BooleanFilter(),
-                    slugFilter: new SlugFilter(),
-                    strToLowerFilter: new StringToLowerFilter(),
-                    strTrimFilter: new StringTrimFilter(),
-                    stripTagsFilter: new StripTagsFilter()
-                },
-                result = filterChain.addFilters(filters);
-
-            Object.keys(filters).forEach(function (key, index) {
-                expect(filterChain.filters[index]).to.equal(filters[key]);
-            });
-            expect(result).to.equal(filterChain);
-        });
-        it ('should throw an error when passed in value is not an Object or an Array.', function () {
+        it ('should have the appropriate interface.', function () {
             var filterChain = new FilterChain();
-            [99, 'hello-world'].forEach(function (value) {
-                var caughtError;
+
+            [   'filter', 'isFilter', 'isFilterChain',
+                'addFilter', 'addFilters', 'prependFilter',
+                'mergeFilterChain'
+            ]
+                .forEach(function (methodName) {
+                    expect(filterChain[methodName]).to.be.instanceof(Function);
+                });
+        });
+
+        describe ('#filter', function () {
+            var filter = new FilterChain(),
+                filters = [
+                    new StringToLowerFilter(),
+                    new StringTrimFilter()
+                ];
+        });
+
+        describe ('#isFilter', function () {
+            var filterChain = new FilterChain();
+            it ('should return false when passed in value is not a filter.', function () {
+                expect(filterChain.isFilter({})).to.equal(false);
+                expect(filterChain.isFilter(function () {})).to.equal(false);
+            });
+            it ('should return true when passed in value is filter.', function () {
+                expect(filterChain.isFilter(new SlugFilter())).to.equal(true);
+                expect(filterChain.isFilter(new StripTagsFilter())).to.equal(true);
+            });
+            it ('should return false when no value is passed in.', function () {
+                expect(filterChain.isFilter()).to.equal(false);
+            });
+        });
+
+        describe ('#isFilterChain', function () {
+            var filterChain = new FilterChain();
+            it ('should return false when passed in value is not a filter chain.', function () {
+                expect(filterChain.isFilterChain({})).to.equal(false);
+                expect(filterChain.isFilterChain(function () {})).to.equal(false);
+            });
+            it ('should return true when passed in value is filter chain.', function () {
+                expect(filterChain.isFilterChain(new FilterChain())).to.equal(true);
+            });
+            it ('should return false when no value is passed in.', function () {
+                expect(filterChain.isFilterChain()).to.equal(false);
+            });
+        });
+
+        describe ('#addFilter', function () {
+            it ('should add a filter to it\'s list of filters and return itself after doing so.', function () {
+                var filterChain = new FilterChain(),
+                    filter = new SlugFilter(),
+                    result = filterChain.addFilter(filter);
+                expect(filterChain.filters[0]).to.equal(filter);
+                expect(result).to.equal(filterChain);
+            });
+            it ('should throw an error when trying to add non filter values as a filter.', function () {
+                var filterChain = new FilterChain(),
+                    caughtError;
                 try {
-                    filterChain.addFilters(value);
+                    filterChain.addFilter({});
+                }
+                catch (e) {
+                    caughtError = e;
+                }
+                expect(caughtError).to.be.instanceof(TypeError);
+            });
+            it ('should throw an error when no value is passed in.', function () {
+                var filterChain = new FilterChain(),
+                    caughtError;
+                try {
+                    filterChain.addFilter();
                 }
                 catch (e) {
                     caughtError = e;
@@ -293,71 +278,118 @@ describe('sjl.filter.FilterChain', function () {
                 expect(caughtError).to.be.instanceof(TypeError);
             });
         });
-        it ('should throw an error when no value is passed in.', function () {
-            var filterChain = new FilterChain(),
-                caughtError;
-            try {
-                filterChain.addFilters();
-            }
-            catch (e) {
-                caughtError = e;
-            }
-            expect(caughtError).to.be.instanceof(TypeError);
+
+        describe ('#addFilters', function () {
+            it ('should be able to add a list of filters from passed in array of filters.', function () {
+                var filterChain = new FilterChain(),
+                    filters = [
+                        new BooleanFilter(),
+                        new SlugFilter(),
+                        new StringToLowerFilter(),
+                        new StringTrimFilter(),
+                        new StripTagsFilter()
+                    ],
+                    result = filterChain.addFilters(filters);
+
+                filters.forEach(function (filter, index) {
+                    expect(filterChain.filters[index]).to.equal(filter);
+                });
+                expect(result).to.equal(filterChain);
+            });
+            it ('should be able to add filters from passed in object of filter key-value pairs.', function () {
+                var filterChain = new FilterChain(),
+                    filters = {
+                        blnFilter: new BooleanFilter(),
+                        slugFilter: new SlugFilter(),
+                        strToLowerFilter: new StringToLowerFilter(),
+                        strTrimFilter: new StringTrimFilter(),
+                        stripTagsFilter: new StripTagsFilter()
+                    },
+                    result = filterChain.addFilters(filters);
+
+                Object.keys(filters).forEach(function (key, index) {
+                    expect(filterChain.filters[index]).to.equal(filters[key]);
+                });
+                expect(result).to.equal(filterChain);
+            });
+            it ('should throw an error when passed in value is not an Object or an Array.', function () {
+                var filterChain = new FilterChain();
+                [99, 'hello-world'].forEach(function (value) {
+                    var caughtError;
+                    try {
+                        filterChain.addFilters(value);
+                    }
+                    catch (e) {
+                        caughtError = e;
+                    }
+                    expect(caughtError).to.be.instanceof(TypeError);
+                });
+            });
+            it ('should throw an error when no value is passed in.', function () {
+                var filterChain = new FilterChain(),
+                    caughtError;
+                try {
+                    filterChain.addFilters();
+                }
+                catch (e) {
+                    caughtError = e;
+                }
+                expect(caughtError).to.be.instanceof(TypeError);
+            });
+
         });
 
-    });
+        describe ('#prependFilter', function () {
+            it ('should prepend passed in filter and return self after doing so.', function () {
+                var filterChain = new FilterChain([
+                        new StringToLowerFilter(),
+                        new StringTrimFilter(),
+                        new StripTagsFilter()
+                    ]),
+                    filtersToPrepend = [
+                        new BooleanFilter(),
+                        new SlugFilter()
+                    ];
+                filtersToPrepend.forEach(function (filter) {
+                    expect(filterChain.prependFilter(filter)).to.equal(filterChain);
+                    expect(filterChain.filters[0]).to.equal(filter);
+                });
+            });
+            it ('should throw an error if passed in value is not a filter.', function () {
+                var filterChain = new FilterChain();
+                var caughtError;
+                try {
+                    filterChain.prependFilter({});
+                }
+                catch (e) {
+                    caughtError = e;
+                }
+                expect(caughtError).to.be.instanceof(TypeError);
+            });
+        });
 
-    describe ('#prependFilter', function () {
-        it ('should prepend passed in filter and return self after doing so.', function () {
-            var filterChain = new FilterChain([
+        describe ('#mergeFilterChain', function () {
+            var filters1 = [
+                    new BooleanFilter(),
+                    new SlugFilter()
+                ],
+                filterChain1 = new FilterChain(filters1),
+                filters2 = [
                     new StringToLowerFilter(),
                     new StringTrimFilter(),
                     new StripTagsFilter()
-                ]),
-                filtersToPrepend = [
-                    new BooleanFilter(),
-                    new SlugFilter()
-                ];
-            filtersToPrepend.forEach(function (filter) {
-                expect(filterChain.prependFilter(filter)).to.equal(filterChain);
-                expect(filterChain.filters[0]).to.equal(filter);
-            });
-        });
-        it ('should throw an error if passed in value is not a filter.', function () {
-            var filterChain = new FilterChain();
-            var caughtError;
-            try {
-                filterChain.prependFilter({});
-            }
-            catch (e) {
-                caughtError = e;
-            }
-            expect(caughtError).to.be.instanceof(TypeError);
-        });
-    });
-
-    describe ('#mergeFilterChain', function () {
-        var filters1 = [
-                new BooleanFilter(),
-                new SlugFilter()
-            ],
-            filterChain1 = new FilterChain(filters1),
-            filters2 = [
-                new StringToLowerFilter(),
-                new StringTrimFilter(),
-                new StripTagsFilter()
-            ],
-            filterChain2 = new FilterChain(filters2),
-            result = filterChain1.mergeFilterChain(filterChain2);
+                ],
+                filterChain2 = new FilterChain(filters2),
+                result = filterChain1.mergeFilterChain(filterChain2);
 
             expect(result).to.equal(filterChain1);
 
-        filters1.concat(filters2).forEach(function (filter, index) {
-            expect(filterChain1.filters[index]).to.equal(filter);
+            filters1.concat(filters2).forEach(function (filter, index) {
+                expect(filterChain1.filters[index]).to.equal(filter);
+            });
         });
+
     });
-
-
 
 });
 
@@ -650,6 +682,39 @@ describe ('sjl.input.Input', function () {
     });
 
     describe ('#isValid', function () {
+        it ('should return true when value to validate passes all validators and should set `value` to "filtered" value.', function () {
+            var inputs = {
+                    stringInput: {
+                        alias: 'stringInput',
+                        validators: [
+                            new NotEmptyValidator(),
+                            new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                        ],
+                        filters: [
+                            new StringToLowerFilter(),
+                            new StringTrimFilter()
+                            //new SlugFilter()
+                        ]
+                    }
+                },
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
+
+            sjl.forEach(inputs, function (input, key) {
+                var input = new Input(input);
+                inputValues[key].forEach(function (args) {
+                    input.value = args[0];
+                    expect(input.isValid()).to.equal(true);
+                    expect(input.value).to.equal(args[1]);
+                    expect(input.rawValue).to.equal(args[0]);
+                });
+            });
+        });
 
     });
 
@@ -4143,160 +4208,201 @@ describe('sjl.validator.ValidatorChain', function () {
         NotEmptyValidator = sjl.ns.validator.NotEmptyValidator,
         AlnumValidator =    sjl.ns.validator.AlnumValidator;
 
-    it ('should extend `sjl.ns.validator.Validator', function () {
-        expect((new ValidatorChain()) instanceof Validator).to.equal(true);
-    });
+    describe ('Constructor', function () {
 
-    it('should have the appropriate interface', function () {
-        var chain = new ValidatorChain(),
-            methods = ['isValid', 'addValidator', 'addValidators'];
-        methods.forEach(function (method) {
-            expect(typeof chain[method]).to.equal('function');
+        it ('should extend `sjl.ns.validator.Validator', function () {
+            expect((new ValidatorChain()) instanceof Validator).to.equal(true);
         });
-    });
 
-    it('should merge in passed in options on construction.', function () {
-        var validators = [
-                new RegexValidator({pattern: /^somepatternhere$/}),
-                new NumberValidator(),
-                new NotEmptyValidator()
-            ],
-            defaults = {
-                validators: validators.concat([]),
-                breakChainOnFailure: true
-            },
-            validatorChain = new ValidatorChain(defaults);
-        expect(validatorChain.breakChainOnFailure).to.equal(defaults.breakChainOnFailure);
-        expect(validatorChain.validators.length).to.equal(defaults.validators.length);
-        validatorChain.validators.forEach(function (validator, index) {
-            expect(defaults.validators[index]).to.equal(validator);
-        });
-    });
-
-    describe('`isValidator`', function () {
-        it('should return true when object is a validator and false when it isn\'t.', function () {
-            var validatorChain = new ValidatorChain(),
-                regexValidator = new RegexValidator({pattern: /^\d+$/});
-            expect(validatorChain.isValidator(regexValidator)).to.equal(true);
-            expect(validatorChain.isValidator({})).to.equal(false);
-        });
-    });
-
-    describe('`isValidatorChain`', function () {
-        it('should return true when object is a validator chain and false when it isn\'t.', function () {
-            var validatorChain = new ValidatorChain(),
-                otherValidatorChain = new ValidatorChain();
-            expect(validatorChain.isValidatorChain(otherValidatorChain)).to.equal(true);
-            expect(validatorChain.isValidatorChain({})).to.equal(false);
-        });
-    });
-
-    describe('`addValidator`', function () {
-        it('should be able to add a validator to it\'s validator list.', function () {
-            var validatorChain = new ValidatorChain(),
-                regexValidator = new RegexValidator({pattern: /^\d+$/});
-            expect(validatorChain.addValidator(regexValidator)).to.equal(validatorChain);
-            expect(validatorChain.validators[0]).to.equal(regexValidator);
-            expect(validatorChain.validators.length).to.equal(1);
-        });
-    });
-
-    describe('`addValidators`', function () {
-        it('should be able to add a multiple validators from an array or from an object.', function () {
-            var validatorChain = new ValidatorChain(),
-
-                // Array to add validators from
-                arrayOfValidators = [
+        it('should merge in passed in options on construction.', function () {
+            var validators = [
                     new RegexValidator({pattern: /^somepatternhere$/}),
-                    new AlnumValidator(),
+                    new NumberValidator(),
                     new NotEmptyValidator()
                 ],
+                defaults = {
+                    validators: validators.concat([]),
+                    breakChainOnFailure: true
+                },
+                validatorChain = new ValidatorChain(defaults);
+            expect(validatorChain.breakChainOnFailure).to.equal(defaults.breakChainOnFailure);
+            expect(validatorChain.validators.length).to.equal(defaults.validators.length);
+            validatorChain.validators.forEach(function (validator, index) {
+                expect(defaults.validators[index]).to.equal(validator);
+            });
+        });
+
+    });
+
+    describe ('Properties', function () {
+        describe ('#validators', function () {
+            var validatorChain1 = new ValidatorChain();
+            [
+                ['breakChainOnFailure', Boolean],
+                ['validators', Array]
+            ]
+                .forEach(function (args) {
+                    it('should have an `' + args[0] + '` property with a default type of `' + args[1].name + '`.', function () {
+                        var isValidProp = sjl.classOfIsMulti.apply(sjl, [validatorChain1[args[0]]].concat(args.slice(1)));
+                        expect(isValidProp).to.equal(true);
+                    });
+                });
+
+            it ('should be set to a new array when populated array is comming in.', function () {
+                var validatorChain = new ValidatorChain(),
+                    validators1 = [
+                        new RegexValidator()
+                    ],
+                    validators2 = [
+                        new RegexValidator(),
+                        new AlnumValidator()
+                    ];
+
+                [validators1, validators2].forEach(function (validators) {
+                    validatorChain.validators = validators;
+                    expect(validatorChain.validators.length).to.equal(validators.length);
+                    validators.forEach(function (validator, index) {
+                        expect(validatorChain.validators[index]).to.equal(validator);
+                    });
+                });
+            });
+        });
+    });
+
+    describe ('Methods', function () {
+
+        it('should have the appropriate interface', function () {
+            var chain = new ValidatorChain(),
+                methods = ['isValid', 'addValidator', 'addValidators'];
+            methods.forEach(function (method) {
+                expect(typeof chain[method]).to.equal('function');
+            });
+        });
+
+        describe('`isValidator`', function () {
+            it('should return true when object is a validator and false when it isn\'t.', function () {
+                var validatorChain = new ValidatorChain(),
+                    regexValidator = new RegexValidator({pattern: /^\d+$/});
+                expect(validatorChain.isValidator(regexValidator)).to.equal(true);
+                expect(validatorChain.isValidator({})).to.equal(false);
+            });
+        });
+
+        describe('`isValidatorChain`', function () {
+            it('should return true when object is a validator chain and false when it isn\'t.', function () {
+                var validatorChain = new ValidatorChain(),
+                    otherValidatorChain = new ValidatorChain();
+                expect(validatorChain.isValidatorChain(otherValidatorChain)).to.equal(true);
+                expect(validatorChain.isValidatorChain({})).to.equal(false);
+            });
+        });
+
+        describe('`addValidator`', function () {
+            it('should be able to add a validator to it\'s validator list.', function () {
+                var validatorChain = new ValidatorChain(),
+                    regexValidator = new RegexValidator({pattern: /^\d+$/});
+                expect(validatorChain.addValidator(regexValidator)).to.equal(validatorChain);
+                expect(validatorChain.validators[0]).to.equal(regexValidator);
+                expect(validatorChain.validators.length).to.equal(1);
+            });
+        });
+
+        describe('`addValidators`', function () {
+            it('should be able to add a multiple validators from an array or from an object.', function () {
+                var validatorChain = new ValidatorChain(),
+
+                // Array to add validators from
+                    arrayOfValidators = [
+                        new RegexValidator({pattern: /^somepatternhere$/}),
+                        new AlnumValidator(),
+                        new NotEmptyValidator()
+                    ],
 
                 // Obj to add validators from
-                objOfValidators = {},
+                    objOfValidators = {},
 
                 // Obj iterator from where to get values from objOfValidators
-                objectIterator;
+                    objectIterator;
 
-            // Expect returns self
-            expect(validatorChain.addValidators(arrayOfValidators)).to.equal(validatorChain);
+                // Expect returns self
+                expect(validatorChain.addValidators(arrayOfValidators)).to.equal(validatorChain);
 
-            // Expect added all validators in list
-            expect(validatorChain.validators.length).to.equal(arrayOfValidators.length);
+                // Expect added all validators in list
+                expect(validatorChain.validators.length).to.equal(arrayOfValidators.length);
 
-            // Validate additions
-            arrayOfValidators.forEach(function (validator, index) {
-                expect(validatorChain.validators[index]).to.equal(validator);
+                // Validate additions
+                arrayOfValidators.forEach(function (validator, index) {
+                    expect(validatorChain.validators[index]).to.equal(validator);
 
-                // Inject `objOfValidators` with validator
-                objOfValidators[sjl.lcaseFirst(sjl.classOf(validator))] = validator;
+                    // Inject `objOfValidators` with validator
+                    objOfValidators[sjl.lcaseFirst(sjl.classOf(validator))] = validator;
+                });
+
+                // Clear validators
+                validatorChain.validators = [];
+
+                // Ensure validators cleared out
+                expect(validatorChain.validators.length).to.equal(0);
+
+                // Iterator
+                objectIterator = new sjl.ns.stdlib.ObjectIterator(objOfValidators);
+
+                // Expect returns self
+                expect(validatorChain.addValidators(objOfValidators)).to.equal(validatorChain);
+
+                // Expect added all validators in list
+                expect(validatorChain.validators.length).to.equal(objectIterator.values.length);
+
+                // Validate additions
+                objectIterator.values.forEach(function (validator, index) {
+                    expect(validatorChain.validators[index]).to.equal(validator);
+                });
+
             });
-
-            // Clear validators
-            validatorChain.validators = [];
-
-            // Ensure validators cleared out
-            expect(validatorChain.validators.length).to.equal(0);
-
-            // Iterator
-            objectIterator = new sjl.ns.stdlib.ObjectIterator(objOfValidators);
-
-            // Expect returns self
-            expect(validatorChain.addValidators(objOfValidators)).to.equal(validatorChain);
-
-            // Expect added all validators in list
-            expect(validatorChain.validators.length).to.equal(objectIterator.values.length);
-
-            // Validate additions
-            objectIterator.values.forEach(function (validator, index) {
-                expect(validatorChain.validators[index]).to.equal(validator);
-            });
-
         });
-    });
 
-    describe('`prependValidator`', function () {
-        it('should be able to add a multiple validators from an array or from an object.', function () {
-            var validatorChain = new ValidatorChain(),
-                validatorToPrepend = new NumberValidator(),
+        describe('`prependValidator`', function () {
+            it('should be able to add a multiple validators from an array or from an object.', function () {
+                var validatorChain = new ValidatorChain(),
+                    validatorToPrepend = new NumberValidator(),
 
                 // Array to add validators from
-                arrayOfValidators = [
-                    new RegexValidator({pattern: /^somepatternhere$/}),
-                    new AlnumValidator(),
-                    new NotEmptyValidator()
-                ],
+                    arrayOfValidators = [
+                        new RegexValidator({pattern: /^somepatternhere$/}),
+                        new AlnumValidator(),
+                        new NotEmptyValidator()
+                    ],
 
                 // Run op
-                resultOfOp = validatorChain.addValidators(arrayOfValidators)
-                    .prependValidator(validatorToPrepend);
+                    resultOfOp = validatorChain.addValidators(arrayOfValidators)
+                        .prependValidator(validatorToPrepend);
 
-            // Expect returns self
-            expect(resultOfOp).to.equal(validatorChain);
-            expect(validatorChain.validators.length).to.equal(arrayOfValidators.length + 1);
-            expect(validatorChain.validators[0]).to.equal(validatorToPrepend);
+                // Expect returns self
+                expect(resultOfOp).to.equal(validatorChain);
+                expect(validatorChain.validators.length).to.equal(arrayOfValidators.length + 1);
+                expect(validatorChain.validators[0]).to.equal(validatorToPrepend);
+            });
         });
-    });
 
-    describe('`mergeValidatorChain`', function () {
-        it('should be able to add a multiple validators from an array or from an object.', function () {
-            var // Array to add validators from
-                arrayOfValidators = [
-                    new NotEmptyValidator(),
-                    new AlnumValidator(),
-                ],
+        describe('`mergeValidatorChain`', function () {
+            it('should be able to add a multiple validators from an array or from an object.', function () {
+                var // Array to add validators from
+                    arrayOfValidators = [
+                        new NotEmptyValidator(),
+                        new AlnumValidator(),
+                    ],
 
                 // Array to add validators from
-                arrayOfValidators2 = [
-                    new NotEmptyValidator(),
-                    new NumberValidator()
-                ],
+                    arrayOfValidators2 = [
+                        new NotEmptyValidator(),
+                        new NumberValidator()
+                    ],
 
                 // Chain to merge to
-                validatorChain = new ValidatorChain({
-                    validators: arrayOfValidators.concat([]),
-                    breakChainOnFailure: false
-                }),
+                    validatorChain = new ValidatorChain({
+                        validators: arrayOfValidators.concat([]),
+                        breakChainOnFailure: false
+                    }),
 
                 // Copy of chain to merge to
                 //copyOfValidatorChain = new ValidatorChain({
@@ -4305,76 +4411,77 @@ describe('sjl.validator.ValidatorChain', function () {
                 //}),
 
                 // Chain to merge from
+                    validatorChain2 = new ValidatorChain({
+                        validators: arrayOfValidators2.concat([]),
+                        breakChainOnFailure: true
+                    }),
+
+                // Run op
+                    resultOfOp = validatorChain.mergeValidatorChain(validatorChain2);
+
+                // Expect correct length of validators
+                expect(validatorChain.validators.length).to.equal(arrayOfValidators.length + arrayOfValidators2.length);
+
+                // Expect merged in `breakChainOnFailure`
+                expect(validatorChain.breakChainOnFailure).to.equal(true);
+
+                // Expect original validator chain to be returned
+                expect(resultOfOp).to.equal(validatorChain);
+            });
+
+
+        });
+
+        describe('`isValid`', function () {
+            var // Array to add validators from
+                arrayOfValidators = [
+                    new NotEmptyValidator(),
+                    new AlnumValidator(),
+                ],
+
+            // Array to add validators from
+                arrayOfValidators2 = [
+                    new NotEmptyValidator(),
+                    new NumberValidator()
+                ],
+
+            // Chain to merge to
+                validatorChain = new ValidatorChain({
+                    validators: arrayOfValidators.concat([]),
+                    breakChainOnFailure: false
+                }),
+
+            // Copy of chain to merge to
+                copyOfValidatorChain = new ValidatorChain({
+                    validators: arrayOfValidators.concat([]),
+                    breakChainOnFailure: false
+                }),
+
+            // Chain to merge from
                 validatorChain2 = new ValidatorChain({
                     validators: arrayOfValidators2.concat([]),
                     breakChainOnFailure: true
                 }),
 
-                // Run op
+            // Merge validator into first validator
                 resultOfOp = validatorChain.mergeValidatorChain(validatorChain2);
 
-            // Expect correct length of validators
-            expect(validatorChain.validators.length).to.equal(arrayOfValidators.length + arrayOfValidators2.length);
+            expect(copyOfValidatorChain.isValid('helloworld')).to.equal(true);
+            expect(copyOfValidatorChain.messages.length).to.equal(0);
 
-            // Expect merged in `breakChainOnFailure`
-            expect(validatorChain.breakChainOnFailure).to.equal(true);
+            expect(validatorChain.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
+            expect(validatorChain.messages.length).to.equal(1);
 
-            // Expect original validator chain to be returned
+            expect(validatorChain2.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
+            expect(validatorChain2.messages.length).to.equal(2);
+
+            // @note validator.messages get cleared from within `isValid` before validation occurs
+            expect(validatorChain2.isValid(99)).to.equal(true);
+            expect(validatorChain2.messages.length).to.equal(0);
+
+            // Expect return value of merge operation to be original validator chain
             expect(resultOfOp).to.equal(validatorChain);
         });
 
-
     });
-
-    describe('`isValid`', function () {
-        var // Array to add validators from
-            arrayOfValidators = [
-                new NotEmptyValidator(),
-                new AlnumValidator(),
-            ],
-
-            // Array to add validators from
-            arrayOfValidators2 = [
-                new NotEmptyValidator(),
-                new NumberValidator()
-            ],
-
-            // Chain to merge to
-            validatorChain = new ValidatorChain({
-                validators: arrayOfValidators.concat([]),
-                breakChainOnFailure: false
-            }),
-
-            // Copy of chain to merge to
-            copyOfValidatorChain = new ValidatorChain({
-                validators: arrayOfValidators.concat([]),
-                breakChainOnFailure: false
-            }),
-
-            // Chain to merge from
-            validatorChain2 = new ValidatorChain({
-                validators: arrayOfValidators2.concat([]),
-                breakChainOnFailure: true
-            }),
-
-            // Merge validator into first validator
-            resultOfOp = validatorChain.mergeValidatorChain(validatorChain2);
-
-        expect(copyOfValidatorChain.isValid('helloworld')).to.equal(true);
-        expect(copyOfValidatorChain.messages.length).to.equal(0);
-
-        expect(validatorChain.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
-        expect(validatorChain.messages.length).to.equal(1);
-
-        expect(validatorChain2.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
-        expect(validatorChain2.messages.length).to.equal(2);
-
-        // @note validator.messages get cleared from within `isValid` before validation occurs
-        expect(validatorChain2.isValid(99)).to.equal(true);
-        expect(validatorChain2.messages.length).to.equal(0);
-
-        // Expect return value of merge operation to be original validator chain
-        expect(resultOfOp).to.equal(validatorChain);
-    });
-
 });

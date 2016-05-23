@@ -1,0 +1,15 @@
+InputFilter
+	- addInput
+	- addInputs
+	- isInput
+	- hasInput
+	- getInput
+	- setInput
+	- removeInput
+	- filter
+	- validate, isValid
+	- getMessages
+	- getRawValues
+	- getValues
+	-
+	

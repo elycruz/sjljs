@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 5.6.89 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: bf0283a6d9b16eb3360077f6423be59f 
- * | Built-on: Sat May 21 2016 15:01:30 GMT-0400 (EDT) 
+ * | md5checksum: a58e1db6392629d863bd2be42fff3ca9 
+ * | Built-on: Mon May 23 2016 18:26:48 GMT-0400 (EDT) 
  **/
 /**
  * The `sjl` module.
@@ -166,6 +166,43 @@
         return classOf(obj) === (
                 classOfType === String.name ? type : type.name
             );
+    }
+
+    /**
+     * For each for array like objects.
+     * @param arrayLike {Array|Set|SjlSet|SjlMap|Map}
+     * @param callback
+     * @param context
+     */
+    function forEach (arrayLike, callback, context) {
+        var classOfArrayLike = sjl.classOf(arrayLike);
+        switch (classOfArrayLike) {
+            case 'Array':
+            case 'Set':
+            case 'SjlSet':
+            case 'SjlMap':
+            case 'Map':
+                arrayLike.forEach(callback, context);
+            break;
+            case 'Object':
+                forEachInObj(arrayLike, callback, context);
+            break;
+            default:
+                throw new TypeError('sjl.forEach takes only ' +
+                    '`Array`, `Object`, `Map`, `Set`, `SjlSet`, and `SjlMap` objects.  ' +
+                    'Type passed in: `' + classOfArrayLike + '`.');
+        }
+    }
+
+    /**
+     * @param obj {Object}
+     * @param callback {Function}
+     * @param context {undefined|Object}
+     */
+    function forEachInObj (obj, callback, context) {
+        Object.keys(obj).forEach(function (key, index) {
+            callback.call(context, obj[key], key, index);
+        });
     }
 
     /**
@@ -964,6 +1001,8 @@
         extractBoolFromArrayEnd: extractBoolFromArrayEnd,
         extractBoolFromArrayStart: extractBoolFromArrayStart,
         extractFromArrayAt: extractFromArrayAt,
+        forEach: forEach,
+        forEachInObj: forEachInObj,
         hasMethod: hasMethod,
         implode: implode,
         isset: isset,

@@ -13,6 +13,8 @@
 - [(m) sjl.extractBoolFromArrayEnd](#m-sjlextractboolfromarrayend)
 - [(m) sjl.extractBoolFromArrayStart](#m-sjlextractboolfromarraystart)
 - [(m) sjl.extractFromArrayAt](#m-sjlextractfromarrayat)
+- [(m) sjl.forEach](#m-sjlforeach)
+- [(m) sjl.forEachInObj](#m-sjlforeachinobj)
 - [(m) sjl.hasMethod](#m-sjlhasmethod)
 - [(m) sjl.implode](#m-sjlimplode)
 - [(m) sjl.isset](#m-sjlisset)

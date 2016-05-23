@@ -1,7 +1,7 @@
 /**! sjljs 5.6.89
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 668c836ed52660dc087dbcbc0748a58f
- * | Built-on: Sat May 21 2016 15:01:32 GMT-0400 (EDT)
+ * | md5checksum: b0576291f6354d42ef9eeae6501fa1de
+ * | Built-on: Mon May 23 2016 18:26:50 GMT-0400 (EDT)
  **//**
  * The `sjl` module.
  * @module sjl {Object}
@@ -165,6 +165,43 @@
         return classOf(obj) === (
                 classOfType === String.name ? type : type.name
             );
+    }
+
+    /**
+     * For each for array like objects.
+     * @param arrayLike {Array|Set|SjlSet|SjlMap|Map}
+     * @param callback
+     * @param context
+     */
+    function forEach (arrayLike, callback, context) {
+        var classOfArrayLike = sjl.classOf(arrayLike);
+        switch (classOfArrayLike) {
+            case 'Array':
+            case 'Set':
+            case 'SjlSet':
+            case 'SjlMap':
+            case 'Map':
+                arrayLike.forEach(callback, context);
+            break;
+            case 'Object':
+                forEachInObj(arrayLike, callback, context);
+            break;
+            default:
+                throw new TypeError('sjl.forEach takes only ' +
+                    '`Array`, `Object`, `Map`, `Set`, `SjlSet`, and `SjlMap` objects.  ' +
+                    'Type passed in: `' + classOfArrayLike + '`.');
+        }
+    }
+
+    /**
+     * @param obj {Object}
+     * @param callback {Function}
+     * @param context {undefined|Object}
+     */
+    function forEachInObj (obj, callback, context) {
+        Object.keys(obj).forEach(function (key, index) {
+            callback.call(context, obj[key], key, index);
+        });
     }
 
     /**
@@ -963,6 +1000,8 @@
         extractBoolFromArrayEnd: extractBoolFromArrayEnd,
         extractBoolFromArrayStart: extractBoolFromArrayStart,
         extractFromArrayAt: extractFromArrayAt,
+        forEach: forEach,
+        forEachInObj: forEachInObj,
         hasMethod: hasMethod,
         implode: implode,
         isset: isset,
@@ -2526,7 +2565,8 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'validators', value, Array);
-                        _validators = value.slice();
+                        _validators = [];
+                        this.addValidators(value.slice());
                     }
                 },
                 breakChainOnFailure: {
@@ -3603,7 +3643,8 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'filters', value, Array);
-                        _filters = value;
+                        _filters = [];
+                        this.addFilters(value.slice());
                     }
                 }
             });
@@ -4293,13 +4334,17 @@
                     get: function () {
                         return this.validatorChain.validators;
                     },
-                    set: function () {}
+                    set: function (value) {
+                        this.validatorChain.addValidators(value);
+                    }
                 },
                 filters: {
                     get: function () {
                         return this.filterChain.filters;
                     },
-                    set: function () {}
+                    set: function (value) {
+                        this.filterChain.addFilters(value);
+                    }
                 },
                 alias: {
                     get: function () {
@@ -4389,24 +4434,37 @@
 
                 // Get the validator chain, value and validate
                 validatorChain = self.validatorChain,
+                isValid,
                 retVal;
 
             // Clear messages
             self.clearMessages();
 
+            // Set value
+            this.value =
+                this.rawValue =
+                    sjl.isUndefined(value) ? this.value : value;
+
             // Check whether we need to add an empty validator
             if (!self.validationHasRun && !self.continueIfEmpty) {
-                validatorChain.addValidator(new sjl.EmptyValidator());
+                validatorChain.addValidator(new sjl.validator.NotEmptyValidator());
             }
 
-            self.rawValue = value;
+            // Get whether is valid or not
+            isValid = validatorChain.isValid(this.rawValue);
 
-            retVal = validatorChain.isValid(value);
-
-            // Fallback value
-            if (retVal === false && self.hasFallbackValue()) {
+            // Run filter if valid
+            if (isValid) {
+                retVal = true;
+                this.value = this.filter();
+            }
+            // Get fallback value if any
+            else if (!isValid && self.hasFallbackValue()) {
                 self.value = self.fallbackValue;
                 retVal = true;
+            }
+            else {
+                retVal = false;
             }
 
             // Protect from adding programmatic validators more than once..
@@ -4418,11 +4476,11 @@
         },
 
         validate: function (value) {
-            return false;
+            return this.isValid.call(this, value);
         },
 
         filter: function (value) {
-            return this.filterChain().filter(value);
+            return this.filterChain.filter(sjl.isUndefined(value) ? this.rawValue : value);
         },
 
         hasFallbackValue: function () {

@@ -89,6 +89,39 @@ describe ('sjl.input.Input', function () {
     });
 
     describe ('#isValid', function () {
+        it ('should return true when value to validate passes all validators and should set `value` to "filtered" value.', function () {
+            var inputs = {
+                    stringInput: {
+                        alias: 'stringInput',
+                        validators: [
+                            new NotEmptyValidator(),
+                            new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                        ],
+                        filters: [
+                            new StringToLowerFilter(),
+                            new StringTrimFilter()
+                            //new SlugFilter()
+                        ]
+                    }
+                },
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
+
+            sjl.forEach(inputs, function (input, key) {
+                var input = new Input(input);
+                inputValues[key].forEach(function (args) {
+                    input.value = args[0];
+                    expect(input.isValid()).to.equal(true);
+                    expect(input.value).to.equal(args[1]);
+                    expect(input.rawValue).to.equal(args[0]);
+                });
+            });
+        });
 
     });
 

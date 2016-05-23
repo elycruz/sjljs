@@ -50,6 +50,8 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.extractBoolFromArrayEnd](#m-sjlextractboolfromarrayend)
 - [(m) sjl.extractBoolFromArrayStart](#m-sjlextractboolfromarraystart)
 - [(m) sjl.extractFromArrayAt](#m-sjlextractfromarrayat)
+- [(m) sjl.forEach](#m-sjlforeach)
+- [(m) sjl.forEachInObj](#m-sjlforeachinobj)
 - [(m) sjl.hasMethod](#m-sjlhasmethod)
 - [(m) sjl.implode](#m-sjlimplode)
 - [(m) sjl.isset](#m-sjlisset)
@@ -107,6 +109,7 @@ only includes the core and no classes or constructors from it's other packages).
   - [(m) sjl.filter.StripTagsFilter](#m-sjlfilterstriptagsfilter)
 - [(p) sjl.input](#p-sjlinput)
   - [(m) sjl.input.Input](#m-sjlinputinput)
+  - [(m) sjl.input.InputFilter](#m-sjlinputinputfilter)
 - [(p) sjl.nodejs](#p-sjlnodejs)
   - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
 - [(m) sjl](#m-sjl)
@@ -231,6 +234,14 @@ only includes the core and no classes or constructors from it's other packages).
 @todo - Added documentation here.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
+### (m) sjl.forEach
+@todo - Added documentation here.
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
+
+### (m) sjl.forEachInObj
+@todo - Added documentation here.
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
+
 ### (m) sjl.hasMethod
 @todo - Added documentation here.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
@@ -240,6 +251,10 @@ only includes the core and no classes or constructors from it's other packages).
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.input.Input
+@todo - Added documentation here.
+[Back to other packages and members list.](#other-packages-and-members)
+
+### (m) sjl.input.InputFilter
 @todo - Added documentation here.
 [Back to other packages and members list.](#other-packages-and-members)
 

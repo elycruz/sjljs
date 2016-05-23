@@ -21,7 +21,8 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'validators', value, Array);
-                        _validators = value.slice();
+                        _validators = [];
+                        this.addValidators(value.slice());
                     }
                 },
                 breakChainOnFailure: {
