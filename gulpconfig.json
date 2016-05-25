@@ -37,6 +37,7 @@
     "./src/filter/StringToLowerFilter.js",
     "./src/filter/StringTrimFilter.js",
     "./src/filter/StripTagsFilter.js",
-    "./src/input/Input.js"
+    "./src/input/Input.js",
+    "./src/input/InputFilter.js"
   ]
 }
