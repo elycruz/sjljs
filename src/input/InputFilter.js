@@ -76,14 +76,11 @@
     InputFilter = sjl.stdlib.Extendable.extend(InputFilter, {
 
         addInput: function (input) {
-            return this._addInputOnInputs(input);
+            return this._addInputOnInputs(input, this.inputs);
         },
 
         addInputs: function (inputs) {
-            if (!sjl.classOfIs(inputs, Array, Object)) {
-                throw new TypeError(contextName + '.addInputs expects `inputs` to be of ' +
-                    'type `Object` or `Array`.  Type received: `' + sjl.classOf(inputs) + '`.');
-            }
+            sjl.throwTypeErrorIfEmpty(contextName + '.addInputs', 'inputs', inputs, Object);
             this._setInputsOnInputs(inputs, this.inputs);
             return this;
         },
@@ -235,7 +232,8 @@
 
             // Loop through incoming inputs
             sjl.forEachInObj(sjl.jsonClone(inputs), function (input, key) {
-                self._addInputOnInputs(input, inputs);
+                input.alias = key;
+                self._addInputOnInputs(input, inputsOut);
             });
 
             // Return this
@@ -243,13 +241,8 @@
         },
 
         _inputHashToInput: function (inputHash) {
-            // Set name if it is not set
-            if (!sjl.isset(inputHash.alias)) {
-                inputHash.alias = key;
-            }
-            var input = new Input(inputHash);
-            input.getValidatorChain().addValidators(validators);
-            return input;
+            sjl.throwTypeErrorIfEmpty(contextName + '_inputHashToInput', 'inputHash.alias', inputHash.alias, String);
+            return new Input(inputHash);
         },
 
         _validateInput: function (input, dataMap) {
