@@ -155,10 +155,13 @@ describe ('sjl.input.Input', function () {
                     },
                 },
                     inputFilter = new InputFilter(),
-                    result = inputFilter.addInputs(inputsHash);
+                    result;
 
                 // Ensure `inputs` has no keys
                 expect(Object.keys(inputFilter.inputs).length).to.equal(0);
+
+                // Run operation
+                result = inputFilter.addInputs(inputsHash);
 
                 // Ensure operation returned owner
                 expect(result).to.equal(inputFilter);
@@ -167,27 +170,83 @@ describe ('sjl.input.Input', function () {
 
                 // Ensure inputs were added
                 Object.keys(inputsHash).forEach(function (key) {
-                    debugger;
                     expect(inputFilter.inputs.hasOwnProperty(key)).to.equal(true);
                     expect(inputFilter.inputs[key]).to.be.instanceof(Input);
                 });
             });
         });
 
-        describe ('#addInputs', function () {
-
-        });
-
         describe ('#hasInputs', function () {
+            it ('should return `true` when input filter has input.', function () {
+                var inputsHash = {
+                        someInput1: {
+                            required: true
+                        },
+                        someInput2: {
+                            required: true
+                        },
+                        someInput3: {
+                            required: true
+                        },
+                    },
+                    inputFilter;
+
+                inputFilter = new InputFilter({inputs: inputsHash});
+
+                Object.keys(inputsHash).forEach(function (key) {
+                    expect(inputFilter.hasInput(key)).to.equal(true);
+                });
+
+            });
+            it ('should return `false` when input filter has input.', function () {
+                var inputFilter = new InputFilter();
+                expect(inputFilter.hasInput('hello')).to.equal(false);
+            });
+            it ('should throw a type error when key is empty or not a string.', function () {
+                var inputFilter = new InputFilter();
+                [undefined, '', []].forEach(function (value) {
+                    var caughtError;
+                    try {
+                        expect(inputFilter.hasInput(value));
+                    }
+                    catch (e) {
+                        caughtError = e;
+                    }
+                    expect(caughtError).to.be.instanceof(TypeError);
+                });
+            });
 
         });
 
         describe ('#isInput', function () {
-
+            it ('should return `true` when value is an `Input`.', function () {
+                var inputFilter = new InputFilter();
+                expect(inputFilter.isInput(new Input())).to.equal(true);
+            });
+            it ('should return `false` when value is not an `Input`.', function () {
+                var inputFilter = new InputFilter();
+                expect(inputFilter.isInput({})).to.equal(false);
+                expect(inputFilter.isInput()).to.equal(false);
+            });
         });
 
         describe ('#removeInput', function () {
+            it ('should be able to remove a defined input.', function () {
+                var inputFilter = new InputFilter({inputs: {hello: {alias: 'hello'}}}),
+                    addInput = inputFilter.inputs.hello;
+                // Ensure input was added
+                expect(inputFilter.inputs.hello).to.be.instanceof(Input);
 
+                // Perform operation
+                expect(inputFilter.removeInput('hello')).to.equal(addInput);
+
+                // Check that operation was successful
+                expect(Object.keys(inputFilter.inputs).length).to.equal(0);
+            });
+            it ('should return `Undefined` when input to remove was not found.', function () {
+                var inputFilter = new InputFilter();
+                expect(inputFilter.removeInput()).to.equal(undefined);
+            });
         });
 
         describe ('#isValid', function () {
@@ -222,6 +281,10 @@ describe ('sjl.input.Input', function () {
 
         });
 
+        describe ('#clearInputs', function () {
+
+        });
+
         describe ('#clearValidInputs', function () {
 
         });
@@ -230,8 +293,92 @@ describe ('sjl.input.Input', function () {
 
         });
 
-        describe ('#clearInvalidInputs', function () {
+        describe ('#_addInputOnInputs', function () {
+            var inputFilter = new InputFilter();
+            it ('should return it\'s owner.', function () {
+                expect(inputFilter._addInputOnInputs({alias: 'hello'}, inputFilter.inputs)).to.equal(inputFilter);
+            });
+            it ('should be able to convert an hash object to an `Input`.', function () {
+                inputFilter._addInputOnInputs({alias: 'hello'}, inputFilter.inputs);
+                expect(inputFilter.inputs.hello).to.be.instanceof(Input);
+                expect(Object.keys(inputFilter.inputs).length).to.equal(1);
+            });
+            it ('should be able add an `Input` object.', function () {
+                var input = new Input({alias: 'hello'});
+                inputFilter._addInputOnInputs(input, inputFilter.inputs);
+                expect(inputFilter.inputs.hello).to.equal(input);
+                expect(Object.keys(inputFilter.inputs).length).to.equal(1);                var input = new Input({alias: 'hello'});
+            });
+            it ('should throw a type error on malformed input hashes and objects.', function () {
+                var caughtError;
+                [undefined, {}].forEach(function (value) {
+                    try {
+                        inputFilter._addInputOnInputs(value, inputFilter.inputs);
+                    }
+                    catch (e) {
+                        caughtError = e;
+                    }
+                    expect(caughtError).to.be.instanceof(TypeError);
+                });
+            });
+        });
 
+        describe ('#_setDataOnInputs', function () {
+            var inputFilter = new InputFilter({
+                inputs: {
+                    input1: {alias: 'input1'},
+                    input2: {alias: 'input2'},
+                    input3: {alias: 'input3'},
+                }
+            }),
+                inputValues = {
+                    input1: 'hello',
+                    input2: false,
+                    input3: 99
+                },
+                result = inputFilter._setDataOnInputs(inputValues, inputFilter.inputs);
+
+            it ('should return passed in inputs object.', function () {
+                expect(result).to.equal(inputFilter.inputs);
+            });
+
+            it ('should give inputs their designated values.', function () {
+                sjl.forEach(inputValues, function (value, key) {
+                    expect(inputFilter.inputs[key].rawValue).to.equal(value);
+                });
+            });
+
+            it ('should throw an error when `data` is not an Object.', function () {
+                var caughtError;
+                try {
+                    inputFilter._setDataOnInputs(undefined, inputFilter.inputs);
+                }
+                catch (e) {
+                    caughtError = e;
+                }
+                expect(caughtError).to.be.instanceof(TypeError);
+            });
+
+            it ('should throw an error when `inputsOn` is not an Object.', function () {
+                var caughtError;
+                try {
+                    inputFilter._setDataOnInputs({}, undefined);
+                }
+                catch (e) {
+                    caughtError = e;
+                }
+                expect(caughtError).to.be.instanceof(TypeError);
+            });
+        });
+
+        describe ('#_setInputsOnInputs', function () {
+            var inputFilter = new InputFilter(),
+                inputHashes = {
+                    input1: {alias: 'input1'},
+                    input2: {alias: 'input2'},
+                    input3: {alias: 'input3'}
+                };
+                //result = inputFilter._setDataOnInputs(inputValues, inputFilter.inputs);
         });
 
     });

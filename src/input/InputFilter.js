@@ -1,5 +1,6 @@
 /**
  * Created by elydelacruz on 5/21/16.
+ * @todo refactor input filter to not require `alias`es for Input configs unless method requires it.
  */
 (function () {
 
@@ -9,7 +10,7 @@
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Input = sjl.input.Input,
         contextName = 'sjl.input.InputFilter',
-        validateNonEmptyKey = function (key, methodName, type) {
+        validateNonEmptyKey = function (key, methodName) {
             sjl.throwTypeErrorIfEmpty(contextName + '.' + methodName, 'key', key, String);
         },
         InputFilter = function InputFilter(options) {
@@ -27,8 +28,9 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'data', value, Array);
                         _data = value;
-                        this._setDataOnInputs(_data);
-                    }
+                        this._setDataOnInputs(_data, _inputs);
+                    },
+                    enumerable: true
                 },
                 inputs: {
                     get: function () {
@@ -37,7 +39,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'inputs', value, Object);
                         _inputs = this._setInputsOnInputs(value, _inputs);
-                    }
+                    },
+                    enumerable: true
                 },
                 invalidInputs: {
                     get: function () {
@@ -46,7 +49,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'invalidInputs', value, Object);
                         _invalidInputs = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 validInputs: {
                     get: function () {
@@ -55,7 +59,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'validInputs', value, Object);
                         _validInputs = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 messages: {
                     get: function () {
@@ -64,12 +69,13 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'messages', value, Object);
                         _messages = value;
-                    }
+                    },
+                    enumerable: true
                 }
             });
 
             if (sjl.isObject(options)) {
-                sjl.extend(true, this, options);
+                sjl.extend(this, options);
             }
         };
 
@@ -99,13 +105,14 @@
             return input instanceof Input;
         },
 
-        removeInput: function (value) {
-            var self = this,
-                inputs = self.inputs;
-            if (inputs.hasOwnProperty(value)) {
-                sjl.unset(value, inputs);
+        removeInput: function (key) {
+            var inputs = this.inputs,
+                retVal;
+            if (inputs.hasOwnProperty(key)) {
+                retVal = inputs[key];
+                sjl.unset(inputs, key);
             }
-            return self;
+            return retVal;
         },
 
         isValid: function () {
@@ -126,7 +133,7 @@
         },
 
         validate: function () {
-            return this.isValid.apply(this, arguments);;
+            return this.isValid.apply(this, arguments);
         },
 
         filter: function () {
@@ -158,7 +165,7 @@
         getMessages: function () {
             var self = this,
                 messages = self.messages;
-            sjl.forEachInObj(this.invalidInputs, function (input, key) {
+            sjl.forEachInObj(this.invalidInputs, function (input) {
                 var messageItem;
                 if (sjl.notEmptyAndOfType(input, Input)) {
                     messageItem = messages[input.alias];
@@ -191,6 +198,11 @@
             return this;
         },
 
+        clearInputs: function () {
+            this.inputs = {};
+            return this;
+        },
+
         clearInvalidInputs: function () {
             this.invalidInputs = {};
             return this;
@@ -211,33 +223,24 @@
             return this;
         },
 
-        _setDataOnInputs: function (data) {
+        _setDataOnInputs: function (data, inputs) {
+            sjl.throwTypeErrorIfNotOfType(contextName + '._setDataOnInputs', 'data', data, Object);
+            sjl.throwTypeErrorIfNotOfType(contextName + '._setDataOnInputs', 'inputs', inputs, Object);
             Object.keys(data).forEach(function (key) {
-                this.inputs[key].rawValue = data[key];
-            }, this);
-            return this;
+                inputs[key].rawValue = data[key];
+            });
+            return inputs;
         },
 
         _setInputsOnInputs: function (inputs, inputsOn) {
-            var self = this,
-                inputsOut;
-
-            // Set inputs only if incoming inputs is populated
-            if (sjl.notEmptyAndOfType(inputs, Object)) {
-                inputsOut = {};
-            }
-            else {
-                inputsOut = sjl.clone({}, inputsOn);
-            }
-
             // Loop through incoming inputs
             sjl.forEachInObj(sjl.jsonClone(inputs), function (input, key) {
                 input.alias = key;
-                self._addInputOnInputs(input, inputsOut);
-            });
+                this._addInputOnInputs(input, inputsOn);
+            }, this);
 
             // Return this
-            return inputsOut;
+            return inputsOn;
         },
 
         _inputHashToInput: function (inputHash) {

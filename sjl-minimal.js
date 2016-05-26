@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 5.6.89 
  * | License: GPL-2.0+ AND MIT 
  * | md5checksum: a58e1db6392629d863bd2be42fff3ca9 
- * | Built-on: Tue May 24 2016 20:21:31 GMT-0400 (EDT) 
+ * | Built-on: Thu May 26 2016 00:38:02 GMT-0400 (EDT) 
  **/
 /**
  * The `sjl` module.
