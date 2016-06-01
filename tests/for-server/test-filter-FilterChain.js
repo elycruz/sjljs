@@ -14,8 +14,8 @@ describe('sjl.filter.FilterChain', function () {
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~
 
-    var Filter =                sjl.filter.Filter,
-        FilterChain =           sjl.filter.FilterChain,
+    var FilterChain =           sjl.filter.FilterChain,
+        //Filter =                sjl.filter.Filter,
         BooleanFilter =         sjl.filter.BooleanFilter,
         StringToLowerFilter =   sjl.filter.StringToLowerFilter,
         StringTrimFilter =      sjl.filter.StringTrimFilter,
@@ -77,11 +77,12 @@ describe('sjl.filter.FilterChain', function () {
         });
 
         describe ('#filter', function () {
-            var filter = new FilterChain(),
-                filters = [
-                    new StringToLowerFilter(),
-                    new StringTrimFilter()
-                ];
+            // var filter = new FilterChain(),
+            //     filters = [
+            //         new StringToLowerFilter(),
+            //         new StringTrimFilter()
+            //     ];
+            it ('should have tests written.');
         });
 
         describe ('#isFilter', function () {

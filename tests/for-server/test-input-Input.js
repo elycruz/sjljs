@@ -113,12 +113,12 @@ describe ('sjl.input.Input', function () {
                 };
 
             sjl.forEach(inputs, function (input, key) {
-                var input = new Input(input);
+                var inputObj = new Input(input);
                 inputValues[key].forEach(function (args) {
-                    input.value = args[0];
-                    expect(input.isValid()).to.equal(true);
-                    expect(input.value).to.equal(args[1]);
-                    expect(input.rawValue).to.equal(args[0]);
+                    inputObj.value = args[0];
+                    expect(inputObj.isValid()).to.equal(true);
+                    expect(inputObj.value).to.equal(args[1]);
+                    expect(inputObj.rawValue).to.equal(args[0]);
                 });
             });
         });

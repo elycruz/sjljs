@@ -307,7 +307,7 @@ describe ('sjl.input.InputFilter', function () {
                 var input = new Input({alias: 'hello'});
                 inputFilter._addInputOnInputs(input, inputFilter.inputs);
                 expect(inputFilter.inputs.hello).to.equal(input);
-                expect(Object.keys(inputFilter.inputs).length).to.equal(1);                var input = new Input({alias: 'hello'});
+                expect(Object.keys(inputFilter.inputs).length).to.equal(1);
             });
             it ('should throw a type error on malformed input hashes and objects.', function () {
                 var caughtError;
@@ -425,10 +425,79 @@ describe ('sjl.input.InputFilter', function () {
         });
 
         describe ('#_validatorsFromInputHash', function () {
+            it ('should return an empty array for inputs that don\'t have any validators.', function () {
+                var inputFilter = new InputFilter({
+                    inputs: {
+                        input1: {alias: 'input1'},
+                        input2: {alias: 'input2'},
+                        input3: {alias: 'input3'}
+                    }
+                });
+                sjl.forEachInObj(inputFilter.inputs, function (value, key) {
+                    var result = inputFilter._validatorsFromInputHash(value);
+                    expect(result).to.be.instanceof(Array);
+                    expect(result.length).to.equal(0);
+                });
+            });
+            it ('should return validators for inputs that have them.', function () {
+                var inputFilter = new InputFilter({
+                        inputs: {
+                            input1: {
+                                alias: 'input1',
+                                validators: [
+                                    new RegexValidator(),
+                                    new AlnumValidator()
+                                ]
+                            },
+                            input2: {alias: 'input2'},
+                            input3: {alias: 'input3'}
+                        }
+                    });
+                sjl.forEachInObj(inputFilter.inputs, function (value, key, inputs) {
+                    var result = inputFilter._validatorsFromInputHash(value);
+                    expect(result).to.be.instanceof(Array);
+                    expect(result.length).to.equal(inputs[key].validators.length);
+                });
 
+            });
         });
 
         describe ('#_filtersFromInputHash', function () {
+            it ('should return an empty array for inputs that don\'t have any filters.', function () {
+                var inputFilter = new InputFilter({
+                    inputs: {
+                        input1: {alias: 'input1'},
+                        input2: {alias: 'input2'},
+                        input3: {alias: 'input3'}
+                    }
+                });
+                sjl.forEachInObj(inputFilter.inputs, function (value, key) {
+                    var result = inputFilter._filtersFromInputHash(value);
+                    expect(result).to.be.instanceof(Array);
+                    expect(result.length).to.equal(0);
+                });
+            });
+            it ('should return filters for inputs that have them.', function () {
+                var inputFilter = new InputFilter({
+                    inputs: {
+                        input1: {
+                            alias: 'input1',
+                            filters: [
+                                new BooleanFilter(),
+                                new StringToLowerFilter()
+                            ]
+                        },
+                        input2: {alias: 'input2'},
+                        input3: {alias: 'input3'}
+                    }
+                });
+                sjl.forEachInObj(inputFilter.inputs, function (value, key, inputs) {
+                    var result = inputFilter._filtersFromInputHash(value);
+                    expect(result).to.be.instanceof(Array);
+                    expect(result.length).to.equal(inputs[key].filters.length);
+                });
+
+            });
 
         });
 

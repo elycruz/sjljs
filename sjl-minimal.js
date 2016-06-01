@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 5.6.89 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: a58e1db6392629d863bd2be42fff3ca9 
- * | Built-on: Thu May 26 2016 00:38:02 GMT-0400 (EDT) 
+ * | md5checksum: 3c072e957b3c161b7f8dd2560190f407 
+ * | Built-on: Wed Jun 01 2016 13:15:50 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module.
@@ -200,8 +200,8 @@
      * @param context {undefined|Object}
      */
     function forEachInObj (obj, callback, context) {
-        Object.keys(obj).forEach(function (key, index) {
-            callback.call(context, obj[key], key, index);
+        Object.keys(obj).forEach(function (key) {
+            callback.call(context, obj[key], key, obj);
         });
     }
 

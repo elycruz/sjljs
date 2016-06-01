@@ -234,7 +234,7 @@
 
         _setInputsOnInputs: function (inputs, inputsOn) {
             // Loop through incoming inputs
-            sjl.forEachInObj(sjl.jsonClone(inputs), function (input, key) {
+            sjl.forEachInObj(inputs, function (input, key) {
                 input.alias = key;
                 this._addInputOnInputs(input, inputsOn);
             }, this);

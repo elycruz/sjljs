@@ -140,7 +140,7 @@ describe('sjl.defineSubClass', function () {
 
         it ('should have it\'s prototype\'s constructor property properly set.', function () {
             expect(SubClass.prototype.constructor).to.equal(InitialConstructor);
-        })
+        });
     });
 
 });

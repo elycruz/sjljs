@@ -195,8 +195,8 @@
      * @param context {undefined|Object}
      */
     function forEachInObj (obj, callback, context) {
-        Object.keys(obj).forEach(function (key, index) {
-            callback.call(context, obj[key], key, index);
+        Object.keys(obj).forEach(function (key) {
+            callback.call(context, obj[key], key, obj);
         });
     }
 

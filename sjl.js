@@ -1,7 +1,7 @@
 /**! sjljs 5.6.89
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 36debb4d61d1d4f1c55040ebce86da2c
- * | Built-on: Thu May 26 2016 00:38:04 GMT-0400 (EDT)
+ * | md5checksum: 0bf6f3ceb9f813165953a83d5eb95649
+ * | Built-on: Wed Jun 01 2016 13:15:51 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module.
  * @module sjl {Object}
@@ -199,8 +199,8 @@
      * @param context {undefined|Object}
      */
     function forEachInObj (obj, callback, context) {
-        Object.keys(obj).forEach(function (key, index) {
-            callback.call(context, obj[key], key, index);
+        Object.keys(obj).forEach(function (key) {
+            callback.call(context, obj[key], key, obj);
         });
     }
 
@@ -4784,7 +4784,7 @@
 
         _setInputsOnInputs: function (inputs, inputsOn) {
             // Loop through incoming inputs
-            sjl.forEachInObj(sjl.jsonClone(inputs), function (input, key) {
+            sjl.forEachInObj(inputs, function (input, key) {
                 input.alias = key;
                 this._addInputOnInputs(input, inputsOn);
             }, this);
