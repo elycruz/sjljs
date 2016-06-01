@@ -2,7 +2,7 @@
  * Created by Ely on 3/26/2016.
  */
 
-describe ('sjl.input.Input', function () {
+describe ('sjl.input.InputFilter', function () {
 
     // ~~~ STRIP ~~~
     // This part gets stripped out when
@@ -373,12 +373,63 @@ describe ('sjl.input.Input', function () {
 
         describe ('#_setInputsOnInputs', function () {
             var inputFilter = new InputFilter(),
-                inputHashes = {
+                inputs = {
+                    input1: {alias: 'input1'},
+                    input2: {alias: 'input2'},
+                    input3: {alias: 'input3'}
+                },
+                result = inputFilter._setInputsOnInputs(inputs, inputFilter.inputs);
+
+            it ('should return the passed in `inputs` object to set inputs on.', function () {
+                expect(result).to.equal(inputFilter.inputs);
+            });
+            Object.keys(inputs).forEach(function (key) {
+                it ('should have added an input for key "' + key + '".', function () {
+                    expect(inputFilter.inputs[key]).to.be.instanceof(Input);
+                });
+            });
+        });
+
+        describe ('#_inputHashToInput', function () {
+            var inputFilter = new InputFilter(),
+                inputs = {
                     input1: {alias: 'input1'},
                     input2: {alias: 'input2'},
                     input3: {alias: 'input3'}
                 };
-                //result = inputFilter._setDataOnInputs(inputValues, inputFilter.inputs);
+            sjl.forEachInObj(inputs, function (value, key) {
+                var result = inputFilter._inputHashToInput(value);
+                it ('should return and `Input` object from input hash.', function () {
+                    expect(result).to.be.instanceof(Input);
+                });
+                it ('should have returned and `Input` object with the correct `alias` applied to it.', function () {
+                    expect(result.alias).to.equal(key);
+                });
+            });
+        });
+
+        describe ('#_validateInputs', function () {
+
+        });
+
+        describe ('#_validateInput', function () {
+
+        });
+
+        describe ('#_filterInputs', function () {
+
+        });
+
+        describe ('#_filterInput', function () {
+
+        });
+
+        describe ('#_validatorsFromInputHash', function () {
+
+        });
+
+        describe ('#_filtersFromInputHash', function () {
+
         });
 
     });
