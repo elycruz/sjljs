@@ -36,7 +36,7 @@ describe('sjl.filter.FilterChain', function () {
         it ('should have expected proporties.', function () {
             expect((new FilterChain()).filters).to.be.instanceof(Array);
         });
-        describe ('#filter', function () {
+        describe ('#filters', function () {
             it ('should pass passed in filters through filter adding mechanisms', function () {
                 var filterChain = new FilterChain(),
                     filters1 = [
@@ -77,12 +77,23 @@ describe('sjl.filter.FilterChain', function () {
         });
 
         describe ('#filter', function () {
-            // var filter = new FilterChain(),
-            //     filters = [
-            //         new StringToLowerFilter(),
-            //         new StringTrimFilter()
-            //     ];
-            it ('should have tests written.');
+            var filterChain = new FilterChain([
+                    new StringToLowerFilter(),
+                    new StringTrimFilter()
+                ]),
+                argsToTest = [
+                    [' Hello World ', 'hello world'],
+                    ['Hello World ', 'hello world'],
+                    [' Hello World', 'hello world'],
+                    ['Hello World', 'hello world'],
+                ];
+            argsToTest.forEach(function (args) {
+                it ('should return expected filtered value for filter set.', function () {
+                    var result = filterChain.filter(args[0]);
+                    expect(result).to.equal(args[1]);
+                });
+
+            });
         });
 
         describe ('#isFilter', function () {
