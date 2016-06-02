@@ -12,5 +12,9 @@ Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc.
 or as a supplement to applications requiring quick ramp up, some semblance of cohesion, and/or applications requiring 
 functional programming.
 
-~~See release notes for release 5.6.0.~~
-## Warning:  This is branch is in alhpa.
+## Previous version:
+[5.x.x] (https://github.com/elycruz/sjljs/tree/5.0.XX)
+[0.5.x] (https://github.com/elycruz/sjljs/tree/0.5.x)
+
+### Jsdocs
+@todo add jsdocs link here.

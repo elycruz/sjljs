@@ -12,8 +12,12 @@ Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc.
 or as a supplement to applications requiring quick ramp up, some semblance of cohesion, and/or applications requiring 
 functional programming.
 
-~~See release notes for release 5.6.0.~~
-## Warning:  This is branch is in alhpa.
+## Previous version:
+[5.x.x] (https://github.com/elycruz/sjljs/tree/5.0.XX)
+[0.5.x] (https://github.com/elycruz/sjljs/tree/0.5.x)
+
+### Jsdocs
+@todo add jsdocs link here.
 
 ## Sections in Readme:
 - [Getting Started](#getting-started)
@@ -116,13 +120,13 @@ only includes the core and no classes or constructors from it's other packages).
 - [(p) sjl.stdlib](#p-sjlstdlib)
   - [(m) sjl.stdlib.Config](#m-sjlstdlibconfig)
   - [(m) sjl.stdlib.Extendable](#m-sjlstdlibextendable)
-  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
   - [(m) sjl.stdlib.Iterator](#m-sjlstdlibiterator)
   - [(m) sjl.stdlib.ObjectIterator](#m-sjlstdlibobjectiterator)
   - [(m) sjl.stdlib.Optionable](#m-sjlstdliboptionable)
   - [(m) sjl.stdlib.PriorityList](#m-sjlstdlibprioritylist)
   - [(m) sjl.stdlib.SjlMap](#m-sjlstdlibsjlmap)
   - [(m) sjl.stdlib.SjlSet](#m-sjlstdlibsjlset)
+  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
 - [(p) sjl.validator](#p-sjlvalidator)
   - [(m) sjl.validator.AlnumValidator](#m-sjlvalidatoralnumvalidator)
   - [(m) sjl.validator.DigitValidator](#m-sjlvalidatordigitvalidator)
