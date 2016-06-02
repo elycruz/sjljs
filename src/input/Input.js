@@ -17,7 +17,7 @@
         contextName = 'sjl.input.Input',
         Input = function Input(options) {
             var _allowEmpty = false,
-                _continueIfEmpty = false,
+                _continueIfEmpty = true,
                 _breakOnFailure = false,
                 _fallbackValue,
                 _filterChain = null,
@@ -26,6 +26,7 @@
                 _validatorChain = null,
                 _value,
                 _rawValue,
+                _filteredValue,
                 _messages = [],
 
                 // Protect from adding programmatic validators, from within `isValid`, more than once
@@ -133,7 +134,7 @@
                         return _value;
                     },
                     set: function (value) {
-                        if (typeof value === 'undefined') {
+                        if (sjl.isUndefined(value)) {
                             throw new TypeError('Input.value cannot be set to an undefined value.');
                         }
                         _value = value;
@@ -148,6 +149,15 @@
                             throw new TypeError('Input.rawValue cannot be set to an undefined value.');
                         }
                         _rawValue = value;
+                    }
+                },
+                filteredValue: {
+                    get: function () {
+                        return _filteredValue;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'filteredValue', value, String);
+                        _filteredValue = value;
                     }
                 },
                 messages: {
@@ -176,6 +186,11 @@
             else if (sjl.classOfIs(options, Object)) {
                 sjl.extend(this, options);
             }
+
+            // Set raw value
+            if (this.value) {
+                this.rawValue = this.value;
+            }
         };
 
     Input = Extendable.extend(Input, {
@@ -186,29 +201,30 @@
 
                 // Get the validator chain, value and validate
                 validatorChain = self.validatorChain,
+                valueToTest = this.resolveValueToTest(value),
                 isValid,
                 retVal;
 
             // Clear messages
             self.clearMessages();
 
-            // Set value
-            this.value =
-                this.rawValue =
-                    sjl.isUndefined(value) ? this.value : value;
+            // Ensure raw value
+            self.rawValue = valueToTest;
 
             // Check whether we need to add an empty validator
-            if (!self.validationHasRun && !self.continueIfEmpty) {
+            if (!self.validationHasRun && self.continueIfEmpty) {
                 validatorChain.addValidator(new sjl.validator.NotEmptyValidator());
             }
 
             // Get whether is valid or not
-            isValid = validatorChain.isValid(this.rawValue);
+            isValid = validatorChain.isValid(valueToTest);
 
             // Run filter if valid
             if (isValid) {
                 retVal = true;
-                this.value = this.filter();
+                self.value =
+                    self.filteredValue =
+                        this.filter(valueToTest);
             }
             // Get fallback value if any
             else if (!isValid && self.hasFallbackValue()) {
@@ -228,11 +244,16 @@
         },
 
         validate: function (value) {
-            return this.isValid.call(this, value);
+            return this.isValid(value);
         },
 
         filter: function (value) {
             return this.filterChain.filter(sjl.isUndefined(value) ? this.rawValue : value);
+        },
+
+        resolveValueToTest: function (value) {
+            return !sjl.isUndefined(value) ? value :
+                (!sjl.isUndefined(this.rawValue) ? this.rawValue : this.value);
         },
 
         hasFallbackValue: function () {
