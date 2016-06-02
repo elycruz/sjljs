@@ -212,38 +212,83 @@
         });
     }
 
+    /**
+     * Checs if value is a valid number (also checks if isNaN so that you don't have to).
+     * @param value {*}
+     * @returns {Boolean}
+     */
     function isNumber (value) {
         return classOfIs(value, Number);
     }
 
+    /**
+     * Returns whether a value is a function or not.
+     * @param value {*}
+     * @returns {Boolean}
+     */
     function isFunction (value) {
         return classOfIs(value, Function);
     }
 
+    /**
+     * Checks if value is an array.
+     * @param value {*}
+     * @returns {boolean}
+     */
     function isArray (value) {
         return Array.isArray(value);
     }
 
+    /**
+     * Checks if value is a boolean.
+     * @param value {*}
+     * @returns {Boolean}
+     */
     function isBoolean (value) {
         return classOfIs(value, Boolean);
     }
 
+    /**
+     * Checks whether value is an object or not.
+     * @param value
+     * @returns {Boolean}
+     */
     function isObject (value) {
         return classOfIs(value, Object);
     }
 
+    /**
+     * Checks whether value is a string or not.
+     * @param value {*}
+     * @returns {Boolean}
+     */
     function isString(value) {
         return classOfIs(value, String);
     }
 
+    /**
+     * Checks if value is undefined.
+     * @param value {*}
+     * @returns {Boolean}
+     */
     function isUndefined (value) {
         return classOfIs(value, 'Undefined');
     }
 
+    /**
+     * Checks if value is null.
+     * @param value {*}
+     * @returns {Boolean}
+     */
     function isNull (value) {
         return classOfIs(value, 'Null');
     }
 
+    /**
+     * Checks if value is a `Symbol`.
+     * @param value {*}
+     * @returns {Boolean}
+     */
     function isSymbol (value) {
         return classOfIs(value, 'Symbol');
     }
