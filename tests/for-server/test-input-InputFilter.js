@@ -405,10 +405,77 @@ describe ('sjl.input.InputFilter', function () {
         });
 
         describe ('#_validateInputs', function () {
+            var inputFilter = new InputFilter({inputs: {
+                    stringInput: {
+                        alias: 'stringInput',
+                        validators: [
+                            new NotEmptyValidator(),
+                            new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                        ],
+                        filters: [
+                            new StringToLowerFilter(),
+                            new StringTrimFilter()
+                            //new SlugFilter()
+                        ]
+                    }
+                }
+                }),
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
 
+            // When `value` is set directly
+            sjl.forEach(inputFilter.inputs, function (input, key) {
+                inputValues[key].forEach(function (args) {
+                    it ('should', function () {
+                        inputFilter.data = {stringInput: args[0]};
+                        var result = inputFilter._validateInputs(inputFilter.inputs, inputFilter.data);
+                        expect(result).to.equal(true);
+                    });
+                });
+            });
         });
 
         describe ('#_validateInput', function () {
+            var inputFilter = new InputFilter({inputs: {
+                        stringInput: {
+                            alias: 'stringInput',
+                            validators: [
+                                new NotEmptyValidator(),
+                                new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                            ],
+                            filters: [
+                                new StringToLowerFilter(),
+                                new StringTrimFilter()
+                                //new SlugFilter()
+                            ]
+                        }
+                    }
+                }),
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
+
+            // When `value` is set directly
+            sjl.forEach(inputFilter.inputs, function (input, key) {
+                inputValues[key].forEach(function (args) {
+                    it ('should', function () {
+                        inputFilter.data = {stringInput: args[0]};
+                        var result = inputFilter._validateInput(inputFilter.inputs.stringInput);
+                        expect(result).to.equal(true);
+                        expect(inputFilter.inputs.stringInput.value).to.equal(args[1]);
+                        expect(inputFilter.inputs.stringInput.rawValue).to.equal(args[0]);
+                    });
+                });
+            });
 
         });
 

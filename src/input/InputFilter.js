@@ -26,7 +26,7 @@
                         return _data;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'data', value, Array);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'data', value, Object);
                         _data = value;
                         this._setDataOnInputs(_data, _inputs);
                     },
@@ -249,6 +249,7 @@
         },
 
         _validateInput: function (input, dataMap) {
+            dataMap = dataMap || this.data;
             var name = input.alias,
                 dataExists = sjl.isset(dataMap[name]),
                 data = dataExists ? dataMap[name] : null,
@@ -257,6 +258,10 @@
                 continueIfEmpty = input.continueIfEmpty,
                 retVal = true;
 
+            if (dataExists) {
+                input.rawValue = dataMap[name];
+            }
+
             // If data doesn't exists and input is not required
             if (!dataExists && !required) {
                 retVal = true;
@@ -264,7 +269,7 @@
 
             // If data doesn't exist, input is required, and input allows empty value,
             // then input is valid only if continueIfEmpty is false;
-            else if (!dataExists && required && allowEmpty && !continueIfEmpty) {
+            else if (!dataExists && required && allowEmpty && continueIfEmpty) {
                 retVal = true;
             }
 
@@ -287,11 +292,13 @@
             return retVal;
         },
 
-        _validateInputs: function (data) {
+        _validateInputs: function (inputs, data) {
+            data = data || this.data;
+            inputs = inputs || this.inputs;
             var self = this;
 
             // Validate inputs
-            sjl.forEach(this.inputs, function (input, key) {
+            sjl.forEach(inputs, function (input, key) {
                 sjl.throwTypeErrorIfNotOfType(contextName + '._validateInputs', 'inputs[input]', input, Input);
                 if (self._validateInput(input, data)) {
                     self.validInputs[key] = input;
