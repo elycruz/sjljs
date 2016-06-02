@@ -28,7 +28,7 @@ describe ('sjl.input.InputFilter', function () {
         SlugFilter =            sjl.filter.SlugFilter,
         StripTagsFilter =       sjl.filter.StripTagsFilter;
 
-    describe('Constructor', function () {
+    describe ('Constructor', function () {
         it ('should be a subclass of `sjl.stdlib.Extendable`.', function () {
             expect((new InputFilter())).to.be.instanceof(sjl.stdlib.Extendable);
         });
@@ -48,7 +48,7 @@ describe ('sjl.input.InputFilter', function () {
         });
     });
 
-    describe('Properties.', function () {
+    describe ('Properties.', function () {
         var inputFilter = new InputFilter();
         [
             ['data', Object],
@@ -249,11 +249,7 @@ describe ('sjl.input.InputFilter', function () {
             });
         });
 
-        describe ('#isValid', function () {
-
-        });
-
-        describe ('#validate', function () {
+        describe ('#isValid, #validate', function () {
 
         });
 
