@@ -156,7 +156,9 @@
                         return _filteredValue;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'filteredValue', value, String);
+                        if (sjl.isUndefined(value)) {
+                            throw new TypeError(contextName + '.filteredValue doesn\'t allow `undefined` values.');
+                        }
                         _filteredValue = value;
                     }
                 },
@@ -188,7 +190,7 @@
             }
 
             // Set raw value
-            if (this.value) {
+            if (this.value && sjl.isUndefined(this.rawValue)) {
                 this.rawValue = this.value;
             }
         };
@@ -244,7 +246,7 @@
         },
 
         validate: function (value) {
-            return this.isValid(value);
+            return this.isValid.apply(this, arguments);
         },
 
         filter: function (value) {

@@ -38,6 +38,9 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'inputs', value, Object);
+                        if (sjl.empty(value)) {
+                            _inputs = {};
+                        }
                         _inputs = this._setInputsOnInputs(value, _inputs);
                     },
                     enumerable: true
@@ -123,7 +126,11 @@
                 .clearMessages();
 
             // If no data bail and throw an error
-            if (sjl.empty(self.data)) {
+            if (sjl.empty(self.inputs)) {
+                throw new Error(contextName + '.isValid could\'nt ' +
+                    'find any inputs to validate.  Set the `.inputs` property.');
+            }
+            else if (sjl.empty(self.data)) {
                 throw new Error(contextName + '.isValid could\'nt ' +
                     'find any data for validation.  Set the data on `.data` property.');
             }
@@ -184,7 +191,7 @@
             sjl.throwTypeErrorIfNotOfType(contextName + '.mergeMessages', 'messages', messages, Object);
             Object.keys(messages).forEach(function (key) {
                 this.messages[key] = messages[key].concat(sjl.isset(this.messages[key]) ? this.messages[key] : []);
-            });
+            }, this);
             return this;
         },
 

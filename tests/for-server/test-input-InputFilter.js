@@ -250,43 +250,105 @@ describe ('sjl.input.InputFilter', function () {
         });
 
         describe ('#isValid, #validate', function () {
-
+            var inputFilter = new InputFilter({
+                inputs: {stringInput: {alias: 'stringInput', required: true}},
+                data: {stringInput: 99}
+            });
+            it ('should return true when inputs are valid.', function () {
+                expect(inputFilter.isValid()).to.equal(true);
+            });
         });
 
         describe ('#filter', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return itself.', function () {
+                expect(inputFilter.filter()).to.equal(inputFilter);
+            });
         });
 
         describe ('#getRawValues', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return an object.', function () {
+                expect(inputFilter.getRawValues()).to.be.instanceof(Object);
+            });
         });
 
         describe ('#getValues', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return an object.', function () {
+                expect(inputFilter.getValues()).to.be.instanceof(Object);
+            });
         });
 
         describe ('#getMessages', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return an object.', function () {
+                expect(inputFilter.getMessages()).to.be.instanceof(Object);
+            });
         });
 
         describe ('#mergeMessages', function () {
-
+            var inputFilter = new InputFilter({
+                    messages: {stringInput: ['hello world']}
+                }),
+                otherMessages = {stringInput: ['hello']},
+                result = inputFilter.mergeMessages(otherMessages);
+            it ('should return self.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should have a messages array with the length of the passed in messages array.', function () {
+                expect(inputFilter.messages.stringInput.length).to.equal(2);
+            });
         });
 
         describe ('#clearMessages', function () {
-
+            var inputFilter = new InputFilter({messages: {stringInput: ['some message here.']}}),
+                result = inputFilter.clearMessages();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('Messages should be clear.', function () {
+                expect(Object.keys(inputFilter.messages).length).to.equal(0);
+            });
         });
 
         describe ('#clearInputs', function () {
-
+            var inputFilter = new InputFilter(),
+                result;
+            inputFilter.inputs.helloWorld = new Input();
+            result = inputFilter.clearInputs();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should empty `inputs` object.', function () {
+                expect(Object.keys(inputFilter.inputs).length).to.equal(0);
+            });
         });
 
         describe ('#clearValidInputs', function () {
-
+            var inputFilter = new InputFilter(),
+                result;
+            inputFilter.validInputs.helloWorld = new Input();
+            result = inputFilter.clearValidInputs();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should empty `validInputs` object.', function () {
+                expect(Object.keys(inputFilter.validInputs).length).to.equal(0);
+            });
         });
 
         describe ('#clearInvalidInputs', function () {
-
+            var inputFilter = new InputFilter(),
+                result;
+            inputFilter.invalidInputs.helloWorld = new Input();
+            result = inputFilter.clearInvalidInputs();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should empty `invalidInputs` object.', function () {
+                expect(Object.keys(inputFilter.invalidInputs).length).to.equal(0);
+            });
         });
 
         describe ('#_addInputOnInputs', function () {
