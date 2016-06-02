@@ -320,8 +320,9 @@
         },
 
         _filterInput: function (input) {
-            input.rawValue = sjl.isUndefined(input.value) ? null : input.value;
-            input.value = input.filterChain.filter();
+            input.value =
+                input.filteredValue =
+                    input.filter();
             return input;
         },
 
