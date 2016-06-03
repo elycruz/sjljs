@@ -59,7 +59,7 @@
         var retVal = [null, array],
             matchesType, foundElement,
             splicedArray;
-        makeCopyOfArray = classOfIs(makeCopyOfArray, 'Boolean') ? makeCopyOfArray : true;
+        makeCopyOfArray = isBoolean(makeCopyOfArray) ? makeCopyOfArray : true;
         if (array.hasOwnProperty(index + '')) {
             if (makeCopyOfArray) {
                 array = array.concat([]);
@@ -565,8 +565,7 @@
                 return;
             }
             if (deep === true) {
-                if (classOfIs(p[prop], Object)
-                    && classOfIs(o[prop], Object)
+                if (isObject(p[prop]) && isObject(o[prop])
                     && !isEmptyObj(p[prop])) {
                     extend(o[prop], p[prop], deep);
                 }
@@ -681,7 +680,7 @@
         var __statics;
 
         // If superclass is a Constructor snatch statics
-        if (classOfIs(superclass, Function)) {
+        if (isFunction(superclass)) {
             // Set statics for snatching statics
             __statics = {};
 
