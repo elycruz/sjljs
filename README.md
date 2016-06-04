@@ -19,6 +19,8 @@ functional programming.
 ### Jsdocs
 Api for current version:
 [6.0.x] (http://sjljs.elycruz.com/6.0.x/jsdocs)
+- **Note** Docs are currently under construction but the 
+docs for the core are available at the aforementioned link.
 
 ## Sections in Readme:
 - [Getting Started](#getting-started)
