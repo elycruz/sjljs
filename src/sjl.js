@@ -349,10 +349,10 @@
     }
 
     /**
-     * Checks to see if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string}.
+     * Checks to see if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string).
      * @function module:sjl.emptyMulti
      * @params {*} - One or more params of any type.
-     * @returns {Boolean} - Returns true if any of the values passed
+     * @returns {Boolean} - Returns true if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string).
      */
     function emptyMulti () {
         return argsToArray(arguments).some(function (value) {

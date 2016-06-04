@@ -1,0 +1,9 @@
+{
+    readme: {
+        "markdown-fragments/readme-sections/sjl-direct-members.md",
+        "markdown-fragments/generated/sjl-direct-members-list.md",
+        "markdown-fragments/readme-sections/packages-and-members.md",
+        "markdown-fragments/generated/packages-and-members-list.md",
+        "markdown-fragments/package-and-member-docs/*.md",
+    }
+}

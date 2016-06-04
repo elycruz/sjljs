@@ -17,4 +17,7 @@ functional programming.
 - [0.5.x] (https://github.com/elycruz/sjljs/tree/0.5.x)
 
 ### Jsdocs
-@todo add jsdocs link here.
+Api for current version:
+[6.0.x] (http://sjljs.elycruz.com/6.0.x/jsdocs)
+- **Note** Docs are currently under construction but the 
+docs for the core are available at the aforementioned link.

@@ -49,7 +49,7 @@ gulp.task('sjl-direct-member-list-markdown', function () {
         .pipe(fs.createWriteStream(filePath));
 });
 
-gulp.task('readme', ['sjl-direct-member-list-markdown', 'package-member-list-markdown'], function () {
+gulp.task('readme', function () {
     gulp.src(gulpConfig.readme)
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));

@@ -10,10 +10,10 @@
 - 5.0.0+
 
 ## Todos:
-### MVP for 0.6.0
-- [X] - @todo Include all sub items for components included as sub nav in readme.
+### MVP for 6.1.0
+- [X] - ~~@todo Include all sub items for components included as sub nav in readme.~~ All docs will now be included in api docs
+instead (generated with jsdocs).
 - [ ] - @todo Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.
-    - @note jsdoc is currently undergoing a refactor by the jsdoc folks.  It is currently in alpha.
 - [ ] - @todo Ensure all existing constructors and library members have a test file for theirselves.
 
 ## License:

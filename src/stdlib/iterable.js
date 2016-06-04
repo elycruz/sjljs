@@ -4,7 +4,6 @@
 
 (function () {
 
-
     'use strict';
 
     var isNodeEnv = typeof window === 'undefined',
