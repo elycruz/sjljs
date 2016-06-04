@@ -1,8 +1,5 @@
 /**
  * Created by Ely on 7/21/2014.
- * @note `set` and `setOptions` are different from the `merge` function in
- *  that they force the use of legacy setters if they are available;
- *  e.g., setName, setSomePropertyName, etc..
  */
 (function () {
 

@@ -1,8 +1,8 @@
 /**
- * The `sjl` module.
+ * The `sjl` module definition.
  * @module sjl {Object}
+ * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
  * @created by Ely on 5/29/2015.
- * @todo Cleanup jsdocs and make them more readable where possible (some of the jsdoc definitions in sjljs's source files are old and need to be written using es5 and es6 kind of language to make them more readable to the user (also since most of the functionality is es5/es6ish makes sense to perform this upgrade).
  */
 (function () {
 
@@ -206,6 +206,7 @@
 
     /**
      * Check if `value` is of one of the passed in types.
+     * @function module:sjl.classOfIsMulti
      * @param value {*}
      * @param type {Function|String} - Constructor or string.
      * @returns {boolean}
@@ -218,6 +219,7 @@
 
     /**
      * Checs if value is a valid number (also checks if isNaN so that you don't have to).
+     * @function module:sjl.isNumber
      * @param value {*}
      * @returns {Boolean}
      */
@@ -227,6 +229,7 @@
 
     /**
      * Returns whether a value is a function or not.
+     * @function module:sjl.isFunction
      * @param value {*}
      * @returns {Boolean}
      */
@@ -236,6 +239,7 @@
 
     /**
      * Checks if value is an array.
+     * @function module:sjl.isArray
      * @param value {*}
      * @returns {boolean}
      */
@@ -245,6 +249,7 @@
 
     /**
      * Checks if value is a boolean.
+     * @function module:sjl.isBoolean
      * @param value {*}
      * @returns {Boolean}
      */
@@ -254,6 +259,7 @@
 
     /**
      * Checks whether value is an object or not.
+     * @function module:sjl.isObject
      * @param value
      * @returns {Boolean}
      */
@@ -263,6 +269,7 @@
 
     /**
      * Checks whether value is a string or not.
+     * @function module:sjl.isString
      * @param value {*}
      * @returns {Boolean}
      */
@@ -272,6 +279,7 @@
 
     /**
      * Checks if value is undefined.
+     * @function module:sjl.isUndefined
      * @param value {*}
      * @returns {Boolean}
      */
@@ -281,6 +289,7 @@
 
     /**
      * Checks if value is null.
+     * @function module:sjl.isNull
      * @param value {*}
      * @returns {Boolean}
      */
@@ -290,6 +299,7 @@
 
     /**
      * Checks if value is a `Symbol`.
+     * @function module:sjl.isSymbol
      * @param value {*}
      * @returns {Boolean}
      */
@@ -340,6 +350,7 @@
 
     /**
      * Checks to see if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string}.
+     * @function module:sjl.emptyMulti
      * @params {*} - One or more params of any type.
      * @returns {Boolean} - Returns true if any of the values passed
      */
@@ -363,6 +374,7 @@
 
     /**
      * Returns true if an element is not empty and is of type.
+     * @function module:sjl.notEmptyAndOfType
      * @param value {*} - Value to check.
      * @param type {String|Function} - Type to check against (string name or actual constructor).
      * @returns {Boolean}
@@ -375,6 +387,7 @@
      * Frees references for value and removes the property from `obj` if no references are found and if obj[propName] is configurable.
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete  - Read the 'Examples' section.
      * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty - Read description for `configurable`.
+     * @function module:sjl.unset
      * @param obj {*}
      * @param propName {String}
      * @returns {Boolean} - Whether deletion occurred or not (will always return true if obj[propName] is configurable.
@@ -394,8 +407,8 @@
      * autoNamespace ('hello.world.how.are.you.doing', obj)
      *
      * @example
-     * // Will set 'hello.what.is.your.name' to 'whuan'
-     *
+     * // Will set 'hello.what.is.your.name' to 'juan'
+     * autoNamespace ('hello.what.is.your.name', obj, 'juan')
      *
      * @function module:sjl.autoNamespace
      * @param ns_string {String} - The namespace you wish to fetch
@@ -510,6 +523,7 @@
 
     /**
      * Searches an object for namespace string.
+     * @function module:sjl.searchObj
      * @param ns_string {String} - Namespace string;  E.g., 'all.your.base'
      * @param objToSearch {*}
      * @returns {*} - Found value.  If no found value returns `undefined`.
@@ -794,6 +808,7 @@
      * Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.
      * E.g., If pointer is less than `min` then returns `min`.  If pointer is greater than `max` returns `max`.
      * If pointer is within bounds returns `pointer`.
+     * @function module:sjl.constrainPointer
      * @param pointer {Number}
      * @param min {Number}
      * @param max {Number}
@@ -808,6 +823,7 @@
      * on direction:  E.g.,
      * If pointer is less than `min` then returns `max`.  If pointer is greater than `max` returns `min`.
      * If pointer is within bounds then returns `pointer`.
+     * @function module:sjl.wrapPointer
      * @param pointer {Number}
      * @param min {Number}
      * @param max {Number}
@@ -820,6 +836,7 @@
     /**
      * Throws a type error if value is not of type and prepends the prefix and
      * paramName/variable-name to the message (removes type checking boilerplate where required).
+     * @function module:sjl.throwTypeErrorIfNotOfType
      * @param prefix {String} - Context name and function name to prefix to error message if it is thrown.
      * @param paramName {String} - Param name of the value being passed in.
      * @param value {*} - Value to inspect.
@@ -846,6 +863,7 @@
 
     /**
      * Throws an error if passed in `value` is empty (0, null, undefined, false, empty {}, or empty []).
+     * @function module:sjl.throwTypeErrorIfEmpty
      * @param prefix {String} - String to prefix to message.
      * @param paramName {String} - Param that expected a non empty value (hint for user).
      * @param value {*} - Value to check.
@@ -1026,7 +1044,10 @@
         return extractBoolFromArray(array, false);
     }
 
-    // Define `sjl`
+    /**
+     * Define `sjl` module.
+     * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
+     */
     sjl = {
         argsToArray: argsToArray,
         camelCase: camelCase,
@@ -1111,10 +1132,31 @@
 
         // Instantiate known namespaces and set them directly on `sjl` for ease of use;
         // E.g., Accessing `sjl.ns.stdlib.Extendable` now becomes `sjl.stdlib.Extendable`
+        // --------------------------------------------------------------------------------
+
+        /**
+         * @namespace sjl.filter {Object}
+         */
         defineEnumProp(sjl,     'filter',       sjl.ns('filter'));
+
+        /**
+         * @namespace sjl.input {Object}
+         */
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
+
+        /**
+         * @namespace sjl.stdlib {Object}
+         */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
+
+        /**
+         * @namespace sjl.utils {Object}
+         */
         defineEnumProp(sjl,     'utils',        sjl.ns('utils'));
+
+        /**
+         * @namespace sjl.validator {Object}
+         */
         defineEnumProp(sjl,     'validator',    sjl.ns('validator'));
 
         // Export sjl globally

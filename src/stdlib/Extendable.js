@@ -1,6 +1,5 @@
 /**
  * Created by Ely on 4/12/2014.
- * Code copy pasted from "Javascript the definitive guide"
  */
 
 (function () {
@@ -13,11 +12,9 @@
 
     /**
      * The `sjl.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-     * @class module:sjl.stdlib.Extendable
-     * @memberof namespace:sjl.stdlib
+     * @class sjl.stdlib.Extendable
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
-
 
     // Export `Extendable`
     if (isNodeEnv) {
@@ -29,9 +26,5 @@
             return Extendable;
         }
     }
-
-    /**
-     * @static class:sjl.stdlib.Extendable#extend
-     */
 
 })();
