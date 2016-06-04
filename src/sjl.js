@@ -47,6 +47,7 @@
      * Extracts a value at an `index` of passed in array (alternately only extract the value if it is of `type`).
      * Returns an array with two elements: Element `1` contains the extracted value and element `2` the resulting
      * array of the extraction (copy of original array with extracted element) of the value at `index`.
+     * @function module:sjl.extractFromArrayAt
      * @param array {Array} - Array to operate on.
      * @param index {Number} - Index of element to look for in `array`.
      * @param type {String} - Optional.
@@ -86,6 +87,7 @@
 
     /**
      * Checks if one or more parameters are set (not null and not undefined).
+     * @function module:sjl.issetMulti
      * @params {*} - One or more values to check of any type.
      * @returns {Boolean} - True if all params passed in are not null or undefined.
      */
@@ -165,6 +167,7 @@
 
     /**
      * For each for array like objects.
+     * @function module:sjl.forEach
      * @param arrayLike {Array|Set|SjlSet|SjlMap|Map}
      * @param callback
      * @param context
@@ -190,6 +193,7 @@
     }
 
     /**
+     * @function module:sjl.forEachInObj
      * @param obj {Object}
      * @param callback {Function}
      * @param context {undefined|Object}

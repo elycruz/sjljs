@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Documentation Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Documentation</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-sjl.html">sjl</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-sjl.filter.Filter.html">sjl.filter.Filter</a></li><li><a href="namespace_sjl.stdlib.module_sjl.stdlib.Extendable.html">namespace:sjl.stdlib.sjl.stdlib.Extendable</a></li><li><a href="namespace_sjl.stdlib.SjlSet.html">namespace:sjl.stdlib.SjlSet</a></li><li><a href="ObjectIterator.html">ObjectIterator</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#addErrorByKey">addErrorByKey</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#pointer">pointer</a></li><li><a href="global.html#toJSON">toJSON</a></li><li><a href="global.html#valid">valid</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><p><a href="https://travis-ci.org/elycruz/sjljs"><img src="https://travis-ci.org/elycruz/sjljs.png" alt="Build Status"></a> 
+<a href="http://badge.fury.io/gh/elycruz%2Fsjljs"><img src="https://badge.fury.io/gh/elycruz%2Fsjljs.svg" alt="GitHub version"></a> 
+<a href="http://badge.fury.io/js/sjljs"><img src="https://badge.fury.io/js/sjljs.svg" alt="NPM version"></a>
+<a href="https://david-dm.org/elycruz/sjljs"><img src="https://david-dm.org/elycruz/sjljs.png" alt="Dependencies"></a></p>
+<h1>sjljs</h1><p>A library for writing strongly typed javascript and solid classical oop.  Also for making your applications, components,
+and libraries more concise. </p>
+<p>Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc..  Only meant as a supplement to them 
+or as a supplement to applications requiring quick ramp up, some semblance of cohesion, and/or applications requiring 
+functional programming.</p>
+<h2>Previous version:</h2><ul>
+<li>[5.x.x] (https://github.com/elycruz/sjljs/tree/5.0.XX)</li>
+<li>[0.5.x] (https://github.com/elycruz/sjljs/tree/0.5.x)</li>
+</ul>
+<h3>Jsdocs</h3><p>@todo add jsdocs link here.</p>
+<h2>Sections in Readme:</h2><ul>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#sjl-direct-members-and-methods">Sjl Direct Members and Methods</a></li>
+<li><a href="#other-packages-and-members">Other Packages and Members</a></li>
+<li><a href="#unit-tests">Unit Tests</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#supported-platforms">Supported Platforms</a></li>
+<li><a href="#todos">Todos</a></li>
+<li><a href="#license">License</a></li>
+</ul>
+<h2>Getting Started:</h2><p>Include either the full library './sjl[.min].js' or the minimal version './sjl-minimal[.min].js' (the minimal version
+only includes the core and no classes or constructors from it's other packages).</p>
+<h2>Sjl direct Members and Methods:</h2><h4>Legend</h4><ul>
+<li><strong>(m)</strong> - Member prefix.  Denotes item is a member;  E.g., A method or property.</li>
+</ul>
+<h4>Members/Methods:</h4><ul>
+<li><a href="#m-sjlargstoarray">(m) sjl.argsToArray</a></li>
+<li><a href="#m-sjlcamelcase">(m) sjl.camelCase</a></li>
+<li><a href="#m-sjlclassof">(m) sjl.classOf</a></li>
+<li><a href="#m-sjlclassofis">(m) sjl.classOfIs</a></li>
+<li><a href="#m-sjlclassofismulti">(m) sjl.classOfIsMulti</a></li>
+<li><a href="#m-sjlclone">(m) sjl.clone</a></li>
+<li><a href="#m-sjlconstrainpointer">(m) sjl.constrainPointer</a></li>
+<li><a href="#m-sjldefinesubclass">(m) sjl.defineSubClass</a></li>
+<li><a href="#m-sjldefineenumprop">(m) sjl.defineEnumProp</a></li>
+<li><a href="#m-sjlempty">(m) sjl.empty</a></li>
+<li><a href="#m-sjlemptymulti">(m) sjl.emptyMulti</a></li>
+<li><a href="#m-sjlextend">(m) sjl.extend</a></li>
+<li><a href="#m-sjlextractboolfromarrayend">(m) sjl.extractBoolFromArrayEnd</a></li>
+<li><a href="#m-sjlextractboolfromarraystart">(m) sjl.extractBoolFromArrayStart</a></li>
+<li><a href="#m-sjlextractfromarrayat">(m) sjl.extractFromArrayAt</a></li>
+<li><a href="#m-sjlforeach">(m) sjl.forEach</a></li>
+<li><a href="#m-sjlforeachinobj">(m) sjl.forEachInObj</a></li>
+<li><a href="#m-sjlhasmethod">(m) sjl.hasMethod</a></li>
+<li><a href="#m-sjlimplode">(m) sjl.implode</a></li>
+<li><a href="#m-sjlisset">(m) sjl.isset</a></li>
+<li><a href="#m-sjlissetmulti">(m) sjl.issetMulti</a></li>
+<li><a href="#m-sjlissetandoftype">(m) sjl.issetAndOfType</a></li>
+<li><a href="#m-sjlisempty">(m) sjl.isEmpty</a></li>
+<li><a href="#m-sjlisemptyobj">(m) sjl.isEmptyObj</a></li>
+<li><a href="#m-sjlisemptyornotoftype">(m) sjl.isEmptyOrNotOfType</a></li>
+<li><a href="#m-sjlisarray">(m) sjl.isArray</a></li>
+<li><a href="#m-sjlisboolean">(m) sjl.isBoolean</a></li>
+<li><a href="#m-sjlisfunction">(m) sjl.isFunction</a></li>
+<li><a href="#m-sjlisnull">(m) sjl.isNull</a></li>
+<li><a href="#m-sjlisnumber">(m) sjl.isNumber</a></li>
+<li><a href="#m-sjlisobject">(m) sjl.isObject</a></li>
+<li><a href="#m-sjlisstring">(m) sjl.isString</a></li>
+<li><a href="#m-sjlissymbol">(m) sjl.isSymbol</a></li>
+<li><a href="#m-sjlisundefined">(m) sjl.isUndefined</a></li>
+<li><a href="#m-sjljsonclone">(m) sjl.jsonClone</a></li>
+<li><a href="#m-sjllcasefirst">(m) sjl.lcaseFirst</a></li>
+<li><a href="#m-sjlautonamespace">(m) sjl.autoNamespace</a></li>
+<li><a href="#m-sjlnotemptyandoftype">(m) sjl.notEmptyAndOfType</a></li>
+<li><a href="#m-sjlrestargs">(m) sjl.restArgs</a></li>
+<li><a href="#m-sjlucasefirst">(m) sjl.ucaseFirst</a></li>
+<li><a href="#m-sjlunset">(m) sjl.unset</a></li>
+<li><a href="#m-sjlsearchobj">(m) sjl.searchObj</a></li>
+<li><a href="#m-sjlthrowtypeerrorifnotoftype">(m) sjl.throwTypeErrorIfNotOfType</a></li>
+<li><a href="#m-sjlthrowtypeerrorifempty">(m) sjl.throwTypeErrorIfEmpty</a></li>
+<li><a href="#m-sjlvalueordefault">(m) sjl.valueOrDefault</a></li>
+<li><a href="#m-sjlwrappointer">(m) sjl.wrapPointer</a></li>
+<li><a href="#m-sjlsymbol">(m) sjl.Symbol</a></li>
+<li><a href="#m-sjlns">(m) sjl.ns</a></li>
+<li><a href="#m-sjlpackage">(m) sjl.package</a></li>
+<li><a href="#m-sjlfilter">(m) sjl.filter</a></li>
+<li><a href="#m-sjlinput">(m) sjl.input</a></li>
+<li><a href="#m-sjlnodejs">(m) sjl.nodejs</a></li>
+<li><a href="#m-sjlsjl">(m) sjl.sjl</a></li>
+<li><a href="#m-sjlstdlib">(m) sjl.stdlib</a></li>
+<li><a href="#m-sjlvalidator">(m) sjl.validator</a></li>
+</ul>
+<h2>Other Packages and members:</h2><h4>Legend</h4><ul>
+<li><strong>(m)</strong> - Member prefix.  Denotes item is a member;  E.g., A constructor, method or a property.</li>
+<li><strong>(p)</strong> - Package prefix.  Denotes item is a package;  E.g., an object with access to package members directly on it.</li>
+</ul>
+<h4>Other Packages and Members List:</h4><ul>
+<li><a href="#p-sjlfilter">(p) sjl.filter</a><ul>
+<li><a href="#m-sjlfilterbooleanfilter">(m) sjl.filter.BooleanFilter</a></li>
+<li><a href="#m-sjlfilterfilter">(m) sjl.filter.Filter</a></li>
+<li><a href="#m-sjlfilterfilterchain">(m) sjl.filter.FilterChain</a></li>
+<li><a href="#m-sjlfilterslugfilter">(m) sjl.filter.SlugFilter</a></li>
+<li><a href="#m-sjlfilterstringtolowerfilter">(m) sjl.filter.StringToLowerFilter</a></li>
+<li><a href="#m-sjlfilterstringtrimfilter">(m) sjl.filter.StringTrimFilter</a></li>
+<li><a href="#m-sjlfilterstriptagsfilter">(m) sjl.filter.StripTagsFilter</a></li>
+</ul>
+</li>
+<li><a href="#p-sjlinput">(p) sjl.input</a><ul>
+<li><a href="#m-sjlinputinput">(m) sjl.input.Input</a></li>
+<li><a href="#m-sjlinputinputfilter">(m) sjl.input.InputFilter</a></li>
+</ul>
+</li>
+<li><a href="#p-sjlnodejs">(p) sjl.nodejs</a><ul>
+<li><a href="#m-sjlnodejsnamespace">(m) sjl.nodejs.Namespace</a></li>
+</ul>
+</li>
+<li><a href="#m-sjl">(m) sjl</a></li>
+<li><a href="#p-sjlstdlib">(p) sjl.stdlib</a><ul>
+<li><a href="#m-sjlstdlibconfig">(m) sjl.stdlib.Config</a></li>
+<li><a href="#m-sjlstdlibextendable">(m) sjl.stdlib.Extendable</a></li>
+<li><a href="#m-sjlstdlibiterator">(m) sjl.stdlib.Iterator</a></li>
+<li><a href="#m-sjlstdlibobjectiterator">(m) sjl.stdlib.ObjectIterator</a></li>
+<li><a href="#m-sjlstdliboptionable">(m) sjl.stdlib.Optionable</a></li>
+<li><a href="#m-sjlstdlibprioritylist">(m) sjl.stdlib.PriorityList</a></li>
+<li><a href="#m-sjlstdlibsjlmap">(m) sjl.stdlib.SjlMap</a></li>
+<li><a href="#m-sjlstdlibsjlset">(m) sjl.stdlib.SjlSet</a></li>
+<li><a href="#m-sjlstdlibiterable">(m) sjl.stdlib.iterable</a></li>
+</ul>
+</li>
+<li><a href="#p-sjlvalidator">(p) sjl.validator</a><ul>
+<li><a href="#m-sjlvalidatoralnumvalidator">(m) sjl.validator.AlnumValidator</a></li>
+<li><a href="#m-sjlvalidatordigitvalidator">(m) sjl.validator.DigitValidator</a></li>
+<li><a href="#m-sjlvalidatornotemptyvalidator">(m) sjl.validator.NotEmptyValidator</a></li>
+<li><a href="#m-sjlvalidatornumbervalidator">(m) sjl.validator.NumberValidator</a></li>
+<li><a href="#m-sjlvalidatorregexvalidator">(m) sjl.validator.RegexValidator</a></li>
+<li><a href="#m-sjlvalidatorstringlengthvalidator">(m) sjl.validator.StringLengthValidator</a></li>
+<li><a href="#m-sjlvalidatorvalidator">(m) sjl.validator.Validator</a></li>
+<li><a href="#m-sjlvalidatorvalidatorchain">(m) sjl.validator.ValidatorChain</a></li>
+</ul>
+</li>
+</ul>
+<h3>(m) sjl.Symbol</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.argsToArray</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.autoNamespace</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.camelCase</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.classOf</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.classOfIs</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.classOfIsMulti</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.clone</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.constrainPointer</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.defineEnumProp</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.defineSubClass</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.empty</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.emptyMulti</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.extend</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.extractBoolFromArrayEnd</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.extractBoolFromArrayStart</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.extractFromArrayAt</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.filter.BooleanFilter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.filter.Filter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.filter.FilterChain</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.filter.SlugFilter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.filter.StringToLowerFilter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.filter.StringTrimFilter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.filter.StripTagsFilter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.filter</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.forEach</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.forEachInObj</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.hasMethod</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.implode</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.input.Input</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.input.InputFilter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.input</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isArray</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isBoolean</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isEmpty</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isEmptyObj</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isEmptyOrNotOfType</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isFunction</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isNull</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isNumber</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isObject</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isString</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isSymbol</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isUndefined</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.isset</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.issetAndOfType</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.issetMulti</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.jsonClone</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.lcaseFirst</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.nodejs.Namespace</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.nodejs</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.notEmptyAndOfType</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.ns</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.package</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.restArgs</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.searchObj</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.sjl</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.stdlib.Config</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.Extendable</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.Iterator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.ObjectIterator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.Optionable</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.PriorityList</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.SjlMap</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.SjlSet</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib.iterable</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.stdlib</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.throwTypeErrorIfEmpty</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.throwTypeErrorIfNotOfType</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.ucaseFirst</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.unset</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.validator.AlnumValidator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator.DigitValidator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator.NotEmptyValidator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator.NumberValidator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator.RegexValidator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator.StringLengthValidator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator.Validator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator.ValidatorChain</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.validator</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.valueOrDefault</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.wrapPointer</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(p) sjl.filter</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(p) sjl.input</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(p) sjl.nodejs</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(p) sjl.stdlib</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(p) sjl.validator</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h2>Unit Tests:</h2><p>To run unit tests:</p>
+<p>1.)  First do an <code>npm install</code> in project root.</p>
+<p>2.)  For running tests with node:
+Run one of the following from your terminal:</p>
+<ul>
+<li><code>$ gulp tests</code>, </li>
+<li><code>$ mocha tests/for-server</code>, or </li>
+<li><code>$ npm tests</code> </li>
+</ul>
+<p>3.)  For running tests in the browser:</p>
+<ul>
+<li>Launch './tests/for-browser/index.html'</li>
+<li><strong>Note</strong> <code>npm install</code> has to be run prior to trying to this aforementioned file.</li>
+</ul>
+<h2>Requirements:</h2><ul>
+<li>Javascript versions ecmascript 5+</li>
+</ul>
+<h2>Supported Platforms:</h2><h3>Browsers</h3><ul>
+<li>IE9+, and all other modern day browsers.</li>
+</ul>
+<h3>NodeJs</h3><ul>
+<li>5.0.0+</li>
+</ul>
+<h2>Todos:</h2><h3>MVP for 0.6.0</h3><ul>
+<li>[X] - @todo Include all sub items for components included as sub nav in readme.</li>
+<li>[ ] - @todo Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.<ul>
+<li>@note jsdoc is currently undergoing a refactor by the jsdoc folks.  It is currently in alpha.</li>
+</ul>
+</li>
+<li>[ ] - @todo Ensure all existing constructors and library members have a test file for theirselves.</li>
+</ul>
+<h2>License:</h2><p><a href="http://www.gnu.org/licenses/gpl-2.0.html" title="http://www.gnu.org/licenses/gpl-2.0.html">GPL v2+</a> AND
+<a href="http://opensource.org/licenses/MIT" title="http://opensource.org/licenses/MIT">MIT</a></p></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-06-04T13:44:50-04:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>

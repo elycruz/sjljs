@@ -8,6 +8,7 @@ var packageJson = require('./package'),
     header = require('gulp-header'),
     mocha = require('gulp-mocha'),
     jshint = require('gulp-jshint'),
+    jsdoc = require('gulp-jsdoc3'),
     uglify = require('gulp-uglify'),
     duration = require('gulp-duration'),
     fncallback = require('gulp-fncallback'),
@@ -179,6 +180,18 @@ gulp.task('jshint', function () {
         'tests/for-server/*.js'
         ])
         .pipe(jsHintPipe());
+});
+
+gulp.task('jsdoc', function (cb) {
+    gulp.src(['README.md', './src/**/*.js'], {read: false})
+        .pipe(jsdoc({
+            opts: {
+                "template": "templates/default",  // same as -t templates/default
+                "encoding": "utf8",               // same as -e utf8
+                "destination": "./jsdocs/",          // same as -d ./out/
+                "recurse": true
+            }
+        }, cb));
 });
 
 gulp.task('watch', function () {
