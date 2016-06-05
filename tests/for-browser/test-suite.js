@@ -148,8 +148,8 @@ describe('sjl.filter.Filter', function () {
 
 describe('sjl.filter.FilterChain', function () {
 
-        var Filter =                sjl.filter.Filter,
-        FilterChain =           sjl.filter.FilterChain,
+        var FilterChain =           sjl.filter.FilterChain,
+        //Filter =                sjl.filter.Filter,
         BooleanFilter =         sjl.filter.BooleanFilter,
         StringToLowerFilter =   sjl.filter.StringToLowerFilter,
         StringTrimFilter =      sjl.filter.StringTrimFilter,
@@ -170,7 +170,7 @@ describe('sjl.filter.FilterChain', function () {
         it ('should have expected proporties.', function () {
             expect((new FilterChain()).filters).to.be.instanceof(Array);
         });
-        describe ('#filter', function () {
+        describe ('#filters', function () {
             it ('should pass passed in filters through filter adding mechanisms', function () {
                 var filterChain = new FilterChain(),
                     filters1 = [
@@ -211,11 +211,23 @@ describe('sjl.filter.FilterChain', function () {
         });
 
         describe ('#filter', function () {
-            var filter = new FilterChain(),
-                filters = [
+            var filterChain = new FilterChain([
                     new StringToLowerFilter(),
                     new StringTrimFilter()
+                ]),
+                argsToTest = [
+                    [' Hello World ', 'hello world'],
+                    ['Hello World ', 'hello world'],
+                    [' Hello World', 'hello world'],
+                    ['Hello World', 'hello world'],
                 ];
+            argsToTest.forEach(function (args) {
+                it ('should return expected filtered value for filter set.', function () {
+                    var result = filterChain.filter(args[0]);
+                    expect(result).to.equal(args[1]);
+                });
+
+            });
         });
 
         describe ('#isFilter', function () {
@@ -620,7 +632,7 @@ describe ('sjl.input.Input', function () {
         SlugFilter =            sjl.filter.SlugFilter,
         StripTagsFilter =       sjl.filter.StripTagsFilter;
 
-    describe('Constructor', function () {
+    describe ('Constructor', function () {
         it ('should be a subclass of `sjl.stdlib.Extendable`.', function () {
             expect((new Input())).to.be.instanceof(sjl.stdlib.Extendable);
         });
@@ -644,7 +656,7 @@ describe ('sjl.input.Input', function () {
         });
     });
 
-    describe('Interface', function () {
+    describe ('Interface', function () {
         var input = new Input();
         [
             'isValid',
@@ -656,7 +668,7 @@ describe ('sjl.input.Input', function () {
         });
     });
 
-    describe('Properties.', function () {
+    describe ('Properties.', function () {
         var input = new Input();
         [
             ['allowEmpty', Boolean],
@@ -681,49 +693,99 @@ describe ('sjl.input.Input', function () {
         });
     });
 
-    describe ('#isValid', function () {
-        it ('should return true when value to validate passes all validators and should set `value` to "filtered" value.', function () {
-            var inputs = {
-                    stringInput: {
-                        alias: 'stringInput',
-                        validators: [
-                            new NotEmptyValidator(),
-                            new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
-                        ],
-                        filters: [
-                            new StringToLowerFilter(),
-                            new StringTrimFilter()
-                            //new SlugFilter()
-                        ]
-                    }
-                },
-                inputValues = {
-                    stringInput: [
-                        ['hello-world', 'hello-world'],
-                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
-                        [' a9_B99_999 ', 'a9_b99_999']
+    describe ('#isValid, #validate', function () {
+        var inputs = {
+                stringInput: {
+                    alias: 'stringInput',
+                    validators: [
+                        new NotEmptyValidator(),
+                        new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                    ],
+                    filters: [
+                        new StringToLowerFilter(),
+                        new StringTrimFilter()
+                        //new SlugFilter()
                     ]
-                };
+                }
+            },
+            inputValues = {
+                stringInput: [
+                    ['hello-world', 'hello-world'],
+                    ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                    [' a9_B99_999 ', 'a9_b99_999']
+                ]
+            };
 
-            sjl.forEach(inputs, function (input, key) {
-                var input = new Input(input);
-                inputValues[key].forEach(function (args) {
-                    input.value = args[0];
-                    expect(input.isValid()).to.equal(true);
-                    expect(input.value).to.equal(args[1]);
-                    expect(input.rawValue).to.equal(args[0]);
+        // When `value` is set directly
+        sjl.forEach(inputs, function (input, key) {
+            inputValues[key].forEach(function (args) {
+                var inputObj = new Input(input);
+                it ('should return true when value is tested directly from `value`.', function () {
+                    inputObj.value = args[0];
+                    expect(inputObj.isValid()).to.equal(true);
+                });
+                it ('should set `value` to filtered value.', function () {
+                    expect(inputObj.value).to.equal(args[1]);
+                });
+                it ('should have `rawValue` to the initial value to test.', function () {
+                    expect(inputObj.rawValue).to.equal(args[0]);
                 });
             });
         });
 
-    });
+        // When `rawValue` is set directly
+        sjl.forEach(inputs, function (input, key) {
+            inputValues[key].forEach(function (args) {
+                var inputObj = new Input(input);
+                it ('should return true when value is tested directly from `rawValue`.', function () {
+                    inputObj.rawValue = args[0];
+                    expect(inputObj.isValid()).to.equal(true);
+                });
+                it ('should set `value` to filtered value.', function () {
+                    expect(inputObj.value).to.equal(args[1]);
+                });
+                it ('should have `rawValue` to the initial value to test.', function () {
+                    expect(inputObj.rawValue).to.equal(args[0]);
+                });
+            });
+        });
 
-    describe ('#validate', function () {
-
+        // When value to test is passed in
+        sjl.forEach(inputs, function (input, key) {
+            inputValues[key].forEach(function (args) {
+                var inputObj = new Input(input);
+                it ('should return true when value to is directly passed in and validates.', function () {
+                    expect(inputObj.isValid(args[0])).to.equal(true);
+                });
+                it ('should set `value` to filtered value.', function () {
+                    expect(inputObj.value).to.equal(args[1]);
+                });
+                it ('should have `rawValue` to the initial value to test.', function () {
+                    expect(inputObj.rawValue).to.equal(args[0]);
+                });
+            });
+        });
     });
 
     describe ('#filter', function () {
-
+        var input = new Input({
+                filters: [
+                    new StringToLowerFilter(),
+                    new StringTrimFilter()
+                ]
+            }),
+            argsToTest = [
+                [' Hello World ', 'hello world'],
+                ['Hello World ', 'hello world'],
+                [' Hello World', 'hello world'],
+                ['Hello World', 'hello world'],
+            ];
+        argsToTest.forEach(function (args) {
+            it ('should return expected filtered value for filter set.', function () {
+                var result = input.filter(args[0]);
+                expect(result).to.equal(args[1]);
+            });
+        });
     });
 
     describe ('#hasFallbackValue', function () {
@@ -924,7 +986,7 @@ describe ('sjl.input.InputFilter', function () {
         SlugFilter =            sjl.filter.SlugFilter,
         StripTagsFilter =       sjl.filter.StripTagsFilter;
 
-    describe('Constructor', function () {
+    describe ('Constructor', function () {
         it ('should be a subclass of `sjl.stdlib.Extendable`.', function () {
             expect((new InputFilter())).to.be.instanceof(sjl.stdlib.Extendable);
         });
@@ -944,7 +1006,7 @@ describe ('sjl.input.InputFilter', function () {
         });
     });
 
-    describe('Properties.', function () {
+    describe ('Properties.', function () {
         var inputFilter = new InputFilter();
         [
             ['data', Object],
@@ -1145,48 +1207,106 @@ describe ('sjl.input.InputFilter', function () {
             });
         });
 
-        describe ('#isValid', function () {
-
-        });
-
-        describe ('#validate', function () {
-
+        describe ('#isValid, #validate', function () {
+            var inputFilter = new InputFilter({
+                inputs: {stringInput: {alias: 'stringInput', required: true}},
+                data: {stringInput: 99}
+            });
+            it ('should return true when inputs are valid.', function () {
+                expect(inputFilter.isValid()).to.equal(true);
+            });
         });
 
         describe ('#filter', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return itself.', function () {
+                expect(inputFilter.filter()).to.equal(inputFilter);
+            });
         });
 
         describe ('#getRawValues', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return an object.', function () {
+                expect(inputFilter.getRawValues()).to.be.instanceof(Object);
+            });
         });
 
         describe ('#getValues', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return an object.', function () {
+                expect(inputFilter.getValues()).to.be.instanceof(Object);
+            });
         });
 
         describe ('#getMessages', function () {
-
+            var inputFilter = new InputFilter();
+            it ('should return an object.', function () {
+                expect(inputFilter.getMessages()).to.be.instanceof(Object);
+            });
         });
 
         describe ('#mergeMessages', function () {
-
+            var inputFilter = new InputFilter({
+                    messages: {stringInput: ['hello world']}
+                }),
+                otherMessages = {stringInput: ['hello']},
+                result = inputFilter.mergeMessages(otherMessages);
+            it ('should return self.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should have a messages array with the length of the passed in messages array.', function () {
+                expect(inputFilter.messages.stringInput.length).to.equal(2);
+            });
         });
 
         describe ('#clearMessages', function () {
-
+            var inputFilter = new InputFilter({messages: {stringInput: ['some message here.']}}),
+                result = inputFilter.clearMessages();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('Messages should be clear.', function () {
+                expect(Object.keys(inputFilter.messages).length).to.equal(0);
+            });
         });
 
         describe ('#clearInputs', function () {
-
+            var inputFilter = new InputFilter(),
+                result;
+            inputFilter.inputs.helloWorld = new Input();
+            result = inputFilter.clearInputs();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should empty `inputs` object.', function () {
+                expect(Object.keys(inputFilter.inputs).length).to.equal(0);
+            });
         });
 
         describe ('#clearValidInputs', function () {
-
+            var inputFilter = new InputFilter(),
+                result;
+            inputFilter.validInputs.helloWorld = new Input();
+            result = inputFilter.clearValidInputs();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should empty `validInputs` object.', function () {
+                expect(Object.keys(inputFilter.validInputs).length).to.equal(0);
+            });
         });
 
         describe ('#clearInvalidInputs', function () {
-
+            var inputFilter = new InputFilter(),
+                result;
+            inputFilter.invalidInputs.helloWorld = new Input();
+            result = inputFilter.clearInvalidInputs();
+            it ('should return itself.', function () {
+                expect(result).to.equal(inputFilter);
+            });
+            it ('should empty `invalidInputs` object.', function () {
+                expect(Object.keys(inputFilter.invalidInputs).length).to.equal(0);
+            });
         });
 
         describe ('#_addInputOnInputs', function () {
@@ -1203,7 +1323,7 @@ describe ('sjl.input.InputFilter', function () {
                 var input = new Input({alias: 'hello'});
                 inputFilter._addInputOnInputs(input, inputFilter.inputs);
                 expect(inputFilter.inputs.hello).to.equal(input);
-                expect(Object.keys(inputFilter.inputs).length).to.equal(1);                var input = new Input({alias: 'hello'});
+                expect(Object.keys(inputFilter.inputs).length).to.equal(1);
             });
             it ('should throw a type error on malformed input hashes and objects.', function () {
                 var caughtError;
@@ -1305,19 +1425,154 @@ describe ('sjl.input.InputFilter', function () {
         });
 
         describe ('#_validateInputs', function () {
+            var inputFilter = new InputFilter({inputs: {
+                    stringInput: {
+                        alias: 'stringInput',
+                        validators: [
+                            new NotEmptyValidator(),
+                            new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                        ],
+                        filters: [
+                            new StringToLowerFilter(),
+                            new StringTrimFilter()
+                            //new SlugFilter()
+                        ]
+                    }
+                }
+                }),
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
 
+            // When `value` is set directly
+            sjl.forEach(inputFilter.inputs, function (input, key) {
+                inputValues[key].forEach(function (args) {
+                    it ('should return true when inputs validate.', function () {
+                        inputFilter.data = {stringInput: args[0]};
+                        var result = inputFilter._validateInputs(inputFilter.inputs, inputFilter.data);
+                        expect(result).to.equal(true);
+                    });
+                });
+            });
         });
 
         describe ('#_validateInput', function () {
+            var inputFilter = new InputFilter({inputs: {
+                        stringInput: {
+                            alias: 'stringInput',
+                            validators: [
+                                new NotEmptyValidator(),
+                                new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                            ],
+                            filters: [
+                                new StringToLowerFilter(),
+                                new StringTrimFilter()
+                                //new SlugFilter()
+                            ]
+                        }
+                    }
+                }),
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
+
+            // When `value` is set directly
+            sjl.forEach(inputFilter.inputs, function (input, key) {
+                inputValues[key].forEach(function (args) {
+                    it ('should return true for inputs that validate', function () {
+                        inputFilter.data = {stringInput: args[0]};
+                        var result = inputFilter._validateInput(inputFilter.inputs.stringInput);
+                        expect(result).to.equal(true);
+                        expect(inputFilter.inputs.stringInput.value).to.equal(args[1]);
+                        expect(inputFilter.inputs.stringInput.rawValue).to.equal(args[0]);
+                    });
+                });
+            });
 
         });
 
         describe ('#_filterInputs', function () {
+            var inputFilter = new InputFilter({inputs: {
+                    stringInput: {
+                        alias: 'stringInput',
+                        validators: [
+                            new NotEmptyValidator(),
+                            new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                        ],
+                        filters: [
+                            new StringToLowerFilter(),
+                            new StringTrimFilter()
+                            //new SlugFilter()
+                        ]
+                    }
+                }
+                }),
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
 
+            // When `value` is set directly
+            sjl.forEach(inputFilter.inputs, function (input, key) {
+                inputValues[key].forEach(function (args) {
+                    it ('should call filter on passed inputs.', function () {
+                        inputFilter.data = {stringInput: args[0]};
+                        var result = inputFilter._filterInputs(inputFilter.inputs);
+                        expect(result).to.equal(inputFilter);
+                        expect(input.value).to.equal(args[1]);
+                        expect(input.rawValue).to.equal(args[0]);
+                    });
+                });
+            });
         });
 
         describe ('#_filterInput', function () {
+            var inputFilter = new InputFilter({inputs: {
+                    stringInput: {
+                        alias: 'stringInput',
+                        validators: [
+                            new NotEmptyValidator(),
+                            new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                        ],
+                        filters: [
+                            new StringToLowerFilter(),
+                            new StringTrimFilter()
+                            //new SlugFilter()
+                        ]
+                    }
+                }
+                }),
+                inputValues = {
+                    stringInput: [
+                        ['hello-world', 'hello-world'],
+                        ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
+                        [' a9_B99_999 ', 'a9_b99_999']
+                    ]
+                };
 
+            // When `value` is set directly
+            sjl.forEach(inputFilter.inputs, function (input, key) {
+                inputValues[key].forEach(function (args) {
+                    it ('should filter passed in input\'s value.', function () {
+                        inputFilter.data = {stringInput: args[0]};
+                        var result = inputFilter._filterInput(input);
+                        expect(result).to.equal(input);
+                        expect(input.value).to.equal(args[1]);
+                        expect(input.rawValue).to.equal(args[0]);
+                    });
+                });
+            });
         });
 
         describe ('#_validatorsFromInputHash', function () {
@@ -1787,7 +2042,7 @@ describe('sjl.defineSubClass', function () {
 
         it ('should have it\'s prototype\'s constructor property properly set.', function () {
             expect(SubClass.prototype.constructor).to.equal(InitialConstructor);
-        })
+        });
     });
 
 });
