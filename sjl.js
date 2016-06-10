@@ -1,7 +1,7 @@
-/**! sjljs 6.0.3
+/**! sjljs 6.0.5
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 5bdf5de0b9421761591e4a17765875c2
- * | Built-on: Sun Jun 05 2016 12:38:54 GMT-0400 (EDT)
+ * | md5checksum: 5f98be9c4b8cdcaee7b2a6e0132bc5a5
+ * | Built-on: Fri Jun 10 2016 16:15:04 GMT-0400 (EDT)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -4519,11 +4519,10 @@
                 },
                 messages: {
                     get: function () {
-                        return _messages;
+                        return this.validatorChain.messages;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'messages', value, Array);
-                        _messages = value;
+                        this.validatorChain.messages = value;
                     }
                 },
                 validationHasRun: {

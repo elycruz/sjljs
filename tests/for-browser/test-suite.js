@@ -691,6 +691,16 @@ describe ('sjl.input.Input', function () {
                 expect(isValidProp).to.equal(true);
             });
         });
+
+        describe ('#messages', function () {
+            var input = new Input();
+            it ('should be of type `Array`.', function () {
+                expect(input.messages).to.be.instanceof(Array);
+            });
+            it ('should be the messages array from the `Input`\'s validatorChain.', function () {
+                expect(input.messages).to.equal(input.validatorChain.messages);
+            });
+        });
     });
 
     describe ('#isValid, #validate', function () {

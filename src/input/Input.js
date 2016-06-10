@@ -164,11 +164,10 @@
                 },
                 messages: {
                     get: function () {
-                        return _messages;
+                        return this.validatorChain.messages;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'messages', value, Array);
-                        _messages = value;
+                        this.validatorChain.messages = value;
                     }
                 },
                 validationHasRun: {
