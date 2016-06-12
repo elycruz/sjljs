@@ -709,7 +709,7 @@ describe ('sjl.input.Input', function () {
                     alias: 'stringInput',
                     validators: [
                         new NotEmptyValidator(),
-                        new RegexValidator({pattern: /[a-z][a-z\d\-\s]+/})
+                        new RegexValidator({pattern: /^\s?[a-z][a-z\d\-\s]+/})
                     ],
                     filters: [
                         new StringToLowerFilter(),
@@ -719,10 +719,11 @@ describe ('sjl.input.Input', function () {
                 }
             },
             inputValues = {
+                // @type Array[String (passing value), String (filtered value), {*} Failing value]
                 stringInput: [
-                    ['hello-world', 'hello-world'],
-                    ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing'],
-                    [' a9_B99_999 ', 'a9_b99_999']
+                    ['hello-world', 'hello-world', {}],
+                    ['hello-99-WORLD_hoW_Are_yoU_doinG', 'hello-99-world_how_are_you_doing', {hello: 'hello'}],
+                    ['a9_B99_999 ', 'a9_b99_999', new Map([['hello', 'hello-value']])]
                 ]
             };
 
@@ -730,7 +731,7 @@ describe ('sjl.input.Input', function () {
         sjl.forEach(inputs, function (input, key) {
             inputValues[key].forEach(function (args) {
                 var inputObj = new Input(input);
-                it ('should return true when value is tested directly from `value`.', function () {
+                it ('should return true when value is tested directly from `value` and passes validation.', function () {
                     inputObj.value = args[0];
                     expect(inputObj.isValid()).to.equal(true);
                 });
@@ -739,6 +740,13 @@ describe ('sjl.input.Input', function () {
                 });
                 it ('should have `rawValue` to the initial value to test.', function () {
                     expect(inputObj.rawValue).to.equal(args[0]);
+                });
+                it ('should return false when value doesn\'t pass validation.', function () {
+                    var inputObj2 = new Input(input);
+                    inputObj2.value = args[2];
+                    expect(inputObj2.isValid()).to.equal(false);
+                    expect(inputObj2.messages.length).to.equal(1);
+                    console.log(inputObj2.messages);
                 });
             });
         });
@@ -1224,6 +1232,12 @@ describe ('sjl.input.InputFilter', function () {
             });
             it ('should return true when inputs are valid.', function () {
                 expect(inputFilter.isValid()).to.equal(true);
+                sjl.forEach(inputFilter.inputs, function (input, key, inputs) {
+                    expect(input.messages.length).to.equal(0);
+                });
+            });
+            it ('should return false when inputs are not valid.', function () {
+
             });
         });
 

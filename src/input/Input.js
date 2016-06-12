@@ -27,7 +27,6 @@
                 _value,
                 _rawValue,
                 _filteredValue,
-                _messages = [],
 
                 // Protect from adding programmatic validators, from within `isValid`, more than once
                 _validationHasRun = false;
@@ -262,9 +261,7 @@
         },
 
         clearMessages: function () {
-            while (this.messages.length > 0) {
-                this.messages.pop();
-            }
+            this.validatorChain.clearMessages();
             return this;
         },
 

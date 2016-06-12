@@ -1,7 +1,7 @@
-/**! sjljs 6.0.5
+/**! sjljs 6.0.8
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 5f98be9c4b8cdcaee7b2a6e0132bc5a5
- * | Built-on: Fri Jun 10 2016 16:15:04 GMT-0400 (EDT)
+ * | md5checksum: fae4a1b53e0fef463dafb282855de3e6
+ * | Built-on: Sun Jun 12 2016 16:21:45 GMT-0400 (EDT)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -4096,7 +4096,9 @@
         },
         filter: {
             value: function (value, max) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.SlugFilter', 'value', value, String);
+                if (!sjl.isString(value)) {
+                    return value;
+                }
                 max = sjl.classOfIs(max, Number) ? max : 201;
                 return value.trim().toLowerCase()
                     .split(SlugFilter.allowedCharsRegex)
@@ -4143,8 +4145,7 @@
     Object.defineProperties(StringToLowerFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringToLowerFilter', 'value', value, String);
-                return value.toLowerCase();
+                return sjl.isString(value) ? value.toLowerCase() : value;
             },
             enumerable: true
         }
@@ -4183,8 +4184,7 @@
     Object.defineProperties(StringTrimFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringTrimFilter', 'value', value, String);
-                return value.trim();
+                return sjl.isString(value) ? value.trim() : value;
             },
             enumerable: true
         }
@@ -4297,6 +4297,9 @@
         if (sjl.isEmptyOrNotOfType(tags, Array)) {
             return value;
         }
+        else if (!sjl.isString(value)) {
+            return value;
+        }
         else if (!validateTagNames(tags)) {
             throw new Error (contextName + ' `_stripTags` ' +
                 'Only valid html tag names allowed in `tags` list.  ' +
@@ -4382,7 +4385,6 @@
                 _value,
                 _rawValue,
                 _filteredValue,
-                _messages = [],
 
                 // Protect from adding programmatic validators, from within `isValid`, more than once
                 _validationHasRun = false;
@@ -4617,9 +4619,7 @@
         },
 
         clearMessages: function () {
-            while (this.messages.length > 0) {
-                this.messages.pop();
-            }
+            this.validatorChain.clearMessages();
             return this;
         },
 
