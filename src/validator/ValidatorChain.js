@@ -43,6 +43,7 @@
         };
 
     ValidatorChain = Validator.extend(ValidatorChain, {
+
         isValid: function (value) {
             var self = this,
                 retVal,
@@ -140,6 +141,16 @@
             return this.addValidators(validatorChain.validators);
         },
 
+        clearMessages: function () {
+            while (this.messages.length > 0) {
+                this.messages.pop();
+            }
+            this.validators.forEach(function (validator) {
+                validator.clearMessages();
+            });
+            return this;
+        },
+
         appendMessages: function (messages) {
             var self = this;
             if (sjl.isEmptyOrNotOfType(messages, Array)) {
@@ -153,6 +164,7 @@
             throw new TypeError('`' + contextName + '.' + funcName + '` only accepts subclasses/types of ' +
                 '`' + expectedType.name + '`.  Type received: "' + sjl.classOf(value) + '".');
         }
+
     });
 
     if (isNodeEnv) {

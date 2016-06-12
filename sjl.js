@@ -1,7 +1,7 @@
 /**! sjljs 6.0.8
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: fae4a1b53e0fef463dafb282855de3e6
- * | Built-on: Sun Jun 12 2016 16:21:45 GMT-0400 (EDT)
+ * | md5checksum: 3bce30eae4bd84568193c9afcfc5a1a7
+ * | Built-on: Sun Jun 12 2016 16:30:36 GMT-0400 (EDT)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -2694,6 +2694,7 @@
         };
 
     ValidatorChain = Validator.extend(ValidatorChain, {
+
         isValid: function (value) {
             var self = this,
                 retVal,
@@ -2791,6 +2792,16 @@
             return this.addValidators(validatorChain.validators);
         },
 
+        clearMessages: function () {
+            while (this.messages.length > 0) {
+                this.messages.pop();
+            }
+            this.validators.forEach(function (validator) {
+                validator.clearMessages();
+            });
+            return this;
+        },
+
         appendMessages: function (messages) {
             var self = this;
             if (sjl.isEmptyOrNotOfType(messages, Array)) {
@@ -2804,6 +2815,7 @@
             throw new TypeError('`' + contextName + '.' + funcName + '` only accepts subclasses/types of ' +
                 '`' + expectedType.name + '`.  Type received: "' + sjl.classOf(value) + '".');
         }
+
     });
 
     if (isNodeEnv) {

@@ -5249,7 +5249,7 @@ describe('sjl.validator.ValidatorChain', function () {
             expect(validatorChain.messages.length).to.equal(1);
 
             expect(validatorChain2.isValid('helloworld')).to.equal(false); // this chain has a number validator in it so 'helloworld' should fail
-            expect(validatorChain2.messages.length).to.equal(2);
+            expect(validatorChain2.messages.length).to.equal(1);
 
             // @note validator.messages get cleared from within `isValid` before validation occurs
             expect(validatorChain2.isValid(99)).to.equal(true);
