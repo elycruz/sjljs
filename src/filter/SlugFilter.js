@@ -25,7 +25,9 @@
         },
         filter: {
             value: function (value, max) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.SlugFilter', 'value', value, String);
+                if (!sjl.isString(value)) {
+                    return value;
+                }
                 max = sjl.classOfIs(max, Number) ? max : 201;
                 return value.trim().toLowerCase()
                     .split(SlugFilter.allowedCharsRegex)

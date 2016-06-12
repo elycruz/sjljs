@@ -256,6 +256,12 @@ describe ('sjl.input.InputFilter', function () {
             });
             it ('should return true when inputs are valid.', function () {
                 expect(inputFilter.isValid()).to.equal(true);
+                sjl.forEach(inputFilter.inputs, function (input, key, inputs) {
+                    expect(input.messages.length).to.equal(0);
+                });
+            });
+            it ('should return false when inputs are not valid.', function () {
+
             });
         });
 

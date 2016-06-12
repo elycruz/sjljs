@@ -21,8 +21,7 @@
     Object.defineProperties(StringTrimFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringTrimFilter', 'value', value, String);
-                return value.trim();
+                return sjl.isString(value) ? value.trim() : value;
             },
             enumerable: true
         }

@@ -21,8 +21,7 @@
     Object.defineProperties(StringToLowerFilter, {
         filter: {
             value: function (value) {
-                sjl.throwTypeErrorIfNotOfType('sjl.filter.StringToLowerFilter', 'value', value, String);
-                return value.toLowerCase();
+                return sjl.isString(value) ? value.toLowerCase() : value;
             },
             enumerable: true
         }

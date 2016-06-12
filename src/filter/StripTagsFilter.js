@@ -95,6 +95,9 @@
         if (sjl.isEmptyOrNotOfType(tags, Array)) {
             return value;
         }
+        else if (!sjl.isString(value)) {
+            return value;
+        }
         else if (!validateTagNames(tags)) {
             throw new Error (contextName + ' `_stripTags` ' +
                 'Only valid html tag names allowed in `tags` list.  ' +
