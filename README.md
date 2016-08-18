@@ -9,8 +9,7 @@ A library for writing strongly typed javascript and solid classical oop.  Also f
 and libraries more concise. 
 
 Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc..  Only meant as a supplement to them 
-or as a supplement to applications requiring quick ramp up, some semblance of cohesion, and/or applications requiring 
-functional programming.
+or as a supplement to applications requiring quick ramp up.
 
 ## Previous version:
 - [5.x.x] (https://github.com/elycruz/sjljs/tree/5.0.XX)

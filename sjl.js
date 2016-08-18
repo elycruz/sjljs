@@ -1,7 +1,7 @@
-/**! sjljs 6.0.8
+/**! sjljs 6.0.9
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 3bce30eae4bd84568193c9afcfc5a1a7
- * | Built-on: Sun Jun 12 2016 16:30:36 GMT-0400 (EDT)
+ * | md5checksum: e6215a5caa437bae09ed44b99436a8cd
+ * | Built-on: Thu Aug 18 2016 18:09:18 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -160,7 +160,7 @@
         var classOfType = classOf(type);
         if (classOfType !== String.name && !(type instanceof Function)) {
             throw new TypeError('sjl.classOfIs expects it\'s `type` parameter to' +
-                'be of type `String` or an instance of `Function`.  Type recieved: ' + classOfType + '.');
+                'be of type `String` or an instance of `Function`.  Type received: ' + classOfType + '.');
         }
         return classOf(obj) === (
                 classOfType === String.name ? type : type.name
@@ -895,7 +895,7 @@
             throw new TypeError('#`' + prefix + '`.`' + paramName
                 + '` Cannot be empty.  ' + (suffix || '')
                 + '  Value received: `' + value + '`.  '
-                + '  Type recieved: ' + classOfValue + '`.');
+                + '  Type received: ' + classOfValue + '`.');
         }
     }
 
@@ -1416,26 +1416,36 @@
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         errorContextName = 'sjl.stdlib.Iterator',
 
-        Iterator = function Iterator(values, pointer) {
+        Iterator = function Iterator(values) {
             var _values,
                 _pointer = 0;
+
+            /**
+             * Public property docs
+             *----------------------------------------------------- */
+            /**
+             * Iterator values.
+             * @name values
+             * @member {Array<*>} sjl.stdlib.Iterator#values
+             */
+            /**
+             * Iterator pointer.
+             * @name pointer
+             * @member {Number} sjl.stdlib.Iterator#pointer
+             */
+            /**
+             * Iterator size.
+             * @name size
+             * @readonly
+             * @member {Number} sjl.stdlib.Iterator#size
+             */
 
             // Define properties before setting values
             Object.defineProperties(this, {
                 values: {
-                    /**
-                     * @returns {Array}
-                     */
                     get: function () {
                         return _values;
                     },
-                    /**
-                     * @param values {Array}
-                     * @throws {TypeError}
-                     * @note Pointer gets constrained to bounds of `values`'s length if it is out of
-                     *  bounds (if it is less than `0` gets pushed to `0` if it is greater than values.length
-                     *      gets pulled back down to values.length).
-                     */
                     set: function (values) {
                         sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, Array);
                         _values = values;
@@ -1443,19 +1453,12 @@
                     }
                 },
                pointer: {
-                    /**
-                     * @returns {Number}
-                     */
                     get: function () {
                         return _pointer;
                     },
-                    /**
-                     * @param pointer {Number}
-                     * @throws {TypeError}
-                     */
-                    set: function (pointer) {
-                        sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', pointer, Number);
-                        _pointer = sjl.constrainPointer(pointer, 0, _values.length);
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', value, Number);
+                        _pointer = sjl.constrainPointer(value, 0, _values.length);
                     }
                 },
                 size: {
@@ -1463,18 +1466,21 @@
                         return _values.length;
                     }
                 }
-            }); // End of properties define
+            }); // End of `defineProperties`
 
             // Set values
             this.values = values || [];
         };
 
     /**
+     * Es6 compliant iterator constructor with some convenience methods;  I.e.,
+     *  `valid`, `rewind`, `current`, and `forEach`.
      * @class sjl.stdlib.Iterator
      * @extends sjl.stdlib.Extendable
-     * @type {void|Object|*}
+     * @param values {Array} - Values to iterate through.
      */
     Iterator = sjl.stdlib.Extendable.extend(Iterator, {
+
         /**
          * Returns the current value that `pointer` is pointing to.
          * @method sjl.stdlib.Iterator#current
@@ -1529,7 +1535,7 @@
         },
 
         /**
-         * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
+         * Iterates through all elements in iterator.
          * @param callback {Function}
          * @param context {Object}
          * @returns {sjl.stdlib.Iterator}
@@ -1565,46 +1571,64 @@
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Iterator = sjl.stdlib.Iterator,
-        contextName = 'sjl.stdlib.ObjectIterator',
+        moduleName = 'ObjectIterator',
+        contextName = 'sjl.stdlib.' + moduleName,
+
+    /**
+     * @class sjl.stdlib.ObjectIterator
+     * @extends sjl.stdlib.Iterator
+     * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
+     * @param values {Array|Undefined} - Array of values if first param is an array.
+     */
+    ObjectIterator = Iterator.extend({
 
         /**
-         * Constructor for ObjectIterator.
-         * @param keysOrObj {Array|Object}
-         * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else the
-         *  value would be used as the iterator's pointer in which case it would be optional.
-         * @param pointer {Number} - Optional.
+         * Constructor.
+         * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
+         * @param values {Array|Undefined} - Array of values if first param is an array.
          */
-        ObjectIterator = function ObjectIterator(keysOrObj, valuesOrPointer, pointer) {
-            var obj, values,
-                classOfParam1 = sjl.classOf(keysOrObj),
+        constructor: function ObjectIterator(keysOrObj, values) {
+            var obj,
+                classOfParam0 = sjl.classOf(keysOrObj),
                 receivedParamTypesList,
+                _values,
                 _keys;
 
-            // If called with obj as first param
-            if (classOfParam1 === 'Object') {
+            // Constructor scenario 1 (if param `0` is of type `Object`)
+            if (classOfParam0 === 'Object') {
                 obj = keysOrObj;
                 _keys = Object.keys(obj);
-                pointer = valuesOrPointer;
-                values = _keys.map(function (key) {
+                _values = _keys.map(function (key) {
                     return obj[key];
                 });
             }
-            else if (classOfParam1 === 'Array') {
+
+            // Constructor scenario 2 (if param `0` is of type `Array`)
+            else if (classOfParam0 === 'Array') {
+                sjl.throwTypeErrorIfNotOfType(contextName, 'values', values, Array,
+                    'With the previous param being an array `values` can only be an array in this scenario.');
                 _keys = keysOrObj;
-                sjl.throwTypeErrorIfNotOfType(contextName, 'valuesOrPointer', valuesOrPointer, Array,
-                    'With the previous param being an array `valuesOrPointer` can only be an array in this scenario.');
-                values = valuesOrPointer;
-                pointer = pointer || 0;
+                _values = values;
             }
+
+            // Else failed constructor scenario
             else {
-                receivedParamTypesList = [sjl.classOf(keysOrObj), sjl.classOf(valuesOrPointer), sjl.classOf(pointer)];
-                throw new TypeError ('#`' + contextName + '` recieved incorrect parameter values.  The expected ' +
-                    'parameter list should one of two: [Object, Number] or [Array, Array, Number].  ' +
-                    'Parameter list recieved: [' + receivedParamTypesList.join(', ') + '].');
+                receivedParamTypesList = [classOfParam0, sjl.classOf(values)];
+                throw new TypeError ('#`' + contextName + '` received incorrect parameter values.  The expected ' +
+                    'parameter list should be one of two: [Object] or [Array, Array].  ' +
+                    'Parameter list received: [' + receivedParamTypesList.join(', ') + '].');
             }
 
             // Extend #own properties with #Iterator's own properties
-            Iterator.call(this, values, pointer);
+            Iterator.call(this, _values);
+
+            // @note Defining member jsdoc blocks here since our members are defined using Object.defineProperties()
+            //   and some IDEs don't handle this very well (E.g., WebStorm)
+
+            /**
+             * Object iterator keys.
+             * @member {Array<*>} sjl.stdlib.ObjectIterator#keys
+             */
 
             // Define other own properties
             Object.defineProperties(this, {
@@ -1613,23 +1637,13 @@
                         return _keys;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType('ObjectIterator.keys', 'keys', value, Array);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'keys', value, Array);
                         _keys = value;
                     }
                 }
             });
-        };
+        },
 
-    /**
-     * @class sjl.stdlib.ObjectIterator
-     * @extends sjl.stdlib.Iterator
-     * @name ObjectIterator
-     * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
-     * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else pointer.
-     * @param pointer {Number} - Optional.
-     * @type {sjl.stdlib.ObjectIterator}
-     */
-    ObjectIterator = Iterator.extend(ObjectIterator, {
         /**
          * Returns the current key and value that `pointer` is pointing to as an array [key, value].
          * @method sjl.stdlib.Iterator#current
@@ -1665,6 +1679,10 @@
             return retVal;
         },
 
+        /**
+         * Returns whether iterator has more items to return or not.
+         * @returns {boolean}
+         */
         valid: function () {
             var pointer = this.pointer;
             return pointer < this.values.length && pointer < this.keys.length;
@@ -1686,24 +1704,17 @@
             return this;
         }
 
-    }, {
-        forEach: function (obj, callback, context) {
-            return Object.keys(obj).forEach(function (key) {
-                callback.call(context, obj[key], key, obj);
-            });
-        }
     });
 
     if (isNodeEnv) {
         module.exports = ObjectIterator;
     }
     else {
-        sjl.ns('stdlib.ObjectIterator', ObjectIterator);
+        sjl.ns('stdlib.' + moduleName, ObjectIterator);
         if (window.__isAmd) {
             return ObjectIterator;
         }
     }
-
 
 }());
 
@@ -1721,18 +1732,17 @@
         ObjectIterator = sjl.stdlib.ObjectIterator;
 
     /**
-     * Turns an array into an iterable.
+     * Defines an es6 compliant iterator callback on `Object` or `Array`.
      * @function module:sjl.iterable
      * @param array {Array|Object} - Array or object to set iterator function on.
-     * @param pointer {Number|undefined}
      * @returns array {Array|Object}
      */
-    sjl.iterable = function (arrayOrObj, pointer) {
+    sjl.iterable = function (arrayOrObj) {
         var classOfArrayOrObj = sjl.classOf(arrayOrObj),
             keys, values;
         if (classOfArrayOrObj === 'Array') {
             arrayOrObj[sjl.Symbol.iterator] = function () {
-                return new Iterator(arrayOrObj, pointer);
+                return new Iterator(arrayOrObj);
             };
         }
         else if (classOfArrayOrObj === 'Object') {
@@ -1741,12 +1751,13 @@
                 return arrayOrObj[key];
             });
             arrayOrObj[sjl.Symbol.iterator] = function () {
-                return new ObjectIterator(keys, values, pointer);
+                return new ObjectIterator(keys, values);
             };
         }
         else {
             throw new Error('sjl.iterable only takes objects or arrays.  ' +
-                'arrayOrObj param recieved type is "' + classOfArrayOrObj + '".  Value recieved: ' + arrayOrObj);
+                'arrayOrObj param received type is "' + classOfArrayOrObj +
+                '".  Value received: ' + arrayOrObj);
         }
         return arrayOrObj;
     };
@@ -1774,24 +1785,52 @@
         Extendable = stdlib.Extendable,
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
-        SjlSet = function SjlSet (iterable) {
+
+    /**
+     * SjlSet constructor.  This object has the same interface as the es6 `Set`
+     * object.  The only difference is this one has some extra methods;  I.e.,
+     *  `addFromArray`, `iterator`, and a defined `toJSON` method.
+     * @class sjl.stdlib.SjlSet
+     * @extends sjl.stdlib.Extendable
+     * @param iterable {Array}
+     */
+    SjlSet = Extendable.extend({
+        /**
+         * Constructor.
+         * @param iterable {Array} - Optional.
+         */
+        constructor: function SjlSet (iterable) {
             var self = this,
                 _values = [];
 
+            /**
+             * Public properties:
+             *------------------------------------------------*/
+            /**
+             * @member {Number} sjl.stdlib.SjlSet#size
+             * @readonly
+             * @enumerable True.
+             */
+            /**
+             * Where the values are kept on the Set.
+             * @member {Array<*>} sjl.stdlib.SjlSet#_values
+             * @readonly
+             */
+            /**
+             * Flag for knowing that default es6 iterator was overridden.
+             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden
+             * @readonly
+             */
+
             Object.defineProperties(this, {
                 _values: {
-                    get: function () {
-                        return _values;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(SjlSet.name, '_values', value, Array);
-                        _values = makeIterable(value);
-                    }
+                    value: _values
                 },
                 size: {
                     get: function () {
                         return _values.length;
-                    }
+                    },
+                    enumerable: true
                 }
             });
 
@@ -1815,32 +1854,40 @@
             };
 
             // Set flag to remember that original iterator was overridden
-            self._iteratorOverridden = true;
-        };
+            Object.defineProperty(self, '_iteratorOverridden', {value: true});
+        },
 
-    /**
-     * SjlSet constructor.  This object has the same interface as the es6 `Set`
-     * object.  The only difference is this one uses a more sugery iterator which
-     * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
-     * `valid` methods (@see sjl.Iterator)
-     * @constructor SjlSet
-     * @memberof namespace:sjl.stdlib
-     * @extends sjl.stdlib.Extendable
-     * @param iterable {Array}
-     */
-    SjlSet = Extendable.extend(SjlSet, {
+        /**
+         * Adds a value to Set.
+         * @method sjl.stdlib.SjlSet#add
+         * @param value {*}
+         * @returns {sjl.stdlib.SjlSet}
+         */
         add: function (value) {
             if (!this.has(value)) {
                 this._values.push(value);
             }
             return this;
         },
+
+        /**
+         * Clears Set.
+         * @method sjl.stdlib.SjlSet#clear
+         * @returns {sjl.stdlib.SjlSet}
+         */
         clear: function () {
             while (this._values.length > 0) {
                 this._values.pop();
             }
             return this;
         },
+
+        /**
+         * Deletes a value from Set.
+         * @method sjl.stdlib.SjlSet#delete
+         * @param value {*}
+         * @returns {sjl.stdlib.SjlSet}
+         */
         delete: function (value) {
             var _index = this._values.indexOf(value);
             if (_index > -1 && _index <= this._values.length) {
@@ -1848,19 +1895,54 @@
             }
             return this;
         },
+
+        /**
+         * Es6 compliant iterator for all entries in set
+         * @method sjl.stdlib.SjlSet#entries
+         * @return {sjl.stdlib.ObjectIterator}
+         */
         entries: function () {
             return new ObjectIterator(this._values, this._values, 0);
         },
+
+        /**
+         * Loops through values in set and calls callback
+         * (with optional context) for each value in set.
+         * Same signature as Array.prototype.forEach except for values in Set.
+         * @method sjl.stdlib.SjlSet#forEach
+         * @param callback {Function} - Same signature as Array.prototype.forEach.
+         * @param context {*} - Optional.
+         * @returns {sjl.stdlib.SjlSet}
+         */
         forEach: function (callback, context) {
             this._values.forEach(callback, context);
             return this;
         },
+
+        /**
+         * Checks if value exists within Set.
+         * @method sjl.stdlib.SjlSet#has
+         * @param value
+         * @returns {boolean}
+         */
         has: function (value) {
             return this._values.indexOf(value) > -1;
         },
+
+        /**
+         * Returns an es6 compliant iterator of Set's values (since set doesn't have any keys).
+         * @method sjl.stdlib.SjlSet#keys
+         * @returns {sjl.stdlib.Iterator}
+         */
         keys: function () {
             return this._values[sjl.Symbol.iterator]();
         },
+
+        /**
+         * Returns an es6 compliant iterator of Set's values.
+         * @method sjl.stdlib.SjlSet#values
+         * @returns {sjl.stdlib.Iterator}
+         */
         values: function () {
             return this._values[sjl.Symbol.iterator]();
         },
@@ -1869,6 +1951,12 @@
          * METHODS NOT PART OF THE `Set` spec for ES6:
          **************************************************/
 
+        /**
+         * Adds item onto `SjlSet` from the passed in array.
+         * @method sjl.stdlib.SjlSet#addFromArray
+         * @param value {Array}
+         * @returns {sjl.stdlib.SjlSet}
+         */
         addFromArray: function (value) {
             // Iterate through the passed in iterable and add all values to `_values`
             var iterator = makeIterable(value, 0)[sjl.Symbol.iterator]();
@@ -1881,10 +1969,20 @@
             return this;
         },
 
+        /**
+         * Returns an iterator with an es6 compliant interface.
+         * @method sjl.stdlib.SjlSet#iterator
+         * @returns {sjl.stdlib.Iterator}
+         */
         iterator: function () {
             return this._values[sjl.Symbol.iterator]();
         },
 
+        /**
+         * Returns own `values`.
+         * @method sjl.stdlib.SjlSet#toJSON
+         * @returns {Array<*>}
+         */
         toJSON: function () {
             return this._values;
         }
@@ -1899,7 +1997,6 @@
             return SjlSet;
         }
     }
-
 
 })();
 
@@ -4315,7 +4412,7 @@
         else if (!validateTagNames(tags)) {
             throw new Error (contextName + ' `_stripTags` ' +
                 'Only valid html tag names allowed in `tags` list.  ' +
-                'Tags recieved: "' + tags + '".');
+                'Tags received: "' + tags + '".');
         }
         var out = value;
         tags.forEach(function (tag) {

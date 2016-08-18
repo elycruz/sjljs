@@ -9,24 +9,52 @@
         Extendable = stdlib.Extendable,
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
-        SjlSet = function SjlSet (iterable) {
+
+    /**
+     * SjlSet constructor.  This object has the same interface as the es6 `Set`
+     * object.  The only difference is this one has some extra methods;  I.e.,
+     *  `addFromArray`, `iterator`, and a defined `toJSON` method.
+     * @class sjl.stdlib.SjlSet
+     * @extends sjl.stdlib.Extendable
+     * @param iterable {Array}
+     */
+    SjlSet = Extendable.extend({
+        /**
+         * Constructor.
+         * @param iterable {Array} - Optional.
+         */
+        constructor: function SjlSet (iterable) {
             var self = this,
                 _values = [];
 
+            /**
+             * Public properties:
+             *------------------------------------------------*/
+            /**
+             * @member {Number} sjl.stdlib.SjlSet#size
+             * @readonly
+             * @enumerable True.
+             */
+            /**
+             * Where the values are kept on the Set.
+             * @member {Array<*>} sjl.stdlib.SjlSet#_values
+             * @readonly
+             */
+            /**
+             * Flag for knowing that default es6 iterator was overridden.
+             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden
+             * @readonly
+             */
+
             Object.defineProperties(this, {
                 _values: {
-                    get: function () {
-                        return _values;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(SjlSet.name, '_values', value, Array);
-                        _values = makeIterable(value);
-                    }
+                    value: _values
                 },
                 size: {
                     get: function () {
                         return _values.length;
-                    }
+                    },
+                    enumerable: true
                 }
             });
 
@@ -50,32 +78,40 @@
             };
 
             // Set flag to remember that original iterator was overridden
-            self._iteratorOverridden = true;
-        };
+            Object.defineProperty(self, '_iteratorOverridden', {value: true});
+        },
 
-    /**
-     * SjlSet constructor.  This object has the same interface as the es6 `Set`
-     * object.  The only difference is this one uses a more sugery iterator which
-     * has, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and
-     * `valid` methods (@see sjl.Iterator)
-     * @constructor SjlSet
-     * @memberof namespace:sjl.stdlib
-     * @extends sjl.stdlib.Extendable
-     * @param iterable {Array}
-     */
-    SjlSet = Extendable.extend(SjlSet, {
+        /**
+         * Adds a value to Set.
+         * @method sjl.stdlib.SjlSet#add
+         * @param value {*}
+         * @returns {sjl.stdlib.SjlSet}
+         */
         add: function (value) {
             if (!this.has(value)) {
                 this._values.push(value);
             }
             return this;
         },
+
+        /**
+         * Clears Set.
+         * @method sjl.stdlib.SjlSet#clear
+         * @returns {sjl.stdlib.SjlSet}
+         */
         clear: function () {
             while (this._values.length > 0) {
                 this._values.pop();
             }
             return this;
         },
+
+        /**
+         * Deletes a value from Set.
+         * @method sjl.stdlib.SjlSet#delete
+         * @param value {*}
+         * @returns {sjl.stdlib.SjlSet}
+         */
         delete: function (value) {
             var _index = this._values.indexOf(value);
             if (_index > -1 && _index <= this._values.length) {
@@ -83,19 +119,54 @@
             }
             return this;
         },
+
+        /**
+         * Es6 compliant iterator for all entries in set
+         * @method sjl.stdlib.SjlSet#entries
+         * @return {sjl.stdlib.ObjectIterator}
+         */
         entries: function () {
             return new ObjectIterator(this._values, this._values, 0);
         },
+
+        /**
+         * Loops through values in set and calls callback
+         * (with optional context) for each value in set.
+         * Same signature as Array.prototype.forEach except for values in Set.
+         * @method sjl.stdlib.SjlSet#forEach
+         * @param callback {Function} - Same signature as Array.prototype.forEach.
+         * @param context {*} - Optional.
+         * @returns {sjl.stdlib.SjlSet}
+         */
         forEach: function (callback, context) {
             this._values.forEach(callback, context);
             return this;
         },
+
+        /**
+         * Checks if value exists within Set.
+         * @method sjl.stdlib.SjlSet#has
+         * @param value
+         * @returns {boolean}
+         */
         has: function (value) {
             return this._values.indexOf(value) > -1;
         },
+
+        /**
+         * Returns an es6 compliant iterator of Set's values (since set doesn't have any keys).
+         * @method sjl.stdlib.SjlSet#keys
+         * @returns {sjl.stdlib.Iterator}
+         */
         keys: function () {
             return this._values[sjl.Symbol.iterator]();
         },
+
+        /**
+         * Returns an es6 compliant iterator of Set's values.
+         * @method sjl.stdlib.SjlSet#values
+         * @returns {sjl.stdlib.Iterator}
+         */
         values: function () {
             return this._values[sjl.Symbol.iterator]();
         },
@@ -104,6 +175,12 @@
          * METHODS NOT PART OF THE `Set` spec for ES6:
          **************************************************/
 
+        /**
+         * Adds item onto `SjlSet` from the passed in array.
+         * @method sjl.stdlib.SjlSet#addFromArray
+         * @param value {Array}
+         * @returns {sjl.stdlib.SjlSet}
+         */
         addFromArray: function (value) {
             // Iterate through the passed in iterable and add all values to `_values`
             var iterator = makeIterable(value, 0)[sjl.Symbol.iterator]();
@@ -116,10 +193,20 @@
             return this;
         },
 
+        /**
+         * Returns an iterator with an es6 compliant interface.
+         * @method sjl.stdlib.SjlSet#iterator
+         * @returns {sjl.stdlib.Iterator}
+         */
         iterator: function () {
             return this._values[sjl.Symbol.iterator]();
         },
 
+        /**
+         * Returns own `values`.
+         * @method sjl.stdlib.SjlSet#toJSON
+         * @returns {Array<*>}
+         */
         toJSON: function () {
             return this._values;
         }
@@ -134,6 +221,5 @@
             return SjlSet;
         }
     }
-
 
 })();

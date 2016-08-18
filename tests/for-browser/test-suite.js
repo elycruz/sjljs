@@ -3338,12 +3338,12 @@ describe('sjl.stdlib.Iterator', function () {
         Iterator = sjl.ns.stdlib.Iterator,
         iterator = new Iterator(basicArray);
 
-    it ('should be able to return an iterator whether called as a function or not.', function () {
+    it ('should create a new `Iterator`.', function () {
         expect(iterator instanceof Iterator).to.equal(true);
-        expect((new Iterator(basicArray, 3)) instanceof Iterator).to.equal(true);
+        expect((new Iterator(basicArray)) instanceof Iterator).to.equal(true);
     });
 
-    it ('should have it\'s main properties (`values` and `pointer`) set on an `__internal` object', function () {
+    it ('should have `values` and `pointer` properties of the correct types', function () {
         expect(sjl.issetAndOfType(iterator.values, 'Array')).to.equal(true);
         expect(sjl.issetAndOfType(iterator.pointer, 'Number')).to.equal(true);
     });
@@ -3361,6 +3361,7 @@ describe('sjl.stdlib.Iterator', function () {
             expect(value.value).to.equal(basicArray[iterator.pointer - 1]);
             expect(value.done).to.equal(false);
         }
+        expect(iterator.valid()).to.equal(false);
     });
 
     it ('should be able to be rewound.', function () {

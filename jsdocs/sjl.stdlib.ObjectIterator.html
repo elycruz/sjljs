@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: Config</title>
+	<title>Documentation Class: ObjectIterator</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -84,7 +84,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Config</h1>
+	<h1 class="page-title">Class: ObjectIterator</h1>
 <section>
 
 <header>
@@ -92,7 +92,7 @@
         <h2>
             <span class="ancestors"><a href="sjl.stdlib.html">.stdlib</a>.</span>
         
-        Config
+        ObjectIterator
         </h2>
         
     
@@ -105,23 +105,99 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Config"><span class="type-signature"></span>new Config()</h4>
+    <h4 class="name" id="ObjectIterator"><span class="type-signature"></span>new ObjectIterator(keysOrObj, values)</h4>
     
     
 </dt>
 <dd>
 
     
-    <div class="description">
-        Constructor takes one or more config objects to set onto `Config`.
-    </div>
-    
 
     
 
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keysOrObj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of keys or object to create (object) iterator from.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>values</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Undefined</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of values if first param is an array.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -189,7 +265,7 @@
 
 
     <ul>
-        <li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li>
+        <li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li>
     </ul>
 
 
@@ -204,6 +280,321 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="keys">
+    <h4><span class="type-signature"></span>keys<span class="type-signature"> :Array.&lt;*></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Object iterator keys.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Array.&lt;*></span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="pointer">
+    <h4><span class="type-signature"></span>pointer<span class="type-signature"> :Number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Iterator pointer.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#pointer">sjl.stdlib.Iterator#pointer</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="size">
+    <h4><span class="type-signature">&lt;readonly> </span>size<span class="type-signature"> :Number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Iterator size.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#size">sjl.stdlib.Iterator#size</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="values">
+    <h4><span class="type-signature"></span>values<span class="type-signature"> :Array.&lt;*></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Iterator values.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Array.&lt;*></span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#values">sjl.stdlib.Iterator#values</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -212,7 +603,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="get"><span class="type-signature"></span>get(keyOrNsKey)</h4>
+    <h4 class="name" id="current"><span class="type-signature"></span>current()</h4>
     
     
 </dt>
@@ -220,7 +611,7 @@
 
     
     <div class="description">
-        Gets any value from config by key (key can be a namespace string).
+        Returns the current value that `pointer` is pointing to.
     </div>
     
 
@@ -229,56 +620,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keyOrNsKey</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -290,7 +631,21 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#current">sjl.stdlib.Iterator#current</a>
+			</li>
+		</ul>
+	</dd>
+	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="sjl.stdlib.Iterator.html#current">sjl.stdlib.Iterator#current</a>
+    </li></ul></dd>
     
 
     
@@ -330,43 +685,11 @@
     
 
     
-    <h5>Throws:</h5>
-    
-            
-
-<dl>
-    <dt>
-        <div class="param-desc">
-        - Throws type error if keyOrNsKey is not a string.
-        </div>
-    </dt>
-    <dt>
-        <dl>
-            <dt>
-                Type
-            </dt>
-            <dd>
-                
-<span class="param-type">TypeError</span>
-
-
-
-            </dd>
-        </dl>
-    </dt>
-</dl>
-
-
-        
 
     
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    - Found value.
-</div>
-
 
 
 <dl>
@@ -375,7 +698,7 @@
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">Object</span>
 
 
 
@@ -392,7 +715,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="has"><span class="type-signature"></span>has(keyOrNsString)</h4>
+    <h4 class="name" id="next"><span class="type-signature"></span>next()</h4>
     
     
 </dt>
@@ -400,7 +723,7 @@
 
     
     <div class="description">
-        Checks if a defined value exists for key (or namespace key) and returns it.If no value is found (key/ns-key is undefined) then returns undefined.
+        Method which returns the current position in the iterator based on where the pointer is.This method also increases the pointer after it is done fetching the value to return.
     </div>
     
 
@@ -409,56 +732,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keyOrNsString</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -470,7 +743,21 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#next">sjl.stdlib.Iterator#next</a>
+			</li>
+		</ul>
+	</dd>
+	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="sjl.stdlib.Iterator.html#next">sjl.stdlib.Iterator#next</a>
+    </li></ul></dd>
     
 
     
@@ -523,10 +810,7 @@
     </dt>
     <dd>
         
-<span class="param-type">*</span>
-|
-
-<span class="param-type">undefined</span>
+<span class="param-type">Object</span>
 
 
 
@@ -543,7 +827,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="set"><span class="type-signature"></span>set(keyOrNsKey, value)</h4>
+    <h4 class="name" id="rewind"><span class="type-signature"></span>rewind()</h4>
     
     
 </dt>
@@ -551,7 +835,7 @@
 
     
     <div class="description">
-        Sets any value on config by key or namespace key.
+        Rewinds the iterator.
     </div>
     
 
@@ -560,80 +844,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keyOrNsKey</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -644,6 +854,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#rewind">sjl.stdlib.Iterator#rewind</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -690,10 +909,6 @@
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    - Returns self.
-</div>
-
 
 
 <dl>
@@ -702,7 +917,114 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></span>
+<span class="param-type"><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="valid"><span class="type-signature"></span>valid()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns whether the iterator has reached it's end.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#valid">sjl.stdlib.Iterator#valid</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
 
 
 

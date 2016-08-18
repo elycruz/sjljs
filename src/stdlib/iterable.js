@@ -12,18 +12,17 @@
         ObjectIterator = sjl.stdlib.ObjectIterator;
 
     /**
-     * Turns an array into an iterable.
+     * Defines an es6 compliant iterator callback on `Object` or `Array`.
      * @function module:sjl.iterable
      * @param array {Array|Object} - Array or object to set iterator function on.
-     * @param pointer {Number|undefined}
      * @returns array {Array|Object}
      */
-    sjl.iterable = function (arrayOrObj, pointer) {
+    sjl.iterable = function (arrayOrObj) {
         var classOfArrayOrObj = sjl.classOf(arrayOrObj),
             keys, values;
         if (classOfArrayOrObj === 'Array') {
             arrayOrObj[sjl.Symbol.iterator] = function () {
-                return new Iterator(arrayOrObj, pointer);
+                return new Iterator(arrayOrObj);
             };
         }
         else if (classOfArrayOrObj === 'Object') {
@@ -32,12 +31,13 @@
                 return arrayOrObj[key];
             });
             arrayOrObj[sjl.Symbol.iterator] = function () {
-                return new ObjectIterator(keys, values, pointer);
+                return new ObjectIterator(keys, values);
             };
         }
         else {
             throw new Error('sjl.iterable only takes objects or arrays.  ' +
-                'arrayOrObj param recieved type is "' + classOfArrayOrObj + '".  Value recieved: ' + arrayOrObj);
+                'arrayOrObj param received type is "' + classOfArrayOrObj +
+                '".  Value received: ' + arrayOrObj);
         }
         return arrayOrObj;
     };

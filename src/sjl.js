@@ -156,7 +156,7 @@
         var classOfType = classOf(type);
         if (classOfType !== String.name && !(type instanceof Function)) {
             throw new TypeError('sjl.classOfIs expects it\'s `type` parameter to' +
-                'be of type `String` or an instance of `Function`.  Type recieved: ' + classOfType + '.');
+                'be of type `String` or an instance of `Function`.  Type received: ' + classOfType + '.');
         }
         return classOf(obj) === (
                 classOfType === String.name ? type : type.name
@@ -891,7 +891,7 @@
             throw new TypeError('#`' + prefix + '`.`' + paramName
                 + '` Cannot be empty.  ' + (suffix || '')
                 + '  Value received: `' + value + '`.  '
-                + '  Type recieved: ' + classOfValue + '`.');
+                + '  Type received: ' + classOfValue + '`.');
         }
     }
 

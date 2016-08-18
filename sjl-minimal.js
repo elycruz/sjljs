@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 6.0.8 
+/**! sjl-minimal.js 6.0.9 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: bdb4e994074d67b25dd093f690b48ad1 
- * | Built-on: Sun Jun 12 2016 16:30:33 GMT-0400 (EDT) 
+ * | md5checksum: e529b676412192220d45b5144fea9d82 
+ * | Built-on: Thu Aug 18 2016 18:09:16 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module definition.
@@ -161,7 +161,7 @@
         var classOfType = classOf(type);
         if (classOfType !== String.name && !(type instanceof Function)) {
             throw new TypeError('sjl.classOfIs expects it\'s `type` parameter to' +
-                'be of type `String` or an instance of `Function`.  Type recieved: ' + classOfType + '.');
+                'be of type `String` or an instance of `Function`.  Type received: ' + classOfType + '.');
         }
         return classOf(obj) === (
                 classOfType === String.name ? type : type.name
@@ -896,7 +896,7 @@
             throw new TypeError('#`' + prefix + '`.`' + paramName
                 + '` Cannot be empty.  ' + (suffix || '')
                 + '  Value received: `' + value + '`.  '
-                + '  Type recieved: ' + classOfValue + '`.');
+                + '  Type received: ' + classOfValue + '`.');
         }
     }
 

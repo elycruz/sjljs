@@ -101,7 +101,7 @@
         else if (!validateTagNames(tags)) {
             throw new Error (contextName + ' `_stripTags` ' +
                 'Only valid html tag names allowed in `tags` list.  ' +
-                'Tags recieved: "' + tags + '".');
+                'Tags received: "' + tags + '".');
         }
         var out = value;
         tags.forEach(function (tag) {

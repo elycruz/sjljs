@@ -9,46 +9,64 @@
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         Iterator = sjl.stdlib.Iterator,
-        contextName = 'sjl.stdlib.ObjectIterator',
+        moduleName = 'ObjectIterator',
+        contextName = 'sjl.stdlib.' + moduleName,
+
+    /**
+     * @class sjl.stdlib.ObjectIterator
+     * @extends sjl.stdlib.Iterator
+     * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
+     * @param values {Array|Undefined} - Array of values if first param is an array.
+     */
+    ObjectIterator = Iterator.extend({
 
         /**
-         * Constructor for ObjectIterator.
-         * @param keysOrObj {Array|Object}
-         * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else the
-         *  value would be used as the iterator's pointer in which case it would be optional.
-         * @param pointer {Number} - Optional.
+         * Constructor.
+         * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
+         * @param values {Array|Undefined} - Array of values if first param is an array.
          */
-        ObjectIterator = function ObjectIterator(keysOrObj, valuesOrPointer, pointer) {
-            var obj, values,
-                classOfParam1 = sjl.classOf(keysOrObj),
+        constructor: function ObjectIterator(keysOrObj, values) {
+            var obj,
+                classOfParam0 = sjl.classOf(keysOrObj),
                 receivedParamTypesList,
+                _values,
                 _keys;
 
-            // If called with obj as first param
-            if (classOfParam1 === 'Object') {
+            // Constructor scenario 1 (if param `0` is of type `Object`)
+            if (classOfParam0 === 'Object') {
                 obj = keysOrObj;
                 _keys = Object.keys(obj);
-                pointer = valuesOrPointer;
-                values = _keys.map(function (key) {
+                _values = _keys.map(function (key) {
                     return obj[key];
                 });
             }
-            else if (classOfParam1 === 'Array') {
+
+            // Constructor scenario 2 (if param `0` is of type `Array`)
+            else if (classOfParam0 === 'Array') {
+                sjl.throwTypeErrorIfNotOfType(contextName, 'values', values, Array,
+                    'With the previous param being an array `values` can only be an array in this scenario.');
                 _keys = keysOrObj;
-                sjl.throwTypeErrorIfNotOfType(contextName, 'valuesOrPointer', valuesOrPointer, Array,
-                    'With the previous param being an array `valuesOrPointer` can only be an array in this scenario.');
-                values = valuesOrPointer;
-                pointer = pointer || 0;
+                _values = values;
             }
+
+            // Else failed constructor scenario
             else {
-                receivedParamTypesList = [sjl.classOf(keysOrObj), sjl.classOf(valuesOrPointer), sjl.classOf(pointer)];
-                throw new TypeError ('#`' + contextName + '` recieved incorrect parameter values.  The expected ' +
-                    'parameter list should one of two: [Object, Number] or [Array, Array, Number].  ' +
-                    'Parameter list recieved: [' + receivedParamTypesList.join(', ') + '].');
+                receivedParamTypesList = [classOfParam0, sjl.classOf(values)];
+                throw new TypeError ('#`' + contextName + '` received incorrect parameter values.  The expected ' +
+                    'parameter list should be one of two: [Object] or [Array, Array].  ' +
+                    'Parameter list received: [' + receivedParamTypesList.join(', ') + '].');
             }
 
             // Extend #own properties with #Iterator's own properties
-            Iterator.call(this, values, pointer);
+            Iterator.call(this, _values);
+
+            // @note Defining member jsdoc blocks here since our members are defined using Object.defineProperties()
+            //   and some IDEs don't handle this very well (E.g., WebStorm)
+
+            /**
+             * Object iterator keys.
+             * @member {Array<*>} sjl.stdlib.ObjectIterator#keys
+             */
 
             // Define other own properties
             Object.defineProperties(this, {
@@ -57,23 +75,13 @@
                         return _keys;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType('ObjectIterator.keys', 'keys', value, Array);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'keys', value, Array);
                         _keys = value;
                     }
                 }
             });
-        };
+        },
 
-    /**
-     * @class sjl.stdlib.ObjectIterator
-     * @extends sjl.stdlib.Iterator
-     * @name ObjectIterator
-     * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
-     * @param valuesOrPointer {Array|Number} - Array of values if first param is an array of keys.  Else pointer.
-     * @param pointer {Number} - Optional.
-     * @type {sjl.stdlib.ObjectIterator}
-     */
-    ObjectIterator = Iterator.extend(ObjectIterator, {
         /**
          * Returns the current key and value that `pointer` is pointing to as an array [key, value].
          * @method sjl.stdlib.Iterator#current
@@ -109,6 +117,10 @@
             return retVal;
         },
 
+        /**
+         * Returns whether iterator has more items to return or not.
+         * @returns {boolean}
+         */
         valid: function () {
             var pointer = this.pointer;
             return pointer < this.values.length && pointer < this.keys.length;
@@ -130,23 +142,16 @@
             return this;
         }
 
-    }, {
-        forEach: function (obj, callback, context) {
-            return Object.keys(obj).forEach(function (key) {
-                callback.call(context, obj[key], key, obj);
-            });
-        }
     });
 
     if (isNodeEnv) {
         module.exports = ObjectIterator;
     }
     else {
-        sjl.ns('stdlib.ObjectIterator', ObjectIterator);
+        sjl.ns('stdlib.' + moduleName, ObjectIterator);
         if (window.__isAmd) {
             return ObjectIterator;
         }
     }
-
 
 }());

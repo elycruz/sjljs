@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: SjlSet</title>
+	<title>Documentation Class: ObjectIterator</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -47,14 +47,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.filter.Filter.html">sjl.filter.Filter</a></li><li><a href="namespace_sjl.stdlib.SjlSet.html">namespace:sjl.stdlib.SjlSet</a></li><li><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li>
+					<li><a href="global.html#constructor">constructor</a></li><li><a href="module-sjl.filter.Filter.html">sjl.filter.Filter</a></li><li><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl_stdlib.ObjectIterator.html">sjl:stdlib.ObjectIterator</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#addErrorByKey">addErrorByKey</a></li><li><a href="global.html#constructor">constructor</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#pointer">pointer</a></li><li><a href="global.html#toJSON">toJSON</a></li><li><a href="global.html#valid">valid</a></li>
+					<li><a href="global.html#addErrorByKey">addErrorByKey</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#pointer">pointer</a></li><li><a href="global.html#toJSON">toJSON</a></li><li><a href="global.html#valid">valid</a></li>
 				</ul>
 			</li>
 			
@@ -84,13 +84,13 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: SjlSet</h1>
+	<h1 class="page-title">Class: ObjectIterator</h1>
 <section>
 
 <header>
     
         <h2>
-        SjlSet
+        ObjectIterator
         </h2>
         
     
@@ -103,16 +103,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="SjlSet"><span class="type-signature"></span>new SjlSet(iterable)</h4>
+    <h4 class="name" id="ObjectIterator"><span class="type-signature"></span>new ObjectIterator(keysOrObj, valuesOrPointer, pointer)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        SjlSet constructor.  This object has the same interface as the es6 `Set`object.  The only difference is this one uses a more sugery iterator whichhas, in addition to the `next` method, `current`, `iterator`, `pointer`, `rewind`, and`valid` methods (@see sjl.Iterator)
-    </div>
     
 
     
@@ -146,13 +142,16 @@
 
         <tr>
             
-                <td class="name"><code>iterable</code></td>
+                <td class="name"><code>keysOrObj</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">Array</span>
+|
+
+<span class="param-type">Object</span>
 
 
 
@@ -163,7 +162,58 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Array of keys or object to create (object) iterator from.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>valuesOrPointer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of values if first param is an array of keys.  Else pointer.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>pointer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Optional (depending on preceding parameters).</td>
         </tr>
 
     
@@ -237,7 +287,7 @@
 
 
     <ul>
-        <li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li>
+        <li>sjl:stdlib.Iterator</li>
     </ul>
 
 
@@ -300,7 +350,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-08-18T15:32:13-04:00
+		on 2016-08-18T17:00:13-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

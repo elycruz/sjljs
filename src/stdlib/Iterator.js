@@ -10,26 +10,36 @@
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         errorContextName = 'sjl.stdlib.Iterator',
 
-        Iterator = function Iterator(values, pointer) {
+        Iterator = function Iterator(values) {
             var _values,
                 _pointer = 0;
+
+            /**
+             * Public property docs
+             *----------------------------------------------------- */
+            /**
+             * Iterator values.
+             * @name values
+             * @member {Array<*>} sjl.stdlib.Iterator#values
+             */
+            /**
+             * Iterator pointer.
+             * @name pointer
+             * @member {Number} sjl.stdlib.Iterator#pointer
+             */
+            /**
+             * Iterator size.
+             * @name size
+             * @readonly
+             * @member {Number} sjl.stdlib.Iterator#size
+             */
 
             // Define properties before setting values
             Object.defineProperties(this, {
                 values: {
-                    /**
-                     * @returns {Array}
-                     */
                     get: function () {
                         return _values;
                     },
-                    /**
-                     * @param values {Array}
-                     * @throws {TypeError}
-                     * @note Pointer gets constrained to bounds of `values`'s length if it is out of
-                     *  bounds (if it is less than `0` gets pushed to `0` if it is greater than values.length
-                     *      gets pulled back down to values.length).
-                     */
                     set: function (values) {
                         sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, Array);
                         _values = values;
@@ -37,19 +47,12 @@
                     }
                 },
                pointer: {
-                    /**
-                     * @returns {Number}
-                     */
                     get: function () {
                         return _pointer;
                     },
-                    /**
-                     * @param pointer {Number}
-                     * @throws {TypeError}
-                     */
-                    set: function (pointer) {
-                        sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', pointer, Number);
-                        _pointer = sjl.constrainPointer(pointer, 0, _values.length);
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', value, Number);
+                        _pointer = sjl.constrainPointer(value, 0, _values.length);
                     }
                 },
                 size: {
@@ -57,18 +60,21 @@
                         return _values.length;
                     }
                 }
-            }); // End of properties define
+            }); // End of `defineProperties`
 
             // Set values
             this.values = values || [];
         };
 
     /**
+     * Es6 compliant iterator constructor with some convenience methods;  I.e.,
+     *  `valid`, `rewind`, `current`, and `forEach`.
      * @class sjl.stdlib.Iterator
      * @extends sjl.stdlib.Extendable
-     * @type {void|Object|*}
+     * @param values {Array} - Values to iterate through.
      */
     Iterator = sjl.stdlib.Extendable.extend(Iterator, {
+
         /**
          * Returns the current value that `pointer` is pointing to.
          * @method sjl.stdlib.Iterator#current
@@ -123,7 +129,7 @@
         },
 
         /**
-         * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
+         * Iterates through all elements in iterator.
          * @param callback {Function}
          * @param context {Object}
          * @returns {sjl.stdlib.Iterator}

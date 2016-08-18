@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: SjlMap</title>
+	<title>Documentation Class: SjlSet</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -84,7 +84,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: SjlMap</h1>
+	<h1 class="page-title">Class: SjlSet</h1>
 <section>
 
 <header>
@@ -92,7 +92,7 @@
         <h2>
             <span class="ancestors"><a href="sjl.stdlib.html">.stdlib</a>.</span>
         
-        SjlMap
+        SjlSet
         </h2>
         
     
@@ -105,7 +105,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="SjlMap"><span class="type-signature"></span>new SjlMap(iterable)</h4>
+    <h4 class="name" id="SjlSet"><span class="type-signature"></span>new SjlSet(iterable)</h4>
     
     
 </dt>
@@ -113,7 +113,7 @@
 
     
     <div class="description">
-        'Simple Javascript Library Map' object (stand-in object for es6 `Maps` until they're support is more widely accepted). This constructor offers the same exact api as es6 `Map` objects with an additional couple of convenience methods (`addFromArray`, `addFromObject`, `iterator`, `toJson`).
+        SjlSet constructor.  This object has the same interface as the es6 `Set`object.  The only difference is this one has some extra methods;  I.e., `addFromArray`, `iterator`, and a defined `toJSON` method.
     </div>
     
 
@@ -155,9 +155,6 @@
             
                 
 <span class="param-type">Array</span>
-|
-
-<span class="param-type">Object</span>
 
 
 
@@ -168,7 +165,7 @@
 
             
 
-            <td class="description last">The object to populate itself from (either an `Array<[[key, value]]>` or an `Object` hash).</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -236,6 +233,15 @@
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li>
+    </ul>
+
 
     
 
@@ -245,6 +251,221 @@
 
     
 
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="_iteratorOverridden">
+    <h4><span class="type-signature">&lt;readonly> </span>_iteratorOverridden<span class="type-signature"> :Boolean</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Flag for knowing that default es6 iterator was overridden.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Boolean</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="_values">
+    <h4><span class="type-signature">&lt;readonly> </span>_values<span class="type-signature"> :Array.&lt;*></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Where the values are kept on the Set.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Array.&lt;*></span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="size">
+    <h4><span class="type-signature">&lt;readonly> </span>size<span class="type-signature"> :Number</span></h4>
+
+    
+</dt>
+<dd>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
     
 
     
@@ -254,7 +475,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addFromArray"><span class="type-signature"></span>addFromArray(array)</h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add(value)</h4>
     
     
 </dt>
@@ -262,7 +483,7 @@
 
     
     <div class="description">
-        Adds key-value array pairs in an array to this instance.
+        Adds a value to Set.
     </div>
     
 
@@ -297,13 +518,13 @@
 
         <tr>
             
-                <td class="name"><code>array</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;Array.&lt;*, *>></span>
+<span class="param-type">*</span>
 
 
 
@@ -314,7 +535,7 @@
 
             
 
-            <td class="description last">Array of key-value array entries to parse.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -385,7 +606,7 @@
     </dt>
     <dd>
         
-<span class="param-type">SjlMap</span>
+<span class="param-type"><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></span>
 
 
 
@@ -402,7 +623,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addFromObject"><span class="type-signature"></span>addFromObject(object)</h4>
+    <h4 class="name" id="addFromArray"><span class="type-signature"></span>addFromArray(value)</h4>
     
     
 </dt>
@@ -410,7 +631,7 @@
 
     
     <div class="description">
-        Add all the `object`'s instance's own property key-value pairs to this instance.
+        Adds item onto `SjlSet` from the passed in array.
     </div>
     
 
@@ -445,13 +666,13 @@
 
         <tr>
             
-                <td class="name"><code>object</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Array</span>
 
 
 
@@ -462,7 +683,7 @@
 
             
 
-            <td class="description last">Object to operate on.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -533,7 +754,7 @@
     </dt>
     <dd>
         
-<span class="param-type">SjlMap</span>
+<span class="param-type"><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></span>
 
 
 
@@ -558,7 +779,7 @@
 
     
     <div class="description">
-        Clears the `SjlMap` object of all data that has been set on it.
+        Clears Set.
     </div>
     
 
@@ -631,7 +852,7 @@
     </dt>
     <dd>
         
-<span class="param-type">SjlMap</span>
+<span class="param-type"><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></span>
 
 
 
@@ -648,7 +869,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="delete"><span class="type-signature"></span>delete(key)</h4>
+    <h4 class="name" id="delete"><span class="type-signature"></span>delete(value)</h4>
     
     
 </dt>
@@ -656,7 +877,7 @@
 
     
     <div class="description">
-        Deletes an entry in the `SjlMap`.
+        Deletes a value from Set.
     </div>
     
 
@@ -691,7 +912,7 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
@@ -708,7 +929,7 @@
 
             
 
-            <td class="description last">Key of key-value pair to remove.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -779,7 +1000,7 @@
     </dt>
     <dd>
         
-<span class="param-type">SjlMap</span>
+<span class="param-type"><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></span>
 
 
 
@@ -804,7 +1025,7 @@
 
     
     <div class="description">
-        Returns the entries in this `SjlMap` as a valid es6 iterator to iterate over (usable in older versions of javascript).
+        Es6 compliant iterator for all entries in set
     </div>
     
 
@@ -902,7 +1123,7 @@
 
     
     <div class="description">
-        Iterates through all key value pairs in itself and passes them to `callback` on each iteration.
+        Loops through values in set and calls callback(with optional context) for each value in set.Same signature as Array.prototype.forEach except for values in Set.
     </div>
     
 
@@ -954,7 +1175,7 @@
 
             
 
-            <td class="description last">Required.</td>
+            <td class="description last">Same signature as Array.prototype.forEach.</td>
         </tr>
 
     
@@ -967,7 +1188,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">*</span>
 
 
 
@@ -1049,7 +1270,7 @@
     </dt>
     <dd>
         
-<span class="param-type">SjlMap</span>
+<span class="param-type"><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></span>
 
 
 
@@ -1066,7 +1287,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="get"><span class="type-signature"></span>get(key)</h4>
+    <h4 class="name" id="has"><span class="type-signature"></span>has(value)</h4>
     
     
 </dt>
@@ -1074,7 +1295,7 @@
 
     
     <div class="description">
-        Returns the value "set" for a key in instance.
+        Checks if value exists within Set.
     </div>
     
 
@@ -1109,16 +1330,10 @@
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
             
             </td>
 
@@ -1127,154 +1342,6 @@
             
 
             <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="has"><span class="type-signature"></span>has(key)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Returns whether a `key` is set on this `SjlMap`.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Required.</td>
         </tr>
 
     
@@ -1370,105 +1437,7 @@
 
     
     <div class="description">
-        Returns a valid es6 iterator to iterate over key-value pair entries of this instance. (same as `SjlMap#entries`).
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="keys"><span class="type-signature"></span>keys()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Returns the keys in this `SjlMap` as a valid es6 iterator object to iterate over (usable in older versions of javascript).
+        Returns an iterator with an es6 compliant interface.
     </div>
     
 
@@ -1558,7 +1527,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="set"><span class="type-signature"></span>set(key, value)</h4>
+    <h4 class="name" id="keys"><span class="type-signature"></span>keys()</h4>
     
     
 </dt>
@@ -1566,7 +1535,7 @@
 
     
     <div class="description">
-        Sets a key-value pair in this instance.
+        Returns an es6 compliant iterator of Set's values (since set doesn't have any keys).
     </div>
     
 
@@ -1575,80 +1544,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>key</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Key to set.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Value to set.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -1713,7 +1608,7 @@
     </dt>
     <dd>
         
-<span class="param-type">SjlMap</span>
+<span class="param-type"><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></span>
 
 
 
@@ -1738,7 +1633,7 @@
 
     
     <div class="description">
-        Shallow to json method.
+        Returns own `values`.
     </div>
     
 
@@ -1811,7 +1706,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Array.&lt;*></span>
 
 
 
@@ -1836,7 +1731,7 @@
 
     
     <div class="description">
-        Returns the values in this `SjlMap` as a valid es6 iterator object to iterate over (usable in older versions of javascript).
+        Returns an es6 compliant iterator of Set's values.
     </div>
     
 
