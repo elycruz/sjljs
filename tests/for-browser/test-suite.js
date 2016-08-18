@@ -3606,7 +3606,9 @@ describe('sjl.stdlib.Optionable', function () {
 
 describe('sjl.stdlib.PriorityList', function () {
 
-        var PriorityList = sjl.ns.stdlib.PriorityList;
+        return;
+
+    var PriorityList = sjl.ns.stdlib.PriorityList;
 
     describe('#`PriorityList Methods Existence`', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],

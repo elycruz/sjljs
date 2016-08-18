@@ -14,8 +14,8 @@
     /**
      * Defines an es6 compliant iterator callback on `Object` or `Array`.
      * @function module:sjl.iterable
-     * @param array {Array|Object} - Array or object to set iterator function on.
-     * @returns array {Array|Object}
+     * @param arrayOrObj {Array|Object} - Array or object to set iterator function on.
+     * @returns {Array|Object}
      */
     sjl.iterable = function (arrayOrObj) {
         var classOfArrayOrObj = sjl.classOf(arrayOrObj),

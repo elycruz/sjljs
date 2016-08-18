@@ -1144,14 +1144,10 @@
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
         /**
+         * Sjl Standard Library type classes namespace.
          * @namespace sjl.stdlib {Object}
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
-
-        /**
-         * @namespace sjl.utils {Object}
-         */
-        defineEnumProp(sjl,     'utils',        sjl.ns('utils'));
 
         /**
          * @namespace sjl.validator {Object}

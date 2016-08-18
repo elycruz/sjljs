@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 6.0.9 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: e529b676412192220d45b5144fea9d82 
- * | Built-on: Thu Aug 18 2016 18:09:16 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: bbadcc38502b1b3b6730c00d2d02517b 
+ * | Built-on: Thu Aug 18 2016 18:44:35 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module definition.
@@ -1149,14 +1149,10 @@
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
         /**
+         * Sjl Standard Library type classes namespace.
          * @namespace sjl.stdlib {Object}
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
-
-        /**
-         * @namespace sjl.utils {Object}
-         */
-        defineEnumProp(sjl,     'utils',        sjl.ns('utils'));
 
         /**
          * @namespace sjl.validator {Object}

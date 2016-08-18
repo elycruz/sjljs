@@ -1,7 +1,7 @@
 /**! sjljs 6.0.9
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: e6215a5caa437bae09ed44b99436a8cd
- * | Built-on: Thu Aug 18 2016 18:09:18 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: 9891a054502c55770145bdcea8ede1e1
+ * | Built-on: Thu Aug 18 2016 18:44:37 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -1148,14 +1148,10 @@
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
         /**
+         * Sjl Standard Library type classes namespace.
          * @namespace sjl.stdlib {Object}
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
-
-        /**
-         * @namespace sjl.utils {Object}
-         */
-        defineEnumProp(sjl,     'utils',        sjl.ns('utils'));
 
         /**
          * @namespace sjl.validator {Object}
@@ -1734,8 +1730,8 @@
     /**
      * Defines an es6 compliant iterator callback on `Object` or `Array`.
      * @function module:sjl.iterable
-     * @param array {Array|Object} - Array or object to set iterator function on.
-     * @returns array {Array|Object}
+     * @param arrayOrObj {Array|Object} - Array or object to set iterator function on.
+     * @returns {Array|Object}
      */
     sjl.iterable = function (arrayOrObj) {
         var classOfArrayOrObj = sjl.classOf(arrayOrObj),
@@ -2016,73 +2012,61 @@
         ObjectIterator =    sjl.stdlib.ObjectIterator,
         makeIterable =      sjl.stdlib.iterable,
 
-        // Constructor to augment
+        /**
+         * SjlMap constructor to augment
+         * @param iterable {Array|Object}
+         */
         SjlMap = function SjlMap (iterable) {
             var self = this,
-                _keys,
-                _values;
+                _keys = makeIterable([]),
+                _values = makeIterable([]),
+                classOfParam0 = sjl.classOf(iterable);
+
             Object.defineProperties(this, {
                 _keys: {
-                    get: function () {
-                        return _keys;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_keys', value, Array);
-                        _keys = makeIterable(value);
-                    }
+                    value: _keys
                 },
                 _values: {
-                    get: function () {
-                        return _values;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(SjlMap.name, '_values', value, Array);
-                        _values = makeIterable(value);
-                    }
+                    value: _values
                 },
                 size: {
                     get: function () {
                         return self._keys.length;
-                    }
+                    },
+                    enumerable: true
                 }
             });
 
-            self._keys = [];
-            self._values = [];
-
             // If an array was passed in inject values
-            if (Array.isArray(iterable)) {
+            if (classOfParam0 === 'Array') {
                 self.addFromArray(iterable);
             }
-
-            else if (sjl.classOfIs(iterable, 'Object')) {
+            else if (classOfParam0 === 'Object') {
                 self.addFromObject(iterable);
             }
 
-            // If anything other than an array is passed in throw an Error
-            else if (typeof iterable !== _undefined) {
-                throw new Error ('Type Error: sjl.SjlMap takes only iterable objects as it\'s first parameter. ' +
-                ' Parameter received: ', iterable);
+            // Else if anything other undefined was passed at this point throw an error
+            else if (classOfParam0 !== 'Undefined') {
+                throw new TypeError ('Type Error: sjl.stdlib.SjlMap constructor only accepts a parameter of type' +
+                    '`Object`, `Array` or `Undefined`. ' +
+                ' Type received: ', sjl.classOf(iterable));
             }
 
             // Set custom iterator function on `this`
             self[sjl.Symbol.iterator] = function () {
-                return new ObjectIterator(self._keys, self._values, 0);
+                return new ObjectIterator(_keys, _values, 0);
             };
 
             // Set flag to remember that original iterator was overridden
-            self._iteratorOverridden = true;
+            Object.defineProperty(self, '_iteratorOverridden', {value: true});
         };
 
     /**
-     * 'Simple Javascript Library Map' object (stand-in object
-     *  for es6 `Maps` until they're support is more widely accepted).
-     *
-     *  This constructor offers the same exact api as es6 `Map` objects with
+     * `SjlMap` constructor. Has same api as es6 `Map` constructor with
      *  an additional couple of convenience methods (`addFromArray`, `addFromObject`, `iterator`, `toJson`).
      *
-     * @param iterable {Array|Object} - The object to populate itself from (either an `Array<[[key, value]]>`
-     *  or an `Object` hash).
+     * @param iterable {Array|Object} - The object to populate itself from (either an `Array<[key, value]>`
+     *  or an `Object`).
      * @constructor sjl.stdlib.SjlMap
      */
     SjlMap = Extendable.extend(SjlMap, {
@@ -2092,14 +2076,13 @@
          * @returns {SjlMap}
          */
         clear: function () {
-                while (this._values.length > 0) {
-                    this._values.pop();
+            [this._values, this._keys].forEach(function (values) {
+                while (values.length > 0) {
+                    values.pop();
                 }
-                while (this._keys.length > 0) {
-                    this._keys.pop();
-                }
-                return this;
-            },
+            });
+            return this;
+        },
 
         /**
          * Deletes an entry in the `SjlMap`.
@@ -2223,8 +2206,6 @@
                 entry = iterator.next();
                 this.set(entry.value[0], entry.value[1]);
             }
-            iterator = null;
-            entry = null;
             return this;
         },
 

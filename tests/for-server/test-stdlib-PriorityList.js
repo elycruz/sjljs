@@ -15,6 +15,8 @@ describe('sjl.stdlib.PriorityList', function () {
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~
 
+    return;
+
     var PriorityList = sjl.ns.stdlib.PriorityList;
 
     describe('#`PriorityList Methods Existence`', function () {
