@@ -5,6 +5,22 @@
 
     'use strict';
 
+    function priorityListItemsToObj (items) {
+        return items.reduce(function (a1, a2) {
+            var out = a1;
+            if (a1 instanceof PriorityListItem) {
+                out = {};
+                out[a1.key] = a1.value;
+                console.log(a1.key, a1.value);
+            }
+            if (a2) {
+                out[a2.key] = a2.value;
+                console.log(a2.key, a2.value);
+            }
+            return out;
+        });
+    }
+
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
@@ -19,7 +35,7 @@
                     value: key
                 },
                 serial: {
-                    value: priorityItemSerial
+                    value: +priorityItemSerial
                 },
                 value: {
                     value: value
@@ -30,7 +46,7 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(PriorityListItem.name, 'priority', value, Number);
-                        _priority = priority;
+                        _priority = value;
                     }
                 }
             });
@@ -41,8 +57,10 @@
             var _sorted = false,
                 _internalPriorities = 0,
                 _LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false,
-                _LIFO_modifier = _LIFO ? 1 : -1,
+                _LIFO_modifier,
+                _itemsMap = new SjlMap(),
                 classOfIterable = sjl.classOf(objOrArray);
+
             Object.defineProperties(this, {
                 originallyPassedInIterableType: {
                     value: classOfIterable
@@ -57,7 +75,16 @@
                     }
                 },
                 itemsMap: {
-                    value: new SjlMap()
+                    get: function () {
+                        return _itemsMap;
+                    },
+                    set: function (value) {
+                        if (!sjl.classOfIsMulti(value, 'Map', 'SjlMap')) {
+                            throw new TypeError('sjl.stdlib.SjlMap.itemsMap can only be of type `Map` or `SjlMap`.  ' +
+                                'Type received: "' + sjl.classOf(value) + '".');
+                        }
+                        _itemsMap = value;
+                    }
                 },
                 LIFO: {
                     get: function () {
@@ -108,27 +135,28 @@
         // Own Api functions
         // -------------------------------------------
         sort: function () {
-            var retVal = this,
-                LIFO_modifier = this.LIFO_modifier,
-                sortedValues,
-                sortedKeys;
-            if (this.sorted) {
-                return retVal;
+            var self = this,
+                LIFO_modifier = self.LIFO_modifier,
+                sortedEntries;
+            if (self.sorted) {
+                return self;
             }
-            sortedValues = [].concat(this.itemsMap._values).sort(function (a, b) {
-                return a.priority === b.priority
-                    ? (a.serial > b.serial ? -1 : 1) * LIFO_modifier
-                    : (a.priority > b.priority ? -1 : 1);
-            }, this);
-            sortedKeys = sortedValues.map(function (item) {
-                return item.key;
-            });
-            this.itemsMap._keys = sortedKeys;
-            this.itemsMap._values = sortedValues.map(function (item) {
-                return item.value;
-            });
-            this.sorted = true;
-            return this.pointer(0);
+            sortedEntries = [].concat(self.itemsMap._values).sort(function (a, b) {
+                var retVal;
+                if (a.priority === b.priority) {
+                    retVal = a.serial > b.serial;
+                }
+                else {
+                    retVal = a.priority > b.priority;
+                }
+                return (retVal ? -1 : 1) * LIFO_modifier;
+            }, self);
+
+            // Create new map with sorted items (items sorted based on this.LIFO_modifier)
+            self.itemsMap = new SjlMap();
+            self.addFromObject(priorityListItemsToObj(sortedEntries));
+            self.sorted = true;
+            return self.pointer(0);
         },
 
         normalizePriority: function (priority) {
@@ -215,9 +243,9 @@
         },
         entries: function () {
             this.sort();
-            var keys = this.itemsMap._keys.concat([]),
-                values = this.itemsMap._values.concat([]);
-            return new sjl.stdlib.ObjectIterator(keys, values);
+            return new sjl.stdlib.ObjectIterator(
+                this.itemsMap._keys.concat([]),
+                this.itemsMap._values.concat([]));
         },
         forEach: function (callback, context) {
             return this.sort().itemsMap.forEach(callback, context);
@@ -268,9 +296,7 @@
                 entry = iterator.next();
                 this.set(entry.value[0], entry.value[1]);
             }
-            iterator = null;
-            entry = null;
-            return this; //.sort();
+            return this;
         },
 
         /**

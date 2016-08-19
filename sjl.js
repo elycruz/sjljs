@@ -1,7 +1,7 @@
-/**! sjljs 6.0.9
+/**! sjljs 6.0.10
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 9891a054502c55770145bdcea8ede1e1
- * | Built-on: Thu Aug 18 2016 18:44:37 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: 5229180321a6292d354c1478aed515ce
+ * | Built-on: Thu Aug 18 2016 19:29:35 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -2289,7 +2289,7 @@
                     value: key
                 },
                 serial: {
-                    value: priorityItemSerial
+                    value: +priorityItemSerial
                 },
                 value: {
                     value: value
@@ -2300,7 +2300,7 @@
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(PriorityListItem.name, 'priority', value, Number);
-                        _priority = priority;
+                        _priority = value;
                     }
                 }
             });
@@ -2312,7 +2312,9 @@
                 _internalPriorities = 0,
                 _LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false,
                 _LIFO_modifier = _LIFO ? 1 : -1,
+                _itemsMap = new SjlMap(),
                 classOfIterable = sjl.classOf(objOrArray);
+
             Object.defineProperties(this, {
                 originallyPassedInIterableType: {
                     value: classOfIterable
@@ -2327,7 +2329,16 @@
                     }
                 },
                 itemsMap: {
-                    value: new SjlMap()
+                    get: function () {
+                        return _itemsMap;
+                    },
+                    set: function (value) {
+                        if (!sjl.classOfIsMulti(value, 'Map', 'SjlMap')) {
+                            throw new TypeError('sjl.stdlib.SjlMap.itemsMap can only be of type `Map` or `SjlMap`.  ' +
+                                'Type received: "' + sjl.classOf(value) + '".');
+                        }
+                        _itemsMap = value;
+                    }
                 },
                 LIFO: {
                     get: function () {
@@ -2393,10 +2404,11 @@
             sortedKeys = sortedValues.map(function (item) {
                 return item.key;
             });
-            this.itemsMap._keys = sortedKeys;
-            this.itemsMap._values = sortedValues.map(function (item) {
+            // this.itemsMap._keys = sortedKeys;
+            // this.itemsMap._values = ;
+            this.itemsMap = new SjlMap(sortedKeys, sortedValues.map(function (item) {
                 return item.value;
-            });
+            }));
             this.sorted = true;
             return this.pointer(0);
         },

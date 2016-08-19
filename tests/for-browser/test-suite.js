@@ -3606,15 +3606,10 @@ describe('sjl.stdlib.Optionable', function () {
 
 describe('sjl.stdlib.PriorityList', function () {
 
-        return;
-
-    var PriorityList = sjl.ns.stdlib.PriorityList;
+        var PriorityList = sjl.ns.stdlib.PriorityList;
 
     describe('#`PriorityList Methods Existence`', function () {
-        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
-                ['v4', 4], ['v5', 5], ['v6', 6],
-                ['v7', 5], ['v8', 4]],
-            priorityList = new PriorityList([]),
+            var priorityList = new PriorityList(),
             methods = ['clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', 'get', 'set',
                 'next', 'current', 'valid', 'rewind', 'addFromArray', 'addFromObject'];
         it ('should have the following methods: [`' + methods.join('`, `') + '`]', function () {
@@ -3635,7 +3630,7 @@ describe('sjl.stdlib.PriorityList', function () {
             // Ensure `clear` returns `self`
             expect(priorityList.clear()).to.equal(priorityList);
         });
-        it ('should set `size` to `0` as a side effect.', function () {
+        it ('should return `0` from `size` as a side effect.', function () {
             // Validate size of set
             expect(priorityList.size).to.equal(0);
         });
@@ -3646,8 +3641,8 @@ describe('sjl.stdlib.PriorityList', function () {
                 ['v4', 4], ['v5', 5], ['v6', 6],
                 ['v7', 5], ['v8', 4]],
             keyEntryToDelete = 'b',
-            keyEntryToDeleteValue = 1,
-            mapFrom = [ ['a', 0], [keyEntryToDelete, keyEntryToDeleteValue], ['c', 3] ],
+            keyEntryToDeleteValue = Math.random() * 1000 + 500,
+            mapFrom = [ ['a', 0], [keyEntryToDelete, keyEntryToDeleteValue], ['c', 3] ].concat(entries),
             priorityList = new PriorityList(mapFrom);
 
         it ('should delete unique key and return `self`.', function () {
@@ -3660,6 +3655,7 @@ describe('sjl.stdlib.PriorityList', function () {
             // Ensure method deleted key entry
             expect(priorityList.has(keyEntryToDelete)).to.equal(false);
             expect(priorityList.itemsMap._values.some(function (item) {
+                console.log(item.value);
                 return item.value === keyEntryToDeleteValue;
             })).to.equal(false);
             expect(priorityList.itemsMap._keys.indexOf(keyEntryToDelete)).to.equal(-1);
@@ -3675,19 +3671,29 @@ describe('sjl.stdlib.PriorityList', function () {
         var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
                 ['v4', 4], ['v5', 5], ['v6', 6],
                 ['v7', 5], ['v8', 4]],
-            priorityList = new PriorityList(entries),
+            priorityList = new PriorityList(entries, true),
             iterator = priorityList.entries(),
             reversedEntries = entries.concat([]).sort(function (a, b) {
-                return a[0] < b[0];
+                return a[1] < b[1];
             }),
             value;
+
+        console.log(iterator._values, iterator._keys);
+
+
+        it ('should return an iterator.', function () {
+            expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
+        });
+
         // Validate
-        it ('should work as an iterator with included extra functions (`valid`).', function () {
+        it ('should have all values sorted when LIFO is true.', function () {
             while (iterator.valid()) {
                 value = iterator.next();
+                let originalEntry = reversedEntries[iterator.pointer - 1];
+                console.log(value, value.value);
                 expect(value.done).to.equal(false);
-                expect(value.value[0]).to.equal(reversedEntries[iterator.pointer - 1][0]);
-                expect(value.value[1]).to.equal(reversedEntries[iterator.pointer - 1][1]);
+                expect(value.value[0]).to.equal(originalEntry[0]);
+                expect(value.value[1]).to.equal(originalEntry[1]);
             }
         });
     });
