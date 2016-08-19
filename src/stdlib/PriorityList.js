@@ -23,7 +23,7 @@
 
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
-        sjl = isNodeEnv ? require('../sjl.js') : window.sjl,
+        sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
         Extendable = sjl.stdlib.Extendable,
         ObjectIterator = sjl.stdlib.ObjectIterator,
         SjlMap = sjl.stdlib.SjlMap,
@@ -58,20 +58,22 @@
                 _internalPriorities = 0,
                 _LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false,
                 _LIFO_modifier,
+                _itemWrapperConstructor = PriorityListItem,
                 _itemsMap = new SjlMap(),
+                contextName = 'sjl.stdlib.PriorityList',
                 classOfIterable = sjl.classOf(objOrArray);
 
             Object.defineProperties(this, {
                 originallyPassedInIterableType: {
                     value: classOfIterable
                 },
-                _internalPriorities: {
+                itemWrapperConstructor: {
                     get: function () {
-                        return _internalPriorities;
+                        return _itemWrapperConstructor;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, '_internalPriorities', value, Number);
-                        _internalPriorities = value;
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'itemWrapperConstructor', value, Function);
+                        _itemWrapperConstructor = value;
                     }
                 },
                 itemsMap: {
@@ -84,6 +86,15 @@
                                 'Type received: "' + sjl.classOf(value) + '".');
                         }
                         _itemsMap = value;
+                    }
+                },
+                _internalPriorities: {
+                    get: function () {
+                        return _internalPriorities;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, '_internalPriorities', value, Number);
+                        _internalPriorities = value;
                     }
                 },
                 LIFO: {
@@ -106,6 +117,14 @@
                         this.sorted = false;
                     }
                 },
+                pointer: {
+                    get: function () {
+                        return this.itemsMap.pointer;
+                    },
+                    set: function (value) {
+                        this.itemsMap.pointer = value; // itemsMap validates pointer for us
+                    }
+                },
                 sorted: {
                     get: function () {
                         return _sorted;
@@ -121,6 +140,7 @@
                     }
                 }
             });
+
             if (classOfIterable === 'Object') {
                 this.addFromObject(objOrArray);
             }
@@ -132,6 +152,84 @@
     PriorityListItem = Extendable.extend(PriorityListItem);
 
     PriorityList = Extendable.extend(PriorityList, {
+        // Iterator functions
+        // -------------------------------------------
+        /**
+         * Returns the current key and value that `pointer` is pointing to as an array [key, value].
+         * @method sjl.stdlib.PriorityList#current
+         * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
+         */
+        current: function () {
+            return this.itemsMap.current();
+        },
+
+        /**
+         * Method which returns the current position in the iterator based on where the pointer is.
+         * This method also increases the pointer after it is done fetching the value to return.
+         * @method sjl.stdlib.PriorityList#next
+         * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
+         */
+        next: function () {
+            return this.itemsMap.next();
+        },
+
+        /**
+         * Returns whether the pointer hasn't reached the end of the list or not
+         * @returns {boolean}
+         */
+        valid: function () {
+            return this.itemsMap.valid();
+        },
+
+        /**
+         * Rewinds the iterator.
+         * @method sjl.stdlib.PriorityList#rewind
+         * @returns {sjl.stdlib.PriorityList}
+         */
+        rewind: function () {
+            this.itemsMap.rewind();
+            return this;
+        },
+
+        // Map functions
+        // -------------------------------------------
+        clear: function () {
+            this.pointer = 0;
+            this.itemsMap.clear();
+            this.sorted = false;
+            return this;
+        },
+        entries: function () {
+            return this.sort().itemsMap.entries();
+        },
+        forEach: function (callback, context) {
+            this.sort().itemsMap.forEach(callback, context);
+            return this;
+        },
+        has: function (key) {
+            return this.itemsMap.has(key);
+        },
+        keys: function () {
+            return this.sort().itemsMap.keys();
+        },
+        values: function () {
+            return this.sort().itemsMap.values();
+        },
+        get: function (key) {
+            return this.itemsMap.get(key);
+        },
+        set: function (key, value, priority) {
+            this.itemsMap.set(key, new (this.itemWrapperConstructor) (key, value, this.normalizePriority(priority)));
+            this.sorted = false;
+            return this;
+        },
+        delete: function (key) {
+            this.itemsMap.delete(key);
+            return this;
+        },
+
+        // Non api specific functions
+        // -------------------------------------------
         // Own Api functions
         // -------------------------------------------
         sort: function () {
@@ -156,9 +254,16 @@
             self.itemsMap = new SjlMap();
             self.addFromObject(priorityListItemsToObj(sortedEntries));
             self.sorted = true;
-            return self.pointer(0);
+            self.pointer = 0;
+            return self;
         },
 
+        /**
+         * Ensures priority returned is a number or increments it's internal priority counter
+         * and returns it.
+         * @param priority {Number}
+         * @returns {Number}
+         */
         normalizePriority: function (priority) {
             var retVal;
             if (sjl.classOfIs(priority, Number)) {
@@ -170,115 +275,6 @@
             }
             return retVal;
         },
-
-        // Iterator functions
-        // -------------------------------------------
-        /**
-         * Returns the current key and value that `pointer()` is pointing to as an array [key, value].
-         * @method sjl.stdlib.PriorityList#current
-         * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
-        current: function () {
-            var current = this.itemsMap.current();
-            current.value = current.value.value;
-            return !current.done ? current.value : current;
-        },
-
-        /**
-         * Method which returns the current position in the iterator based on where the pointer is.
-         * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.stdlib.PriorityList#next
-         * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
-        next: function () {
-            var next = this.itemsMap.next();
-            next.value = next.value.value;
-            return !next.done ? next.value : next;
-        },
-
-        /**
-         * Returns whether the pointer hasn't reached the end of the list or not
-         * @returns {boolean}
-         */
-        valid: function () {
-            return this.itemsMap.valid();
-        },
-
-        /**
-         * Rewinds the iterator.
-         * @method sjl.stdlib.PriorityList#rewind
-         * @returns {sjl.stdlib.PriorityList}
-         */
-        rewind: function () {
-            this.itemsMap.rewind();
-            return this;
-        },
-
-        /**
-         * Overloaded getter and setter for internal maps `_pointer` property.
-         * @param pointer {Number|undefined} - If undefined then method is a getter call else it is a setter call.
-         * @returns {sjl.stdlib.PriorityList}
-         * @throws {TypeError} - If `pointer` is set and is not of type `Number`.
-         */
-        pointer: function (pointer) {
-            var retVal = this;
-            // If is a getter call get the value
-            if (typeof pointer === _undefined) {
-                retVal = this.itemsMap.pointer;
-            }
-            // If is a setter call
-            else {
-                // Set and validate pointer (validated via `_pointer` getter property definition)
-                this.itemsMap.pointer = pointer;
-            }
-            return retVal;
-        },
-
-        // Map functions
-        // -------------------------------------------
-        clear: function () {
-            this.pointer(0).itemsMap.clear();
-            this.sorted = false;
-            return this;
-        },
-        entries: function () {
-            this.sort();
-            return new sjl.stdlib.ObjectIterator(
-                this.itemsMap._keys.concat([]),
-                this.itemsMap._values.concat([]));
-        },
-        forEach: function (callback, context) {
-            return this.sort().itemsMap.forEach(callback, context);
-        },
-        has: function (key) {
-            return this.itemsMap.has(key);
-        },
-        keys: function () {
-            return this.sort().itemsMap.keys();
-        },
-        values: function () {
-            var out = [];
-            this.sort().itemsMap.forEach(function (value, key) {
-                out.push(value);
-            });
-            return new sjl.stdlib.Iterator(out);
-        },
-        get: function (key) {
-            var item = this.itemsMap.get(key);
-            return sjl.classOfIs(item, PriorityListItem) ? item.value : item;
-        },
-        set: function (key, value, priority) {
-            this.sorted = false;
-            this.itemsMap.set(key, new PriorityListItem(key, value, this.normalizePriority(priority)));
-            return this;
-        },
-        delete: function (key) {
-            this.itemsMap.delete(key);
-            return this;
-        },
-
-        // Non api specific functions
-        // -------------------------------------------
 
         /**
          * Adds key-value array pairs in an array to this instance.

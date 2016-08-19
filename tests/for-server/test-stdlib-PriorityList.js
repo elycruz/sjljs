@@ -95,9 +95,10 @@ describe('sjl.stdlib.PriorityList', function () {
             while (iterator.valid()) {
                 value = iterator.next();
                 let originalEntry = reversedEntries[iterator.pointer - 1];
+                console.log(value.value)
                 expect(value.done).to.equal(false);
                 expect(value.value[0]).to.equal(originalEntry[0]);
-                expect(value.value[1]).to.equal(originalEntry[1]);
+                expect(value.value[1].value).to.equal(originalEntry[1]);
             }
         });
 
@@ -127,7 +128,7 @@ describe('sjl.stdlib.PriorityList', function () {
             // Validate `forEach` method works as expected
             priorityList.forEach(function (value, key) {
                 expect(reversedEntries[indexCount][0]).to.equal(key);
-                expect(reversedEntries[indexCount][1]).to.equal(value);
+                expect(reversedEntries[indexCount][1]).to.equal(value.value);
                 expect(this).to.equal(undefined);
                 indexCount += 1;
             });
@@ -199,7 +200,7 @@ describe('sjl.stdlib.PriorityList', function () {
                 iterator = priorityList.values();
             while (iterator.valid()) {
                 let value = iterator.next();
-                expect(value.value).to.equal(entries[index][1]);
+                expect(value.valuevalue.value).to.equal(entries[index][1]);
                 index += 1;
             }
         });
