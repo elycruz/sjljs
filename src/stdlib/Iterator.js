@@ -9,9 +9,11 @@
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
         errorContextName = 'sjl.stdlib.Iterator',
+        getPropDescriptor = Object.getOwnPropertyDescriptor,
 
         Iterator = function Iterator(values) {
-            var _values,
+            sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, 'Array');
+            var _values = values,
                 _pointer = 0;
 
             /**
@@ -34,36 +36,34 @@
              * @member {Number} sjl.stdlib.Iterator#size
              */
 
-            // Define properties before setting values
-            Object.defineProperties(this, {
-                values: {
-                    get: function () {
-                        return _values;
-                    },
-                    set: function (values) {
-                        sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, Array);
-                        _values = values;
-                        this.pointer = _pointer; // Force pointer within bounds (if it is out of bounds)
-                    }
-                },
-               pointer: {
+            // Set values property
+            if (!getPropDescriptor(this, '_values')) {
+                Object.defineProperty(this, '_values', {value: _values});
+            }
+
+            // Set `pointer` property description
+            if (!getPropDescriptor(this, 'pointer')) {
+                Object.defineProperty(this, 'pointer', {
                     get: function () {
                         return _pointer;
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(errorContextName, 'pointer', value, Number);
                         _pointer = sjl.constrainPointer(value, 0, _values.length);
-                    }
-                },
-                size: {
+                    },
+                    enumerable: true
+                });
+            }
+
+            if (!getPropDescriptor(this, 'size')) {
+                // Define properties before setting values
+                Object.defineProperty(this, 'size', {
                     get: function () {
                         return _values.length;
-                    }
-                }
-            }); // End of `defineProperties`
-
-            // Set values
-            this.values = values || [];
+                    },
+                    enumerable: true
+                });
+            }
         };
 
     /**
@@ -84,7 +84,7 @@
             var self = this;
             return self.valid() ? {
                 done: false,
-                value: self.values[self.pointer]
+                value: self._values[self.pointer]
             } : {
                 done: true
             };
@@ -101,7 +101,7 @@
                 pointer = self.pointer,
                 retVal = self.valid() ? {
                     done: false,
-                    value: self.values[pointer]
+                    value: self._values[pointer]
                 } : {
                     done: true
                 };
@@ -125,7 +125,7 @@
          * @returns {boolean}
          */
         valid: function () {
-            return this.pointer < this.values.length;
+            return this.pointer < this._values.length;
         },
 
         /**
@@ -136,7 +136,7 @@
          */
         forEach: function (callback, context) {
             context = context || this;
-            this.values.forEach(callback, context);
+            this._values.forEach(callback, context);
             return this;
         }
 

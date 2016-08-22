@@ -25,17 +25,24 @@
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
         Extendable = sjl.stdlib.Extendable,
-        ObjectIterator = sjl.stdlib.ObjectIterator,
         SjlMap = sjl.stdlib.SjlMap,
-        priorityItemSerial = 0,
-        PriorityListItem = function PriorityListItem (key, value, priority) {
-            var _priority;
+        Iterator = sjl.stdlib.Iterator,
+        PriorityListItem = function PriorityListItem (key, value, priority, serial) {
+            var _priority,
+                _serial,
+                contextName = 'sjl.stdlib.PriorityListItem';
             Object.defineProperties(this, {
                 key: {
                     value: key
                 },
                 serial: {
-                    value: +priorityItemSerial
+                    get: function () {
+                        return _serial;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'serial', value, Number);
+                        _serial = value;
+                    }
                 },
                 value: {
                     value: value
@@ -45,21 +52,21 @@
                         return _priority;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(PriorityListItem.name, 'priority', value, Number);
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'priority', value, Number);
                         _priority = value;
                     }
                 }
             });
             this.priority = priority;
-            priorityItemSerial += 1;
+            this.serial = serial;
         },
         PriorityList = function PriorityList (objOrArray, LIFO) {
             var _sorted = false,
-                _internalPriorities = 0,
+                __internalPriorities = 0,
+                ___internalSerialNumbers = 0,
                 _LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false,
                 _LIFO_modifier,
                 _itemWrapperConstructor = PriorityListItem,
-                _itemsMap = new SjlMap(),
                 contextName = 'sjl.stdlib.PriorityList',
                 classOfIterable = sjl.classOf(objOrArray);
 
@@ -76,25 +83,22 @@
                         _itemWrapperConstructor = value;
                     }
                 },
-                itemsMap: {
+                __internalSerialNumbers: {
                     get: function () {
-                        return _itemsMap;
+                        return ___internalSerialNumbers;
                     },
                     set: function (value) {
-                        if (!sjl.classOfIsMulti(value, 'Map', 'SjlMap')) {
-                            throw new TypeError('sjl.stdlib.SjlMap.itemsMap can only be of type `Map` or `SjlMap`.  ' +
-                                'Type received: "' + sjl.classOf(value) + '".');
-                        }
-                        _itemsMap = value;
+                        sjl.throwTypeErrorIfNotOfType(contextName, '__internalSerialNumbers', value, Number);
+                        ___internalSerialNumbers = value;
                     }
                 },
                 _internalPriorities: {
                     get: function () {
-                        return _internalPriorities;
+                        return __internalPriorities;
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, '_internalPriorities', value, Number);
-                        _internalPriorities = value;
+                        __internalPriorities = value;
                     }
                 },
                 LIFO: {
@@ -117,14 +121,6 @@
                         this.sorted = false;
                     }
                 },
-                pointer: {
-                    get: function () {
-                        return this.itemsMap.pointer;
-                    },
-                    set: function (value) {
-                        this.itemsMap.pointer = value; // itemsMap validates pointer for us
-                    }
-                },
                 sorted: {
                     get: function () {
                         return _sorted;
@@ -133,14 +129,14 @@
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'sorted', value, Boolean);
                         _sorted = value;
                     }
-                },
-                size: {
-                    get: function () {
-                        return this.itemsMap.size;
-                    }
                 }
             });
 
+            // Extend instance properties
+            SjlMap.call(this);
+            Iterator.call(this, this._values);
+
+            // Inject incoming iterable(s)
             if (classOfIterable === 'Object') {
                 this.addFromObject(objOrArray);
             }
@@ -151,80 +147,50 @@
 
     PriorityListItem = Extendable.extend(PriorityListItem);
 
-    PriorityList = Extendable.extend(PriorityList, {
-        // Iterator functions
-        // -------------------------------------------
-        /**
-         * Returns the current key and value that `pointer` is pointing to as an array [key, value].
-         * @method sjl.stdlib.PriorityList#current
-         * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
+    PriorityList = SjlMap.extend(PriorityList, {
+        // Iterator interface
         current: function () {
-            return this.itemsMap.current();
+            return Iterator.prototype.current.call(this);
         },
-
-        /**
-         * Method which returns the current position in the iterator based on where the pointer is.
-         * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.stdlib.PriorityList#next
-         * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
-         */
         next: function () {
-            return this.itemsMap.next();
+            return Iterator.prototype.next.call(this);
         },
-
-        /**
-         * Returns whether the pointer hasn't reached the end of the list or not
-         * @returns {boolean}
-         */
         valid: function () {
-            return this.itemsMap.valid();
+            return Iterator.prototype.valid.call(this);
         },
-
-        /**
-         * Rewinds the iterator.
-         * @method sjl.stdlib.PriorityList#rewind
-         * @returns {sjl.stdlib.PriorityList}
-         */
         rewind: function () {
-            this.itemsMap.rewind();
-            return this;
+            return Iterator.prototype.rewind.call(this);
         },
+        // forEach doesn't get added as SjlMap already has an implementation of it
 
-        // Map functions
+        // Overridden Map functions
         // -------------------------------------------
         clear: function () {
-            this.pointer = 0;
-            this.itemsMap.clear();
+            SjlMap.prototype.clear.call(this);
             this.sorted = false;
             return this;
         },
         entries: function () {
-            return this.sort().itemsMap.entries();
+            return SjlMap.prototype.entries.call(this.sort());
         },
         forEach: function (callback, context) {
-            this.sort().itemsMap.forEach(callback, context);
+            SjlMap.prototype.forEach.call(this.sort(), callback, context);
             return this;
-        },
-        has: function (key) {
-            return this.itemsMap.has(key);
         },
         keys: function () {
-            return this.sort().itemsMap.keys();
+            return SjlMap.prototype.keys.call(this.sort());
         },
         values: function () {
-            return this.sort().itemsMap.values();
+            return SjlMap.prototype.values.call(this.sort());
         },
         get: function (key) {
-            return this.itemsMap.get(key);
+            var retVal = SjlMap.prototype.get.call(this, key);
+            return sjl.isset(retVal) ? retVal.value : retVal;
         },
         set: function (key, value, priority) {
-            this.itemsMap.set(key, new (this.itemWrapperConstructor) (key, value, this.normalizePriority(priority)));
+            SjlMap.prototype.set.call(this, key,
+                new (this.itemWrapperConstructor) (key, value, this.normalizePriority(priority), this.__internalSerialNumbers++));
             this.sorted = false;
-            return this;
-        },
-        delete: function (key) {
-            this.itemsMap.delete(key);
             return this;
         },
 
@@ -234,25 +200,30 @@
         // -------------------------------------------
         sort: function () {
             var self = this,
-                LIFO_modifier = self.LIFO_modifier,
-                sortedEntries;
+                LIFO_modifier = self.LIFO_modifier;
+
+            // If already sorted return self
             if (self.sorted) {
                 return self;
             }
-            sortedEntries = [].concat(self.itemsMap._values).sort(function (a, b) {
-                var retVal;
-                if (a.priority === b.priority) {
-                    retVal = a.serial > b.serial;
-                }
-                else {
-                    retVal = a.priority > b.priority;
-                }
-                return (retVal ? -1 : 1) * LIFO_modifier;
-            }, self);
 
-            // Create new map with sorted items (items sorted based on this.LIFO_modifier)
-            self.itemsMap = new SjlMap();
-            self.addFromObject(priorityListItemsToObj(sortedEntries));
+            // Sort entries
+            self._values.sort(function (a, b) {
+                    var retVal;
+                    if (a.priority === b.priority) {
+                        retVal = a.serial > b.serial;
+                    }
+                    else {
+                        retVal = a.priority > b.priority;
+                    }
+                    return (retVal ? -1 : 1) * LIFO_modifier;
+                })
+                .forEach(function (item, index) {
+                    self._keys[index] = item.key;
+                    item.serial = index;
+                });
+
+            // Set sorted to true and pointer to 0
             self.sorted = true;
             self.pointer = 0;
             return self;
@@ -283,16 +254,8 @@
          * @returns {PriorityList}
          */
         addFromArray: function (array) {
-            // Iterate through the passed in iterable and add all values to `_values`
-            var iterator = sjl.iterable(array, 0)[sjl.Symbol.iterator](),
-                entry;
-
-            // Loop through values and add them
-            while (iterator.valid()) {
-                entry = iterator.next();
-                this.set(entry.value[0], entry.value[1]);
-            }
-            return this;
+            this.sorted = false;
+            return SjlMap.prototype.addFromArray.call(this, array);
         },
 
         /**
@@ -302,29 +265,9 @@
          * @returns {PriorityList}
          */
         addFromObject: function (object) {
-            sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'object', object, 'Object',
-                'Only `Object` types allowed.');
-            var self = this,
-                entry,
-                objectIt = new ObjectIterator(object);
-            while (objectIt.valid()) {
-                entry = objectIt.next();
-                self.set(entry.value[0], entry.value[1]);
-            }
-            return self; //.sort();
-        },
-
-        /**
-         * Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
-         *  (same as `PriorityList#entries`).
-         * @method sjl.stdlib.PriorityList#iterator
-         * @returns {sjl.stdlib.ObjectIterator}
-         */
-        iterator: function () {
-            return this.entries();
-        },
-
-        toJSON: function () {}
+            this.sorted = false;
+            return SjlMap.prototype.addFromObject.call(this, object);
+        }
     });
 
     if (isNodeEnv) {

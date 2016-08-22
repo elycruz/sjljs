@@ -164,10 +164,10 @@ describe('sjl.validator.ValidatorChain', function () {
                 expect(validatorChain.addValidators(objOfValidators)).to.equal(validatorChain);
 
                 // Expect added all validators in list
-                expect(validatorChain.validators.length).to.equal(objectIterator.values.length);
+                expect(validatorChain.validators.length).to.equal(objectIterator._values.length);
 
                 // Validate additions
-                objectIterator.values.forEach(function (validator, index) {
+                objectIterator._values.forEach(function (validator, index) {
                     expect(validatorChain.validators[index]).to.equal(validator);
                 });
 

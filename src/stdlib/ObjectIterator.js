@@ -92,7 +92,7 @@
                 pointer = self.pointer;
             return self.valid() ? {
                 done: false,
-                value: [self.keys[pointer], self.values[pointer]]
+                value: [self.keys[pointer], self._values[pointer]]
             } : {
                 done: true
             };
@@ -109,7 +109,7 @@
                 pointer = self.pointer,
                 retVal = self.valid() ? {
                     done: false,
-                    value: [self.keys[pointer], self.values[pointer]]
+                    value: [self.keys[pointer], self._values[pointer]]
                 } : {
                     done: true
                 };
@@ -123,7 +123,7 @@
          */
         valid: function () {
             var pointer = this.pointer;
-            return pointer < this.values.length && pointer < this.keys.length;
+            return pointer < this._values.length && pointer < this.keys.length;
         },
 
         /**
@@ -134,7 +134,7 @@
          */
         forEach: function (callback, context) {
             var self = this,
-                values = self.values;
+                values = self._values;
             context = context || self;
             self.keys.forEach(function (key, index, keys) {
                 callback.call(context, values[index], key, keys);

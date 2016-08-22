@@ -23,8 +23,8 @@ describe('sjl.stdlib.Iterator', function () {
         expect((new Iterator(basicArray)) instanceof Iterator).to.equal(true);
     });
 
-    it ('should have `values` and `pointer` properties of the correct types', function () {
-        expect(sjl.issetAndOfType(iterator.values, 'Array')).to.equal(true);
+    it ('should have `_values` and `pointer` properties of the correct types', function () {
+        expect(sjl.issetAndOfType(iterator._values, 'Array')).to.equal(true);
         expect(sjl.issetAndOfType(iterator.pointer, 'Number')).to.equal(true);
     });
 

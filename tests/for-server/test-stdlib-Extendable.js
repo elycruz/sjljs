@@ -28,9 +28,8 @@ describe('sjl.stdlib.Extendable', function () {
     // Extendable
     it ('should be extendable', function () {
         // sjl.Iterator extends sjl.Extendable
-        var iterator = new Iterator();
+        var iterator = new Iterator([]);
         expect(iterator instanceof Iterator).to.equal(true);
-        iterator = null;
     });
 
     // Extendable family

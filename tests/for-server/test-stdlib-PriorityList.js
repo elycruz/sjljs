@@ -63,10 +63,10 @@ describe('sjl.stdlib.PriorityList', function () {
 
             // Ensure method deleted key entry
             expect(priorityList.has(keyEntryToDelete)).to.equal(false);
-            expect(priorityList.itemsMap._values.some(function (item) {
+            expect(priorityList._values.some(function (item) {
                 return item.value === keyEntryToDeleteValue;
             })).to.equal(false);
-            expect(priorityList.itemsMap._keys.indexOf(keyEntryToDelete)).to.equal(-1);
+            expect(priorityList._keys.indexOf(keyEntryToDelete)).to.equal(-1);
         });
 
         it ('should set `size` to `size - 1` as a side effect.', function () {
@@ -84,8 +84,7 @@ describe('sjl.stdlib.PriorityList', function () {
             allEntries = entries.concat([]),
             reversedEntries = entries.concat([]).sort(function (a, b) {
                 return a[0] < b[0];
-            }),
-            value;
+            });
 
         it ('should return an iterator.', function () {
             expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
@@ -93,9 +92,9 @@ describe('sjl.stdlib.PriorityList', function () {
 
         it ('should have all values sorted when LIFO is true.', function () {
             while (iterator.valid()) {
-                value = iterator.next();
-                let originalEntry = reversedEntries[iterator.pointer - 1];
-                console.log(value.value)
+                let value = iterator.next(),
+                    originalEntry = reversedEntries[iterator.pointer - 1];
+                console.log(value.value);
                 expect(value.done).to.equal(false);
                 expect(value.value[0]).to.equal(originalEntry[0]);
                 expect(value.value[1].value).to.equal(originalEntry[1]);
@@ -104,8 +103,8 @@ describe('sjl.stdlib.PriorityList', function () {
 
         it ('should have all values sorted in reverse priority order when `LIFO` is `false`.', function () {
             while (iterator.valid()) {
-                value = iterator.next();
-                let originalEntry = allEntries[iterator.pointer - 1];
+                let value = iterator.next(),
+                    originalEntry = allEntries[iterator.pointer - 1];
                 expect(value.done).to.equal(false);
                 expect(value.value[0]).to.equal(originalEntry[0]);
                 expect(value.value[1]).to.equal(originalEntry[1]);
@@ -141,7 +140,7 @@ describe('sjl.stdlib.PriorityList', function () {
             // Validate `forEach` method works as expected
             priorityList.forEach(function (value, key) {
                 expect(reversedEntries[indexCount][0]).to.equal(key);
-                expect(reversedEntries[indexCount][1]).to.equal(value);
+                expect(reversedEntries[indexCount][1]).to.equal(value.value);
                 expect(this).to.equal(exampleContext);
                 indexCount += 1;
             }, exampleContext);
@@ -200,7 +199,7 @@ describe('sjl.stdlib.PriorityList', function () {
                 iterator = priorityList.values();
             while (iterator.valid()) {
                 let value = iterator.next();
-                expect(value.valuevalue.value).to.equal(entries[index][1]);
+                expect(value.value.value).to.equal(entries[index][1]);
                 index += 1;
             }
         });
@@ -210,11 +209,10 @@ describe('sjl.stdlib.PriorityList', function () {
             var index = 0,
                 reversedEntries = entries.sort(function (a, b) {
                     return a[0] > b[0];
-                }),
-                iterator = priorityList.iterator();
-            while (iterator.valid()) {
-                let value = iterator.next();
-                expect(value.value).to.equal(reversedEntries[index][1]);
+                });
+            while (priorityList.valid()) {
+                let value = priorityList.next();
+                expect(value.value.value).to.equal(reversedEntries[index][1]);
                 index += 1;
             }
             console.log(reversedEntries);
@@ -255,11 +253,7 @@ describe('sjl.stdlib.PriorityList', function () {
                     ['v4', 4], ['v5', 5], ['v6', 6],
                     ['v7', 5], ['v8', 4]],
                 otherEntries = [['v10', 7], ['v11', 8], ['v12', 9]],
-                expectedEntries = entries.concat(otherEntries).sort(function (a, b) {
-                    a = parseInt(a[0].split('v')[1], 10);
-                    b = parseInt(b[0].split('v')[1], 10);
-                    return a > b ? -1 : ((a === b) ? 0 : 1);
-                }),
+                expectedEntries = entries.concat(otherEntries).reverse(),
                 priorityList = new PriorityList(entries, true),
                 value,
                 index = 0,
@@ -269,8 +263,9 @@ describe('sjl.stdlib.PriorityList', function () {
             expect(priorityList.size).to.equal(expectedEntries.length);
             while (iterator.valid()) {
                 value = iterator.next();
+                console.log(value.value);
                 expect(value.value[0]).to.equal(expectedEntries[index][0]);
-                expect(value.value[1]).to.equal(expectedEntries[index][1]);
+                expect(value.value[1].value).to.equal(expectedEntries[index][1]);
                 index += 1;
             }
         });
