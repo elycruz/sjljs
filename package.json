@@ -37,6 +37,10 @@
     "url": "git://github.com/elycruz/sjljs.git"
   },
   "keywords": [
+    "es6",
+    "esharmony",
+    "es2015",
+    "collections",
     "oop-javascript",
     "base",
     "extendable",
