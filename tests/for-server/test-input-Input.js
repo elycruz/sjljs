@@ -141,7 +141,7 @@ describe ('sjl.input.Input', function () {
                     inputObj2.value = args[2];
                     expect(inputObj2.isValid()).to.equal(false);
                     expect(inputObj2.messages.length).to.equal(1);
-                    console.log(inputObj2.messages);
+                    // console.log(inputObj2.messages);
                 });
             });
         });

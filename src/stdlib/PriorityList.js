@@ -5,26 +5,11 @@
 
     'use strict';
 
-    function priorityListItemsToObj (items) {
-        return items.reduce(function (a1, a2) {
-            var out = a1;
-            if (a1 instanceof PriorityListItem) {
-                out = {};
-                out[a1.key] = a1.value;
-                console.log(a1.key, a1.value);
-            }
-            if (a2) {
-                out[a2.key] = a2.value;
-                console.log(a2.key, a2.value);
-            }
-            return out;
-        });
-    }
-
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
         Extendable = sjl.stdlib.Extendable,
+        ObjectIterator = sjl.stdlib.ObjectIterator,
         SjlMap = sjl.stdlib.SjlMap,
         Iterator = sjl.stdlib.Iterator,
         PriorityListItem = function PriorityListItem (key, value, priority, serial) {
@@ -60,13 +45,14 @@
             this.priority = priority;
             this.serial = serial;
         },
-        PriorityList = function PriorityList (objOrArray, LIFO) {
+        PriorityList = function PriorityList (objOrArray, LIFO, wrapItems) {
             var _sorted = false,
                 __internalPriorities = 0,
-                ___internalSerialNumbers = 0,
-                _LIFO = sjl.classOfIs(LIFO, Boolean) ? LIFO : false,
+                __internalSerialNumbers = 0,
+                _LIFO = sjl.isset(LIFO) ? LIFO : false,
                 _LIFO_modifier,
                 _itemWrapperConstructor = PriorityListItem,
+                _wrapItems = sjl.isset(wrapItems) ? wrapItems : true,
                 contextName = 'sjl.stdlib.PriorityList',
                 classOfIterable = sjl.classOf(objOrArray);
 
@@ -83,13 +69,22 @@
                         _itemWrapperConstructor = value;
                     }
                 },
-                __internalSerialNumbers: {
+                wrapItems: {
                     get: function () {
-                        return ___internalSerialNumbers;
+                        return _wrapItems;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(contextName, 'wrapItems', value, Boolean);
+                        _wrapItems = value;
+                    }
+                },
+                _internalSerialNumbers: {
+                    get: function () {
+                        return __internalSerialNumbers;
                     },
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, '__internalSerialNumbers', value, Number);
-                        ___internalSerialNumbers = value;
+                        __internalSerialNumbers = value;
                     }
                 },
                 _internalPriorities: {
@@ -132,6 +127,10 @@
                 }
             });
 
+            // Validate these via their setters
+            this.LIFO = _LIFO;
+            this.wrapItems = _wrapItems;
+
             // Extend instance properties
             SjlMap.call(this);
             Iterator.call(this, this._values);
@@ -149,11 +148,20 @@
 
     PriorityList = SjlMap.extend(PriorityList, {
         // Iterator interface
+        // -------------------------------------------
         current: function () {
-            return Iterator.prototype.current.call(this);
+            var current = Iterator.prototype.current.call(this);
+            if (!current.done && this.wrapItems) {
+                current.value = current.value.value;
+            }
+            return current;
         },
         next: function () {
-            return Iterator.prototype.next.call(this);
+            var next = Iterator.prototype.next.call(this);
+            if (!next.done && this.wrapItems) {
+                next.value = next.value.value;
+            }
+            return next;
         },
         valid: function () {
             return Iterator.prototype.valid.call(this);
@@ -171,25 +179,35 @@
             return this;
         },
         entries: function () {
-            return SjlMap.prototype.entries.call(this.sort());
+            return this.sort().wrapItems ?
+                new ObjectIterator(this._keys, this._values.map(function (item) {
+                    return item.value;
+                })) :
+                new SjlMap.prototype.entries.call(this.sort());
         },
         forEach: function (callback, context) {
-            SjlMap.prototype.forEach.call(this.sort(), callback, context);
+            SjlMap.prototype.forEach.call(this.sort(), function (value, key, map) {
+                callback.call(context, this.wrapItems ? value.value : value, key, map);
+            }, this);
             return this;
         },
         keys: function () {
             return SjlMap.prototype.keys.call(this.sort());
         },
         values: function () {
-            return SjlMap.prototype.values.call(this.sort());
+            if (this.wrapItems) {
+                return new Iterator(this.sort()._values.map(function (item) {
+                    return item.value;
+                }));
+            }
+            return new SjlMap.prototype.values.call(this.sort());
         },
         get: function (key) {
-            var retVal = SjlMap.prototype.get.call(this, key);
-            return sjl.isset(retVal) ? retVal.value : retVal;
+            var result = SjlMap.prototype.get.call(this, key);
+            return this.wrapItems && result ? result.value : result;
         },
         set: function (key, value, priority) {
-            SjlMap.prototype.set.call(this, key,
-                new (this.itemWrapperConstructor) (key, value, this.normalizePriority(priority), this.__internalSerialNumbers++));
+            SjlMap.prototype.set.call(this, key, this.resolveItemWrapping(key, value, priority));
             this.sorted = false;
             return this;
         },
@@ -245,6 +263,25 @@
                 retVal = +this._internalPriorities;
             }
             return retVal;
+        },
+
+        resolveItemWrapping: function (key, value, priority) {
+            var normalizedPriority = this.normalizePriority(priority),
+                serial = this._internalSerialNumbers++;
+            if (this.wrapItems) {
+                return new (this.itemWrapperConstructor) (key, value, normalizedPriority, serial);
+            }
+            try {
+                value.key = key;
+                value.priority = priority;
+                value.serial = serial;
+            }
+            catch (e) {
+                throw new TypeError('PriorityList can only work in "unwrapped" mode with values/objects' +
+                    ' that can have properties created/set on them.  Type encountered: `' + sjl.classOf(value) + '`;' +
+                    '  Original error: ' + e.message);
+            }
+            return value;
         },
 
         /**
