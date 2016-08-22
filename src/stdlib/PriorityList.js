@@ -8,50 +8,22 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
-        Extendable = sjl.stdlib.Extendable,
         ObjectIterator = sjl.stdlib.ObjectIterator,
         SjlMap = sjl.stdlib.SjlMap,
         Iterator = sjl.stdlib.Iterator,
-        PriorityListItem = function PriorityListItem (key, value, priority, serial) {
-            var _priority,
-                _serial,
-                contextName = 'sjl.stdlib.PriorityListItem';
-            Object.defineProperties(this, {
-                key: {
-                    value: key
-                },
-                serial: {
-                    get: function () {
-                        return _serial;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'serial', value, Number);
-                        _serial = value;
-                    }
-                },
-                value: {
-                    value: value
-                },
-                priority: {
-                    get: function () {
-                        return _priority;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'priority', value, Number);
-                        _priority = value;
-                    }
-                }
-            });
-            this.priority = priority;
-            this.serial = serial;
-        },
+
+        /**
+         * PriorityList Constructor (internal docblock).
+         * @param objOrArray {Object|Array}
+         * @param LIFO {Boolean} - Default `false`.
+         * @param wrapItems {Boolean} - Default `false`
+         */
         PriorityList = function PriorityList (objOrArray, LIFO, wrapItems) {
             var _sorted = false,
                 __internalPriorities = 0,
                 __internalSerialNumbers = 0,
                 _LIFO = sjl.isset(LIFO) ? LIFO : false,
-                _LIFO_modifier,
-                _itemWrapperConstructor = PriorityListItem,
+                _itemWrapperConstructor = PriorityList.DefaultPriorityListItemConstructor,
                 _wrapItems = sjl.isset(wrapItems) ? wrapItems : true,
                 contextName = 'sjl.stdlib.PriorityList',
                 classOfIterable = sjl.classOf(objOrArray);
@@ -109,11 +81,6 @@
                 LIFO_modifier: {
                     get: function () {
                         return this.LIFO ? 1 : -1;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO_modifier', value, Number);
-                        _LIFO_modifier = value;
-                        this.sorted = false;
                     }
                 },
                 sorted: {
@@ -144,11 +111,30 @@
             }
         };
 
-    PriorityListItem = Extendable.extend(PriorityListItem);
-
+    /**
+     * Allows the sorting of items based on priority (serial index (order items were entered in) is
+     * also taken into account when items have the same priority).  This class also
+     * implements the es6 `Map` interface and the es6 `Iterator` interface thereby making it
+     * easily manageable and iterable.
+     * @class sjl.stdlib.PriorityList
+     * @extends sjl.stdlib.SjlMap
+     * @extends sjl.stdlib.Iterator
+     * @param objOrArray {Object|Array} - Required.
+     * @param LIFO {Boolean} - "Last In First Out" flag.  Default false.
+     * @param wrapItems {Boolean} - Whether items should be wrapped (internal priority list props set on outer wrapper)
+     * or whether items should not be wrapped (internal priority list properties set directly on passed in objects) (internal props used
+     * for sorting and other internal calculations).  Default false.
+     */
     PriorityList = SjlMap.extend(PriorityList, {
         // Iterator interface
         // -------------------------------------------
+
+        /**
+         * Returns iterator result for item at pointer's current position.
+         * @method sjl.stdlib.PriorityList#current
+         * @method sjl.stdlib.Iterator#current
+         * @returns {{done: boolean, value: *}|{done: boolean}} - Returns `value` key in result only while `done` is `false`.
+         */
         current: function () {
             var current = Iterator.prototype.current.call(this);
             if (!current.done && this.wrapItems) {
@@ -156,6 +142,13 @@
             }
             return current;
         },
+
+        /**
+         * Returns the next iterator result for item at own `pointer`'s current position.
+         * @method sjl.stdlib.PriorityList#next
+         * @overrides sjl.stdlib.Iterator#next
+         * @returns {{done: boolean, value: *}|{done: boolean}} - Returns `value` key in result only while `done` is `false`.
+         */
         next: function () {
             var next = Iterator.prototype.next.call(this);
             if (!next.done && this.wrapItems) {
@@ -163,9 +156,24 @@
             }
             return next;
         },
+
+        /**
+         * Returns a boolean indicating whether a valid iterator result object can be retrieved from
+         * self or not.
+         * @method sjl.stdlib.PriorityList#valid
+         * @overrides sjl.stdlib.Iterator#valid
+         * @returns {boolean}
+         */
         valid: function () {
             return Iterator.prototype.valid.call(this);
         },
+
+        /**
+         * Set's pointer to `0`.
+         * @method sjl.stdlib.PriorityList#rewind
+         * @overrides sjl.stdlib.Iterator#rewind
+         * @returns {sjl.stdlib.Iterator}
+         */
         rewind: function () {
             return Iterator.prototype.rewind.call(this);
         },
@@ -173,11 +181,24 @@
 
         // Overridden Map functions
         // -------------------------------------------
+        /**
+         * Clears any stored priority items.  Also
+         * internally sets `sorted` to `false`.
+         * @method sjl.stdlib.PriorityList#clear
+         * @overrides sjl.stdlib.SjlMap#clear
+         * @returns {sjl.stdlib.PriorityList}
+         */
         clear: function () {
             SjlMap.prototype.clear.call(this);
             this.sorted = false;
             return this;
         },
+
+        /**
+         * Returns a key-value es6 compliant iterator.
+         * @overrides sjl.stdlib.SjlMap#entries
+         * @returns {sjl.stdlib.ObjectIterator}
+         */
         entries: function () {
             return this.sort().wrapItems ?
                 new ObjectIterator(this._keys, this._values.map(function (item) {
@@ -185,15 +206,39 @@
                 })) :
                 new SjlMap.prototype.entries.call(this.sort());
         },
+
+        /**
+         * Allows you to loop through priority items in priority list.
+         * Same function signature as Array.prorotype.forEach.
+         * @param callback {Function} - Same signature as SjlMap.prorotype.forEach; I.e., {Function<value, key, obj>}.
+         * @param context {undefined|*}
+         * @method sjl.stdlib.PriorityList#forEach
+         * @overrides sjl.stdlib.SjlMap#forEach
+         * @returns {sjl.stdlib.PriorityList}
+         */
         forEach: function (callback, context) {
             SjlMap.prototype.forEach.call(this.sort(), function (value, key, map) {
                 callback.call(context, this.wrapItems ? value.value : value, key, map);
             }, this);
             return this;
         },
+
+        /**
+         * Returns an iterator for keys in this priority list.
+         * @method sjl.stdlib.PriorityList#keys
+         * @overrides sjl.stdlib.SjlMap#keys
+         * @returns {sjl.stdlib.Iterator}
+         */
         keys: function () {
             return SjlMap.prototype.keys.call(this.sort());
         },
+
+        /**
+         * Returns an iterator for values in this priority list.
+         * @method sjl.stdlib.PriorityList#values
+         * @overrides sjl.stdlib.SjlMap#values
+         * @returns {sjl.stdlib.Iterator}
+         */
         values: function () {
             if (this.wrapItems) {
                 return new Iterator(this.sort()._values.map(function (item) {
@@ -202,10 +247,30 @@
             }
             return new SjlMap.prototype.values.call(this.sort());
         },
+
+        /**
+         * Fetches value for key (returns unwrapped value if `wrapItems` is `true`).
+         * @param key {*}
+         * @method sjl.stdlib.PriorityList#get
+         * @overrides sjl.stdlib.SjlMap#get
+         * @returns {*}
+         */
         get: function (key) {
             var result = SjlMap.prototype.get.call(this, key);
             return this.wrapItems && result ? result.value : result;
         },
+
+        /**
+         * Sets an item onto Map at passed in priority.  If no
+         * priority is passed in value is set at internally incremented
+         * priority.
+         * @param key {*}
+         * @param value {*}
+         * @param priority {Number}
+         * @overrides sjl.stdlib.SjlMap#set
+         * @method sjl.stdlib.PriorityList#set
+         * @returns {sjl.stdlib.PriorityList}
+         */
         set: function (key, value, priority) {
             SjlMap.prototype.set.call(this, key, this.resolveItemWrapping(key, value, priority));
             this.sorted = false;
@@ -216,6 +281,12 @@
         // -------------------------------------------
         // Own Api functions
         // -------------------------------------------
+
+        /**
+         * Sorts priority list items based on `LIFO` flag.
+         * @method sjl.stdlib.PriorityList#sort
+         * @returns {sjl.stdlib.PriorityList} - Returns self.
+         */
         sort: function () {
             var self = this,
                 LIFO_modifier = self.LIFO_modifier;
@@ -251,6 +322,7 @@
          * Ensures priority returned is a number or increments it's internal priority counter
          * and returns it.
          * @param priority {Number}
+         * @method sjl.stdlib.PriorityList#normalizePriority
          * @returns {Number}
          */
         normalizePriority: function (priority) {
@@ -265,6 +337,14 @@
             return retVal;
         },
 
+        /**
+         * Used internally to get value either raw or wrapped as specified by the `wrapItems` flag.
+         * @param key {*}
+         * @param value {*}
+         * @param priority {Number}
+         * @method sjl.stdlib.PriorityList#resolveItemWrapping
+         * @returns {*|PriorityListItem}
+         */
         resolveItemWrapping: function (key, value, priority) {
             var normalizedPriority = this.normalizePriority(priority),
                 serial = this._internalSerialNumbers++;
@@ -286,6 +366,7 @@
 
         /**
          * Adds key-value array pairs in an array to this instance.
+         * @overrides sjl.stdlib.SjlMap#addFromArray
          * @method sjl.stdlib.PriorityList#addFromArray
          * @param array {Array<Array<*, *>>} - Array of key-value array entries to parse.
          * @returns {PriorityList}
@@ -297,6 +378,7 @@
 
         /**
          * Add all the `object`'s instance's own property key-value pairs to this instance.
+         * @overrides sjl.stdlib.SjlMap#addFromObject
          * @method sjl.stdlib.PriorityList#addFromObject
          * @param object {Object} - Object to operate on.
          * @returns {PriorityList}
@@ -305,6 +387,11 @@
             this.sorted = false;
             return SjlMap.prototype.addFromObject.call(this, object);
         }
+    });
+
+    Object.defineProperty(PriorityList, 'DefaultPriorityListItemConstructor', {
+        value: sjl.stdlib.PriorityListItem,
+        enumerable: true
     });
 
     if (isNodeEnv) {

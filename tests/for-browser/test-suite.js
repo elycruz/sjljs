@@ -3607,6 +3607,17 @@ describe('sjl.stdlib.PriorityList', function () {
 
         var PriorityList = sjl.ns.stdlib.PriorityList;
 
+    function priorityListEntriesObjValues (startIndice, numObjs) {
+        var out = [];
+        for (var i = startIndice; i < numObjs; i += 1) {
+            out.push([
+                'item' + i,
+                {randomNumber: Math.round(Math.random() * numObjs)}
+            ]);
+        }
+        return out;
+    }
+
     describe('#`PriorityList Methods Existence`', function () {
             var priorityList = new PriorityList(),
             methods = ['clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', 'get', 'set',
@@ -3615,6 +3626,52 @@ describe('sjl.stdlib.PriorityList', function () {
             methods.forEach(function (method) {
                 expect(typeof priorityList[method]).to.equal('function');
             });
+        });
+    });
+
+    describe('#`PriorityList#current', function () {
+        var entries = priorityListEntriesObjValues(0, 8),
+            priorityList = new PriorityList(entries);
+        it ('should return the item at internal `pointer` position when `wrapItems` is false.', function () {
+            var currentItem = entries[0][1];
+            expect(priorityList.pointer).to.equal(0);
+            expect(priorityList.current().value).to.equal(currentItem);
+        });
+    });
+    describe('#`PriorityList#next', function () {
+        var entries = priorityListEntriesObjValues(0, 8),
+            priorityList = new PriorityList(entries);
+        it ('should return the next item in the list starting with the first item.', function () {
+            expect(priorityList.pointer).to.equal(0);
+            expect(priorityList.next().value).to.equal(entries[0][1]);
+            expect(priorityList.next().value).to.equal(entries[1][1]);
+            expect(priorityList.next().value).to.equal(entries[2][1]);
+        });
+    });
+
+    describe('#`PriorityList#rewind', function () {
+        var entries = priorityListEntriesObjValues(0, 8),
+            priorityList = new PriorityList(entries),
+            listEnd = entries.length - 1;
+        priorityList.pointer = listEnd;
+        it ('should return self and set pointer to `0`.', function () {
+            expect(priorityList.pointer).to.equal(listEnd);
+            expect(priorityList.rewind()).to.equal(priorityList);
+            expect(priorityList.pointer).to.equal(0);
+        });
+    });
+
+    describe('#`PriorityList#valid', function () {
+        var entries = priorityListEntriesObjValues(0, 8),
+            priorityList = new PriorityList(entries);
+        it ('should return the true while pointer is not at end of list.', function () {
+            expect(priorityList.pointer).to.equal(0);
+            expect(priorityList.valid()).to.equal(true);
+        });
+        it ('should return false when pointer is at end of list.', function () {
+            priorityList.pointer = entries.length;
+            expect(priorityList.pointer).to.equal(entries.length);
+            expect(priorityList.valid()).to.equal(false);
         });
     });
 

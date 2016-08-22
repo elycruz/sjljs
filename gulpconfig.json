@@ -16,6 +16,7 @@
     "./src/stdlib/iterable.js",
     "./src/stdlib/SjlSet.js",
     "./src/stdlib/SjlMap.js",
+    "./src/stdlib/PriorityListItem.js",
     "./src/stdlib/PriorityList.js",
     "./src/validator/Validator.js",
     "./src/validator/ValidatorChain.js",
