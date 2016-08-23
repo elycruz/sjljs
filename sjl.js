@@ -1,7 +1,7 @@
 /**! sjljs 6.1.10
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: fc8502f45634417a11ea0c1e71433161
- * | Built-on: Tue Aug 23 2016 01:02:29 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: f0f5f79359760b4abcacefe560f35239
+ * | Built-on: Tue Aug 23 2016 01:12:23 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -2359,7 +2359,7 @@
     }
     else {
         // Export class to namespace
-        sjl.ns('stdlib.PriorityList', PriorityListItem);
+        sjl.ns('stdlib.PriorityListItem', PriorityListItem);
 
         // If `Amd` return the class
         if (window.__isAmd) {

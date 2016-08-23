@@ -70,7 +70,7 @@
     }
     else {
         // Export class to namespace
-        sjl.ns('stdlib.PriorityList', PriorityListItem);
+        sjl.ns('stdlib.PriorityListItem', PriorityListItem);
 
         // If `Amd` return the class
         if (window.__isAmd) {
