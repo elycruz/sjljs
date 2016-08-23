@@ -86,7 +86,7 @@
 
         /**
          * Returns the current key and value that `pointer` is pointing to as an array [key, value].
-         * @method sjl.stdlib.Iterator#current
+         * @method sjl.stdlib.ObjectIterator#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         current: function () {
@@ -103,7 +103,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.stdlib.Iterator#next
+         * @method sjl.stdlib.ObjectIterator#next
          * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         next: function () {

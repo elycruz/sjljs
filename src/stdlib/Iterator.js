@@ -11,6 +11,11 @@
         errorContextName = 'sjl.stdlib.Iterator',
         getPropDescriptor = Object.getOwnPropertyDescriptor,
 
+        /**
+         * @param values {Array}
+         * @constructor
+         * @private
+         */
         Iterator = function Iterator(values) {
             sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, 'Array');
             var _values = values,

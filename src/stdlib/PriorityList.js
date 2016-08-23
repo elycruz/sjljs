@@ -182,7 +182,7 @@
         /**
          * Returns iterator result for item at pointer's current position.
          * @method sjl.stdlib.PriorityList#current
-         * @method sjl.stdlib.Iterator#current
+         * @method sjl.stdlib.PriorityList#current
          * @returns {{done: boolean, value: *}|{done: boolean}} - Returns `value` key in result only while `done` is `false`.
          */
         current: function () {
