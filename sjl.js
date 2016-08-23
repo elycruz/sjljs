@@ -1,7 +1,7 @@
 /**! sjljs 6.1.10
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: f65c58e370c099dfab8fcf7d7837387d
- * | Built-on: Mon Aug 22 2016 12:40:49 GMT-0400 (EDT)
+ * | md5checksum: 49022f7c3281c74de07a3b3412123ffc
+ * | Built-on: Tue Aug 23 2016 00:28:24 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -2279,14 +2279,28 @@
         sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
         Extendable = sjl.stdlib.Extendable,
 
+    /**
+     * Used as default constructor for wrapping items in when `wrapItems` is set to `true` on
+     * `sjl.stdlib.PriorityList`.
+     * @class sjl.stdlib.PriorityListItem
+     * @extends sjl.stdlib.Extendable
+     * @param key {*}
+     * @param value {*}
+     * @param priority {Number}
+     * @param serial {Number}
+     */
+    PriorityListItem = Extendable.extend({
+
         /**
          * Priority List Item Constructor (internal docblock).
+         * @constructor
          * @param key {*}
          * @param value {*}
          * @param priority {Number}
          * @param serial {Number}
+         * @private
          */
-        PriorityListItem = function PriorityListItem (key, value, priority, serial) {
+        constructor: function PriorityListItem (key, value, priority, serial) {
             var _priority,
                 _serial,
                 contextName = 'sjl.stdlib.PriorityListItem';
@@ -2318,19 +2332,8 @@
             });
             this.priority = priority;
             this.serial = serial;
-        },
-
-    /**
-     * Used as default constructor for wrapping items in when `wrapItems` is set to `true` on
-     * `sjl.stdlib.PriorityList`.
-     * @class PriorityListItem
-     * @extends sjl.stdlib.Extendable
-     * @param key {*}
-     * @param value {*}
-     * @param priority {Number}
-     * @param serial {Number}
-     */
-    PriorityListItem = Extendable.extend(PriorityListItem);
+        }
+    });
 
     if (isNodeEnv) {
         module.exports = PriorityListItem;
@@ -2366,6 +2369,8 @@
          * @param objOrArray {Object|Array}
          * @param LIFO {Boolean} - Default `false`.
          * @param wrapItems {Boolean} - Default `false`
+         * @constructor
+         * @private
          */
         PriorityList = function PriorityList (objOrArray, LIFO, wrapItems) {
             var _sorted = false,
@@ -2377,10 +2382,58 @@
                 contextName = 'sjl.stdlib.PriorityList',
                 classOfIterable = sjl.classOf(objOrArray);
 
+            /**
+             * Public property docs
+             *----------------------------------------------------- */
+            /**
+             * itemWrapperConstructor {Function<key, value, priority, serial>} - Item Wrapper Constructor.
+             * Default `sjl.stdlib.PriorityListItem`.
+             * @name itemWrapperConstructor
+             * @member {Function} sjl.stdlib.PriorityList#itemWrapperConstructor
+             */
+            /**
+             * wrapItems {Boolean} - Wrap items flag.  Default `false`.
+             * @name wrapItems
+             * @member {Boolean} sjl.stdlib.PriorityList#wrapItems
+             */
+            /**
+             * LIFO ("last in first out") flag - Default `false`.
+             * @name LIFO
+             * @member {Boolean} sjl.stdlib.PriorityList#LIFO
+             */
+            /**
+             * _internalSerialNumbers {Number} - Internal serial numbers counter.
+             * Not meant for public consumption.
+             * @private
+             * @name _internalSerialNumbers
+             * @member {Boolean} sjl.stdlib.PriorityList#_internalSerialNumbers
+             */
+            /**
+             * _internalPriorities {Number} - Internal priorities counter.
+             * Not meant for public consumption.
+             * @note May be removed later cause we can set all items with no priorities to `0` and allow
+             * them to be sorted by `serial`.
+             * @deprecated
+             * @private
+             * @name _internalPriorities
+             * @member {Boolean} sjl.stdlib.PriorityList#_internalPriorities
+             */
+            /**
+             * _LIFO_modifier {Number} - "last in first out" modifier - Returns -1 or 1 based on `LIFO` flag.
+             * Not meant for public consumption.
+             * @private
+             * @name LIFO
+             * @member {Boolean} sjl.stdlib.PriorityList#LIFO
+             */
+            /**
+             * _sorted {Boolean} - Flag used internally to track when priority list needs to be sorted or not.
+             * Not meant for public consumption.
+             * @private
+             * @name LIFO
+             * @member {Boolean} sjl.stdlib.PriorityList#LIFO
+             */
+
             Object.defineProperties(this, {
-                originallyPassedInIterableType: {
-                    value: classOfIterable
-                },
                 itemWrapperConstructor: {
                     get: function () {
                         return _itemWrapperConstructor;
@@ -2397,6 +2450,16 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'wrapItems', value, Boolean);
                         _wrapItems = value;
+                    }
+                },
+                LIFO: {
+                    get: function () {
+                        return _LIFO;
+                    },
+                    set: function (value) {
+                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO', value, Boolean);
+                        _LIFO = value;
+                        this._sorted = false;
                     }
                 },
                 _internalSerialNumbers: {
@@ -2417,30 +2480,20 @@
                         __internalPriorities = value;
                     }
                 },
-                LIFO: {
-                    get: function () {
-                        return _LIFO;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO', value, Boolean);
-                        _LIFO = value;
-                        this.sorted = false;
-                    }
-                },
-                LIFO_modifier: {
+                _LIFO_modifier: {
                     get: function () {
                         return this.LIFO ? 1 : -1;
                     }
                 },
-                sorted: {
+                _sorted: {
                     get: function () {
                         return _sorted;
                     },
                     set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'sorted', value, Boolean);
+                        sjl.throwTypeErrorIfNotOfType(PriorityList.name, '_sorted', value, Boolean);
                         _sorted = value;
                     }
-                }
+                },
             });
 
             // Validate these via their setters
@@ -2539,7 +2592,7 @@
          */
         clear: function () {
             SjlMap.prototype.clear.call(this);
-            this.sorted = false;
+            this._sorted = false;
             return this;
         },
 
@@ -2559,7 +2612,7 @@
         /**
          * Allows you to loop through priority items in priority list.
          * Same function signature as Array.prorotype.forEach.
-         * @param callback {Function<value, key, obj, context>} - Same signature as Array.prorotype.forEach.
+         * @param callback {Function} - Same signature as SjlMap.prorotype.forEach; I.e., {Function<value, key, obj>}.
          * @param context {undefined|*}
          * @method sjl.stdlib.PriorityList#forEach
          * @overrides sjl.stdlib.SjlMap#forEach
@@ -2622,7 +2675,7 @@
          */
         set: function (key, value, priority) {
             SjlMap.prototype.set.call(this, key, this.resolveItemWrapping(key, value, priority));
-            this.sorted = false;
+            this._sorted = false;
             return this;
         },
 
@@ -2638,10 +2691,10 @@
          */
         sort: function () {
             var self = this,
-                LIFO_modifier = self.LIFO_modifier;
+                LIFO_modifier = self._LIFO_modifier;
 
             // If already sorted return self
-            if (self.sorted) {
+            if (self._sorted) {
                 return self;
             }
 
@@ -2662,7 +2715,7 @@
                 });
 
             // Set sorted to true and pointer to 0
-            self.sorted = true;
+            self._sorted = true;
             self.pointer = 0;
             return self;
         },
@@ -2721,7 +2774,7 @@
          * @returns {PriorityList}
          */
         addFromArray: function (array) {
-            this.sorted = false;
+            this._sorted = false;
             return SjlMap.prototype.addFromArray.call(this, array);
         },
 
@@ -2733,7 +2786,7 @@
          * @returns {PriorityList}
          */
         addFromObject: function (object) {
-            this.sorted = false;
+            this._sorted = false;
             return SjlMap.prototype.addFromObject.call(this, object);
         }
     });

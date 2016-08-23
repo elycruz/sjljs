@@ -9,14 +9,28 @@
         sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
         Extendable = sjl.stdlib.Extendable,
 
+    /**
+     * Used as default constructor for wrapping items in when `wrapItems` is set to `true` on
+     * `sjl.stdlib.PriorityList`.
+     * @class sjl.stdlib.PriorityListItem
+     * @extends sjl.stdlib.Extendable
+     * @param key {*}
+     * @param value {*}
+     * @param priority {Number}
+     * @param serial {Number}
+     */
+    PriorityListItem = Extendable.extend({
+
         /**
          * Priority List Item Constructor (internal docblock).
+         * @constructor
          * @param key {*}
          * @param value {*}
          * @param priority {Number}
          * @param serial {Number}
+         * @private
          */
-        PriorityListItem = function PriorityListItem (key, value, priority, serial) {
+        constructor: function PriorityListItem (key, value, priority, serial) {
             var _priority,
                 _serial,
                 contextName = 'sjl.stdlib.PriorityListItem';
@@ -48,19 +62,8 @@
             });
             this.priority = priority;
             this.serial = serial;
-        },
-
-    /**
-     * Used as default constructor for wrapping items in when `wrapItems` is set to `true` on
-     * `sjl.stdlib.PriorityList`.
-     * @class PriorityListItem
-     * @extends sjl.stdlib.Extendable
-     * @param key {*}
-     * @param value {*}
-     * @param priority {Number}
-     * @param serial {Number}
-     */
-    PriorityListItem = Extendable.extend(PriorityListItem);
+        }
+    });
 
     if (isNodeEnv) {
         module.exports = PriorityListItem;
