@@ -20,6 +20,7 @@ Api for current version:
 [6.0.x] (http://sjljs.elycruz.com/6.0.x/jsdocs)
 - **Note** Docs are currently under construction but the 
 docs for the core are available at the aforementioned link.
+[6.1.x (upcoming version (small bc breaks on `Iterator`, `SjlMap`, and `SjlSet`))] (http://sjljs.elycruz.com/6.1.x/jsdocs)
 
 ## Sections in Readme:
 - [Getting Started](#getting-started)
@@ -49,6 +50,7 @@ Run one of the following from your terminal:
 - **Note** `npm install` has to be run prior to running the aforementioned file.
 - **Alternately** You can check the tests for this version of the library here:
 [6.0.x] (http://sjljs.elycruz.com/6.0.x/tests/for-browser)
+[6.1.x (WIP)] (http://sjljs.elycruz.com/6.1.x/tests/for-browser)
 
 ## Requirements:
 - Javascript versions ecmascript 5+
