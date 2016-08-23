@@ -80,6 +80,7 @@
          * @todo change this method name to `addErrorByKeyOrCallback` or just add `addErrorByCallback` method
          * @param key {String|Function} - Key for add error by or callback to generate error string from.
          * @param value {*|undefined} - Value to pass into the error callback.
+         * @method sjl.validator.Validator#addErrorByKey
          * @returns {Validator}
          */
         addErrorByKey: function (key, value) {
@@ -98,7 +99,7 @@
                     messages.push(messageTemplate[key]);
                 }
             }
-            else if (sjl.classOfIs(key, 'function')) {
+            else if (sjl.classOfIs(key, 'Function')) {
                 messages.push(key.call(self, value, self));
             }
             else {

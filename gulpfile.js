@@ -208,7 +208,7 @@ gulp.task('watch', function () {
     ]);
 
     // Watch readme-sections for 'jsdoc' task
-    gulp.watch(['README.md'] /*['jsdoc']*/);
+    // gulp.watch(['README.md'], ['jsdoc']);
 
     // Watch changelog-fragments and markdown-fragments-fragments for 'readme-sections' task
     gulp.watch(['markdown-fragments-fragments/*.md'], ['readme']);

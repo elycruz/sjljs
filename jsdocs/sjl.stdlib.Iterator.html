@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="sjl.filter.html">sjl.filter</a></li><li><a href="sjl.input.html">sjl.input</a></li><li><a href="sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.validator.html">sjl.validator</a></li>
+					<li><a href="sjl.stdlib.html">sjl.stdlib</a></li>
 				</ul>
 			</li>
 			
@@ -47,14 +47,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.filter.Filter.html">sjl.filter.Filter</a></li><li><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="global.html#addErrorByKey">addErrorByKey</a></li><li><a href="global.html#constructor">constructor</a></li><li><a href="global.html#entries">entries</a></li><li><a href="global.html#forEach">forEach</a></li><li><a href="global.html#toJSON">toJSON</a></li><li><a href="global.html#valid">valid</a></li>
+					<li><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li>
 				</ul>
 			</li>
 			
@@ -487,6 +480,104 @@
 
     
     <div class="description">
+        Returns the current value that `pointer` is pointing to.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="current"><span class="type-signature"></span>current()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
         Returns iterator result for item at pointer's current position.
     </div>
     
@@ -686,7 +777,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="current"><span class="type-signature"></span>current()</h4>
+    <h4 class="name" id="forEach"><span class="type-signature"></span>forEach(callback, context)</h4>
     
     
 </dt>
@@ -694,7 +785,7 @@
 
     
     <div class="description">
-        Returns the current value that `pointer` is pointing to.
+        Iterates through all elements in iterator.
     </div>
     
 
@@ -703,6 +794,80 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -767,105 +932,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="next"><span class="type-signature"></span>next()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Method which returns the current position in the iterator based on where the pointer is.This method also increases the pointer after it is done fetching the value to return.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
+<span class="param-type"><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></span>
 
 
 
@@ -959,6 +1026,104 @@
     - Where Array is actually [<*>, <*>] or of type [any, any].
 </div>
 
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="next"><span class="type-signature"></span>next()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Method which returns the current position in the iterator based on where the pointer is.This method also increases the pointer after it is done fetching the value to return.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
 
 
 <dl>
@@ -1224,7 +1389,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-08-23T00:24:55-04:00
+		on 2016-08-23T00:54:50-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

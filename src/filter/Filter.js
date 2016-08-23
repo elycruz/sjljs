@@ -4,6 +4,8 @@
  * @memberof module:sjl.filter
  * @requires sjl
  * @requires sjl.stdlib.Extendable
+ * @note Class left as 'private' until documented.
+ * @private
  */
 (function () {
 

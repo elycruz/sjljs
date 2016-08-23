@@ -74,6 +74,7 @@
 
             /**
              * toJSON of its own properties or properties found at key/key-namespace-string.
+             * @method sjl.stdlib.Config#toJSON
              * @param keyOrNsString {String} - Optional.
              * @returns {JSON}
              */

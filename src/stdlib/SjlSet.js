@@ -22,6 +22,8 @@
         /**
          * Constructor.
          * @param iterable {Array} - Optional.
+         * @private
+         * @constructor
          */
         constructor: function SjlSet (iterable) {
             var self = this,
@@ -31,18 +33,18 @@
              * Public properties:
              *------------------------------------------------*/
             /**
-             * @member {Number} sjl.stdlib.SjlSet#size
+             * @member {Number} sjl.stdlib.SjlSet#size - Size of Set.  Default `0`.
              * @readonly
-             * @enumerable True.
              */
             /**
-             * Where the values are kept on the Set.
-             * @member {Array<*>} sjl.stdlib.SjlSet#_values
+             * @member {Array<*>} sjl.stdlib.SjlSet#_values - Where the values are kept on the Set.  Default `[]`.
+             * @private
              * @readonly
              */
             /**
              * Flag for knowing that default es6 iterator was overridden.
-             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden
+             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden.  Default `true`.
+             * @private
              * @readonly
              */
 

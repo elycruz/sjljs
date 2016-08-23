@@ -246,6 +246,7 @@
 
         /**
          * Returns a key-value es6 compliant iterator.
+         * @method sjl.stdlib.ObjectIterator#entries
          * @overrides sjl.stdlib.SjlMap#entries
          * @returns {sjl.stdlib.ObjectIterator}
          */

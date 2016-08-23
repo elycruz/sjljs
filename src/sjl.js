@@ -1135,11 +1135,13 @@
 
         /**
          * @namespace sjl.filter {Object}
+         * @private
          */
         defineEnumProp(sjl,     'filter',       sjl.ns('filter'));
 
         /**
          * @namespace sjl.input {Object}
+         * @private
          */
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
@@ -1151,6 +1153,7 @@
 
         /**
          * @namespace sjl.validator {Object}
+         * @private
          */
         defineEnumProp(sjl,     'validator',    sjl.ns('validator'));
 

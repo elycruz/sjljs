@@ -17,6 +17,8 @@
         /**
          * SjlMap constructor to augment
          * @param iterable {Array|Object}
+         * @private
+         * @constructor
          */
         SjlMap = function SjlMap (iterable) {
             var self = this,
@@ -31,6 +33,12 @@
                 _values: {
                     value: _values
                 },
+
+                /**
+                 * @name size
+                 * @member sjl.stdlib.SjlMap#size {Number} - Size of the iterator.
+                 * @readonly
+                 */
                 size: {
                     get: function () {
                         return self._keys.length;

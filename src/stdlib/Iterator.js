@@ -132,6 +132,7 @@
          * Iterates through all elements in iterator.
          * @param callback {Function}
          * @param context {Object}
+         * @method sjl.stdlib.Iterator#forEach
          * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {

@@ -24,6 +24,8 @@
          * Constructor.
          * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
          * @param values {Array|Undefined} - Array of values if first param is an array.
+         * @constructor
+         * @private
          */
         constructor: function ObjectIterator(keysOrObj, values) {
             var obj,
@@ -119,6 +121,7 @@
 
         /**
          * Returns whether iterator has more items to return or not.
+         * @method sjl.stdlib.ObjectIterator#valid
          * @returns {boolean}
          */
         valid: function () {
@@ -130,6 +133,7 @@
          * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
          * @param callback {Function}
          * @param context {Object}
+         * @method sjl.stdlib.ObjectIterator#forEach
          * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {

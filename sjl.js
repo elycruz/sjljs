@@ -1,7 +1,7 @@
 /**! sjljs 6.1.10
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 49022f7c3281c74de07a3b3412123ffc
- * | Built-on: Tue Aug 23 2016 00:28:24 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: fc8502f45634417a11ea0c1e71433161
+ * | Built-on: Tue Aug 23 2016 00:54:23 GMT-0400 (Eastern Daylight Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -1139,11 +1139,13 @@
 
         /**
          * @namespace sjl.filter {Object}
+         * @private
          */
         defineEnumProp(sjl,     'filter',       sjl.ns('filter'));
 
         /**
          * @namespace sjl.input {Object}
+         * @private
          */
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
@@ -1155,6 +1157,7 @@
 
         /**
          * @namespace sjl.validator {Object}
+         * @private
          */
         defineEnumProp(sjl,     'validator',    sjl.ns('validator'));
 
@@ -1276,6 +1279,7 @@
 
             /**
              * toJSON of its own properties or properties found at key/key-namespace-string.
+             * @method sjl.stdlib.Config#toJSON
              * @param keyOrNsString {String} - Optional.
              * @returns {JSON}
              */
@@ -1534,6 +1538,7 @@
          * Iterates through all elements in iterator.
          * @param callback {Function}
          * @param context {Object}
+         * @method sjl.stdlib.Iterator#forEach
          * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {
@@ -1582,6 +1587,8 @@
          * Constructor.
          * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
          * @param values {Array|Undefined} - Array of values if first param is an array.
+         * @constructor
+         * @private
          */
         constructor: function ObjectIterator(keysOrObj, values) {
             var obj,
@@ -1677,6 +1684,7 @@
 
         /**
          * Returns whether iterator has more items to return or not.
+         * @method sjl.stdlib.ObjectIterator#valid
          * @returns {boolean}
          */
         valid: function () {
@@ -1688,6 +1696,7 @@
          * Iterates through all elements in iterator.  @note Delegates to it's values `forEach` method.
          * @param callback {Function}
          * @param context {Object}
+         * @method sjl.stdlib.ObjectIterator#forEach
          * @returns {sjl.stdlib.Iterator}
          */
         forEach: function (callback, context) {
@@ -1794,6 +1803,8 @@
         /**
          * Constructor.
          * @param iterable {Array} - Optional.
+         * @private
+         * @constructor
          */
         constructor: function SjlSet (iterable) {
             var self = this,
@@ -1803,18 +1814,18 @@
              * Public properties:
              *------------------------------------------------*/
             /**
-             * @member {Number} sjl.stdlib.SjlSet#size
+             * @member {Number} sjl.stdlib.SjlSet#size - Size of Set.  Default `0`.
              * @readonly
-             * @enumerable True.
              */
             /**
-             * Where the values are kept on the Set.
-             * @member {Array<*>} sjl.stdlib.SjlSet#_values
+             * @member {Array<*>} sjl.stdlib.SjlSet#_values - Where the values are kept on the Set.  Default `[]`.
+             * @private
              * @readonly
              */
             /**
              * Flag for knowing that default es6 iterator was overridden.
-             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden
+             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden.  Default `true`.
+             * @private
              * @readonly
              */
 
@@ -2015,6 +2026,8 @@
         /**
          * SjlMap constructor to augment
          * @param iterable {Array|Object}
+         * @private
+         * @constructor
          */
         SjlMap = function SjlMap (iterable) {
             var self = this,
@@ -2029,6 +2042,12 @@
                 _values: {
                     value: _values
                 },
+
+                /**
+                 * @name size
+                 * @member sjl.stdlib.SjlMap#size {Number} - Size of the iterator.
+                 * @readonly
+                 */
                 size: {
                     get: function () {
                         return self._keys.length;
@@ -2598,6 +2617,7 @@
 
         /**
          * Returns a key-value es6 compliant iterator.
+         * @method sjl.stdlib.ObjectIterator#entries
          * @overrides sjl.stdlib.SjlMap#entries
          * @returns {sjl.stdlib.ObjectIterator}
          */
@@ -2893,6 +2913,7 @@
          * @todo change this method name to `addErrorByKeyOrCallback` or just add `addErrorByCallback` method
          * @param key {String|Function} - Key for add error by or callback to generate error string from.
          * @param value {*|undefined} - Value to pass into the error callback.
+         * @method sjl.validator.Validator#addErrorByKey
          * @returns {Validator}
          */
         addErrorByKey: function (key, value) {
@@ -2911,7 +2932,7 @@
                     messages.push(messageTemplate[key]);
                 }
             }
-            else if (sjl.classOfIs(key, 'function')) {
+            else if (sjl.classOfIs(key, 'Function')) {
                 messages.push(key.call(self, value, self));
             }
             else {
@@ -4007,6 +4028,8 @@
  * @memberof module:sjl.filter
  * @requires sjl
  * @requires sjl.stdlib.Extendable
+ * @note Class left as 'private' until documented.
+ * @private
  */
 (function () {
 
