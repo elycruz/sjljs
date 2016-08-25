@@ -1112,7 +1112,7 @@
         // Set package namespace and alias for it
         sjl.package =
             sjl.ns =
-                require('./nodejs/Namespace.js')(__dirname, ['.js', '.json']);
+                new (require('./nodejs/Namespace'))(__dirname, ['.js', '.json']);
 
         // Short cut to namespaces
         Object.keys(sjl.ns).forEach(function (key) {

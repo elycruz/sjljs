@@ -11,9 +11,6 @@ var path = require('path'),
 
 function Namespace(dir, allowedFileExts, ignoredDirs) {
     ignoredDirs = Array.isArray(ignoredDirs) ? ignoredDirs : null;
-    if (this instanceof Namespace === false) {
-        return new Namespace(dir, allowedFileExts, ignoredDirs);
-    }
     var self = this,
         files = fs.readdirSync(dir);
     allowedFileExts = allowedFileExts || ['.js', '.json'];
