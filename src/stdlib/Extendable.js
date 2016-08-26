@@ -17,11 +17,19 @@
     Extendable = sjl.defineSubClass(Function, Extendable);
 
     /**
-     * Extends this constructor with the passed in constructor.
-     * Method Signatures:
-     * {Function<constructor {Function}, proto {Object}, statics {Object}>} - `statics` and `proto` are optional.
-     * {Function<proto {Object}, statics {Object}>} - `proto` requires a `constructor` with the constructor
-     * to use to subclass from parent class.
+     * Extends the passed in constructor with `Extendable`.
+     * @examples
+     * // Scenario 1: function called with a constructor, a prototype object, and a static properties object.
+     * // 2nd and 3rd args are optional in this scenario
+     * Extendable.extend(SomeConstructor, somePrototypeHash, someStaticPropsHash);
+     *
+     * // Scenario 2: function is called with a prototype object and a static properties object
+     * // 2nd arg is optional in this scenario.
+     * // Note: First arg must contain a constructor property containing the constructor to extend which is also
+     * //   the constructor that gets set on actual prototype of the extended method which then becomes
+     * //   un-writable/un-configurable (makes for solid oop).
+     * Extendable.extend({ constructor: SomeConstructor, someMethod: function () {} },
+     *                   {someStaticProp: 'hello'});
      * @see sjl.defineSubClass
      * @member sjl.stdlib.Extendable.extend {Function}
      */
