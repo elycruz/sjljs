@@ -16,6 +16,16 @@
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
 
+    /**
+     * Extends this constructor with the passed in constructor.
+     * Method Signatures:
+     * {Function<constructor {Function}, proto {Object}, statics {Object}>} - `statics` and `proto` are optional.
+     * {Function<proto {Object}, statics {Object}>} - `proto` requires a `constructor` with the constructor
+     * to use to subclass from parent class.
+     * @see sjl.defineSubClass
+     * @member sjl.stdlib.Extendable.extend {Function}
+     */
+
     // Export `Extendable`
     if (isNodeEnv) {
         module.exports = Extendable;

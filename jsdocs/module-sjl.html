@@ -311,7 +311,9 @@
 
     
     <div class="description">
-        Takes a namespace string and fetches that location out froman object/Map.  If the namespace doesn't exists it is created thenreturned.  Also allows you to set a value at that namespace (last parameter).
+        Takes a namespace string and fetches that location out from
+an object/Map.  If the namespace doesn't exists it is created then
+returned.  Also allows you to set a value at that namespace (last parameter).
     </div>
     
 
@@ -495,9 +497,11 @@
     
         <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">// will create/fetch within &#x60;obj&#x60;: hello: { world: { how: { are: { you: { doing: {} } } } } }autoNamespace (&#x27;hello.world.how.are.you.doing&#x27;, obj)</pre>
+    <pre class="sunlight-highlight-javascript">// will create/fetch within &#x60;obj&#x60;: hello: { world: { how: { are: { you: { doing: {} } } } } }
+autoNamespace (&#x27;hello.world.how.are.you.doing&#x27;, obj)</pre>
 
-    <pre class="sunlight-highlight-javascript">// Will set &#x27;hello.what.is.your.name&#x27; to &#x27;juan&#x27;autoNamespace (&#x27;hello.what.is.your.name&#x27;, obj, &#x27;juan&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">// Will set &#x27;hello.what.is.your.name&#x27; to &#x27;juan&#x27;
+autoNamespace (&#x27;hello.what.is.your.name&#x27;, obj, &#x27;juan&#x27;)</pre>
 
 
     
@@ -515,7 +519,11 @@
 
     
     <div class="description">
-        Make a string code friendly. Camel cases a dirty string intoa valid javascript variable/constructor name;  Uses `replaceStrRegex`to replace unwanted characters with a '-' and then splits and mergesthe parts with the proper casing, pass in `true` for lcaseFirstto lower case the first character.
+        Make a string code friendly. Camel cases a dirty string into
+a valid javascript variable/constructor name;  Uses `replaceStrRegex`
+to replace unwanted characters with a '-' and then splits and merges
+the parts with the proper casing, pass in `true` for lcaseFirst
+to lower case the first character.
     </div>
     
 
@@ -863,7 +871,14 @@
 
     
     <div class="description">
-        Checks to see if an object is of type 'constructor name'.Note: If passing in constructors as your `type` to check, ensure they are *'named' constructorsas the `name` property is checked directly on them to use in the class/constructor-name comparison.*'named' constructors - Not anonymous functions/constructors but ones having a name:  E.g.,```(function Hello () {}) // Named function.(function () {}) // Anonymous function.```
+        Checks to see if an object is of type 'constructor name'.
+Note: If passing in constructors as your `type` to check, ensure they are *'named' constructors
+as the `name` property is checked directly on them to use in the class/constructor-name comparison.
+*'named' constructors - Not anonymous functions/constructors but ones having a name:  E.g.,
+```
+(function Hello () {}) // Named function.
+(function () {}) // Anonymous function.
+```
     </div>
     
 
@@ -1369,7 +1384,9 @@
 
     
     <div class="description">
-        Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.E.g., If pointer is less than `min` then returns `min`.  If pointer is greater than `max` returns `max`.If pointer is within bounds returns `pointer`.
+        Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.
+E.g., If pointer is less than `min` then returns `min`.  If pointer is greater than `max` returns `max`.
+If pointer is within bounds returns `pointer`.
     </div>
     
 
@@ -1565,7 +1582,9 @@
 
     
     <div class="description">
-        Package factory method.  Allows object to have a `package` methodwhich acts like java like namespace except it allows you to setit's members (once) and then protects it's members.
+        Package factory method.  Allows object to have a `package` method
+which acts like java like namespace except it allows you to set
+it's members (once) and then protects it's members.
     </div>
     
 
@@ -1668,7 +1687,8 @@
 
             
 
-            <td class="description last">Alternate (usually shorter) key to set package function to.  E.g., 'ns' ignore passed in paths as namespaces.  Optional.  Default `null`.</td>
+            <td class="description last">Alternate (usually shorter) key to set package function to.  E.g., 'ns'
+ ignore passed in paths as namespaces.  Optional.  Default `null`.</td>
         </tr>
 
     
@@ -2070,7 +2090,8 @@
 
             
 
-            <td class="description last">Constructor or Object containing 'own' constructor key and methods. Required.</td>
+            <td class="description last">Constructor or Object containing 'own' constructor key and methods.
+ Required.</td>
         </tr>
 
     
@@ -2094,7 +2115,8 @@
 
             
 
-            <td class="description last">Optional.  @note: If the value for the `constructor` param passed in is an object then this object actually represents the `statics` hash.</td>
+            <td class="description last">Optional.  @note: If the value for the `constructor` param passed in is an object
+ then this object actually represents the `statics` hash.</td>
         </tr>
 
     
@@ -2118,7 +2140,8 @@
 
             
 
-            <td class="description last">Static methods. Optional.  @note: If the value for `constructor` passed in is an instance object than the `statics` param isn't used internally.</td>
+            <td class="description last">Static methods. Optional.  @note: If the value for `constructor` passed in is an
+ instance object than the `statics` param isn't used internally.</td>
         </tr>
 
     
@@ -2464,7 +2487,10 @@
 
     
     <div class="description">
-        Extends first object passed in with all other object passed in after.First param could be a boolean indicating whether or not to perform a deep extend.Last param could also be a boolean indicating whether to use legacy setters if they are availableon the receiving object.
+        Extends first object passed in with all other object passed in after.
+First param could be a boolean indicating whether or not to perform a deep extend.
+Last param could also be a boolean indicating whether to use legacy setters if they are available
+on the receiving object.
     </div>
     
 
@@ -2658,7 +2684,12 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">(if last param to passed in to &#x60;sjl.extend&#x60; is &#x60;true&#x60; var o = {setGreeting: v =&gt; this.greeting = &#x27;Hello &#x27; + v},     otherObject = {greeting: &#x27;Junior&#x27;}; // Calls o.setGreeting when merging otherObject because &#x60;true&#x60; was passed in // as the last parameter sjl.extend(o, otherObject, true);</pre>
+    <pre class="sunlight-highlight-javascript">(if last param to passed in to &#x60;sjl.extend&#x60; is &#x60;true&#x60;
+ var o = {setGreeting: v =&gt; this.greeting = &#x27;Hello &#x27; + v},
+     otherObject = {greeting: &#x27;Junior&#x27;};
+ // Calls o.setGreeting when merging otherObject because &#x60;true&#x60; was passed in
+ // as the last parameter
+ sjl.extend(o, otherObject, true);</pre>
 
 
     
@@ -2972,7 +3003,9 @@
 
     
     <div class="description">
-        Extracts a value at an `index` of passed in array (alternately only extract the value if it is of `type`).Returns an array with two elements: Element `1` contains the extracted value and element `2` the resultingarray of the extraction (copy of original array with extracted element) of the value at `index`.
+        Extracts a value at an `index` of passed in array (alternately only extract the value if it is of `type`).
+Returns an array with two elements: Element `1` contains the extracted value and element `2` the resulting
+array of the extraction (copy of original array with extracted element) of the value at `index`.
     </div>
     
 
@@ -3163,7 +3196,9 @@
     
             
 <div class="param-desc">
-    - If passed in array has an element at `index` (and alternately) element matches `type` then returns an array with found index and resulting array of extraction of said value. Else returns `null`.
+    - If passed in array has an element at `index` (and alternately) element
+ matches `type` then returns an array with found index and resulting array of extraction of said value.
+ Else returns `null`.
 </div>
 
 
@@ -7409,7 +7444,8 @@
 
     
     <div class="description">
-        Throws a type error if value is not of type and prepends the prefix andparamName/variable-name to the message (removes type checking boilerplate where required).
+        Throws a type error if value is not of type and prepends the prefix and
+paramName/variable-name to the message (removes type checking boilerplate where required).
     </div>
     
 
@@ -8172,7 +8208,10 @@
 
     
     <div class="description">
-        Wraps a pointer (number) around a bounds (range of two numbers) or returns the next valid pointer dependingon direction:  E.g.,If pointer is less than `min` then returns `max`.  If pointer is greater than `max` returns `min`.If pointer is within bounds then returns `pointer`.
+        Wraps a pointer (number) around a bounds (range of two numbers) or returns the next valid pointer depending
+on direction:  E.g.,
+If pointer is less than `min` then returns `max`.  If pointer is greater than `max` returns `min`.
+If pointer is within bounds then returns `pointer`.
     </div>
     
 
@@ -8404,7 +8443,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-08-23T02:45:14-04:00
+		on 2016-08-25T11:48:57-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
