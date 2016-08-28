@@ -1109,6 +1109,9 @@
 
     // Node specific code
     if (isNodeEnv) {
+        /**
+         * @namespace sjl.nodejs {sjl.nodejs.Namespace}
+         */
         // Set package namespace and alias for it
         sjl.package =
             sjl.ns =
@@ -1146,7 +1149,7 @@
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
         /**
-         * Sjl Standard Library type classes namespace.
+         * Sjl Standard Library classes' namespace.
          * @namespace sjl.stdlib {Object}
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));

@@ -1,7 +1,7 @@
 /**
  * Created by Ely on 5/22/2015.
  * File: Namespace.js
- * Description: Mimicks namespaces/packages in languages like Java and Actionscript.
+ * Description: NodeJs Namespace Constructor.
  */
 
 'use strict';
@@ -9,6 +9,36 @@
 var path = require('path'),
     fs = require('fs');
 
+/**
+ * A namespace constructor for getting an object that mimicks namespaces/packages
+ * in languages like Java and Actionscript.  Classes are loaded on a per request basis.
+ * @example
+ * // Example 1
+ * let sjl = require('sjljs'),
+ *     ns = new sjl.nodejs.Namespace(__dirname),
+ *
+ *     // Fetches './some/namespace/some/where/SomeConstructor(.js|.json)' by default.
+ *     SomeConstructor = ns.some.namespace.some.where.SomeConstructor,
+ *
+ *     // Fetches './some-data-dir/someJsonFile(.js|.json)' by default.
+ *     someJsonFile = ns['some-data-dir'].someJsonFile;
+ *
+ * @example
+ * // Example 2
+ * // `sjl` uses this constructor internally to expose it's class library so you don't
+ * // have to include them manually;  E.g.,
+ *
+ *  // Exposed functionality
+ * let Optionable = sjl.stdlib.Optionable;
+ *
+ * // With out exposed functionality (assume in some './src' folder)
+ * let Optionable = require('../node_modules/sjljs/src/stdlib/Optionable');
+ *
+ * @param dir {String} - Directory to scan.
+ * @param allowedFileExts {Array<String>} - Allowed file extensions (with preceding '.').
+ * @param ignoredDirs {Array<String>} - Directories to ignore on `dir` scan.
+ * @constructor sjl.nodejs.Namespace
+ */
 function Namespace(dir, allowedFileExts, ignoredDirs) {
     ignoredDirs = Array.isArray(ignoredDirs) ? ignoredDirs : null;
     var self = this,
@@ -19,6 +49,16 @@ function Namespace(dir, allowedFileExts, ignoredDirs) {
     }
 }
 
+/**
+ * Scans directories for library members and sets them as getters on passed in Namespace.
+ * @param files {Array<String>}
+ * @param dir {String}
+ * @param allowedFileExts {Array<String>}
+ * @param ignoredDirs {Array<String>}
+ * @param self {Namespace} - Self.
+ * @recursive
+ * @private
+ */
 function processFiles(files, dir, allowedFileExts, ignoredDirs, self) {
     files.forEach(function (file) {
         if (ignoredDirs && ignoredDirs.indexOf(file) > -1) {
