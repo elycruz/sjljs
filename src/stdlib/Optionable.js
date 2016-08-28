@@ -18,16 +18,30 @@
             }
 
             // Define options key name property
-            Object.defineProperty(this, 'optionsKeyName', {
-                value: _optionsKeyname,
-                enumerable: true
-            });
+            Object.defineProperty(this, 'optionsKeyName', {value: _optionsKeyname});
 
-            // Define options key name property
-            Object.defineProperty(this, this.optionsKeyName, {
-                value: new sjl.stdlib.Config(),
-                enumerable: true
-            });
+            // Define "options" property
+            sjl.defineEnumProp(this, this.optionsKeyName, new sjl.stdlib.Config());
+
+            /**
+             * Options key name.  Set when constructing an Optionable instance via the
+             * options hash passed in.
+             * Default value: '_options'
+             * @note The value of this property is set as the key for the options storage internally;
+             * @example
+             *
+             * var model = new sjl.stdlib.Optionable({optionsKeyName: 'options'});
+             * model.options instanceof sjl.stdlib.Config === true // true;
+             *
+             * var model2 = new sjl.stdlib.Optionable(); // Uses default key name '_options' in this case scenario
+             * model2._options instanceof sjl.stdlib.Config === true // true;
+             *
+             * var model3 = new sjl.stdlib.Optionable({optionsKeyName: '_attributes'});
+             * model3._attributes instanceof sjl.stdlib.Config === true // true;
+             *
+             * @readonly
+             * @member sjl.stdlib.Optionable#optionsKeyName {String}
+             */
 
             // Merge all options in to options store
             if (arguments.length > 0) {

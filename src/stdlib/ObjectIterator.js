@@ -66,22 +66,13 @@
             //   and some IDEs don't handle this very well (E.g., WebStorm)
 
             /**
-             * Object iterator keys.
+             * Object iterator keys.  Set on construction.
              * @member {Array<*>} sjl.stdlib.ObjectIterator#keys
+             * @readonly
              */
 
-            // Define other own properties
-            Object.defineProperties(this, {
-                keys: {
-                    get: function () {
-                        return _keys;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'keys', value, Array);
-                        _keys = value;
-                    }
-                }
-            });
+            // Define other own propert(y|ies)
+            Object.defineProperty(this, '_keys', { value: _keys });
         },
 
         /**
@@ -94,7 +85,7 @@
                 pointer = self.pointer;
             return self.valid() ? {
                 done: false,
-                value: [self.keys[pointer], self._values[pointer]]
+                value: [self._keys[pointer], self._values[pointer]]
             } : {
                 done: true
             };
@@ -111,7 +102,7 @@
                 pointer = self.pointer,
                 retVal = self.valid() ? {
                     done: false,
-                    value: [self.keys[pointer], self._values[pointer]]
+                    value: [self._keys[pointer], self._values[pointer]]
                 } : {
                     done: true
                 };
@@ -126,7 +117,7 @@
          */
         valid: function () {
             var pointer = this.pointer;
-            return pointer < this._values.length && pointer < this.keys.length;
+            return pointer < this._values.length && pointer < this._keys.length;
         },
 
         /**
@@ -140,7 +131,7 @@
             var self = this,
                 values = self._values;
             context = context || self;
-            self.keys.forEach(function (key, index, keys) {
+            self._keys.forEach(function (key, index, keys) {
                 callback.call(context, values[index], key, keys);
             });
             return this;

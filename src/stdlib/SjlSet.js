@@ -29,29 +29,22 @@
             var self = this,
                 _values = [];
 
-            /**
-             * Public properties:
-             *------------------------------------------------*/
-            /**
-             * @member {Number} sjl.stdlib.SjlSet#size - Size of Set.  Default `0`.
-             * @readonly
-             */
-            /**
-             * @member {Array<*>} sjl.stdlib.SjlSet#_values - Where the values are kept on the Set.  Default `[]`.
-             * @private
-             * @readonly
-             */
-            /**
-             * Flag for knowing that default es6 iterator was overridden.
-             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden.  Default `true`.
-             * @private
-             * @readonly
-             */
-
+            // Define own props
             Object.defineProperties(this, {
+                /**
+                 * @name _values
+                 * @member {Array<*>} sjl.stdlib.SjlSet#_values - Where the values are kept on the Set.  Default `[]`.
+                 * @readonly
+                 */
                 _values: {
                     value: _values
                 },
+
+                /**
+                 * @name size
+                 * @member {Number} sjl.stdlib.SjlSet#size - Size of Set.  Default `0`.
+                 * @readonly
+                 */
                 size: {
                     get: function () {
                         return _values.length;
@@ -78,6 +71,13 @@
             self[sjl.Symbol.iterator] = function () {
                 return new ObjectIterator(_values, _values);
             };
+
+            /**
+             * Flag for knowing that default es6 iterator was overridden.  Set on construction.
+             * @name _iteratorOverridden
+             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden.  Default `true`.
+             * @readonly
+             */
 
             // Set flag to remember that original iterator was overridden
             Object.defineProperty(self, '_iteratorOverridden', {value: true});

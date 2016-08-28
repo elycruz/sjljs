@@ -89,7 +89,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'itemWrapperConstructor', value, Function);
                         _itemWrapperConstructor = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 wrapItems: {
                     get: function () {
@@ -98,7 +99,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'wrapItems', value, Boolean);
                         _wrapItems = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 LIFO: {
                     get: function () {
@@ -108,7 +110,8 @@
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO', value, Boolean);
                         _LIFO = value;
                         this._sorted = false;
-                    }
+                    },
+                    enumerable: true
                 },
                 _internalSerialNumbers: {
                     get: function () {
@@ -141,7 +144,7 @@
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, '_sorted', value, Boolean);
                         _sorted = value;
                     }
-                },
+                }
             });
 
             // Validate these via their setters

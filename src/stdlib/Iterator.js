@@ -25,9 +25,10 @@
              * Public property docs
              *----------------------------------------------------- */
             /**
-             * Iterator values.
-             * @name values
-             * @member {Array<*>} sjl.stdlib.Iterator#values
+             * Iterator values.  Set on construction.
+             * @name _values
+             * @member {Array<*>} sjl.stdlib.Iterator#_values
+             * @readonly
              */
             /**
              * Iterator pointer.
@@ -43,7 +44,9 @@
 
             // Set values property
             if (!getPropDescriptor(this, '_values')) {
-                Object.defineProperty(this, '_values', {value: _values});
+                Object.defineProperty(this, '_values', {
+                    value: _values
+                });
             }
 
             // Set `pointer` property description

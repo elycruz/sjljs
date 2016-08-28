@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 6.1.10 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: f41709329e416de09517fad3409e0675 
- * | Built-on: Tue Aug 23 2016 01:12:22 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: 846d878d6e5a63690546a521a4351856 
+ * | Built-on: Sun Aug 28 2016 12:29:44 GMT-0400 (EDT) 
  **/
 /**
  * The `sjl` module definition.
@@ -1117,7 +1117,7 @@
         // Set package namespace and alias for it
         sjl.package =
             sjl.ns =
-                require('./nodejs/Namespace.js')(__dirname, ['.js', '.json']);
+                new (require('./nodejs/Namespace'))(__dirname, ['.js', '.json']);
 
         // Short cut to namespaces
         Object.keys(sjl.ns).forEach(function (key) {

@@ -27,9 +27,21 @@
                 classOfParam0 = sjl.classOf(iterable);
 
             Object.defineProperties(this, {
+
+                /**
+                 * Keys array.  Set on construction.
+                 * @member sjl.stdlib.SjlMap#_keys {Array}
+                 * @readonly
+                 */
                 _keys: {
                     value: _keys
                 },
+
+                /**
+                 * Values array.  Set on construction.
+                 * @member sjl.stdlib.SjlMap#_values {Array}
+                 * @readonly
+                 */
                 _values: {
                     value: _values
                 },
@@ -67,6 +79,12 @@
                 return new ObjectIterator(_keys, _values, 0);
             };
 
+            /**
+             * Flag for knowing that es6 iterator was overridden.  Set on construction.
+             * @name _iteratorOverridden
+             * @member sjl.stdlib.SjlMap#_iteratorOverridden {Boolean}
+             * @readonly
+             */
             // Set flag to remember that original iterator was overridden
             Object.defineProperty(self, '_iteratorOverridden', {value: true});
         };

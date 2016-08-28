@@ -34,9 +34,30 @@
             var _priority,
                 _serial,
                 contextName = 'sjl.stdlib.PriorityListItem';
+            /**
+             * Key name.  Set on construction.
+             * @member sjl.stdlib.PriorityListItem#key {String}
+             * @readonly
+             */
+            /**
+             * Value name.  Set on construction.
+             * @member sjl.stdlib.PriorityListItem#value {*}
+             * @readonly
+             */
+            /**
+             * Serial index.
+             * @member sjl.stdlib.PriorityListItem#serial {Number}
+             * @readonly
+             */
+            /**
+             * Priority.
+             * @member sjl.stdlib.PriorityListItem#priority {Number}
+             * @readonly
+             */
             Object.defineProperties(this, {
                 key: {
-                    value: key
+                    value: key,
+                    enumerable: true
                 },
                 serial: {
                     get: function () {
@@ -45,10 +66,12 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'serial', value, Number);
                         _serial = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 value: {
-                    value: value
+                    value: value,
+                    enumerable: true
                 },
                 priority: {
                     get: function () {
@@ -57,7 +80,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'priority', value, Number);
                         _priority = value;
-                    }
+                    },
+                    enumerable: true
                 }
             });
             this.priority = priority;

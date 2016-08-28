@@ -1,7 +1,7 @@
 /**! sjljs 6.1.10
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: f0f5f79359760b4abcacefe560f35239
- * | Built-on: Tue Aug 23 2016 01:12:23 GMT-0400 (Eastern Daylight Time)
+ * | md5checksum: 3ff63a9d1bda83cdad8165297bf1e110
+ * | Built-on: Sun Aug 28 2016 12:29:46 GMT-0400 (EDT)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -1116,7 +1116,7 @@
         // Set package namespace and alias for it
         sjl.package =
             sjl.ns =
-                require('./nodejs/Namespace.js')(__dirname, ['.js', '.json']);
+                new (require('./nodejs/Namespace'))(__dirname, ['.js', '.json']);
 
         // Short cut to namespaces
         Object.keys(sjl.ns).forEach(function (key) {
@@ -1189,6 +1189,24 @@
      * @class sjl.stdlib.Extendable
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
+
+    /**
+     * Extends the passed in constructor with `Extendable`.
+     * @examples
+     * // Scenario 1: function called with a constructor, a prototype object, and a static properties object.
+     * // 2nd and 3rd arguments are optional in this scenario
+     * Extendable.extend(SomeConstructor, somePrototypeHash, someStaticPropsHash);
+     *
+     * // Scenario 2: function is called with a prototype object and a static properties object
+     * // 2nd argument is optional in this scenario.
+     * // Note: First arg must contain a constructor property containing the constructor to extend which is also
+     * //   the constructor that gets set on said constructors prototype.constructor property
+     * //   (gets set as un-writable/un-configurable makes for a more accurate oop experience).
+     * Extendable.extend({ constructor: SomeConstructor, someMethod: function () {} },
+     *                   {someStaticProp: 'hello'});
+     * @see sjl.defineSubClass
+     * @member sjl.stdlib.Extendable.extend {Function}
+     */
 
     // Export `Extendable`
     if (isNodeEnv) {
@@ -1323,16 +1341,30 @@
             }
 
             // Define options key name property
-            Object.defineProperty(this, 'optionsKeyName', {
-                value: _optionsKeyname,
-                enumerable: true
-            });
+            Object.defineProperty(this, 'optionsKeyName', {value: _optionsKeyname});
 
-            // Define options key name property
-            Object.defineProperty(this, this.optionsKeyName, {
-                value: new sjl.stdlib.Config(),
-                enumerable: true
-            });
+            // Define "options" property
+            sjl.defineEnumProp(this, this.optionsKeyName, new sjl.stdlib.Config());
+
+            /**
+             * Options key name.  Set when constructing an Optionable instance via the
+             * options hash passed in.
+             * Default value: '_options'
+             * @note The value of this property is set as the key for the options storage internally;
+             * @example
+             *
+             * var model = new sjl.stdlib.Optionable({optionsKeyName: 'options'});
+             * model.options instanceof sjl.stdlib.Config === true // true;
+             *
+             * var model2 = new sjl.stdlib.Optionable(); // Uses default key name '_options' in this case scenario
+             * model2._options instanceof sjl.stdlib.Config === true // true;
+             *
+             * var model3 = new sjl.stdlib.Optionable({optionsKeyName: '_attributes'});
+             * model3._attributes instanceof sjl.stdlib.Config === true // true;
+             *
+             * @readonly
+             * @member sjl.stdlib.Optionable#optionsKeyName {String}
+             */
 
             // Merge all options in to options store
             if (arguments.length > 0) {
@@ -1417,6 +1449,11 @@
         errorContextName = 'sjl.stdlib.Iterator',
         getPropDescriptor = Object.getOwnPropertyDescriptor,
 
+        /**
+         * @param values {Array}
+         * @constructor
+         * @private
+         */
         Iterator = function Iterator(values) {
             sjl.throwTypeErrorIfNotOfType(errorContextName, 'values', values, 'Array');
             var _values = values,
@@ -1426,9 +1463,10 @@
              * Public property docs
              *----------------------------------------------------- */
             /**
-             * Iterator values.
-             * @name values
-             * @member {Array<*>} sjl.stdlib.Iterator#values
+             * Iterator values.  Set on construction.
+             * @name _values
+             * @member {Array<*>} sjl.stdlib.Iterator#_values
+             * @readonly
              */
             /**
              * Iterator pointer.
@@ -1444,7 +1482,9 @@
 
             // Set values property
             if (!getPropDescriptor(this, '_values')) {
-                Object.defineProperty(this, '_values', {value: _values});
+                Object.defineProperty(this, '_values', {
+                    value: _values
+                });
             }
 
             // Set `pointer` property description
@@ -1629,27 +1669,18 @@
             //   and some IDEs don't handle this very well (E.g., WebStorm)
 
             /**
-             * Object iterator keys.
+             * Object iterator keys.  Set on construction.
              * @member {Array<*>} sjl.stdlib.ObjectIterator#keys
+             * @readonly
              */
 
-            // Define other own properties
-            Object.defineProperties(this, {
-                keys: {
-                    get: function () {
-                        return _keys;
-                    },
-                    set: function (value) {
-                        sjl.throwTypeErrorIfNotOfType(contextName, 'keys', value, Array);
-                        _keys = value;
-                    }
-                }
-            });
+            // Define other own propert(y|ies)
+            Object.defineProperty(this, '_keys', { value: _keys });
         },
 
         /**
          * Returns the current key and value that `pointer` is pointing to as an array [key, value].
-         * @method sjl.stdlib.Iterator#current
+         * @method sjl.stdlib.ObjectIterator#current
          * @returns {{ done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         current: function () {
@@ -1657,7 +1688,7 @@
                 pointer = self.pointer;
             return self.valid() ? {
                 done: false,
-                value: [self.keys[pointer], self._values[pointer]]
+                value: [self._keys[pointer], self._values[pointer]]
             } : {
                 done: true
             };
@@ -1666,7 +1697,7 @@
         /**
          * Method which returns the current position in the iterator based on where the pointer is.
          * This method also increases the pointer after it is done fetching the value to return.
-         * @method sjl.stdlib.Iterator#next
+         * @method sjl.stdlib.ObjectIterator#next
          * @returns {{done: boolean, value: (Array|undefined) }} - Where Array is actually [<*>, <*>] or of type [any, any].
          */
         next: function () {
@@ -1674,7 +1705,7 @@
                 pointer = self.pointer,
                 retVal = self.valid() ? {
                     done: false,
-                    value: [self.keys[pointer], self._values[pointer]]
+                    value: [self._keys[pointer], self._values[pointer]]
                 } : {
                     done: true
                 };
@@ -1689,7 +1720,7 @@
          */
         valid: function () {
             var pointer = this.pointer;
-            return pointer < this._values.length && pointer < this.keys.length;
+            return pointer < this._values.length && pointer < this._keys.length;
         },
 
         /**
@@ -1703,7 +1734,7 @@
             var self = this,
                 values = self._values;
             context = context || self;
-            self.keys.forEach(function (key, index, keys) {
+            self._keys.forEach(function (key, index, keys) {
                 callback.call(context, values[index], key, keys);
             });
             return this;
@@ -1810,29 +1841,22 @@
             var self = this,
                 _values = [];
 
-            /**
-             * Public properties:
-             *------------------------------------------------*/
-            /**
-             * @member {Number} sjl.stdlib.SjlSet#size - Size of Set.  Default `0`.
-             * @readonly
-             */
-            /**
-             * @member {Array<*>} sjl.stdlib.SjlSet#_values - Where the values are kept on the Set.  Default `[]`.
-             * @private
-             * @readonly
-             */
-            /**
-             * Flag for knowing that default es6 iterator was overridden.
-             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden.  Default `true`.
-             * @private
-             * @readonly
-             */
-
+            // Define own props
             Object.defineProperties(this, {
+                /**
+                 * @name _values
+                 * @member {Array<*>} sjl.stdlib.SjlSet#_values - Where the values are kept on the Set.  Default `[]`.
+                 * @readonly
+                 */
                 _values: {
                     value: _values
                 },
+
+                /**
+                 * @name size
+                 * @member {Number} sjl.stdlib.SjlSet#size - Size of Set.  Default `0`.
+                 * @readonly
+                 */
                 size: {
                     get: function () {
                         return _values.length;
@@ -1859,6 +1883,13 @@
             self[sjl.Symbol.iterator] = function () {
                 return new ObjectIterator(_values, _values);
             };
+
+            /**
+             * Flag for knowing that default es6 iterator was overridden.  Set on construction.
+             * @name _iteratorOverridden
+             * @member {Boolean} sjl.stdlib.SjlSet#_iteratorOverridden.  Default `true`.
+             * @readonly
+             */
 
             // Set flag to remember that original iterator was overridden
             Object.defineProperty(self, '_iteratorOverridden', {value: true});
@@ -2036,9 +2067,21 @@
                 classOfParam0 = sjl.classOf(iterable);
 
             Object.defineProperties(this, {
+
+                /**
+                 * Keys array.  Set on construction.
+                 * @member sjl.stdlib.SjlMap#_keys {Array}
+                 * @readonly
+                 */
                 _keys: {
                     value: _keys
                 },
+
+                /**
+                 * Values array.  Set on construction.
+                 * @member sjl.stdlib.SjlMap#_values {Array}
+                 * @readonly
+                 */
                 _values: {
                     value: _values
                 },
@@ -2076,6 +2119,12 @@
                 return new ObjectIterator(_keys, _values, 0);
             };
 
+            /**
+             * Flag for knowing that es6 iterator was overridden.  Set on construction.
+             * @name _iteratorOverridden
+             * @member sjl.stdlib.SjlMap#_iteratorOverridden {Boolean}
+             * @readonly
+             */
             // Set flag to remember that original iterator was overridden
             Object.defineProperty(self, '_iteratorOverridden', {value: true});
         };
@@ -2323,9 +2372,30 @@
             var _priority,
                 _serial,
                 contextName = 'sjl.stdlib.PriorityListItem';
+            /**
+             * Key name.  Set on construction.
+             * @member sjl.stdlib.PriorityListItem#key {String}
+             * @readonly
+             */
+            /**
+             * Value name.  Set on construction.
+             * @member sjl.stdlib.PriorityListItem#value {*}
+             * @readonly
+             */
+            /**
+             * Serial index.
+             * @member sjl.stdlib.PriorityListItem#serial {Number}
+             * @readonly
+             */
+            /**
+             * Priority.
+             * @member sjl.stdlib.PriorityListItem#priority {Number}
+             * @readonly
+             */
             Object.defineProperties(this, {
                 key: {
-                    value: key
+                    value: key,
+                    enumerable: true
                 },
                 serial: {
                     get: function () {
@@ -2334,10 +2404,12 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'serial', value, Number);
                         _serial = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 value: {
-                    value: value
+                    value: value,
+                    enumerable: true
                 },
                 priority: {
                     get: function () {
@@ -2346,7 +2418,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'priority', value, Number);
                         _priority = value;
-                    }
+                    },
+                    enumerable: true
                 }
             });
             this.priority = priority;
@@ -2460,7 +2533,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'itemWrapperConstructor', value, Function);
                         _itemWrapperConstructor = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 wrapItems: {
                     get: function () {
@@ -2469,7 +2543,8 @@
                     set: function (value) {
                         sjl.throwTypeErrorIfNotOfType(contextName, 'wrapItems', value, Boolean);
                         _wrapItems = value;
-                    }
+                    },
+                    enumerable: true
                 },
                 LIFO: {
                     get: function () {
@@ -2479,7 +2554,8 @@
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, 'LIFO', value, Boolean);
                         _LIFO = value;
                         this._sorted = false;
-                    }
+                    },
+                    enumerable: true
                 },
                 _internalSerialNumbers: {
                     get: function () {
@@ -2512,7 +2588,7 @@
                         sjl.throwTypeErrorIfNotOfType(PriorityList.name, '_sorted', value, Boolean);
                         _sorted = value;
                     }
-                },
+                }
             });
 
             // Validate these via their setters
@@ -2553,7 +2629,7 @@
         /**
          * Returns iterator result for item at pointer's current position.
          * @method sjl.stdlib.PriorityList#current
-         * @method sjl.stdlib.Iterator#current
+         * @method sjl.stdlib.PriorityList#current
          * @returns {{done: boolean, value: *}|{done: boolean}} - Returns `value` key in result only while `done` is `false`.
          */
         current: function () {
