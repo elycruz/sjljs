@@ -1,6 +1,6 @@
 {
   "name": "sjljs",
-  "version": "6.1.22",
+  "version": "6.1.24",
   "description": "Simple Javascript Library",
   "main": "./src/sjl.js",
   "directories": {
@@ -10,7 +10,7 @@
     "chai": "^1.9.1",
     "chalk": "^0.5.1",
     "del": "^2.2.0",
-    "gulp": "~3.6.1",
+    "gulp": "^3.9.1",
     "gulp-concat": "~2.2.0",
     "gulp-duration": "0.0.0",
     "gulp-fncallback": "^2.0.2",

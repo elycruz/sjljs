@@ -11,16 +11,16 @@ and libraries more concise.
 Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc..  Only meant as a supplement to them 
 or as a supplement to applications requiring quick ramp up.
 
-## Previous version:
-- [5.x.x] (https://github.com/elycruz/sjljs/tree/5.0.XX)
-- [0.5.x] (https://github.com/elycruz/sjljs/tree/0.5.x)
-
 ### Jsdocs
 Api for current version:
-[6.0.x] (http://sjljs.elycruz.com/6.0.x/jsdocs)
-- **Note** Docs are currently under construction but the 
-docs for the core are available at the aforementioned link.
-[6.1.x (upcoming version (small bc breaks on `Iterator`, `SjlMap`, and `SjlSet`))] (http://sjljs.elycruz.com/6.1.x/jsdocs)
+
+- [6.1.x] (http://sjljs.elycruz.com/6.1.x/jsdocs)
+
+#### Docs for previous versions:
+- [6.0.x (under construction)] (http://sjljs.elycruz.com/6.0.x/jsdocs)
+- [5.6.34 (view readme in branch)] (https://github.com/elycruz/sjljs/tree/5.6.0-alpha)
+- [5.0.x (view readme in branch)] (https://github.com/elycruz/sjljs/tree/5.0.XX)
+- [0.5.x (view readme in branch)] (https://github.com/elycruz/sjljs/tree/0.5.x)
 
 ## Sections in Readme:
 - [Getting Started](#getting-started)
@@ -49,8 +49,13 @@ Run one of the following from your terminal:
 - Launch './tests/for-browser/index.html'
 - **Note** `npm install` has to be run prior to running the aforementioned file.
 - **Alternately** You can check the tests for this version of the library here:
+[6.1.x] (http://sjljs.elycruz.com/6.1.x/tests/for-browser)
 [6.0.x] (http://sjljs.elycruz.com/6.0.x/tests/for-browser)
-[6.1.x (WIP)] (http://sjljs.elycruz.com/6.1.x/tests/for-browser)
+[5.6.34] (http://sjljs.elycruz.com/5.6.34/tests/for-browser)
+[5.6.0] (http://sjljs.elycruz.com/5.6.0/tests/for-browser)
+[0.5.18] (http://sjljs.elycruz.com/0.5.18/tests/for-browser)
+[0.5.17] (http://sjljs.elycruz.com/0.5.17/tests/for-browser)
+[0.5.15] (http://sjljs.elycruz.com/0.5.15/tests/for-browser)
 
 ## Requirements:
 - Javascript versions ecmascript 5+
@@ -61,13 +66,13 @@ Run one of the following from your terminal:
 - IE9+, and all other modern day browsers.
 
 ### NodeJs
-- 5.0.0+
+- 4.0.0+
 
 ## Todos:
 ### MVP for 6.1.0
 - [X] - ~~@todo Include all sub items for components included as sub nav in readme.~~ All docs will now be included in api docs
 instead (generated with jsdocs).
-- [ ] - @todo Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.
+- [X] - @todo Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.
 - [ ] - @todo Ensure all existing constructors and library members have a test file for theirselves.
 
 ## License:
