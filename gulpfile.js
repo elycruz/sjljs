@@ -218,7 +218,7 @@ gulp.task('watch', function () {
 gulp.task('build', [
     'clean',
     'readme',
-    //'jsdoc',
+    'jsdoc',
     'concat',
     'uglify',
     'minimal',

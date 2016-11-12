@@ -1,7 +1,7 @@
-/**! sjl-minimal.js 6.1.10 
+/**! sjl-minimal.js 6.1.22 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 846d878d6e5a63690546a521a4351856 
- * | Built-on: Sun Aug 28 2016 12:29:44 GMT-0400 (EDT) 
+ * | md5checksum: 2e3f4bf11a864dfe0b4b4d06dc26a98e 
+ * | Built-on: Sat Sep 17 2016 19:01:51 GMT-0400 (Eastern Daylight Time) 
  **/
 /**
  * The `sjl` module definition.
@@ -1114,6 +1114,9 @@
 
     // Node specific code
     if (isNodeEnv) {
+        /**
+         * @namespace sjl.nodejs {sjl.nodejs.Namespace}
+         */
         // Set package namespace and alias for it
         sjl.package =
             sjl.ns =
@@ -1151,7 +1154,7 @@
         defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
         /**
-         * Sjl Standard Library type classes namespace.
+         * Sjl Standard Library classes' namespace.
          * @namespace sjl.stdlib {Object}
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
