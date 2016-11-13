@@ -7,10 +7,6 @@
     'use strict';
 
     var sjl,
-        _undefined = 'undefined',
-        isNodeEnv = typeof window === _undefined,
-        slice = Array.prototype.slice,
-        globalContext = isNodeEnv ? global : window,
         _String = String.name,
         _Function = Function.name,
         _Array = Array.name,
@@ -18,7 +14,13 @@
         _Object = Object.name,
         _Boolean = Boolean.name,
         _Null = 'Null',
-        _Undefined = 'Undefined';
+        _Undefined = 'Undefined',
+        _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
+        slice = Array.prototype.slice,
+        globalContext = isNodeEnv ? global : window,
+        PlaceHolder = function PlaceHolder() {},
+        __ = new PlaceHolder();
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
@@ -1369,6 +1371,11 @@
         createTopLevelPackage: createTopLevelPackage,
         curry: curry,
         curryN: curryN,
+        curry1: __, // to appease IDEs and
+        curry2: __, // ""
+        curry3: __, // ""
+        curry4: __, // ""
+        curry5: __, // ""
         defineSubClass: defineSubClass,
         defineEnumProp: defineEnumProp,
         empty: isEmpty,
@@ -1421,6 +1428,45 @@
         valueOrDefault: valueOrDefault,
         wrapPointer: wrapPointer
     };
+
+    // Add `sjl.curry[1-5]`
+    (function () {
+        var count = 1;
+        while (count <= 5) {
+            (function (curryLen) {
+                sjl['curry' + curryLen] = function (fn) {
+                    return curryN(fn, curryLen);
+                };
+            }(count));
+            count += 1;
+        }
+    }());
+
+    /**
+     * Curries a function up to arity/args-length 1.
+     * @function module:sjl.curry1
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 2.
+     * @function module:sjl.curry2
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 3.
+     * @function module:sjl.curry3
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 4.
+     * @function module:sjl.curry4
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 5.
+     * @function module:sjl.curry5
+     * @return {Function}
+     */
 
     // Ensure we have access to es6 `Symbol` object
     if (typeof Symbol === _undefined) {

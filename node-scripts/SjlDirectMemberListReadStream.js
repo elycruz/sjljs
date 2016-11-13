@@ -4,7 +4,7 @@
 
 'use strict';
 
-var sjl = require('./../src/sjlfn'),
+var sjl = require('./../src/sjl'),
     fs = require('fs'),
     util = require('util'),
     stream = require('stream'),
