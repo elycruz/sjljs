@@ -50,16 +50,9 @@ gulp.task('sjl-direct-member-list-markdown', function () {
 });
 
 gulp.task('readme', function () {
-    gulp.src(gulpConfig.readme)
+    return gulp.src(gulpConfig.readme)
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
-});
-
-gulp.task('tests', function () {
-    gulp.src([
-        'tests/for-server/*.js'
-    ])
-        .pipe(mocha());
 });
 
 gulp.task('clean', function () {
@@ -85,7 +78,22 @@ gulp.task('clean', function () {
         });
 });
 
-gulp.task('concat', function () {
+gulp.task('jshint', function () {
+    return gulp.src([
+        'src/**/*.js',
+        'tests/for-server/*.js'
+    ])
+        .pipe(jsHintPipe());
+});
+
+gulp.task('tests', function () {
+    return gulp.src([
+        'tests/for-server/*.js'
+    ])
+        .pipe(mocha());
+});
+
+gulp.task('concat', ['jshint'], function () {
     return gulp.src(gulpConfig.sjl)
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
@@ -124,9 +132,7 @@ gulp.task('uglify', ['concat'], function () {
 });
 
 gulp.task('minimal', function () {
-    return gulp.src([
-            './src/sjl.js'
-        ])
+    return gulp.src(gulpConfig['sjl-minimal'])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.js'))
         .pipe(fncallback(function (file, enc, cb) {
@@ -147,7 +153,7 @@ gulp.task('minimal', function () {
 
 gulp.task('minimal-min', ['minimal'], function () {
     return gulp.src([
-            'sjl-minimal.js'
+            './sjl-minimal.js'
         ])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.min.js'))
@@ -172,14 +178,6 @@ gulp.task('make-browser-test-suite', function () {
         .pipe(replace(/\/\/ ~~~ STRIP ~~~[^~]+\/\/ ~~~ \/STRIP ~~~[\n\r\f]+/gim, ''))
         .pipe(concat('tests/for-browser/test-suite.js'))
         .pipe(gulp.dest('./'));
-});
-
-gulp.task('jshint', function () {
-    return gulp.src([
-        'src/**/*.js',
-        'tests/for-server/*.js'
-        ])
-        .pipe(jsHintPipe());
 });
 
 gulp.task('jsdoc', function (cb) {
@@ -218,10 +216,8 @@ gulp.task('watch', function () {
 gulp.task('build', [
     'clean',
     'readme',
-    //'jsdoc',
-    'concat',
+    'jsdoc',
     'uglify',
-    'minimal',
     'minimal-min',
     'tests',
     'make-browser-test-suite'

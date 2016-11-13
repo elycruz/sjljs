@@ -6,8 +6,13 @@
     "markdown-fragments/readme-sections/unit-tests.md",
     "markdown-fragments/readme-footer.md"
   ],
+  "sjl-minimal": [
+    "./src/sjl.js",
+    "./src/fn.js"
+  ],
   "sjl": [
     "./src/sjl.js",
+    "./src/sjlfn.js",
     "./src/stdlib/Extendable.js",
     "./src/stdlib/Config.js",
     "./src/stdlib/Optionable.js",
@@ -17,23 +22,6 @@
     "./src/stdlib/SjlSet.js",
     "./src/stdlib/SjlMap.js",
     "./src/stdlib/PriorityListItem.js",
-    "./src/stdlib/PriorityList.js",
-    "./src/validator/Validator.js",
-    "./src/validator/ValidatorChain.js",
-    "./src/validator/NotEmptyValidator.js",
-    "./src/validator/RegexValidator.js",
-    "./src/validator/NumberValidator.js",
-    "./src/validator/AlnumValidator.js",
-    "./src/validator/DigitValidator.js",
-    "./src/validator/StringLengthValidator.js",
-    "./src/filter/Filter.js",
-    "./src/filter/FilterChain.js",
-    "./src/filter/BooleanFilter.js",
-    "./src/filter/SlugFilter.js",
-    "./src/filter/StringToLowerFilter.js",
-    "./src/filter/StringTrimFilter.js",
-    "./src/filter/StripTagsFilter.js",
-    "./src/input/Input.js",
-    "./src/input/InputFilter.js"
+    "./src/stdlib/PriorityList.js"
   ]
 }

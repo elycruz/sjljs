@@ -4,7 +4,7 @@
 
 'use strict';
 
-var sjl = require('./../src/sjl.js'),
+var sjl = require('./../src/sjlfn'),
     fs = require('fs'),
     util = require('util'),
     stream = require('stream'),
@@ -67,6 +67,7 @@ function renderMdLi(innerText, padLeft) {
 }
 
 function SjlDirectMemberListReadStream (options) {
+    console.log(sjl);
     Readable.call(this, sjl.extend({
         encoding: 'utf8',
         objectMode: false,

@@ -42,9 +42,11 @@
 
         function unit(value) {
             var monad = createObj(emptyProto);
+
             monad.bind = function (func, args) {
                 return func(value, args);
             };
+
             if (typeof modifier === 'function') {
                 modifier(monad, value);
             }

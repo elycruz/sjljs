@@ -51,6 +51,13 @@
 				</ul>
 			</li>
 			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#obj%255Bundefined%255D">obj[undefined]</a></li>
+				</ul>
+			</li>
+			
 		</ul>
 		<div class="col-sm-3 col-md-3">
             <form class="navbar-form" role="search">
@@ -152,6 +159,218 @@
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".addRevealingModuleCall"><span class="type-signature">&lt;static> </span>addRevealingModuleCall(obj, functionKey, shortFunctionKey)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Revealing module pattern seeder.  Adds the revealing module pattern call to passed in object.  Gives said objectthe revealing module pattern capability (for in browser use).
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">*</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object to set the revealing module pattern method on.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>functionKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Key to set the revealing module setter and store to.  Default 'module'.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>shortFunctionKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Shorthand name to use for revealing module setter and store.  Default 'ns'.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Returns passed in `obj`.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">*</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&#x60;&#x60;&#x60; var myApp = sjl.addRevealingModuleCall ({}, &#x27;module&#x27;); // Creates all namespace objects, if they don&#x27;t already exist, and protects them from being overwritten (uses Object.defineProper(ty|ties) internally) // Then sets your module at the end of the chain also making it &#x60;unconfigurable&#x60; and &#x60;unwritable&#x60; as a property // on the namespace chain though does not protect MyModule itself from being tampered with (for security on // that level look into &#x60;Object.freeze&#x60;). myApp.module(&#x27;some.deep.namespace.MyModule&#x27;, MyModule); // returns MyModule // Fetching module that was set now becomes cleaner and module will always be there and cannot be deleted from location myApp.some.namespace.MyModule === MyModule; // true&#x60;&#x60;&#x60;</pre>
+
+
+    
+</dd>
+
+        
             
 <hr>
 <dt>
@@ -311,9 +530,7 @@
 
     
     <div class="description">
-        Takes a namespace string and fetches that location out from
-an object/Map.  If the namespace doesn't exists it is created then
-returned.  Also allows you to set a value at that namespace (last parameter).
+        Takes a namespace string and fetches that location out froman object/Map.  If the namespace doesn't exists it is created thenreturned.  Also allows you to set a value at that namespace (last parameter).
     </div>
     
 
@@ -497,11 +714,9 @@ returned.  Also allows you to set a value at that namespace (last parameter).
     
         <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">// will create/fetch within &#x60;obj&#x60;: hello: { world: { how: { are: { you: { doing: {} } } } } }
-autoNamespace (&#x27;hello.world.how.are.you.doing&#x27;, obj)</pre>
+    <pre class="sunlight-highlight-javascript">// will create/fetch within &#x60;obj&#x60;: hello: { world: { how: { are: { you: { doing: {} } } } } }autoNamespace (&#x27;hello.world.how.are.you.doing&#x27;, obj)</pre>
 
-    <pre class="sunlight-highlight-javascript">// Will set &#x27;hello.what.is.your.name&#x27; to &#x27;juan&#x27;
-autoNamespace (&#x27;hello.what.is.your.name&#x27;, obj, &#x27;juan&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">// Will set &#x27;hello.what.is.your.name&#x27; to &#x27;juan&#x27;autoNamespace (&#x27;hello.what.is.your.name&#x27;, obj, &#x27;juan&#x27;)</pre>
 
 
     
@@ -519,11 +734,7 @@ autoNamespace (&#x27;hello.what.is.your.name&#x27;, obj, &#x27;juan&#x27;)</pre>
 
     
     <div class="description">
-        Make a string code friendly. Camel cases a dirty string into
-a valid javascript variable/constructor name;  Uses `replaceStrRegex`
-to replace unwanted characters with a '-' and then splits and merges
-the parts with the proper casing, pass in `true` for lcaseFirst
-to lower case the first character.
+        Make a string code friendly. Camel cases a dirty string intoa valid javascript variable/constructor name;  Uses `replaceStrRegex`to replace unwanted characters with a '-' and then splits and mergesthe parts with the proper casing, pass in `true` for lcaseFirstto lower case the first character.
     </div>
     
 
@@ -871,14 +1082,7 @@ to lower case the first character.
 
     
     <div class="description">
-        Checks to see if an object is of type 'constructor name'.
-Note: If passing in constructors as your `type` to check, ensure they are *'named' constructors
-as the `name` property is checked directly on them to use in the class/constructor-name comparison.
-*'named' constructors - Not anonymous functions/constructors but ones having a name:  E.g.,
-```
-(function Hello () {}) // Named function.
-(function () {}) // Anonymous function.
-```
+        Checks to see if an object is of type 'constructor name'.Note: If passing in constructors as your `type` to check, ensure they are *'named' constructorsas the `name` property is checked directly on them to use in the class/constructor-name comparison.*'named' constructors - Not anonymous functions/constructors but ones having a name:  E.g.,```(function Hello () {}) // Named function.(function () {}) // Anonymous function.```
     </div>
     
 
@@ -1376,6 +1580,104 @@ as the `name` property is checked directly on them to use in the class/construct
             
 <hr>
 <dt>
+    <h4 class="name" id=".compose"><span class="type-signature">&lt;static> </span>compose()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Composes one or more functions into a new one.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id=".constrainPointer"><span class="type-signature">&lt;static> </span>constrainPointer(pointer, min, max)</h4>
     
     
@@ -1384,9 +1686,7 @@ as the `name` property is checked directly on them to use in the class/construct
 
     
     <div class="description">
-        Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.
-E.g., If pointer is less than `min` then returns `min`.  If pointer is greater than `max` returns `max`.
-If pointer is within bounds returns `pointer`.
+        Constrains a number within a set of bounds (range of two numbers) or returns the pointer if it is within bounds.E.g., If pointer is less than `min` then returns `min`.  If pointer is greater than `max` returns `max`.If pointer is within bounds returns `pointer`.
     </div>
     
 
@@ -1582,9 +1882,7 @@ If pointer is within bounds returns `pointer`.
 
     
     <div class="description">
-        Package factory method.  Allows object to have a `package` method
-which acts like java like namespace except it allows you to set
-it's members (once) and then protects it's members.
+        Package factory method.  Allows object to have a `package` methodwhich acts like java like namespace except it allows you to setit's members (once) and then protects it's members.
     </div>
     
 
@@ -1687,8 +1985,7 @@ it's members (once) and then protects it's members.
 
             
 
-            <td class="description last">Alternate (usually shorter) key to set package function to.  E.g., 'ns'
- ignore passed in paths as namespaces.  Optional.  Default `null`.</td>
+            <td class="description last">Alternate (usually shorter) key to set package function to.  E.g., 'ns' ignore passed in paths as namespaces.  Optional.  Default `null`.</td>
         </tr>
 
     
@@ -1783,7 +2080,151 @@ it's members (once) and then protects it's members.
             
 <hr>
 <dt>
-    <h4 class="name" id=".defineEnumProp"><span class="type-signature">&lt;static> </span>defineEnumProp(obj, key, value, enumerable)</h4>
+    <h4 class="name" id=".curry"><span class="type-signature">&lt;static> </span>curry(fn)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".curryN"><span class="type-signature">&lt;static> </span>curryN(func, executeArity)</h4>
     
     
 </dt>
@@ -1791,7 +2232,147 @@ it's members (once) and then protects it's members.
 
     
     <div class="description">
-        Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
+        Curries a function and only executes the function when the arity reaches the .
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Function to curry.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>executeArity</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Arity at which to execute curried function.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".defineEnumProp"><span class="type-signature">&lt;static> </span>defineEnumProp(obj, key, value)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Sets an enumerable property on `obj` as not `configurable` and not `writable`.
     </div>
     
 
@@ -1867,7 +2448,7 @@ it's members (once) and then protects it's members.
 
             
 
-            <td class="description last"></td>
+            <td class="description last">Prop name.</td>
         </tr>
 
     
@@ -1892,30 +2473,6 @@ it's members (once) and then protects it's members.
             
 
             <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>enumerable</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Default `false`.</td>
         </tr>
 
     
@@ -2011,7 +2568,7 @@ it's members (once) and then protects it's members.
 
     
     <div class="description">
-        Defines a class using a `superclass`, `constructor`, methods and/or static methods
+        Defines a class using a `superclass`, `constructor`, methods and/or static methods.
     </div>
     
 
@@ -2063,7 +2620,7 @@ it's members (once) and then protects it's members.
 
             
 
-            <td class="description last">SuperClass's constructor.  Optional.</td>
+            <td class="description last">Superclass to inherit from.</td>
         </tr>
 
     
@@ -2090,8 +2647,7 @@ it's members (once) and then protects it's members.
 
             
 
-            <td class="description last">Constructor or Object containing 'own' constructor key and methods.
- Required.</td>
+            <td class="description last">Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).</td>
         </tr>
 
     
@@ -2105,6 +2661,9 @@ it's members (once) and then protects it's members.
             
                 
 <span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
 
 
 
@@ -2115,8 +2674,7 @@ it's members (once) and then protects it's members.
 
             
 
-            <td class="description last">Optional.  @note: If the value for the `constructor` param passed in is an object
- then this object actually represents the `statics` hash.</td>
+            <td class="description last">Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.</td>
         </tr>
 
     
@@ -2130,6 +2688,9 @@ it's members (once) and then protects it's members.
             
                 
 <span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
 
 
 
@@ -2140,8 +2701,7 @@ it's members (once) and then protects it's members.
 
             
 
-            <td class="description last">Static methods. Optional.  @note: If the value for `constructor` passed in is an
- instance object than the `statics` param isn't used internally.</td>
+            <td class="description last">Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.</td>
         </tr>
 
     
@@ -2221,6 +2781,12 @@ it's members (once) and then protects it's members.
 
 
         
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&#x60;&#x60;&#x60; // sjl.defineSubClass (superclass, methods, statics); var NewConstructor = sjl.defineSubClass( SomeConstructor, { constructor: function SomeOtherConstructor () {}, ...}, {...}); // sjl.defineSubClass (superclass, constructor, methods, statics); var NewConstructor = sjl.defineSubClass( SomeConstructor, function SomeOtherConstructor () {}, {...}, {...}); // Both calls above yield extendable constructors;  E.g., // This call yields another constructor which inherits from NewConstructor and is also extendable (has &#x60;extend&#x60; static method). NewConstructor.extend(AnotherConstructor)&#x60;&#x60;&#x60;</pre>
+
 
     
 </dd>
@@ -2487,10 +3053,7 @@ it's members (once) and then protects it's members.
 
     
     <div class="description">
-        Extends first object passed in with all other object passed in after.
-First param could be a boolean indicating whether or not to perform a deep extend.
-Last param could also be a boolean indicating whether to use legacy setters if they are available
-on the receiving object.
+        Extends first object passed in with all other object passed in after.First param could be a boolean indicating whether or not to perform a deep extend.Last param could also be a boolean indicating whether to use legacy setters if they are availableon the receiving object.
     </div>
     
 
@@ -2684,12 +3247,7 @@ on the receiving object.
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">(if last param to passed in to &#x60;sjl.extend&#x60; is &#x60;true&#x60;
- var o = {setGreeting: v =&gt; this.greeting = &#x27;Hello &#x27; + v},
-     otherObject = {greeting: &#x27;Junior&#x27;};
- // Calls o.setGreeting when merging otherObject because &#x60;true&#x60; was passed in
- // as the last parameter
- sjl.extend(o, otherObject, true);</pre>
+    <pre class="sunlight-highlight-javascript">(if last param to passed in to &#x60;sjl.extend&#x60; is &#x60;true&#x60; var o = {setGreeting: v =&gt; this.greeting = &#x27;Hello &#x27; + v},     otherObject = {greeting: &#x27;Junior&#x27;}; // Calls o.setGreeting when merging otherObject because &#x60;true&#x60; was passed in // as the last parameter sjl.extend(o, otherObject, true);</pre>
 
 
     
@@ -3003,9 +3561,7 @@ on the receiving object.
 
     
     <div class="description">
-        Extracts a value at an `index` of passed in array (alternately only extract the value if it is of `type`).
-Returns an array with two elements: Element `1` contains the extracted value and element `2` the resulting
-array of the extraction (copy of original array with extracted element) of the value at `index`.
+        Extracts a value at an `index` of passed in array (alternately only extract the value if it is of `type`).Returns an array with two elements: Element `1` contains the extracted value and element `2` the resultingarray of the extraction (copy of original array with extracted element) of the value at `index`.
     </div>
     
 
@@ -3057,7 +3613,7 @@ array of the extraction (copy of original array with extracted element) of the v
 
             
 
-            <td class="description last">Array to operate on.</td>
+            <td class="description last">Array to extract from.</td>
         </tr>
 
     
@@ -3095,6 +3651,9 @@ array of the extraction (copy of original array with extracted element) of the v
             
                 
 <span class="param-type">String</span>
+|
+
+<span class="param-type">function</span>
 
 
 
@@ -3105,7 +3664,7 @@ array of the extraction (copy of original array with extracted element) of the v
 
             
 
-            <td class="description last">Optional.</td>
+            <td class="description last">Type (name or constructor) to match on.  Optional.</td>
         </tr>
 
     
@@ -3196,9 +3755,7 @@ array of the extraction (copy of original array with extracted element) of the v
     
             
 <div class="param-desc">
-    - If passed in array has an element at `index` (and alternately) element
- matches `type` then returns an array with found index and resulting array of extraction of said value.
- Else returns `null`.
+    - If passed in array has an element at `index` (and alternately) element matches `type` then returns an array with found value at index and resulting array of extraction of said value. Else returns an array containing `null` and passed in array.
 </div>
 
 
@@ -3210,9 +3767,6 @@ array of the extraction (copy of original array with extracted element) of the v
     <dd>
         
 <span class="param-type">Array.&lt;*, Array></span>
-|
-
-<span class="param-type">Null</span>
 
 
 
@@ -4854,7 +5408,7 @@ array of the extraction (copy of original array with extracted element) of the v
 
     
     <div class="description">
-        Checs if value is a valid number (also checks if isNaN so that you don't have to).
+        Checks if value is a valid number (also checks if isNaN so that you don't have to).
     </div>
     
 
@@ -6475,6 +7029,401 @@ array of the extraction (copy of original array with extracted element) of the v
             
 <hr>
 <dt>
+    <h4 class="name" id=".mergeOnProps"><span class="type-signature">&lt;static> </span>mergeOnProps(obj1, obj2, deep)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Merges property values from object 2 to object 1 where possible (where property is writable or has getters and setters).
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>obj2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>deep</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Optional.  Default `false`.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Passed in object at param 1.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".mergeOnPropsMulti"><span class="type-signature">&lt;static> </span>mergeOnPropsMulti(obj1 [, obj2,])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        A strict version of sjl.extend;  I.e., only merges on properties existing on `obj1`.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">If this param is set to a boolean then deep merge takes place.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>obj2,</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">One or more objects to operate on.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id=".notEmptyAndOfType"><span class="type-signature">&lt;static> </span>notEmptyAndOfType(value, type)</h4>
     
     
@@ -6650,7 +7599,7 @@ array of the extraction (copy of original array with extracted element) of the v
             
 <hr>
 <dt>
-    <h4 class="name" id=".package"><span class="type-signature">&lt;static> </span>package(propName, value)</h4>
+    <h4 class="name" id=".ns"><span class="type-signature">&lt;static> </span>ns()</h4>
     
     
 </dt>
@@ -6658,7 +7607,7 @@ array of the extraction (copy of original array with extracted element) of the v
 
     
     <div class="description">
-        Returns a property from sjl packages.
+        Create top level frontend package.
     </div>
     
 
@@ -6667,80 +7616,6 @@ array of the extraction (copy of original array with extracted element) of the v
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>propName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -6794,26 +7669,6 @@ array of the extraction (copy of original array with extracted element) of the v
     
 
     
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -6822,7 +7677,7 @@ array of the extraction (copy of original array with extracted element) of the v
             
 <hr>
 <dt>
-    <h4 class="name" id=".restArgs"><span class="type-signature">&lt;static> </span>restArgs(args, start, end)</h4>
+    <h4 class="name" id=".restArgs"><span class="type-signature">&lt;static> </span>restArgs(args, start [, end])</h4>
     
     
 </dt>
@@ -6853,6 +7708,8 @@ array of the extraction (copy of original array with extracted element) of the v
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
         
 
@@ -6882,6 +7739,14 @@ array of the extraction (copy of original array with extracted element) of the v
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -6909,10 +7774,18 @@ array of the extraction (copy of original array with extracted element) of the v
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">Optional.  Default `0`.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -6935,6 +7808,16 @@ array of the extraction (copy of original array with extracted element) of the v
             
             </td>
 
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -7203,7 +8086,7 @@ array of the extraction (copy of original array with extracted element) of the v
             
 <hr>
 <dt>
-    <h4 class="name" id=".throwTypeErrorIfEmpty"><span class="type-signature">&lt;static> </span>throwTypeErrorIfEmpty(prefix, paramName, value, type, suffix)</h4>
+    <h4 class="name" id=".throwErrorIfEmptyOrNotOfType"><span class="type-signature">&lt;static> </span>throwErrorIfEmptyOrNotOfType(prefix, paramName, value, type, suffix)</h4>
     
     
 </dt>
@@ -7426,8 +8309,44 @@ array of the extraction (copy of original array with extracted element) of the v
     
 
     
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">TypeError</span>
+
+
 
     
+    </div>
+
+
+        
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -7436,7 +8355,7 @@ array of the extraction (copy of original array with extracted element) of the v
             
 <hr>
 <dt>
-    <h4 class="name" id=".throwTypeErrorIfNotOfType"><span class="type-signature">&lt;static> </span>throwTypeErrorIfNotOfType(prefix, paramName, value, type, suffix)</h4>
+    <h4 class="name" id=".throwTypeErrorIfEmpty"><span class="type-signature">&lt;static> </span>throwTypeErrorIfEmpty(prefix, paramName, value, type, suffix)</h4>
     
     
 </dt>
@@ -7444,8 +8363,7 @@ array of the extraction (copy of original array with extracted element) of the v
 
     
     <div class="description">
-        Throws a type error if value is not of type and prepends the prefix and
-paramName/variable-name to the message (removes type checking boilerplate where required).
+        Same as sjl.throwErrorIfEmptyOrNotType but named shorter.
     </div>
     
 
@@ -7497,6 +8415,289 @@ paramName/variable-name to the message (removes type checking boilerplate where 
 
             
 
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>paramName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">function</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>suffix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
+	<dd class="tag-see">
+		<ul>
+			<li>sjl.throwErrorIfEmptyOrNotType for full function description and param descriptions.</li>
+			</ul>
+	</dd>
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">TypeError</span>
+
+
+
+    
+    </div>
+
+
+        
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".throwTypeErrorIfNotOfType"><span class="type-signature">&lt;static> </span>throwTypeErrorIfNotOfType(prefix, paramName, value, type [, suffix])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Throws a type error if value is not of type and prepends the prefix andparamName/variable-name to the message (removes type checking boilerplate where required).
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>prefix</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
             <td class="description last">Context name and function name to prefix to error message if it is thrown.</td>
         </tr>
 
@@ -7517,6 +8718,14 @@ paramName/variable-name to the message (removes type checking boilerplate where 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -7541,6 +8750,14 @@ paramName/variable-name to the message (removes type checking boilerplate where 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -7569,6 +8786,14 @@ paramName/variable-name to the message (removes type checking boilerplate where 
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
@@ -7586,6 +8811,9 @@ paramName/variable-name to the message (removes type checking boilerplate where 
             
                 
 <span class="param-type">String</span>
+|
+
+<span class="param-type">*</span>
 
 
 
@@ -7593,10 +8821,20 @@ paramName/variable-name to the message (removes type checking boilerplate where 
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">A hint to user or a way to fix the error;  Message to suffix to error message.</td>
+            <td class="description last">A hint to user or a way to fix the error;  Message to suffix to error message.  Optional.</td>
         </tr>
 
     
@@ -7654,15 +8892,27 @@ paramName/variable-name to the message (removes type checking boilerplate where 
     
 
     
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">TypeError</span>
+
+
+
+    
+    </div>
+
+
+        
 
     
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    - Sjl.
-</div>
-
 
 
 <dl>
@@ -7671,7 +8921,7 @@ paramName/variable-name to the message (removes type checking boilerplate where 
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">void</span>
 
 
 
@@ -8208,10 +9458,7 @@ paramName/variable-name to the message (removes type checking boilerplate where 
 
     
     <div class="description">
-        Wraps a pointer (number) around a bounds (range of two numbers) or returns the next valid pointer depending
-on direction:  E.g.,
-If pointer is less than `min` then returns `max`.  If pointer is greater than `max` returns `min`.
-If pointer is within bounds then returns `pointer`.
+        Wraps a pointer (number) around a bounds (range of two numbers) or returns the next valid pointer dependingon direction:  E.g.,If pointer is less than `min` then returns `max`.  If pointer is greater than `max` returns `min`.If pointer is within bounds then returns `pointer`.
     </div>
     
 
@@ -8443,7 +9690,7 @@ If pointer is within bounds then returns `pointer`.
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-08-28T12:55:26-04:00
+		on 2016-11-12T23:19:12-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
