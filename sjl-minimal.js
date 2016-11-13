@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 6.1.22 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 2e3f4bf11a864dfe0b4b4d06dc26a98e 
- * | Built-on: Sat Sep 17 2016 19:01:51 GMT-0400 (Eastern Daylight Time) 
+ * | md5checksum: 90d35545e020c6b7ffdde7357a70b35f 
+ * | Built-on: Sat Nov 12 2016 23:16:57 GMT-0500 (Eastern Standard Time) 
  **/
 /**
  * The `sjl` module definition.
@@ -16,11 +16,61 @@
         isNodeEnv = typeof window === _undefined,
         slice = Array.prototype.slice,
         globalContext = isNodeEnv ? global : window,
-        libSrcRootPath = null;
+        _String = String.name,
+        _Function = Function.name,
+        _Array = Array.name,
+        _Number = Number.name,
+        _Object = Object.name,
+        _Boolean = Boolean.name,
+        _Null = 'Null',
+        _Undefined = 'Undefined';
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
     globalContext.__isAmd = typeof define === 'function' && define.amd;
+
+    /**
+     * Composes one or more functions into a new one.
+     * @function module:sjl.compose
+     * @returns {Function}
+     */
+    function compose (/* [func,] */) {
+        var args = argsToArray(arguments);
+        return function (arg0) {
+            return args.reduceRight(function (value, arg){
+                return arg(value);
+            }, arg0);
+        };
+    }
+
+    /**
+     * @function module:sjl.curry
+     * @param fn {Function}
+     * @returns {Function}
+     */
+    function curry (fn) {
+        var curriedArgs = restArgs(arguments, 1);
+        return function () {
+            var concatedArgs = curriedArgs.concat(argsToArray(arguments));
+            return fn.apply(null, concatedArgs);
+        };
+    }
+
+    /**
+     * Curries a function and only executes the function when the arity reaches the .
+     * @function module:sjl.curryN
+     * @param func - Function to curry.
+     * @param executeArity - Arity at which to execute curried function.
+     */
+    function curryN (func, executeArity) {
+        var curriedArgs = restArgs(arguments, 2);
+        return function () {
+            var concatedArgs = curriedArgs.concat(argsToArray(arguments));
+            return concatedArgs.length < executeArity ?
+                curryN.apply(null, [func, executeArity].concat(concatedArgs)) :
+                func.apply(null, concatedArgs);
+        };
+    }
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -36,12 +86,11 @@
      * Slices passed in arguments object (not own arguments object) into array from `start` to `end`.
      * @function module:sjl.restArgs
      * @param args {Arguments|Array}
-     * @param start {Number|undefined} - Optional.  Default `0`.
-     * @param end {Number|undefined} - Optional.  Default `args.length`.
+     * @param start {Number|undefined}
+     * @param [end] {Number|undefined} - Optional.  Default `args.length`.
      * @returns {Array}
      */
     function restArgs (args, start, end) {
-        start = !isNumber(start) ? 0 : start;
         end = end || args.length;
         return slice.call(args, start, end);
     }
@@ -51,28 +100,27 @@
      * Returns an array with two elements: Element `1` contains the extracted value and element `2` the resulting
      * array of the extraction (copy of original array with extracted element) of the value at `index`.
      * @function module:sjl.extractFromArrayAt
-     * @param array {Array} - Array to operate on.
+     * @param array {Array} - Array to extract from.
      * @param index {Number} - Index of element to look for in `array`.
-     * @param type {String} - Optional.
+     * @param type {String|Function} - Type (name or constructor) to match on.  Optional.
      * @param makeCopyOfArray {Boolean|Undefined} - Whether to make a copy of the array or not.  Default `true`.
-     * @returns {Array<*,Array>|Null} - If passed in array has an element at `index` (and alternately) element
-     *  matches `type` then returns an array with found index and resulting array of extraction of said value.
-     *  Else returns `null`.
+     * @returns {Array<*,Array>} - If passed in array has an element at `index` (and alternately) element
+     *  matches `type` then returns an array with found value at index and resulting array of extraction of said value.
+     *  Else returns an array containing `null` and passed in array.
      */
     function extractFromArrayAt (array, index, type, makeCopyOfArray) {
+        makeCopyOfArray = isBoolean(makeCopyOfArray) ? makeCopyOfArray : true;
         var retVal = [null, array],
             matchesType, foundElement,
+            subject,
             splicedArray;
-        makeCopyOfArray = isBoolean(makeCopyOfArray) ? makeCopyOfArray : true;
         if (array.hasOwnProperty(index + '')) {
-            if (makeCopyOfArray) {
-                array = array.concat([]);
-            }
-            matchesType = issetAndOfType(type, String) ? classOfIs(array[index], type) : true;
+            subject = makeCopyOfArray ? array.slice() : array;
+            matchesType = issetAndOfType(type, _String) ? classOfIs(subject[index], type) : true;
             if (matchesType) {
-                splicedArray = array.splice(index, 1);
+                splicedArray = subject.splice(index, 1);
                 foundElement = splicedArray.length > 0 ? splicedArray[0] : null;
-                retVal = [foundElement, array];
+                retVal = [foundElement, subject];
             }
         }
         return retVal;
@@ -124,16 +172,16 @@
             valueType,
             toString;
         if (typeof value === _undefined) {
-            retVal = 'Undefined';
+            retVal = _Undefined;
         }
         else if (value === null) {
-            retVal = 'Null';
+            retVal = _Null;
         }
         else {
             toString = value.toString.name === 'toString' ? Object.prototype.toString : value.toString;
             valueType = toString.call(value);
             retVal = valueType.substring(8, valueType.length - 1);
-            if (retVal === 'Number' && isNaN(value)) {
+            if (retVal === _Number && isNaN(value)) {
                 retVal = 'NaN';
             }
         }
@@ -153,19 +201,16 @@
      * @param obj {*} - Object to be checked.
      * @param type {String|Function} - Either a constructor name or an constructor itself.
      * @returns {Boolean} - Whether object matches class string or not.
-     * @note For devs developing the library or reviewing this source file:  Excuse the nested ternary operators!
-     * They are too succinct to replace with var declarations and if,else statements :(::: hahaha!
-     * Code cleanliness at it's finest!!!  Hahaha!!
      */
     function classOfIs (obj, type) {
-        var classOfType = classOf(type);
-        if (classOfType !== String.name && !(type instanceof Function)) {
+        var classOfType = classOf(type),
+            typeIsFunction = type instanceof Function;
+        if (classOfType !== String.name && !typeIsFunction) {
             throw new TypeError('sjl.classOfIs expects it\'s `type` parameter to' +
                 'be of type `String` or an instance of `Function`.  Type received: ' + classOfType + '.');
         }
-        return classOf(obj) === (
-                classOfType === String.name ? type : type.name
-            );
+        return (typeIsFunction ? obj instanceof type : false) ||
+            classOf(obj) === (classOfType === _String ? type : type.name);
     }
 
     /**
@@ -178,14 +223,14 @@
     function forEach (arrayLike, callback, context) {
         var classOfArrayLike = sjl.classOf(arrayLike);
         switch (classOfArrayLike) {
-            case 'Array':
+            case _Array:
             case 'Set':
             case 'SjlSet':
             case 'SjlMap':
             case 'Map':
                 arrayLike.forEach(callback, context);
             break;
-            case 'Object':
+            case _Object:
                 forEachInObj(arrayLike, callback, context);
             break;
             default:
@@ -221,13 +266,13 @@
     }
 
     /**
-     * Checs if value is a valid number (also checks if isNaN so that you don't have to).
+     * Checks if value is a valid number (also checks if isNaN so that you don't have to).
      * @function module:sjl.isNumber
      * @param value {*}
      * @returns {Boolean}
      */
     function isNumber (value) {
-        return classOfIs(value, Number);
+        return classOfIs(value, _Number);
     }
 
     /**
@@ -237,7 +282,7 @@
      * @returns {Boolean}
      */
     function isFunction (value) {
-        return classOfIs(value, Function);
+        return classOfIs(value, _Function);
     }
 
     /**
@@ -257,7 +302,7 @@
      * @returns {Boolean}
      */
     function isBoolean (value) {
-        return classOfIs(value, Boolean);
+        return classOfIs(value, _Boolean);
     }
 
     /**
@@ -267,7 +312,7 @@
      * @returns {Boolean}
      */
     function isObject (value) {
-        return classOfIs(value, Object);
+        return classOfIs(value, _Object);
     }
 
     /**
@@ -277,7 +322,7 @@
      * @returns {Boolean}
      */
     function isString(value) {
-        return classOfIs(value, String);
+        return classOfIs(value, _String);
     }
 
     /**
@@ -287,7 +332,7 @@
      * @returns {Boolean}
      */
     function isUndefined (value) {
-        return classOfIs(value, 'Undefined');
+        return classOfIs(value, _Undefined);
     }
 
     /**
@@ -297,7 +342,7 @@
      * @returns {Boolean}
      */
     function isNull (value) {
-        return classOfIs(value, 'Null');
+        return classOfIs(value, _Null);
     }
 
     /**
@@ -331,15 +376,15 @@
             retVal;
 
         // If value is an array or a string
-        if (classOfValue === 'Array' || classOfValue === 'String') {
+        if (classOfValue === _Array || classOfValue === _String) {
             retVal = value.length === 0;
         }
 
-        else if ((classOfValue === 'Number' && value !== 0) || (classOfValue === 'Function')) {
+        else if ((classOfValue === _Number && value !== 0) || (classOfValue === _Function)) {
             retVal = false;
         }
 
-        else if (classOfValue === 'Object') {
+        else if (classOfValue === _Object) {
             retVal = isEmptyObj(value);
         }
 
@@ -425,7 +470,7 @@
         var parent = objToSearch,
             shouldSetValue = !isUndefined(valueToSet),
             classOfObjToSearch = classOf(objToSearch);
-        if (classOfObjToSearch !== 'Object' && objToSearch instanceof Function === false) {
+        if (classOfObjToSearch !== _Object && objToSearch instanceof Function === false) {
             throw new TypeError ('sjl.autoNamespace expects a Constructor or an instance obj to search on.' +
                 'Value received: `' + classOfObjToSearch + '`.');
         }
@@ -510,11 +555,12 @@
      * @returns {string} - Imploded string.  *Returns empty string if no members, to join, are found.
      */
     function implode (list, separator) {
-        var retVal = '';
+        var retVal = '',
+            prototypeOfList = Object.getPrototypeOf(list);
         if (isArray(list)) {
             retVal = list.join(separator);
         }
-        else if (list.constructor.name === 'Set' || list.constructor.name === 'SjlSet') {
+        else if (prototypeOfList.constructor.name === 'Set' || prototypeOfList.constructor.name === 'SjlSet') {
             retVal = [];
             list.forEach(function (value) {
                 retVal.push(value);
@@ -537,7 +583,7 @@
             classOfObj = classOf(objToSearch),
             i;
         throwTypeErrorIfNotOfType('sjl.searchObj', 'ns_string', ns_string, String);
-        if (classOfObj !== 'Object' && objToSearch instanceof Function === false) {
+        if (classOfObj !== _Object && objToSearch instanceof Function === false) {
             throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
                 'or an instance of `Function`.  Type received: ' + classOfObj);
         }
@@ -559,7 +605,7 @@
      * @returns {Boolean}
      */
     function hasMethod (obj, method) {
-        return notEmptyAndOfType(obj[method], 'Function');
+        return notEmptyAndOfType(obj[method], _Function);
     }
 
     /**
@@ -568,11 +614,10 @@
      * @param o {*} - *object to extend
      * @param p {*} - *object to extend from
      * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @todo rename these variables to be more readable.
      * @returns {*} - returns o
      */
     function extend(o, p, deep) {
-        deep = deep || false;
-
         // If `o` or `p` are not set bail
         if (!isset(o) || !isset(p)) {
             return o;
@@ -582,12 +627,12 @@
         Object.keys(p).forEach(function (prop) { // For all props in p.
             // If property is present on target (o) and is not writable, skip iteration
             var propDescription = Object.getOwnPropertyDescriptor(o, prop);
-            if (propDescription && (!isset(propDescription.get) && !isset(propDescription.set)) && !propDescription.writable) {
+            if (propDescription && (!isset(propDescription.get) &&
+                !isset(propDescription.set)) && !propDescription.writable) {
                 return;
             }
             if (deep === true) {
-                if (isObject(p[prop]) && isObject(o[prop])
-                    && !isEmptyObj(p[prop])) {
+                if (isObject(p[prop]) && isObject(o[prop]) && !isEmptyObj(p[prop])) {
                     extend(o[prop], p[prop], deep);
                 }
                 else {
@@ -622,10 +667,6 @@
      * @returns    {Object|null} - Returns first object passed in or null if no values were passed in.
      */
     function extendMulti () {
-        // Return if no arguments
-        if (arguments.length === 0) {
-            return null;
-        }
         var args = argsToArray(arguments),
             deep = extractBoolFromArrayStart(args),
             arg0 = args.shift();
@@ -666,7 +707,7 @@
      * Used in methods that require a super class or constructor as a parameter
      * and none is given.
      * @param superClass {Function} - Super class constructor.  Required.
-     * @returns {StandInConstructor}
+     * @returns {Function}
      */
     function standInConstructor(superClass) {
         return function StandInConstructor() {
@@ -680,15 +721,27 @@
     }
 
     /**
-     * Defines a class using a `superclass`, `constructor`, methods and/or static methods
+     * Defines a class using a `superclass`, `constructor`, methods and/or static methods.
+     * @format sjl.defineSubClass (superclass, methodsAndConstructor, statics);
+     * @format sjl.defineSubClass (superclass, constructor, methods, statics);
      * @function module:sjl.defineSubClass
-     * @param superclass {Function} - SuperClass's constructor.  Optional.
-     * @param constructor {Function|Object} -  Constructor or Object containing 'own' constructor key and methods.
-     *  Required.
-     * @param methods {Object} - Optional.  @note: If the value for the `constructor` param passed in is an object
-     *  then this object actually represents the `statics` hash.
-     * @param statics {Object} - Static methods. Optional.  @note: If the value for `constructor` passed in is an
-     *  instance object than the `statics` param isn't used internally.
+     * @param superclass {Function} - Superclass to inherit from.
+     * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
+     * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
+     * @param statics {Object|undefined} - Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.
+     * @example
+     * ```
+     *  // sjl.defineSubClass (superclass, methods, statics);
+     *  var NewConstructor = sjl.defineSubClass( SomeConstructor, { constructor: function SomeOtherConstructor () {}, ...}, {...});
+     *
+     *  // sjl.defineSubClass (superclass, constructor, methods, statics);
+     *  var NewConstructor = sjl.defineSubClass( SomeConstructor, function SomeOtherConstructor () {}, {...}, {...});
+     *
+     *  // Both calls above yield extendable constructors;  E.g.,
+     *  // This call yields another constructor which inherits from NewConstructor and is also extendable (has `extend` static method).
+     *  NewConstructor.extend(AnotherConstructor)
+     *
+     * ```
      * @returns {Function}
      */
     function defineSubClass (superclass,  // Constructor of the superclass
@@ -696,6 +749,8 @@
                                    methods,     // Instance methods: copied to prototype
                                    statics)     // Class properties: copied to constructor
     {
+        // Resolve superclass
+        superclass = superclass || Object.create(Object.prototype);
 
         // Statics for snatching static methods from superclass if it is a constructor
         var __statics;
@@ -712,10 +767,7 @@
             });
         }
 
-        // Resolve superclass
-        superclass = superclass || Object.create(Object.prototype);
-
-        // If `constructor` param is an object then
+        // If `constructor` param is an object then assume [superclass, methods, statics] params order
         if (isObject(constructor)) {
 
             // Set static methods, if any
@@ -742,14 +794,13 @@
          * Extends a new copy of self with passed in parameters.
          * @memberof class:sjl.stdlib.Extendable
          * @static sjl.stdlib.Extendable.extend
-         * @param constructor {Function|Object} - Required.  If this param is an `Object` then the `methods` param becomes
-         *  the `statics` param (as if this param is an Object then it can contain methods within itself).
-         * @param methods {Object|undefined} - Methods.  Optional.
-         * @param statics {Object|undefined} - Static methods.  Optional.
+         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
+         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, it is cast as `statics` param.
+         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
          */
-        constructor.extend = function (constructor_, methods_, statics_) {
+        sjl.defineEnumProp(constructor, 'extend', function (constructor_, methods_, statics_) {
             return defineSubClass(constructor, constructor_, methods_, statics_);
-        };
+        });
 
         // Define constructor's constructor
         Object.defineProperty(constructor.prototype, 'constructor', {value: constructor});
@@ -787,24 +838,52 @@
      * @return {Object|*} - Returns passed in `obj`.
      */
     function createTopLevelPackage (obj, funcKey, altFuncKey) {
-        funcKey = funcKey || 'package';
-        altFuncKey = altFuncKey || 'ns';
+        return addRevealingModuleCall(obj, funcKey, altFuncKey);
+    }
+
+    /**
+     * Revealing module pattern seeder.  Adds the revealing module pattern call to passed in object.  Gives said object
+     * the revealing module pattern capability (for in browser use).
+     * @example
+     * ```
+     *  var myApp = sjl.addRevealingModuleCall ({}, 'module');
+     *
+     *  // Creates all namespace objects, if they don't already exist, and protects them from being overwritten (uses Object.defineProper(ty|ties) internally)
+     *  // Then sets your module at the end of the chain also making it `unconfigurable` and `unwritable` as a property
+     *  // on the namespace chain though does not protect MyModule itself from being tampered with (for security on
+     *  // that level look into `Object.freeze`).
+     *  myApp.module('some.deep.namespace.MyModule', MyModule); // returns MyModule
+     *
+     *  // Fetching module that was set now becomes cleaner and module will always be there and cannot be deleted from location
+     *  myApp.some.namespace.MyModule === MyModule; // true
+     *
+     * ```
+     *
+     * @note For similar a effect on the server side @see sjl.nodejs or 'sjljs/src/nodejs/Namespace' (
+     *  creates a dynamic module loader using object namespaces).
+     * @function module:sjl.addRevealingModuleCall
+     * @param obj {Object|*} - Object to set the revealing module pattern method on.
+     * @param functionKey {String} - Key to set the revealing module setter and store to.  Default 'module'.
+     * @param shortFunctionKey {String} - Shorthand name to use for revealing module setter and store.  Default 'ns'.
+     * @return {Object|*} - Returns passed in `obj`.
+     */
+    function addRevealingModuleCall (obj, functionKey, shortFunctionKey) {
+        functionKey = functionKey || 'module';
         /**
-         * Returns a property from sjl packages.
-         * @note If `nsString` is undefined returns the protected packages object itself.
-         * @function module:sjl.package
-         * @param propName {String}
-         * @param value {*}
-         * @returns {*}
+         * Revealing module function/method.
+         * @note If `nsString` is undefined returns the protected modules/packages object itself.
+         * @param nsString {String} - Namespace string or just property name itself.
+         * @param value {*} - If passed in function/method acts as a setter.
+         * @returns {*} - Returns whatever is found
          */
-        obj[altFuncKey] =
-            obj[funcKey] = function (nsString, value) {
-                return typeof nsString === _undefined ? obj[funcKey]
-                    : unConfigurableNamespace(nsString, obj[funcKey], value);
+        obj[shortFunctionKey || 'ns'] =
+            obj[functionKey] = function (nsString, value) {
+                return sjl.isUndefined(nsString) ?
+                    obj[functionKey] : unConfigurableNamespace(nsString, obj[functionKey], value);
             };
 
         // Return namespace function
-        return obj[funcKey];
+        return obj[functionKey];
     }
 
     /**
@@ -844,8 +923,9 @@
      * @param paramName {String} - Param name of the value being passed in.
      * @param value {*} - Value to inspect.
      * @param type {String|Function} - Expected type constructor or constructor name.
-     * @param suffix {String} - A hint to user or a way to fix the error;  Message to suffix to error message.
-     * @returns {{}} - Sjl.
+     * @param [suffix] {String|*} - A hint to user or a way to fix the error;  Message to suffix to error message.  Optional.
+     * @throws {TypeError}
+     * @returns {void}
      */
     function throwTypeErrorIfNotOfType (prefix, paramName, value, type, suffix) {
         var classOfValue = classOf(value);
@@ -866,20 +946,22 @@
 
     /**
      * Throws an error if passed in `value` is empty (0, null, undefined, false, empty {}, or empty []).
-     * @function module:sjl.throwTypeErrorIfEmpty
+     * @function module:sjl.throwErrorIfEmptyOrNotOfType
      * @param prefix {String} - String to prefix to message.
      * @param paramName {String} - Param that expected a non empty value (hint for user).
      * @param value {*} - Value to check.
      * @param type {String|Function|undefined|null} - Type to check against.  Optional.
      * @param suffix {*} - String to append to message.
+     * @throws {TypeError}
+     * @returns {void}
      */
-    function throwTypeErrorIfEmpty (prefix, paramName, value, type, suffix) {
+    function throwTypeErrorIfEmptyOrNotOfType (prefix, paramName, value, type, suffix) {
         var classOfValue = classOf(value),
             issetType = isset(type);
 
         // If `type` itself is not of the allowed types throw an error
         if (issetType && !isString(type) && !isFunction(type)) {
-            throw new TypeError('`sjl.throwTypeErrorIfEmpty.type` only accepts strings, functions (constructors),' +
+            throw new TypeError('`sjl.throwTypeErrorIfEmptyOrNotOfType.type` only accepts strings, functions (constructors),' +
                 'null, or undefined.  ' +
                 'Type received: `' + classOf(type) + '`.');
         }
@@ -901,6 +983,22 @@
     }
 
     /**
+     * Same as sjl.throwErrorIfEmptyOrNotType but named shorter.
+     * @see sjl.throwErrorIfEmptyOrNotType for full function description and param descriptions.
+     * @function module:sjl.throwTypeErrorIfEmpty
+     * @param prefix {String}
+     * @param paramName {String}
+     * @param value {String}
+     * @param type {String|Function|undefined}
+     * @param suffix {String}
+     * @throws {TypeError}
+     * @returns {void}
+     */
+    function throwTypeErrorIfEmpty (prefix, paramName, value, type, suffix) {
+        throwTypeErrorIfEmptyOrNotOfType (prefix, paramName, value, type, suffix);
+    }
+
+    /**
      * Returns value if it is set and of type else returns `defaultValue`
      * @function module:sjl.valueOrDefault
      * @param value {*} - Value to pass through.
@@ -911,7 +1009,7 @@
         defaultValue = typeof defaultValue === _undefined ? null : defaultValue;
         var retVal;
         if (isset(type)) {
-            retVal = issetAndOfType.apply(null, [value].concat(sjl.restArgs(2))) ? value : defaultValue;
+            retVal = issetAndOfType.apply(null, [value].concat(sjl.restArgs(arguments, 2))) ? value : defaultValue;
         }
         else {
             retVal = isset(value) ? value : defaultValue;
@@ -920,12 +1018,11 @@
     }
 
     /**
-     * Sets a property on `obj` as not `configurable` and not `writable` and allows you to set whether it is enumerable or not.
+     * Sets an enumerable property on `obj` as not `configurable` and not `writable`.
      * @function module:sjl.defineEnumProp
      * @param obj {Object}
-     * @param key {String}
+     * @param key {String} - Prop name.
      * @param value {*}
-     * @param enumerable {Boolean} - Default `false`.
      * @return {void}
      */
     function defineEnumProp(obj, key, value) {
@@ -936,12 +1033,11 @@
     }
 
     /**
-     * Sets properties on obj passed in and makes those properties not configurable.
+     * Sets namespace string on obj and makes namespace configurable (@see Object.defineProper(ty|ties)).
      * @param ns_string {String} - Namespace string; E.g., 'all.your.base'
-     * @param objToSearch {Object}
-     * @param valueToSet {*|undefined}
-     * @returns {*} - Found or set value in the object to search.
-     * @private
+     * @param objToSearch {Object} - Object to set namespace string on.
+     * @param valueToSet {*|undefined} - Value to set at end of namespace string.
+     * @returns {*} - Value that was set at the end of the namespace propagation.
      */
     function unConfigurableNamespace(ns_string, objToSearch, valueToSet) {
         var parent = objToSearch,
@@ -978,7 +1074,7 @@
         var search, char, right, left;
 
         // If typeof `str` is not of type "String" then bail
-        throwTypeErrorIfNotOfType(thisFuncsName, 'str', str, 'String');
+        throwTypeErrorIfNotOfType(thisFuncsName, 'str', str, _String);
 
         // Search for first alpha char
         search = str.search(/[a-z]/i);
@@ -1004,31 +1100,24 @@
 
     /**
      * Extracts a boolean from the beginning or ending of an array depending on startOrEndBln.
+     * @note Method does not create a new array when doing extraction and alters originally passed in array.
      * @param array {Array}
      * @param startOrEndBln {Boolean}
      * @returns {Boolean}
      */
     function extractBoolFromArray(array, startOrEndBln) {
-        var expectedBool = startOrEndBln ? array[0] : array[array.length - 1],
-            classOfExpectedBool = classOf(expectedBool),
-            retVal;
-        if (classOfExpectedBool === 'Boolean') {
-            retVal = startOrEndBln ? array.shift() : array.pop();
-        }
-        else if (classOfExpectedBool === 'Undefined') {
-            if (startOrEndBln) {
-                array.shift();
-            }
-            else {
-                array.pop();
-            }
-            retVal = false;
-        }
-        return retVal;
+        var extractedValue = extractFromArrayAt(
+            array,
+            startOrEndBln ? 0 : array.length - 1,
+            _Boolean,
+            false
+        )[0];
+        return isBoolean(extractedValue) ? extractedValue : false;
     }
 
     /**
      * Returns boolean from beginning of array if any.  If item at beginning of array is undefined returns `false`.
+     * @note Method does not create a new array when doing extraction and alters originally passed in array.
      * @function module:sjl.extractBoolFromArrayStart
      * @param array {Array}
      * @returns {Boolean}
@@ -1039,12 +1128,58 @@
 
     /**
      * Returns boolean from end of array if any.  If item at found there is undefined or not a boolean returns `false`.
+     * @note Method does not create a new array when doing extraction and alters originally passed in array.
      * @function module:sjl.extractBoolFromArrayEnd
      * @param array {Array}
      * @returns {Boolean}
      */
     function extractBoolFromArrayEnd (array) {
         return extractBoolFromArray(array, false);
+    }
+
+
+    /**
+     * Merges property values from object 2 to object 1 where possible (where property is writable or has getters and setters).
+     * @function module:sjl.mergeOnProps
+     * @param obj1 {Object}
+     * @param obj2 {Object}
+     * @param deep {Boolean} - Optional.  Default `false`.
+     * @returns {Object} - Passed in object at param 1.
+     */
+    function mergeOnProps (obj1, obj2, deep) {
+        deep = isBoolean(deep) ? deep : false;
+        Object.keys(obj1).forEach(function (key) {
+            if (!obj2.hasOwnProperty(key)) {
+                return;
+            }
+            extendMulti(deep, obj1[key], obj2[key]);
+        });
+        return obj1;
+    }
+
+    /**
+     * A strict version of sjl.extend;  I.e., only merges on properties existing on `obj1`.
+     * @function module:sjl.mergeOnPropsMulti
+     * @param obj1 {Object|Boolean} - If this param is set to a boolean then deep merge takes place.
+     * @param [obj2,] {Object} - One or more objects to operate on.
+     * @note In the case of `obj1` being a boolean method will expect 2 or more objects following param `obj1`.
+     * @returns {*}
+     */
+    function mergeOnPropsMulti (obj1, obj2) {
+        var args = argsToArray(arguments),
+            deep = extractBoolFromArrayStart(args),
+            arg0 = args.shift();
+
+        // Extend object `0` with other objects
+        args.forEach(function (arg) {
+            if (!isObject(arg)) {
+                return;
+            }
+            // Extend `arg0` with `arg`
+            mergeOnProps(arg0, arg, deep);
+        });
+
+        return arg0;
     }
 
     /**
@@ -1054,13 +1189,17 @@
      */
     sjl = {
         argsToArray: argsToArray,
+        autoNamespace: autoNamespace,
         camelCase: camelCase,
         classOf: classOf,
         classOfIs: classOfIs,
         classOfIsMulti: classOfIsMulti,
         clone: clone,
+        compose: compose,
         constrainPointer: constrainPointer,
         createTopLevelPackage: createTopLevelPackage,
+        curry: curry,
+        curryN: curryN,
         defineSubClass: defineSubClass,
         defineEnumProp: defineEnumProp,
         empty: isEmpty,
@@ -1090,14 +1229,17 @@
         isUndefined: isUndefined,
         jsonClone: jsonClone,
         lcaseFirst: lcaseFirst,
-        autoNamespace: autoNamespace,
+        mergeOnProps: mergeOnProps,
+        mergeOnPropsMulti: mergeOnPropsMulti,
         notEmptyAndOfType: notEmptyAndOfType,
         restArgs: restArgs,
-        ucaseFirst: ucaseFirst,
-        unset: unset,
         searchObj: searchObj,
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
+        throwTypeErrorIfEmptyOrNotOfType: throwTypeErrorIfEmptyOrNotOfType,
         throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
+        ucaseFirst: ucaseFirst,
+        unConfigurableNamespace: unConfigurableNamespace,
+        unset: unset,
         valueOrDefault: valueOrDefault,
         wrapPointer: wrapPointer
     };
@@ -1118,52 +1260,39 @@
          * @namespace sjl.nodejs {sjl.nodejs.Namespace}
          */
         // Set package namespace and alias for it
-        sjl.package =
-            sjl.ns =
-                new (require('./nodejs/Namespace'))(__dirname, ['.js', '.json']);
+        sjl.package = sjl.ns = new (require('./nodejs/Namespace'))(
+            __dirname, ['.js', '.json']
+        );
 
         // Short cut to namespaces
         Object.keys(sjl.ns).forEach(function (key) {
             sjl[key] = sjl.ns[key];
         });
 
-        // Method not needed for NodeJs environment
-        sjl.unset(sjl, 'createTopLevelPackage');
+        // Methods not needed for NodeJs environment
+        unset(sjl, 'createTopLevelPackage');
+        unset(sjl, 'addRevealingModuleCall');
 
         // Export `sjl`
         module.exports = sjl;
     }
     else {
-        // Create top level frontend package.
-        createTopLevelPackage(sjl, 'package', 'ns', libSrcRootPath);
+        /**
+         * Create top level frontend package.
+         * @function module:sjl.package
+         * @function module:sjl.ns
+         */
+        addRevealingModuleCall(sjl, 'package', 'ns');
 
         // Instantiate known namespaces and set them directly on `sjl` for ease of use;
-        // E.g., Accessing `sjl.ns.stdlib.Extendable` now becomes `sjl.stdlib.Extendable`
+        // E.g., Accessing `sjl.ns.stdlib.Extendable` now becomes `sjl.stdlib.Extendable`.
         // --------------------------------------------------------------------------------
-
-        /**
-         * @namespace sjl.filter {Object}
-         * @private
-         */
-        defineEnumProp(sjl,     'filter',       sjl.ns('filter'));
-
-        /**
-         * @namespace sjl.input {Object}
-         * @private
-         */
-        defineEnumProp(sjl,     'input',        sjl.ns('input'));
 
         /**
          * Sjl Standard Library classes' namespace.
          * @namespace sjl.stdlib {Object}
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
-
-        /**
-         * @namespace sjl.validator {Object}
-         * @private
-         */
-        defineEnumProp(sjl,     'validator',    sjl.ns('validator'));
 
         // Export sjl globally
         globalContext.sjl = sjl;

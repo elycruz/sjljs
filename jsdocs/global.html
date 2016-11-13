@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Index</title>
+	<title>Documentation Global</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -84,94 +84,152 @@
 		<div id="main">
 			
 
+	<h1 class="page-title">Global</h1>
+<section>
+
+<header>
+    
+        <h2>
+        
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+<dl class="details">
+    
+
 	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
 
 
+        
+    
+    </div>
 
+    
 
+    
 
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="obj%5Bundefined%5D">
+    <h4><span class="type-signature"></span>obj[undefined]<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Revealing module function/method.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
 	
+
 	
 
+	
+
+	
+</dl>
 
 
+    
+</dd>
 
+        </dl>
+    
 
-    <section class="readme-section">
-        <article><p><a href="https://travis-ci.org/elycruz/sjljs"><img src="https://travis-ci.org/elycruz/sjljs.png" alt="Build Status"></a> 
-<a href="http://badge.fury.io/gh/elycruz%2Fsjljs"><img src="https://badge.fury.io/gh/elycruz%2Fsjljs.svg" alt="GitHub version"></a> 
-<a href="http://badge.fury.io/js/sjljs"><img src="https://badge.fury.io/js/sjljs.svg" alt="NPM version"></a>
-<a href="https://david-dm.org/elycruz/sjljs"><img src="https://david-dm.org/elycruz/sjljs.png" alt="Dependencies"></a></p>
-<h1>sjljs</h1><p>A library for writing strongly typed javascript and solid classical oop.  Also for making your applications, components,
-and libraries more concise. </p>
-<p>Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc..  Only meant as a supplement to them 
-or as a supplement to applications requiring quick ramp up.</p>
-<h2>Previous version:</h2><ul>
-<li>[5.x.x] (https://github.com/elycruz/sjljs/tree/5.0.XX)</li>
-<li>[0.5.x] (https://github.com/elycruz/sjljs/tree/0.5.x)</li>
-</ul>
-<h3>Jsdocs</h3><p>Api for current version:
-[6.0.x] (http://sjljs.elycruz.com/6.0.x/jsdocs)</p>
-<ul>
-<li><strong>Note</strong> Docs are currently under construction but the 
-docs for the core are available at the aforementioned link.
-[6.1.x (upcoming version (small bc breaks on <code>Iterator</code>, <code>SjlMap</code>, and <code>SjlSet</code>))] (http://sjljs.elycruz.com/6.1.x/jsdocs)</li>
-</ul>
-<h2>Sections in Readme:</h2><ul>
-<li><a href="#getting-started">Getting Started</a></li>
-<li><a href="#unit-tests">Unit Tests</a></li>
-<li><a href="#requirements">Requirements</a></li>
-<li><a href="#supported-platforms">Supported Platforms</a></li>
-<li><a href="#todos">Todos</a></li>
-<li><a href="#license">License</a></li>
-</ul>
-<h2>Getting Started:</h2><p>Include either the full library './sjl[.min].js' or the minimal version './sjl-minimal[.min].js' (the minimal version
-only includes the core and no classes or constructors from it's other packages).</p>
-<h2>Unit Tests:</h2><p>To run unit tests:</p>
-<p>1.)  First do an <code>npm install</code> in project root.</p>
-<p>2.)  For running tests with node:
-Run one of the following from your terminal:</p>
-<ul>
-<li><code>$ gulp tests</code>, </li>
-<li><code>$ mocha tests/for-server</code>, or </li>
-<li><code>$ npm tests</code> </li>
-</ul>
-<p>3.)  For running tests in the browser:</p>
-<ul>
-<li>Launch './tests/for-browser/index.html'</li>
-<li><strong>Note</strong> <code>npm install</code> has to be run prior to running the aforementioned file.</li>
-<li><strong>Alternately</strong> You can check the tests for this version of the library here:
-[6.0.x] (http://sjljs.elycruz.com/6.0.x/tests/for-browser)
-[6.1.x (WIP)] (http://sjljs.elycruz.com/6.1.x/tests/for-browser)</li>
-</ul>
-<h2>Requirements:</h2><ul>
-<li>Javascript versions ecmascript 5+</li>
-</ul>
-<h2>Supported Platforms:</h2><h3>Browsers</h3><ul>
-<li>IE9+, and all other modern day browsers.</li>
-</ul>
-<h3>NodeJs</h3><ul>
-<li>5.0.0+</li>
-</ul>
-<h2>Todos:</h2><h3>MVP for 6.1.0</h3><ul>
-<li>[X] - <del>@todo Include all sub items for components included as sub nav in readme.</del> All docs will now be included in api docs
-instead (generated with jsdocs).</li>
-<li>[ ] - @todo Cleanup all jsdocs and ensure all library members are listed there and showing their docs properly/clearly.</li>
-<li>[ ] - @todo Ensure all existing constructors and library members have a test file for theirselves.</li>
-</ul>
-<h2>License:</h2><p><a href="http://www.gnu.org/licenses/gpl-2.0.html" title="http://www.gnu.org/licenses/gpl-2.0.html">GPL v2+</a> AND
-<a href="http://opensource.org/licenses/MIT" title="http://opensource.org/licenses/MIT">MIT</a></p></article>
-    </section>
+    
 
+    
 
+    
+</article>
 
+</section>
 
 
 
