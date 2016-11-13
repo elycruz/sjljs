@@ -1132,7 +1132,6 @@
         return extractBoolFromArray(array, false);
     }
 
-
     /**
      * Merges property values from object 2 to object 1 where possible (where property is writable or has getters and setters).
      * @function module:sjl.mergeOnProps
@@ -1178,12 +1177,186 @@
     }
 
     /**
+     * @param value
+     * @returns {Boolean}
+     */
+    function hasIterator (value) {
+        return isFunction(value[sjl.Symbol.iterator]);
+    }
+
+    /**
+     * @param obj {*}
+     * @returns {Iterator|undefined}
+     */
+    function getIterator (obj) {
+        return obj[sjl.Symbol.iterator];
+    }
+
+    /**
+     * @param iterator {Iterator}
+     * @returns {Array}
+     */
+    function iteratorToArray (iterator) {
+        var current = iterator.next(),
+            out = [];
+        while (current.done === false) {
+            out.push(current.value);
+        }
+        return out;
+    }
+
+    /**
+     * @allParams {*} - [,arrayLike {*}].  One or more array like objects.
+     * @returns {Array|null}
+     */
+    function getArrayLikes (/* [,arrayLike] */) {
+        return argsToArray(arguments).filter(function (arg) {
+            return Array.isArray(arg) ||
+                classOfIs(arg, 'Arguments') ||
+                (isset(WeakSet) && classOfIs(arg, WeakSet)) ||
+                (isset(sjl.stdlib.SjlSet) && classOfIs(arg, sjl.stdlib.SjlSet)) ||
+                (isset(Set) && classOfIs(arg, Set));
+        });
+    }
+
+    /**
+     * @param obj {*}
+     * @returns {Array<Array<*,*>>} - Array map.  I.e., [[key{*}, value{*}]].
+     */
+    function objToArrayMap (obj) {
+        var keys = Object.keys(obj);
+        if (keys.length === 0) {
+            return [];
+        }
+        return keys.map(function (key) {
+            return [key, obj[key]];
+        });
+    }
+
+    /**
+     * @param setObj {{entries: {Function}} | Set | WeakSet | Map | WeakMap | SjlSet | SjlMap} - Object with `entries` method.
+     *  E.g., Set, WeakSet, Map, WeakMap, SjlSet, SjlMap
+     * @returns {Array}
+     */
+    function setToArray (setObj) {
+        var iterator = setObj.entries(),
+            current = iterator.next(),
+            out = [];
+        while (current.done === false) {
+            out.push(current.value);
+            current = iterator.next();
+        }
+        return out;
+    }
+
+    /**
+     * @param mapObj {{entries: {Function}} | Set | WeakSet | Map | WeakMap | SjlSet | SjlMap} - Object with `entries` method.
+     * @returns {Array}
+     */
+    function mapToArray (mapObj) {
+        return setToArray(mapObj);
+    }
+
+    /**
+     * @param arrayLike {*}
+     * @returns {Array|Undefined} - `Undefined` if couldn't find array like.
+     */
+    function arrayLikeToArray (arrayLike) {
+        var out,
+            classOfArrayLike = classOf(arrayLike);
+        switch (classOfArrayLike) {
+            case 'Arguments':
+                out = argsToArray(arrayLike);
+                break;
+            case 'SjlSet':
+            case 'WeakSet':
+            case 'Set':
+                out = setToArray(arrayLike);
+                break;
+            case 'Map':
+            case 'WeakMap':
+            case 'SjlMap':
+                out = mapToArray(arrayLike);
+                break;
+            case 'Array':
+                out = arrayLike;
+                break;
+            case 'String':
+                out = arrayLike.split('');
+                break;
+            default:
+                break;
+        }
+        return out;
+    }
+
+    /**
+     * @param arrayLike {*}
+     * @returns {Array|Undefined} - `Undefined` if couldn't find array like.
+     */
+    function notArrayLikeToArray (arrayLike) {
+        var out,
+            classOfArrayLike = classOf(arrayLike);
+        switch (classOfArrayLike) {
+            case 'Object':
+                if (hasIterator(classOfArrayLike)) {
+                    out = iteratorToArray(getIterator(classOfArrayLike));
+                }
+                else {
+                    out = objToArrayMap(arrayLike);
+                }
+                break;
+            case 'Number':
+                out = arrayLike + ''.split('');
+                break;
+            case 'Function':
+                out = toArray(arrayLike());
+                break;
+            default:
+                // If can't operate on value throw an error
+                if (classOfIsMulti(arrayLike, 'Null', 'Undefined', 'Symbol', 'Boolean')) {
+                    throw new TypeError('`sjl.toArray` cannot operate on values of type' +
+                        ' `Null`, `Undefined`, `Symbol`, `Boolean`.  ' +
+                        'Value type passed in: `' + classOfArrayLike + '`.');
+                }
+                // Else wrap value in array and give a warning
+                else {
+                    console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
+                        'Value and type: ' + arrayLike + ', ', classOfArrayLike);
+                    out = [arrayLike];
+                }
+                break;
+        }
+        return out;
+    }
+
+    /**
+     * @param arrayLike {*}
+     * @returns {Array|Undefined}
+     */
+    function toArray (arrayLike) {
+        return arrayLikeToArray(arrayLike) ||
+            notArrayLikeToArray(arrayLike);
+    }
+
+    /**
+     * @returns {Array}
+     */
+    function concatArrayLikes (/* [,arrayLike] */) {
+        return getArrayLikes.apply(null, arguments).reduce(function (arr1, arr2) {
+            return arr1.concat(toArray(arr2));
+        }, []);
+    }
+
+    /**
      * `sjl` module.
      * @module sjl {Object}
      * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
      */
     sjl = {
         argsToArray: argsToArray,
+        arrayLikeToArray: arrayLikeToArray,
+        notArrayLikeToArray: notArrayLikeToArray,
         autoNamespace: autoNamespace,
         camelCase: camelCase,
         classOf: classOf,
@@ -1191,6 +1364,7 @@
         classOfIsMulti: classOfIsMulti,
         clone: clone,
         compose: compose,
+        concatArrayLikes: concatArrayLikes,
         constrainPointer: constrainPointer,
         createTopLevelPackage: createTopLevelPackage,
         curry: curry,
@@ -1205,7 +1379,10 @@
         extractFromArrayAt: extractFromArrayAt,
         forEach: forEach,
         forEachInObj: forEachInObj,
+        getIterator: getIterator,
+        getArrayLikes: getArrayLikes,
         hasMethod: hasMethod,
+        hasIterator: hasIterator,
         implode: implode,
         isset: isset,
         issetMulti: issetMulti,
@@ -1222,16 +1399,22 @@
         isString: isString,
         isSymbol: isSymbol,
         isUndefined: isUndefined,
+        iteratorToArray: iteratorToArray,
         jsonClone: jsonClone,
         lcaseFirst: lcaseFirst,
+        mapToArray: mapToArray,
         mergeOnProps: mergeOnProps,
         mergeOnPropsMulti: mergeOnPropsMulti,
         notEmptyAndOfType: notEmptyAndOfType,
+        objToArrayMap: objToArrayMap,
+        objToArray: objToArrayMap,
         restArgs: restArgs,
         searchObj: searchObj,
+        setToArray: setToArray,
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
         throwTypeErrorIfEmptyOrNotOfType: throwTypeErrorIfEmptyOrNotOfType,
         throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
+        toArray: toArray,
         ucaseFirst: ucaseFirst,
         unConfigurableNamespace: unConfigurableNamespace,
         unset: unset,

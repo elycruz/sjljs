@@ -36,11 +36,13 @@ var path = require('path'),
  *
  * @param dir {String} - Directory to scan.
  * @param allowedFileExts {Array<String>} - Allowed file extensions (with preceding '.').
- * @param ignoredDirs {Array<String>} - Directories to ignore on `dir` scan.
+ * @param [ignoredDirs] {Array<String>} - Directories to ignore on `dir` scan.
+ * @param [ignoredFiles] {Array<String>} - Directories to ignore on `dir` scan.
  * @constructor sjl.nodejs.Namespace
  */
-function Namespace(dir, allowedFileExts, ignoredDirs) {
+function Namespace(dir, allowedFileExts, ignoredDirs, ignoredFileNames) {
     ignoredDirs = Array.isArray(ignoredDirs) ? ignoredDirs : null;
+    ignoredFileNames = Array.isArray(ignoredFileNames) ? ignoredFileNames : null;
     var self = this,
         files = fs.readdirSync(dir);
     allowedFileExts = allowedFileExts || ['.js', '.json'];
@@ -61,6 +63,7 @@ function Namespace(dir, allowedFileExts, ignoredDirs) {
  */
 function processFiles(files, dir, allowedFileExts, ignoredDirs, self) {
     files.forEach(function (file) {
+        if (file.indexOf('sjl.js'))
         if (ignoredDirs && ignoredDirs.indexOf(file) > -1) {
             return;
         }
