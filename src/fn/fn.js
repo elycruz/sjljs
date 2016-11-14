@@ -30,7 +30,7 @@
             },
             flatten: function () {
                 var value = this.value;
-                while (value instanceof Just) {
+                while (value instanceof Identity) {
                     value = value.value;
                 }
                 return Identity(value);
@@ -72,12 +72,12 @@
             }
         }),
         returnNothing = function () {
-            return Nothing();
+            return Nothing.of();
         },
         Nothing = Extendable.extend({
             constructor: function Nothing () {
                 if (!(this instanceof Nothing)) {
-                    return Nothing.of();
+                    return returnNothing();
                 }
                 Object.defineProperty(this, 'value', {
                     value: null
