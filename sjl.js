@@ -1,7 +1,7 @@
-/**! sjljs 6.2.0
+/**! sjljs 6.2.1
  * | License: GPL-2.0+ AND MIT
  * | md5checksum: 85423b48f544a37e343f4873d7e61a21
- * | Built-on: Sun Nov 13 2016 22:03:21 GMT-0500 (Eastern Standard Time)
+ * | Built-on: Sun Nov 13 2016 22:06:28 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
