@@ -1,7 +1,7 @@
 /**! sjljs 6.2.0
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 18f72509d0350a83bef7c1103b5055da
- * | Built-on: Sun Nov 13 2016 17:21:03 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: 85423b48f544a37e343f4873d7e61a21
+ * | Built-on: Sun Nov 13 2016 22:03:21 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -11,10 +11,6 @@
     'use strict';
 
     var sjl,
-        _undefined = 'undefined',
-        isNodeEnv = typeof window === _undefined,
-        slice = Array.prototype.slice,
-        globalContext = isNodeEnv ? global : window,
         _String = String.name,
         _Function = Function.name,
         _Array = Array.name,
@@ -22,7 +18,13 @@
         _Object = Object.name,
         _Boolean = Boolean.name,
         _Null = 'Null',
-        _Undefined = 'Undefined';
+        _Undefined = 'Undefined',
+        _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
+        slice = Array.prototype.slice,
+        globalContext = isNodeEnv ? global : window,
+        PlaceHolder = function PlaceHolder() {},
+        __ = new PlaceHolder();
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
@@ -1373,6 +1375,11 @@
         createTopLevelPackage: createTopLevelPackage,
         curry: curry,
         curryN: curryN,
+        curry1: __, // to appease IDEs and
+        curry2: __, // ""
+        curry3: __, // ""
+        curry4: __, // ""
+        curry5: __, // ""
         defineSubClass: defineSubClass,
         defineEnumProp: defineEnumProp,
         empty: isEmpty,
@@ -1438,6 +1445,32 @@
             count += 1;
         }
     }());
+
+    /**
+     * Curries a function up to arity/args-length 1.
+     * @function module:sjl.curry1
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 2.
+     * @function module:sjl.curry2
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 3.
+     * @function module:sjl.curry3
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 4.
+     * @function module:sjl.curry4
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 5.
+     * @function module:sjl.curry5
+     * @return {Function}
+     */
 
     // Ensure we have access to es6 `Symbol` object
     if (typeof Symbol === _undefined) {
