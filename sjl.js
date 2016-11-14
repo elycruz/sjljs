@@ -1,7 +1,7 @@
-/**! sjljs 6.1.22
+/**! sjljs 6.2.1
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: c8a098cce1c7946dd8c3ec4af05f816f
- * | Built-on: Sat Nov 12 2016 23:16:58 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: 85423b48f544a37e343f4873d7e61a21
+ * | Built-on: Sun Nov 13 2016 22:06:28 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -11,10 +11,6 @@
     'use strict';
 
     var sjl,
-        _undefined = 'undefined',
-        isNodeEnv = typeof window === _undefined,
-        slice = Array.prototype.slice,
-        globalContext = isNodeEnv ? global : window,
         _String = String.name,
         _Function = Function.name,
         _Array = Array.name,
@@ -22,7 +18,13 @@
         _Object = Object.name,
         _Boolean = Boolean.name,
         _Null = 'Null',
-        _Undefined = 'Undefined';
+        _Undefined = 'Undefined',
+        _undefined = 'undefined',
+        isNodeEnv = typeof window === _undefined,
+        slice = Array.prototype.slice,
+        globalContext = isNodeEnv ? global : window,
+        PlaceHolder = function PlaceHolder() {},
+        __ = new PlaceHolder();
 
     // Check if amd is being used (store this check globally to reduce
     //  boilerplate code in other components).
@@ -1136,7 +1138,6 @@
         return extractBoolFromArray(array, false);
     }
 
-
     /**
      * Merges property values from object 2 to object 1 where possible (where property is writable or has getters and setters).
      * @function module:sjl.mergeOnProps
@@ -1182,12 +1183,186 @@
     }
 
     /**
+     * @param value
+     * @returns {Boolean}
+     */
+    function hasIterator (value) {
+        return isFunction(value[sjl.Symbol.iterator]);
+    }
+
+    /**
+     * @param obj {*}
+     * @returns {Iterator|undefined}
+     */
+    function getIterator (obj) {
+        return obj[sjl.Symbol.iterator];
+    }
+
+    /**
+     * @param iterator {Iterator}
+     * @returns {Array}
+     */
+    function iteratorToArray (iterator) {
+        var current = iterator.next(),
+            out = [];
+        while (current.done === false) {
+            out.push(current.value);
+        }
+        return out;
+    }
+
+    /**
+     * @allParams {*} - [,arrayLike {*}].  One or more array like objects.
+     * @returns {Array|null}
+     */
+    function getArrayLikes (/* [,arrayLike] */) {
+        return argsToArray(arguments).filter(function (arg) {
+            return Array.isArray(arg) ||
+                classOfIs(arg, 'Arguments') ||
+                (isset(WeakSet) && classOfIs(arg, WeakSet)) ||
+                (isset(sjl.stdlib.SjlSet) && classOfIs(arg, sjl.stdlib.SjlSet)) ||
+                (isset(Set) && classOfIs(arg, Set));
+        });
+    }
+
+    /**
+     * @param obj {*}
+     * @returns {Array<Array<*,*>>} - Array map.  I.e., [[key{*}, value{*}]].
+     */
+    function objToArrayMap (obj) {
+        var keys = Object.keys(obj);
+        if (keys.length === 0) {
+            return [];
+        }
+        return keys.map(function (key) {
+            return [key, obj[key]];
+        });
+    }
+
+    /**
+     * @param setObj {{entries: {Function}} | Set | WeakSet | Map | WeakMap | SjlSet | SjlMap} - Object with `entries` method.
+     *  E.g., Set, WeakSet, Map, WeakMap, SjlSet, SjlMap
+     * @returns {Array}
+     */
+    function setToArray (setObj) {
+        var iterator = setObj.entries(),
+            current = iterator.next(),
+            out = [];
+        while (current.done === false) {
+            out.push(current.value);
+            current = iterator.next();
+        }
+        return out;
+    }
+
+    /**
+     * @param mapObj {{entries: {Function}} | Set | WeakSet | Map | WeakMap | SjlSet | SjlMap} - Object with `entries` method.
+     * @returns {Array}
+     */
+    function mapToArray (mapObj) {
+        return setToArray(mapObj);
+    }
+
+    /**
+     * @param arrayLike {*}
+     * @returns {Array|Undefined} - `Undefined` if couldn't find array like.
+     */
+    function arrayLikeToArray (arrayLike) {
+        var out,
+            classOfArrayLike = classOf(arrayLike);
+        switch (classOfArrayLike) {
+            case 'Arguments':
+                out = argsToArray(arrayLike);
+                break;
+            case 'SjlSet':
+            case 'WeakSet':
+            case 'Set':
+                out = setToArray(arrayLike);
+                break;
+            case 'Map':
+            case 'WeakMap':
+            case 'SjlMap':
+                out = mapToArray(arrayLike);
+                break;
+            case 'Array':
+                out = arrayLike;
+                break;
+            case 'String':
+                out = arrayLike.split('');
+                break;
+            default:
+                break;
+        }
+        return out;
+    }
+
+    /**
+     * @param arrayLike {*}
+     * @returns {Array|Undefined} - `Undefined` if couldn't find array like.
+     */
+    function notArrayLikeToArray (arrayLike) {
+        var out,
+            classOfArrayLike = classOf(arrayLike);
+        switch (classOfArrayLike) {
+            case 'Object':
+                if (hasIterator(classOfArrayLike)) {
+                    out = iteratorToArray(getIterator(classOfArrayLike));
+                }
+                else {
+                    out = objToArrayMap(arrayLike);
+                }
+                break;
+            case 'Number':
+                out = arrayLike + ''.split('');
+                break;
+            case 'Function':
+                out = toArray(arrayLike());
+                break;
+            default:
+                // If can't operate on value throw an error
+                if (classOfIsMulti(arrayLike, 'Null', 'Undefined', 'Symbol', 'Boolean')) {
+                    throw new TypeError('`sjl.toArray` cannot operate on values of type' +
+                        ' `Null`, `Undefined`, `Symbol`, `Boolean`.  ' +
+                        'Value type passed in: `' + classOfArrayLike + '`.');
+                }
+                // Else wrap value in array and give a warning
+                else {
+                    console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
+                        'Value and type: ' + arrayLike + ', ', classOfArrayLike);
+                    out = [arrayLike];
+                }
+                break;
+        }
+        return out;
+    }
+
+    /**
+     * @param arrayLike {*}
+     * @returns {Array|Undefined}
+     */
+    function toArray (arrayLike) {
+        return arrayLikeToArray(arrayLike) ||
+            notArrayLikeToArray(arrayLike);
+    }
+
+    /**
+     * @returns {Array}
+     */
+    function concatArrayLikes (/* [,arrayLike] */) {
+        return getArrayLikes.apply(null, arguments).reduce(function (arr1, arr2) {
+            return arr1.concat(toArray(arr2));
+        }, []);
+    }
+
+    /**
      * `sjl` module.
      * @module sjl {Object}
      * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
      */
     sjl = {
         argsToArray: argsToArray,
+        arrayLikeToArray: arrayLikeToArray,
+        notArrayLikeToArray: notArrayLikeToArray,
         autoNamespace: autoNamespace,
         camelCase: camelCase,
         classOf: classOf,
@@ -1195,10 +1370,16 @@
         classOfIsMulti: classOfIsMulti,
         clone: clone,
         compose: compose,
+        concatArrayLikes: concatArrayLikes,
         constrainPointer: constrainPointer,
         createTopLevelPackage: createTopLevelPackage,
         curry: curry,
         curryN: curryN,
+        curry1: __, // to appease IDEs and
+        curry2: __, // ""
+        curry3: __, // ""
+        curry4: __, // ""
+        curry5: __, // ""
         defineSubClass: defineSubClass,
         defineEnumProp: defineEnumProp,
         empty: isEmpty,
@@ -1209,7 +1390,10 @@
         extractFromArrayAt: extractFromArrayAt,
         forEach: forEach,
         forEachInObj: forEachInObj,
+        getIterator: getIterator,
+        getArrayLikes: getArrayLikes,
         hasMethod: hasMethod,
+        hasIterator: hasIterator,
         implode: implode,
         isset: isset,
         issetMulti: issetMulti,
@@ -1226,22 +1410,67 @@
         isString: isString,
         isSymbol: isSymbol,
         isUndefined: isUndefined,
+        iteratorToArray: iteratorToArray,
         jsonClone: jsonClone,
         lcaseFirst: lcaseFirst,
+        mapToArray: mapToArray,
         mergeOnProps: mergeOnProps,
         mergeOnPropsMulti: mergeOnPropsMulti,
         notEmptyAndOfType: notEmptyAndOfType,
+        objToArrayMap: objToArrayMap,
+        objToArray: objToArrayMap,
         restArgs: restArgs,
         searchObj: searchObj,
+        setToArray: setToArray,
         throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
         throwTypeErrorIfEmptyOrNotOfType: throwTypeErrorIfEmptyOrNotOfType,
         throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
+        toArray: toArray,
         ucaseFirst: ucaseFirst,
         unConfigurableNamespace: unConfigurableNamespace,
         unset: unset,
         valueOrDefault: valueOrDefault,
         wrapPointer: wrapPointer
     };
+
+    // Add `sjl.curry[1-5]`
+    (function () {
+        var count = 1;
+        while (count <= 5) {
+            (function (curryLen) {
+                sjl['curry' + curryLen] = function (fn) {
+                    return curryN(fn, curryLen);
+                };
+            }(count));
+            count += 1;
+        }
+    }());
+
+    /**
+     * Curries a function up to arity/args-length 1.
+     * @function module:sjl.curry1
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 2.
+     * @function module:sjl.curry2
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 3.
+     * @function module:sjl.curry3
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 4.
+     * @function module:sjl.curry4
+     * @return {Function}
+     */
+    /**
+     * Curries a function up to arity/args-length 5.
+     * @function module:sjl.curry5
+     * @return {Function}
+     */
 
     // Ensure we have access to es6 `Symbol` object
     if (typeof Symbol === _undefined) {
@@ -1305,195 +1534,140 @@
 }());
 
 /**
- * Created by elyde on 11/12/2016.
- * Adds some functional sugar directly to `sjl` (not on the `fn` namespace)
- * to allow the use of common functional features with sjl;  E.g., compose, curry, curryN, etc..
+ * Created by edlc on 11/13/16.
+ * @todo find out best practice for naming functions that have side effects
+ * @todo split out the `extend` method from `defineSubClass`
  */
+
 (function () {
 
     'use strict';
 
+    function addPropertyValue (context, value) {
+        Object.defineProperty(context, 'value', {
+            value: value,
+            writable: true
+        });
+    }
+
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./sjl') : window.sjl || {};
-
-    /**
-     * @param value
-     * @returns {Boolean}
-     */
-    sjl.hasIterator = function (value) {
-        return sjl.isFunction(value[sjl.Symbol.iterator]);
-    };
-
-    /**
-     * @param obj {*}
-     * @returns {Iterator|undefined}
-     */
-    sjl.getIterator = function (obj) {
-        return obj[sjl.Symbol.iterator];
-    };
-
-    /**
-     * @param iterator {Iterator}
-     * @returns {Array}
-     */
-    sjl.iteratorToArray = function (iterator) {
-        var current = iterator.next(),
-            out = [];
-        while (current.done === false) {
-            out.push(current.value);
-        }
-        return out;
-    };
-
-    /**
-     * @allParams {*} - [,arrayLike {*}].  One or more array like objects.
-     * @returns {Array|null}
-     */
-    sjl.getArrayLikes = function (/* [,arrayLike] */) {
-        return sjl.argsToArray(arguments).filter(function (arg) {
-            return Array.isArray(arg) ||
-                sjl.classOfIs(arg, 'Arguments') ||
-                (sjl.isset(WeakSet) && sjl.classOfIs(arg, WeakSet)) ||
-                (sjl.isset(sjl.stdlib.SjlSet) && sjl.classOfIs(arg, sjl.stdlib.SjlSet)) ||
-                (sjl.isset(Set) && sjl.classOfIs(arg, Set));
-        });
-    };
-
-    /**
-     * @param obj {*}
-     * @returns {Array<Array<*,*>>} - Array map.  I.e., [[key{*}, value{*}]].
-     */
-    sjl.objToArrayMap = function (obj) {
-        var keys = sjl.keys(obj);
-        if (keys.length === 0) {
-            return [];
-        }
-        return keys.map(function (key) {
-            return [key, obj[key]];
-        });
-    };
-
-    /**
-     * @param setObj {{entries: {Function}} | Set | WeakSet | Map | WeakMap | SjlSet | SjlMap} - Object with `entries` method.
-     *  E.g., Set, WeakSet, Map, WeakMap, SjlSet, SjlMap
-     * @returns {Array}
-     */
-    sjl.setToArray = function (setObj) {
-        var iterator = setObj.entries(),
-            current = iterator.next(),
-            out = [];
-        while (current.done === false) {
-            out.push(current.value);
-            current = iterator.next();
-        }
-        return out;
-    };
-
-    /**
-     * @param mapObj {{entries: {Function}} | Set | WeakSet | Map | WeakMap | SjlSet | SjlMap} - Object with `entries` method.
-     * @returns {Array}
-     */
-    sjl.mapToArray = function (mapObj) {
-        return sjl.setToArray(mapObj);
-    };
-
-    /**
-     * @param arrayLike {*}
-     * @returns {Array|Undefined} - `Undefined` if couldn't find array like.
-     */
-    sjl.arrayLikeToArray = function (arrayLike) {
-        var out,
-            classOfArrayLike = sjl.classOf(arrayLike);
-        switch (classOfArrayLike) {
-            case 'Arguments':
-                out = sjl.argsToArray(arrayLike);
-                break;
-            case 'SjlSet':
-            case 'WeakSet':
-            case 'Set':
-                out = sjl.setToArray(arrayLike);
-                break;
-            case 'Map':
-            case 'WeakMap':
-            case 'SjlMap':
-                out = sjl.mapToArray(arrayLike);
-                break;
-            case 'Array':
-                out = arrayLike;
-                break;
-            case 'String':
-                out = arrayLike.split('');
-                break;
-            default:
-                break;
-        }
-        return out;
-    };
-
-    /**
-     * @param arrayLike {*}
-     * @returns {Array|Undefined} - `Undefined` if couldn't find array like.
-     */
-    sjl.notArrayLikeToArray = function (arrayLike) {
-        var out,
-            classOfArrayLike = sjl.classOf(arrayLike);
-        switch (classOfArrayLike) {
-            case 'Object':
-                if (sjl.hasIterator(classOfArrayLike)) {
-                    out = sjl.iteratorToArray(sjl.getIterator(classOfArrayLike));
+        sjl = isNodeEnv ? require('./../sjl.js') : window.sjl || {},
+        Extendable = sjl.defineSubClass(Function, function Extendable() {}),
+        Identity = Extendable.extend({
+            constructor: function Identity (value) {
+                if (!(this instanceof Identity)) {
+                    return Identity.of(value);
                 }
-                else {
-                    out = sjl.objToArrayMap(arrayLike);
+                addPropertyValue(this, value);
+            },
+            map: function (func) {
+                return Identity.of(func(this.value));
+            },
+            flatten: function () {
+                var value = this.value;
+                while (value instanceof Just) {
+                    value = value.value;
                 }
-                break;
-            case 'Number':
-                out = arrayLike + ''.split('');
-                break;
-            case 'Function':
-                out = sjl.toArray(arrayLike());
-                break;
-            default:
-                // If can't operate on value throw an error
-                if (sjl.classOfIsMulti(arrayLike, 'Null', 'Undefined', 'Symbol', 'Boolean')) {
-                    throw new TypeError('`sjl.toArray` cannot operate on values of type' +
-                        ' `Null`, `Undefined`, `Symbol`, `Boolean`.  ' +
-                        'Value type passed in: `' + classOfArrayLike + '`.');
+                return Identity(value);
+            },
+            unwrap: function () {
+                return this.flatten().value;
+            },
+            fnApply: function (obj) {
+                return obj.map(this.value);
+            },
+            fnBind: sjl.curry2(function (fn, mappable) {
+                return mappable.map(fn(this.value)).flatten();
+            }),
+        }, {
+            of: function (value) {
+                return new Identity(value);
+            }
+        }),
+        Just = Identity.extend({
+            constructor: function Just (value) {
+                if (!(this instanceof Just)) {
+                    return Just.of(value);
                 }
-                // Else wrap value in array and give a warning
-                else {
-                    console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
-                        'Value and type: ' + arrayLike + ', ', classOfArrayLike);
-                    out = [arrayLike];
+                Identity.call(this, value);
+            },
+            map: function (func) {
+                return sjl.isset(this.value) ? Just(func(this.value)) : Nothing();
+            },
+            flatten: function () {
+                var value = this.value;
+                while (value instanceof Just) {
+                    value = value.value;
                 }
-                break;
-        }
-        return out;
-    };
+                return sjl.isset(value) ? Just(value): Nothing();
+            }
+        }, {
+            of: function (value) {
+                return new Just(value);
+            }
+        }),
+        returnNothing = function () {
+            return Nothing();
+        },
+        Nothing = Extendable.extend({
+            constructor: function Nothing () {
+                if (!(this instanceof Nothing)) {
+                    return Nothing.of();
+                }
+                Object.defineProperty(this, 'value', {
+                    value: null
+                });
+            },
+            map: returnNothing,
+            unwrap: function () {
+                return this.flatten().value;
+            },
+            flatten: returnNothing,
+            fnApply: returnNothing,
+            fnBind: returnNothing
+        }, {
+            of: function () {
+                return new Nothing();
+            }
+        }),
 
-    /**
-     * @param arrayLike {*}
-     * @returns {Array|Undefined}
-     */
-    sjl.toArray = function (arrayLike) {
-        return sjl.arrayLikeToArray(arrayLike) ||
-            sjl.notArrayLikeToArray(arrayLike);
-    };
+        /**
+         * `fn` package.  Includes some functional members
+         * @type {{map: *, flatten: fnPackage.flatten, unwrap: fnPackage.unwrap, apply: *, bind: *, Identity: (any), Just: (any), Nothing: (any)}}
+         */
+        fnPackage = {
 
-    /**
-     * @returns {Array}
-     */
-    sjl.concatArrayLikes = function (/* [,arrayLike] */) {
-        return sjl.getArrayLikes.apply(null, arguments).reduce(function (arr1, arr2) {
-            return arr1.concat(sjl.toArray(arr2));
-        }, []);
-    };
+            map: sjl.curry2(function (obj, fn) {
+                return obj.map(fn);
+            }),
+            flatten: function (obj) {
+                return obj.flatten();
+            },
+            unwrap: function (obj) {
+                return obj.unwrap();
+            },
+            fnApply: sjl.curry2(function (obj1, obj2) {
+                return obj1.fnApply(obj2);
+            }),
+            fnBind: sjl.curry3(function (obj1, obj2, fn) {
+                return obj1.fnBind(fn, obj2);
+            }),
+
+            Identity: Identity,
+            Just: Just,
+            Nothing: Nothing
+        };
 
     // Export `Extendable`
     if (isNodeEnv) {
-        module.exports = sjl;
+        module.exports = fnPackage;
     }
-    else if (window.__isAmd) {
-        return sjl;
+    else {
+        sjl.ns('fn', fnPackage);
+        sjl.fn = sjl.ns.fn;
+        if (window.__isAmd) {
+            return Extendable;
+        }
     }
 
 }());

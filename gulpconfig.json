@@ -8,11 +8,11 @@
   ],
   "sjl-minimal": [
     "./src/sjl.js",
-    "./src/fn.js"
+    "./src/fn/fn.js"
   ],
   "sjl": [
     "./src/sjl.js",
-    "./src/sjlfn.js",
+    "./src/fn/fn.js",
     "./src/stdlib/Extendable.js",
     "./src/stdlib/Config.js",
     "./src/stdlib/Optionable.js",
