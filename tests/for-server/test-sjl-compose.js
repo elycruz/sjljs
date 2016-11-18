@@ -35,7 +35,7 @@ describe('sjl.compose', function () {
             max = curry2(Math.max),
             pow = curry2(Math.pow),
             composed = sjl.compose(min(8), max(5), pow(2)),
-            randomNum = curry2(function (start, end) { return Math.random() * end + start; }),
+            randomNum = curry2(function (start, end) { return Math.round(Math.random() * end + start); }),
             random = randomNum(0),
             expectedFor = function (num) { return min(8, max(5, pow(num, 2))); };
             [8,5,3,2,1,0, random(89), random(55), random(34)].forEach(function (num) {

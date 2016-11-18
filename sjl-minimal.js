@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 6.2.1 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 2c056e116a35c3e99920eca12c479074 
- * | Built-on: Sun Nov 13 2016 22:06:27 GMT-0500 (Eastern Standard Time) 
+ * | md5checksum: d2171294169b9c4125d31c388b7ccb0d 
+ * | Built-on: Mon Nov 14 2016 10:56:30 GMT-0500 (EST) 
  **/
 /**
  * The `sjl` module definition.
@@ -1566,7 +1566,7 @@
             },
             flatten: function () {
                 var value = this.value;
-                while (value instanceof Just) {
+                while (value instanceof Identity) {
                     value = value.value;
                 }
                 return Identity(value);
@@ -1575,10 +1575,10 @@
                 return this.flatten().value;
             },
             fnApply: function (obj) {
-                return obj.map(this.value);
+                return obj.map(this.unwrap());
             },
             fnBind: sjl.curry2(function (fn, mappable) {
-                return mappable.map(fn(this.value)).flatten();
+                return mappable.map(fn(this.unwrap())).flatten();
             }),
         }, {
             of: function (value) {
@@ -1608,12 +1608,12 @@
             }
         }),
         returnNothing = function () {
-            return Nothing();
+            return Nothing.of();
         },
         Nothing = Extendable.extend({
             constructor: function Nothing () {
                 if (!(this instanceof Nothing)) {
-                    return Nothing.of();
+                    return returnNothing();
                 }
                 Object.defineProperty(this, 'value', {
                     value: null

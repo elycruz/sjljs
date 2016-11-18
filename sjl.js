@@ -1,7 +1,7 @@
 /**! sjljs 6.2.1
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: 85423b48f544a37e343f4873d7e61a21
- * | Built-on: Sun Nov 13 2016 22:06:28 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: 968d6d6f0c400fe1ac61dee569213187
+ * | Built-on: Mon Nov 14 2016 10:56:32 GMT-0500 (EST)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
@@ -1565,7 +1565,7 @@
             },
             flatten: function () {
                 var value = this.value;
-                while (value instanceof Just) {
+                while (value instanceof Identity) {
                     value = value.value;
                 }
                 return Identity(value);
@@ -1574,10 +1574,10 @@
                 return this.flatten().value;
             },
             fnApply: function (obj) {
-                return obj.map(this.value);
+                return obj.map(this.unwrap());
             },
             fnBind: sjl.curry2(function (fn, mappable) {
-                return mappable.map(fn(this.value)).flatten();
+                return mappable.map(fn(this.unwrap())).flatten();
             }),
         }, {
             of: function (value) {
@@ -1607,12 +1607,12 @@
             }
         }),
         returnNothing = function () {
-            return Nothing();
+            return Nothing.of();
         },
         Nothing = Extendable.extend({
             constructor: function Nothing () {
                 if (!(this instanceof Nothing)) {
-                    return Nothing.of();
+                    return returnNothing();
                 }
                 Object.defineProperty(this, 'value', {
                     value: null

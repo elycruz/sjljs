@@ -290,7 +290,7 @@ describe('sjl.compose', function () {
             max = curry2(Math.max),
             pow = curry2(Math.pow),
             composed = sjl.compose(min(8), max(5), pow(2)),
-            randomNum = curry2(function (start, end) { return Math.random() * end + start; }),
+            randomNum = curry2(function (start, end) { return Math.round(Math.random() * end + start); }),
             random = randomNum(0),
             expectedFor = function (num) { return min(8, max(5, pow(num, 2))); };
             [8,5,3,2,1,0, random(89), random(55), random(34)].forEach(function (num) {
@@ -715,6 +715,72 @@ describe('sjl.extractFromArrayAt', function () {
             });
             // console.log(result);
         });
+    });
+
+});
+
+/**
+ * Created by edlc on 11/14/16.
+ */
+describe('sjl.curry', function () {
+
+            Identity = sjl.fn.fn.Identity;
+
+    it ('should have the appropriate (mondaic) interface.', function () {
+        let identity = Identity();
+        ['map', 'flatten', 'unwrap', 'fnBind', 'fnApply'].forEach(function (key) {
+            expect(identity[key]).to.be.instanceOf(Function);
+        });
+    });
+
+    it ('should have a `of` static method.', function () {
+        expect(Identity.of).to.be.instanceOf(Function);
+    });
+
+    describe ('#map', function () {
+        let identity = Identity(2),
+            pow = sjl.curry2(Math.pow),
+            result = identity.map(pow(8));
+        it ('should pass `Identity`\'s contained value to passed in function.', function () {
+            expect(result.unwrap()).to.equal(64);
+        });
+        it ('should return a new instance of `Identity`.', function () {
+            expect(result).to.be.instanceOf(Identity);
+        });
+    });
+
+    describe ('#flatten', function () {
+        it ('should flatten direct descendant `Identity` objects into one `Identity` object' +
+            ' and if no direct descendants should return a new instance.', function () {
+            [Identity(Identity(Identity(5))), Identity(Identity()), Identity()].forEach(function (id) {
+                let result = id.flatten();
+                expect(result).to.be.instanceOf(Identity);
+                expect(result.value instanceof Identity).to.equal(false);
+                if (sjl.isUndefined(result.value)) {
+                    expect(result === id).to.equal(false);
+                }
+            });
+        });
+    });
+
+    describe ('#unwrap', function () {
+        it ('should return it\'s contained value.', function () {
+            let id1= Identity(1),
+                id2 = Identity(),
+                id3 = Identity(3),
+                id4 = Identity(id3);
+            expect(id1.unwrap()).to.equal(1);
+            expect(id2.unwrap()).to.equal(undefined);
+            expect(id4.unwrap()).to.equal(id3.unwrap());
+        });
+    });
+
+    describe ('#fnApply', function () {
+        it ('should contain more tests.');
+    });
+
+    describe ('#fnBind', function () {
+        it ('should contain more tests.');
     });
 
 });
