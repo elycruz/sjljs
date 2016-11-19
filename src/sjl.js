@@ -1480,6 +1480,9 @@
         sjl.Symbol = Symbol;
     }
 
+    // Export this variable
+    sjl.defineEnumProp(sjl, 'isNodeEnv', isNodeEnv);
+
     // Node specific code
     if (isNodeEnv) {
         /**
@@ -1487,13 +1490,13 @@
          */
         // Set package namespace and alias for it
         sjl.package = sjl.ns = new (require('./nodejs/Namespace'))(
-            __dirname, ['.js', '.json']
+            __dirname, ['.js', '.json'], null, ['sjl.js']
         );
 
         // Short cut to namespaces
-        Object.keys(sjl.ns).forEach(function (key) {
-            sjl[key] = sjl.ns[key];
-        });
+        // Object.keys(sjl.ns).forEach(function (key) {
+        //     sjl[key] = sjl.ns[key];
+        // });
 
         // Methods not needed for NodeJs environment
         unset(sjl, 'createTopLevelPackage');
@@ -1522,13 +1525,13 @@
 
         // Check if amd is being used (store this check globally to reduce
         //  boilerplate code in other components).
-        defineEnumProp(sjl, '__isAmd', isFunction(define) && isset(define.amd));
+        defineEnumProp(sjl, 'isAmd', isFunction(define) && isset(define.amd));
 
         // Export sjl globally
         window.sjl = sjl;
 
         // Return sjl if amd is being used
-        if (sjl.__isAmd) {
+        if (sjl.isAmd) {
             return sjl;
         }
     }

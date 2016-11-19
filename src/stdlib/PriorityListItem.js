@@ -7,7 +7,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
-        Extendable = sjl.stdlib.Extendable,
+        Extendable = sjl.ns.stdlib.Extendable,
 
     /**
      * Used as default constructor for wrapping items in when `wrapItems` is set to `true` on
@@ -97,7 +97,7 @@
         sjl.ns('stdlib.PriorityListItem', PriorityListItem);
 
         // If `Amd` return the class
-        if (sjl.__isAmd) {
+        if (sjl.isAmd) {
             return PriorityListItem;
         }
     }

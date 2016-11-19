@@ -8,7 +8,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        Iterator = sjl.stdlib.Iterator,
+        Iterator = sjl.ns.stdlib.Iterator,
         moduleName = 'ObjectIterator',
         contextName = 'sjl.stdlib.' + moduleName,
 
@@ -144,7 +144,7 @@
     }
     else {
         sjl.ns('stdlib.' + moduleName, ObjectIterator);
-        if (sjl.__isAmd) {
+        if (sjl.isAmd) {
             return ObjectIterator;
         }
     }

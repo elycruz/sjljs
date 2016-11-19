@@ -16,7 +16,7 @@
     }
 
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../sjl.js') : window.sjl || {},
+        sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
         Extendable = sjl.defineSubClass(Function, function Extendable() {}),
         Identity = Extendable.extend({
             constructor: function Identity (value) {
@@ -129,7 +129,7 @@
         sjl.ns('fn', fnPackage);
         sjl.fn = sjl.ns.fn;
 
-        if (sjl.__isAmd) {
+        if (sjl.isAmd) {
             return Extendable;
         }
     }

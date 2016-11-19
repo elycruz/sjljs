@@ -144,7 +144,7 @@ describe('sjl.stdlib.PriorityList', function () {
         it ('should return an iterator.', function () {
             var priorityList = new PriorityList(entries, true),
                 iterator = priorityList.entries();
-                expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
+                expect(iterator).to.be.instanceOf(sjl.ns.stdlib.Iterator);
         });
 
         it ('should have all values sorted when LIFO is true.', function () {
@@ -258,7 +258,7 @@ describe('sjl.stdlib.PriorityList', function () {
 
         it ('should return an iterable', function () {
             var iterator = priorityList.values();
-            expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
+            expect(iterator).to.be.instanceOf(sjl.ns.stdlib.Iterator);
         });
 
         it ('should return an iterator that contains all values in the expected order (FIFO by priority/serial).', function () {

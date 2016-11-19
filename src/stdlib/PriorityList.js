@@ -8,9 +8,10 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('./../sjl.js') : window.sjl,
-        ObjectIterator = sjl.stdlib.ObjectIterator,
-        SjlMap = sjl.stdlib.SjlMap,
-        Iterator = sjl.stdlib.Iterator,
+        sjlNamespace = sjl.ns,
+        ObjectIterator = sjlNamespace.stdlib.ObjectIterator,
+        SjlMap = sjlNamespace.stdlib.SjlMap,
+        Iterator = sjlNamespace.stdlib.Iterator,
 
         /**
          * PriorityList Constructor (internal docblock).
@@ -444,7 +445,7 @@
     });
 
     Object.defineProperty(PriorityList, 'DefaultPriorityListItemConstructor', {
-        value: sjl.stdlib.PriorityListItem,
+        value: sjl.ns.stdlib.PriorityListItem,
         enumerable: true
     });
 
@@ -456,7 +457,7 @@
         sjl.ns('stdlib.PriorityList', PriorityList);
 
         // If `Amd` return the class
-        if (sjl.__isAmd) {
+        if (sjl.isAmd) {
             return PriorityList;
         }
     }

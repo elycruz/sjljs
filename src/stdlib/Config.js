@@ -14,7 +14,7 @@
          * @class sjl.stdlib.Config
          * @extends sjl.stdlib.Extendable
          */
-        Config = sjl.stdlib.Extendable.extend({
+        Config = sjl.ns.stdlib.Extendable.extend({
 
             constructor: function Config () {
                 if (arguments.length > 0) {
@@ -91,7 +91,7 @@
     }
     else {
         sjl.ns('stdlib.Config', Config);
-        if (sjl.__isAmd) {
+        if (sjl.isAmd) {
             return Config;
         }
     }

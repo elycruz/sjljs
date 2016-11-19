@@ -26,10 +26,10 @@ describe('sjl.stdlib.Config', function () {
         },
         exampleObjKeys = Object.keys(exampleObj),
         exampleObj2Keys = Object.keys(exampleObj2),
-        Config = sjl.stdlib.Config;
+        Config = sjl.ns.stdlib.Config;
 
     it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
-        expect(new sjl.stdlib.Config()).to.be.instanceof(sjl.stdlib.Extendable);
+        expect(new Config()).to.be.instanceof(sjl.ns.stdlib.Extendable);
     });
 
     it ('should be able to set multiple properties from one object passed int to constructor.', function () {

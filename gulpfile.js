@@ -25,7 +25,8 @@ var packageJson = require('./package'),
         .pipe(duration, chalk.cyan("jshint duration"))
         .pipe(jshint.reporter, 'jshint-stylish'),
     PackageMemberListReadStream = require('./node-scripts/PackageMemberListReadStream'),
-    SjlDirectMemberListReadStream = require('./node-scripts/SjlDirectMemberListReadStream');
+    SjlDirectMemberListReadStream = require('./node-scripts/SjlDirectMemberListReadStream'),
+    VersionNumberStream = require('./node-scripts/VersionNumberReadStream');
 
 gulp.task('package-member-list-markdown', function () {
     var outputDir = './markdown-fragments/generated',
@@ -48,6 +49,13 @@ gulp.task('sjl-direct-member-list-markdown', function () {
     return (new SjlDirectMemberListReadStream())
         .pipe(fs.createWriteStream(filePath));
 });
+
+gulp.task('generate-version-number', function () {
+    return (new VersionNumberStream())
+        .pipe(fs.createWriteStream('./src/generated/version.js'));
+});
+
+gulp.task('gvn', ['generate-version-number']);
 
 gulp.task('readme', function () {
     return gulp.src(gulpConfig.readme)
@@ -93,7 +101,7 @@ gulp.task('tests', function () {
         .pipe(mocha());
 });
 
-gulp.task('concat', ['jshint'], function () {
+gulp.task('concat', ['gvn', 'jshint'], function () {
     return gulp.src(gulpConfig.sjl)
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
@@ -131,7 +139,7 @@ gulp.task('uglify', ['concat'], function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('minimal', function () {
+gulp.task('minimal',['uglify'], function () {
     return gulp.src(gulpConfig['sjl-minimal'])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.js'))
@@ -180,6 +188,8 @@ gulp.task('make-browser-test-suite', function () {
         .pipe(gulp.dest('./'));
 });
 
+gulp.task('mbts', ['make-browser-test-suite']);
+
 gulp.task('jsdoc', function (cb) {
     gulp.src(['README.md', './src/**/*.js'], {read: false})
         .pipe(jsdoc({
@@ -200,7 +210,6 @@ gulp.task('watch', function () {
         //'jsdoc',
         'concat',
         'uglify',
-        'minimal',
         'minimal-min',
         'make-browser-test-suite'
     ]);

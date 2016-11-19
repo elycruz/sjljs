@@ -9,12 +9,11 @@ describe('sjl.curry', function () {
     'use strict';
     let chai = require('chai'),
         sjl = require('./../../src/sjl'),
-        assert = chai.assert,
-        expect = chai.expect,
+        expect = chai.expect;
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~
 
-        Identity = sjl.fn.fn.Identity;
+    let Identity = sjl.ns.fn.Identity;
 
     it ('should have the appropriate (mondaic) interface.', function () {
         let identity = Identity();

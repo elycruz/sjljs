@@ -9,6 +9,32 @@
 // Require `sjljs` (get's set on `window` so no need to put it in a variable).
 require('sjl');
 
+/**
+ * Created by elyde on 11/19/2016.
+ */
+
+describe ('sjl.classOf', function () {
+
+        // Do not run these tests for the browser
+    if (!sjl.isNodeEnv) {
+        return;
+    }
+
+    let Namespace = sjl.ns.nodejs.Namespace,
+        ns = new Namespace(path.join(__dirname, './../../src'));
+
+    it ('should generate a namespace object that has the contents of the "./src/version.js" file.', function () {
+        if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'dev') {
+            console.log('---------------- From Tests ------------------');
+            console.log('Generated Namespace Obj: ', ns);
+            console.log('----------------------------------------------');
+            console.log('\n');
+        }
+        expect(ns.version === sjl.version).to.equal(true);
+    });
+
+});
+
 describe('sjl.argsToArray', function () {
 
         it('should return an array for an arguments object.', function () {
@@ -724,7 +750,7 @@ describe('sjl.extractFromArrayAt', function () {
  */
 describe('sjl.curry', function () {
 
-            Identity = sjl.fn.fn.Identity;
+        let Identity = sjl.ns.fn.Identity;
 
     it ('should have the appropriate (mondaic) interface.', function () {
         let identity = Identity();
@@ -1586,6 +1612,20 @@ describe('sjl.unset', function () {
  */
 
 /**
+ * Created by elyde on 11/19/2016.
+ */
+
+describe('sjl.version', function () {
+
+        it ('should be set.', function () {
+        // @note below member is imported as side effect for node version only
+        // (it is bundled with the browser version)
+        var version = sjl.isNodeEnv ? require('./../../src/generated/version') : sjl.version;
+        expect(sjl.notEmptyAndOfType(version, String)).to.equal(true);
+    });
+
+});
+/**
  * Created by elydelacruz on 4/20/16.
  */
 describe('sjl.wrapPointer', function () {
@@ -1624,10 +1664,10 @@ describe('sjl.stdlib.Config', function () {
         },
         exampleObjKeys = Object.keys(exampleObj),
         exampleObj2Keys = Object.keys(exampleObj2),
-        Config = sjl.stdlib.Config;
+        Config = sjl.ns.stdlib.Config;
 
     it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
-        expect(new sjl.stdlib.Config()).to.be.instanceof(sjl.stdlib.Extendable);
+        expect(new Config()).to.be.instanceof(sjl.ns.stdlib.Extendable);
     });
 
     it ('should be able to set multiple properties from one object passed int to constructor.', function () {
@@ -1916,10 +1956,10 @@ describe('sjl.stdlib.Optionable', function () {
         },
         exampleObjKeys = Object.keys(exampleObj),
         exampleObj2Keys = Object.keys(exampleObj2),
-        Optionable = sjl.stdlib.Optionable;
+        Optionable = sjl.ns.stdlib.Optionable;
 
     it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
-        expect(new sjl.stdlib.Optionable()).to.be.instanceof(sjl.stdlib.Extendable);
+        expect(new sjl.ns.stdlib.Optionable()).to.be.instanceof(sjl.ns.stdlib.Extendable);
     });
 
     it ('should be able to set multiple properties from one object passed int to constructor.', function () {
@@ -2105,7 +2145,7 @@ describe('sjl.stdlib.Optionable', function () {
         it ('should return the options store which should be an instance of `sjl.stdlib.Config`.', function () {
             var optionable = new Optionable();
             expect(optionable.getStoreHash).to.be.instanceof(Function);
-            expect(optionable.getStoreHash()).to.be.instanceof(sjl.stdlib.Config);
+            expect(optionable.getStoreHash()).to.be.instanceof(sjl.ns.stdlib.Config);
         });
     });
 
@@ -2247,7 +2287,7 @@ describe('sjl.stdlib.PriorityList', function () {
         it ('should return an iterator.', function () {
             var priorityList = new PriorityList(entries, true),
                 iterator = priorityList.entries();
-                expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
+                expect(iterator).to.be.instanceOf(sjl.ns.stdlib.Iterator);
         });
 
         it ('should have all values sorted when LIFO is true.', function () {
@@ -2361,7 +2401,7 @@ describe('sjl.stdlib.PriorityList', function () {
 
         it ('should return an iterable', function () {
             var iterator = priorityList.values();
-            expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
+            expect(iterator).to.be.instanceOf(sjl.ns.stdlib.Iterator);
         });
 
         it ('should return an iterator that contains all values in the expected order (FIFO by priority/serial).', function () {
