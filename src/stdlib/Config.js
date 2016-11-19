@@ -91,7 +91,7 @@
     }
     else {
         sjl.ns('stdlib.Config', Config);
-        if (window.__isAmd) {
+        if (sjl.__isAmd) {
             return Config;
         }
     }

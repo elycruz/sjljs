@@ -456,7 +456,7 @@
         sjl.ns('stdlib.PriorityList', PriorityList);
 
         // If `Amd` return the class
-        if (window.__isAmd) {
+        if (sjl.__isAmd) {
             return PriorityList;
         }
     }

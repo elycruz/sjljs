@@ -98,10 +98,9 @@
 
         /**
          * `fn` package.  Includes some functional members
-         * @type {{map: *, flatten: fnPackage.flatten, unwrap: fnPackage.unwrap, apply: *, bind: *, Identity: (any), Just: (any), Nothing: (any)}}
+         * @type {Object}
          */
         fnPackage = {
-
             map: sjl.curry2(function (obj, fn) {
                 return obj.map(fn);
             }),
@@ -117,7 +116,6 @@
             fnBind: sjl.curry3(function (obj1, obj2, fn) {
                 return obj1.fnBind(fn, obj2);
             }),
-
             Identity: Identity,
             Just: Just,
             Nothing: Nothing
@@ -130,7 +128,8 @@
     else {
         sjl.ns('fn', fnPackage);
         sjl.fn = sjl.ns.fn;
-        if (window.__isAmd) {
+
+        if (sjl.__isAmd) {
             return Extendable;
         }
     }

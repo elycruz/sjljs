@@ -106,7 +106,7 @@
     }
     else {
         sjl.ns('stdlib.Optionable', Optionable);
-        if (window.__isAmd) {
+        if (sjl.__isAmd) {
             return Optionable;
         }
     }

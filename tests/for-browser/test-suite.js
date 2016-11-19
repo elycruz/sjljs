@@ -776,6 +776,7 @@ describe('sjl.curry', function () {
     });
 
     describe ('#fnApply', function () {
+
         it ('should contain more tests.');
     });
 

@@ -144,7 +144,7 @@
     }
     else {
         sjl.ns('stdlib.' + moduleName, ObjectIterator);
-        if (window.__isAmd) {
+        if (sjl.__isAmd) {
             return ObjectIterator;
         }
     }

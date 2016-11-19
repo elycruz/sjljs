@@ -59,18 +59,16 @@
 			</li>
 			
 		</ul>
-        
-            <div class="col-sm-3 col-md-3">
-                <form class="navbar-form" role="search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
-                        </div>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
                     </div>
-                </form>
-            </div>
-        
+                </div>
+            </form>
+        </div>
 	</div>
 
 </div>
@@ -115,8 +113,7 @@
 
     
     <div class="description">
-        Optionable Constructor merges all objects passed in to it's `options` hash.
-Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
+        Optionable Constructor merges all objects passed in to it's `options` hash.Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
     </div>
     
 
@@ -213,16 +210,14 @@ Also this class has convenience methods for querying it's `options` hash (see `g
             
 <hr>
 <dt class="name" id="optionsKeyName">
-    <h4 id="optionsKeyName"><span class="type-signature">&lt;readonly> </span>optionsKeyName<span class="type-signature"> :String</span></h4>
+    <h4><span class="type-signature">&lt;readonly> </span>optionsKeyName<span class="type-signature"> :String</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        Options key name.  Set when constructing an Optionable instance via the
-options hash passed in.
-Default value: '_options'
+        Options key name.  Set when constructing an Optionable instance via theoptions hash passed in.Default value: '_options'
     </div>
     
 
@@ -282,14 +277,7 @@ Default value: '_options'
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">var model = new sjl.stdlib.Optionable({optionsKeyName: &#x27;options&#x27;});
-model.options instanceof sjl.stdlib.Config === true // true;
-
-var model2 = new sjl.stdlib.Optionable(); // Uses default key name &#x27;_options&#x27; in this case scenario
-model2._options instanceof sjl.stdlib.Config === true // true;
-
-var model3 = new sjl.stdlib.Optionable({optionsKeyName: &#x27;_attributes&#x27;});
-model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
+    <pre class="sunlight-highlight-javascript">var model = new sjl.stdlib.Optionable({optionsKeyName: &#x27;options&#x27;});model.options instanceof sjl.stdlib.Config === true // true;var model2 = new sjl.stdlib.Optionable(); // Uses default key name &#x27;_options&#x27; in this case scenariomodel2._options instanceof sjl.stdlib.Config === true // true;var model3 = new sjl.stdlib.Optionable({optionsKeyName: &#x27;_attributes&#x27;});model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
 
 
     
@@ -455,8 +443,7 @@ model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
 
     
     <div class="description">
-        Checks a key/namespace string ('a.b.c') to see if `this.options`
- has a value (a non falsy value otherwise returns `false`).
+        Checks a key/namespace string ('a.b.c') to see if `this.options` has a value (a non falsy value otherwise returns `false`).
     </div>
     
 
@@ -598,8 +585,7 @@ model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
 
     
     <div class="description">
-        Sets an option (key, value) or multiple options (Object)
-based on what's passed in.
+        Sets an option (key, value) or multiple options (Object)based on what's passed in.
     </div>
     
 
@@ -712,30 +698,28 @@ based on what's passed in.
 </div>
 </div>
 
-
-    <div class="modal fade" id="searchResults">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Search results</h4>
-          </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div>
-
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 <footer>
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-11-14T10:56:31-05:00
+		on 2016-11-19T09:14:57-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -743,9 +727,7 @@ based on what's passed in.
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-
-    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
-
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
 
 <script>
 $( function () {
@@ -755,7 +737,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -791,7 +773,8 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			return $( heading ).attr( "id" ) || ( prefix + i );
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -817,13 +800,11 @@ $( function () {
 <!--Google Analytics-->
 
 
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            SearcherDisplay.init();
-        });
-    </script>
-
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
 
 </body>
 </html>

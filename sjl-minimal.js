@@ -1,7 +1,7 @@
 /**! sjl-minimal.js 6.2.1 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: d2171294169b9c4125d31c388b7ccb0d 
- * | Built-on: Mon Nov 14 2016 10:56:30 GMT-0500 (EST) 
+ * | md5checksum: da93215c6b2ab2d338838b962d1ac410 
+ * | Built-on: Sat Nov 19 2016 09:32:28 GMT-0500 (Eastern Standard Time) 
  **/
 /**
  * The `sjl` module definition.
@@ -23,13 +23,9 @@
         _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         slice = Array.prototype.slice,
-        globalContext = isNodeEnv ? global : window,
         PlaceHolder = function PlaceHolder() {},
-        __ = new PlaceHolder();
-
-    // Check if amd is being used (store this check globally to reduce
-    //  boilerplate code in other components).
-    globalContext.__isAmd = typeof define === 'function' && define.amd;
+        placeholder = new PlaceHolder(),
+        __ = Object.freeze ? Object.freeze(placeholder) : placeholder;
 
     /**
      * Composes one or more functions into a new one.
@@ -1183,6 +1179,10 @@
         return arg0;
     }
 
+    function isIteratorLike (obj) {
+        return hasMethod(obj, 'next');
+    }
+
     /**
      * @param value
      * @returns {Boolean}
@@ -1208,6 +1208,7 @@
             out = [];
         while (current.done === false) {
             out.push(current.value);
+            current = iterator.next();
         }
         return out;
     }
@@ -1285,10 +1286,10 @@
             case 'SjlMap':
                 out = mapToArray(arrayLike);
                 break;
-            case 'Array':
+            case _Array:
                 out = arrayLike;
                 break;
-            case 'String':
+            case _String:
                 out = arrayLike.split('');
                 break;
             default:
@@ -1305,33 +1306,33 @@
         var out,
             classOfArrayLike = classOf(arrayLike);
         switch (classOfArrayLike) {
-            case 'Object':
+            case _Object:
                 if (hasIterator(classOfArrayLike)) {
                     out = iteratorToArray(getIterator(classOfArrayLike));
+                }
+                else if (isIteratorLike(arrayLike)) {
+                    out = iteratorToArray(arrayLike);
                 }
                 else {
                     out = objToArrayMap(arrayLike);
                 }
                 break;
-            case 'Number':
+            case _Number:
                 out = arrayLike + ''.split('');
                 break;
-            case 'Function':
+            case _Function:
                 out = toArray(arrayLike());
                 break;
             default:
                 // If can't operate on value throw an error
-                if (classOfIsMulti(arrayLike, 'Null', 'Undefined', 'Symbol', 'Boolean')) {
+                if (classOfIsMulti(arrayLike, _Null, _Undefined, 'Symbol', _Boolean)) {
                     throw new TypeError('`sjl.toArray` cannot operate on values of type' +
                         ' `Null`, `Undefined`, `Symbol`, `Boolean`.  ' +
                         'Value type passed in: `' + classOfArrayLike + '`.');
                 }
-                // Else wrap value in array and give a warning
-                else {
-                    console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
-                        'Value and type: ' + arrayLike + ', ', classOfArrayLike);
-                    out = [arrayLike];
-                }
+                console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
+                    'Value received: ' + arrayLike + ', Type of value: ', classOfArrayLike);
+                out = [arrayLike];
                 break;
         }
         return out;
@@ -1351,7 +1352,7 @@
      */
     function concatArrayLikes (/* [,arrayLike] */) {
         return getArrayLikes.apply(null, arguments).reduce(function (arr1, arr2) {
-            return arr1.concat(toArray(arr2));
+            return arr1.concat(arrayLikeToArray(arr2));
         }, []);
     }
 
@@ -1361,6 +1362,7 @@
      * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
      */
     sjl = {
+        _: __, // Placeholder object
         argsToArray: argsToArray,
         arrayLikeToArray: arrayLikeToArray,
         notArrayLikeToArray: notArrayLikeToArray,
@@ -1474,7 +1476,7 @@
      */
 
     // Ensure we have access to es6 `Symbol` object
-    if (typeof Symbol === _undefined) {
+    if (isUndefined(Symbol)) {
         sjl.Symbol = {
             iterator: '@@iterator'
         };
@@ -1523,11 +1525,15 @@
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
 
+        // Check if amd is being used (store this check globally to reduce
+        //  boilerplate code in other components).
+        defineEnumProp(sjl, '__isAmd', isFunction(define) && isset(define.amd));
+
         // Export sjl globally
-        globalContext.sjl = sjl;
+        window.sjl = sjl;
 
         // Return sjl if amd is being used
-        if (globalContext.__isAmd) {
+        if (sjl.__isAmd) {
             return sjl;
         }
     }
@@ -1575,10 +1581,10 @@
                 return this.flatten().value;
             },
             fnApply: function (obj) {
-                return obj.map(this.unwrap());
+                return obj.map(this.value);
             },
             fnBind: sjl.curry2(function (fn, mappable) {
-                return mappable.map(fn(this.unwrap())).flatten();
+                return mappable.map(fn(this.value)).flatten();
             }),
         }, {
             of: function (value) {
@@ -1634,10 +1640,9 @@
 
         /**
          * `fn` package.  Includes some functional members
-         * @type {{map: *, flatten: fnPackage.flatten, unwrap: fnPackage.unwrap, apply: *, bind: *, Identity: (any), Just: (any), Nothing: (any)}}
+         * @type {Object}
          */
         fnPackage = {
-
             map: sjl.curry2(function (obj, fn) {
                 return obj.map(fn);
             }),
@@ -1653,7 +1658,6 @@
             fnBind: sjl.curry3(function (obj1, obj2, fn) {
                 return obj1.fnBind(fn, obj2);
             }),
-
             Identity: Identity,
             Just: Just,
             Nothing: Nothing
@@ -1666,7 +1670,8 @@
     else {
         sjl.ns('fn', fnPackage);
         sjl.fn = sjl.ns.fn;
-        if (window.__isAmd) {
+
+        if (sjl.__isAmd) {
             return Extendable;
         }
     }

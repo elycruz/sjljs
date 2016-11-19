@@ -40,7 +40,7 @@
     }
     else {
         sjl.ns('stdlib.Extendable', Extendable);
-        if (window.__isAmd) {
+        if (sjl.__isAmd) {
             return Extendable;
         }
     }

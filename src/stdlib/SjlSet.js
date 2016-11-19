@@ -219,7 +219,7 @@
     }
     else {
         sjl.ns('stdlib.SjlSet', SjlSet);
-        if (window.__isAmd) {
+        if (sjl.__isAmd) {
             return SjlSet;
         }
     }

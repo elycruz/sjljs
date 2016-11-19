@@ -289,7 +289,7 @@
         sjl.ns('stdlib.SjlMap', SjlMap);
 
         // If `Amd` return the class
-        if (window.__isAmd) {
+        if (sjl.__isAmd) {
             return SjlMap;
         }
     }

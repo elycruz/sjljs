@@ -18,13 +18,9 @@
         _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         slice = Array.prototype.slice,
-        globalContext = isNodeEnv ? global : window,
         PlaceHolder = function PlaceHolder() {},
-        __ = new PlaceHolder();
-
-    // Check if amd is being used (store this check globally to reduce
-    //  boilerplate code in other components).
-    globalContext.__isAmd = typeof define === 'function' && define.amd;
+        placeholder = new PlaceHolder(),
+        __ = Object.freeze ? Object.freeze(placeholder) : placeholder;
 
     /**
      * Composes one or more functions into a new one.
@@ -1178,6 +1174,10 @@
         return arg0;
     }
 
+    function isIteratorLike (obj) {
+        return hasMethod(obj, 'next');
+    }
+
     /**
      * @param value
      * @returns {Boolean}
@@ -1203,6 +1203,7 @@
             out = [];
         while (current.done === false) {
             out.push(current.value);
+            current = iterator.next();
         }
         return out;
     }
@@ -1280,10 +1281,10 @@
             case 'SjlMap':
                 out = mapToArray(arrayLike);
                 break;
-            case 'Array':
+            case _Array:
                 out = arrayLike;
                 break;
-            case 'String':
+            case _String:
                 out = arrayLike.split('');
                 break;
             default:
@@ -1300,33 +1301,33 @@
         var out,
             classOfArrayLike = classOf(arrayLike);
         switch (classOfArrayLike) {
-            case 'Object':
+            case _Object:
                 if (hasIterator(classOfArrayLike)) {
                     out = iteratorToArray(getIterator(classOfArrayLike));
+                }
+                else if (isIteratorLike(arrayLike)) {
+                    out = iteratorToArray(arrayLike);
                 }
                 else {
                     out = objToArrayMap(arrayLike);
                 }
                 break;
-            case 'Number':
+            case _Number:
                 out = arrayLike + ''.split('');
                 break;
-            case 'Function':
+            case _Function:
                 out = toArray(arrayLike());
                 break;
             default:
                 // If can't operate on value throw an error
-                if (classOfIsMulti(arrayLike, 'Null', 'Undefined', 'Symbol', 'Boolean')) {
+                if (classOfIsMulti(arrayLike, _Null, _Undefined, 'Symbol', _Boolean)) {
                     throw new TypeError('`sjl.toArray` cannot operate on values of type' +
                         ' `Null`, `Undefined`, `Symbol`, `Boolean`.  ' +
                         'Value type passed in: `' + classOfArrayLike + '`.');
                 }
-                // Else wrap value in array and give a warning
-                else {
-                    console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
-                        'Value and type: ' + arrayLike + ', ', classOfArrayLike);
-                    out = [arrayLike];
-                }
+                console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
+                    'Value received: ' + arrayLike + ', Type of value: ', classOfArrayLike);
+                out = [arrayLike];
                 break;
         }
         return out;
@@ -1346,7 +1347,7 @@
      */
     function concatArrayLikes (/* [,arrayLike] */) {
         return getArrayLikes.apply(null, arguments).reduce(function (arr1, arr2) {
-            return arr1.concat(toArray(arr2));
+            return arr1.concat(arrayLikeToArray(arr2));
         }, []);
     }
 
@@ -1356,6 +1357,7 @@
      * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
      */
     sjl = {
+        _: __, // Placeholder object
         argsToArray: argsToArray,
         arrayLikeToArray: arrayLikeToArray,
         notArrayLikeToArray: notArrayLikeToArray,
@@ -1469,7 +1471,7 @@
      */
 
     // Ensure we have access to es6 `Symbol` object
-    if (typeof Symbol === _undefined) {
+    if (isUndefined(Symbol)) {
         sjl.Symbol = {
             iterator: '@@iterator'
         };
@@ -1518,11 +1520,15 @@
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
 
+        // Check if amd is being used (store this check globally to reduce
+        //  boilerplate code in other components).
+        defineEnumProp(sjl, '__isAmd', isFunction(define) && isset(define.amd));
+
         // Export sjl globally
-        globalContext.sjl = sjl;
+        window.sjl = sjl;
 
         // Return sjl if amd is being used
-        if (globalContext.__isAmd) {
+        if (sjl.__isAmd) {
             return sjl;
         }
     }
