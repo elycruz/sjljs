@@ -69,7 +69,7 @@ function processFiles(files, dir, allowedFileExts, ignoredDirs, ignoredFileNames
             return;
         }
         if (fs.statSync(path.join(dir, file)).isDirectory()) {
-            self[file] = new Namespace(path.join(dir, file), ignoredDirs, ignoredFileNames);
+            self[file] = new Namespace(path.join(dir, file), allowedFileExts, ignoredDirs, ignoredFileNames);
         }
         else if (allowedFileExts.indexOf(path.extname(file)) > -1) {
             Object.defineProperty(self, file.substr(0, file.lastIndexOf('.')), {
