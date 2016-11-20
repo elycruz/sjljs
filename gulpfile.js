@@ -1,7 +1,10 @@
 /**
  * Created by edelacruz on 4/14/14.
  */
-var packageJson = require('./package'),
+
+'use strict';
+
+let packageJson = require('./package'),
     gulpConfig = require('./gulpconfig'),
     gulp = require('gulp'),
     concat = require('gulp-concat'),
@@ -28,7 +31,7 @@ var packageJson = require('./package'),
     SjlDirectMemberListReadStream = require('./node-scripts/SjlDirectMemberListReadStream'),
     VersionNumberStream = require('./node-scripts/VersionNumberReadStream');
 
-gulp.task('package-member-list-markdown', function () {
+gulp.task('package-member-list-md', function () {
     var outputDir = './markdown-fragments/generated',
         filePath = outputDir + '/packages-and-members-list.md';
     if (!fs.existsSync(outputDir)) {
@@ -39,7 +42,7 @@ gulp.task('package-member-list-markdown', function () {
         .pipe(fs.createWriteStream(filePath));
 });
 
-gulp.task('sjl-direct-member-list-markdown', function () {
+gulp.task('sjl-direct-member-list-md', function () {
     var outputDir = './markdown-fragments/generated',
         filePath = outputDir + '/sjl-direct-members-list.md';
     if (!fs.existsSync(outputDir)) {
@@ -55,9 +58,11 @@ gulp.task('generate-version-number', function () {
         .pipe(fs.createWriteStream('./src/generated/version.js'));
 });
 
+gulp.task('pml', ['package-member-list-md']);
+gulp.task('sdm', ['sjl-direct-member-list-md']);
 gulp.task('gvn', ['generate-version-number']);
 
-gulp.task('readme', function () {
+gulp.task('readme', ['pml', 'sdm', 'gvn'], function () {
     return gulp.src(gulpConfig.readme)
         .pipe(concat('README.md'))
         .pipe(gulp.dest('./'));
@@ -94,14 +99,14 @@ gulp.task('jshint', function () {
         .pipe(jsHintPipe());
 });
 
-gulp.task('tests', function () {
+gulp.task('tests', ['gvn'], function () {
     return gulp.src([
         'tests/for-server/*.js'
     ])
         .pipe(mocha());
 });
 
-gulp.task('concat', ['gvn', 'jshint'], function () {
+gulp.task('concat', ['tests'], function () {
     return gulp.src(gulpConfig.sjl)
         .pipe(jsHintPipe())
         .pipe(concat('./sjl.js'))
@@ -139,7 +144,7 @@ gulp.task('uglify', ['concat'], function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('minimal',['uglify'], function () {
+gulp.task('minimal', ['tests'], function () {
     return gulp.src(gulpConfig['sjl-minimal'])
         .pipe(jsHintPipe())
         .pipe(concat('./sjl-minimal.js'))
@@ -178,7 +183,7 @@ gulp.task('minimal-min', ['minimal'], function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('make-browser-test-suite', function () {
+gulp.task('make-browser-test-suite', ['uglify'], function () {
     return gulp.src([
         'tests/for-browser/tests-header.js',
         'tests/for-server/**/*.js'])
@@ -190,7 +195,7 @@ gulp.task('make-browser-test-suite', function () {
 
 gulp.task('mbts', ['make-browser-test-suite']);
 
-gulp.task('jsdoc', function (cb) {
+gulp.task('jsdoc', ['readme'], function (cb) {
     gulp.src(['README.md', './src/**/*.js'], {read: false})
         .pipe(jsdoc({
             opts: {
@@ -202,20 +207,23 @@ gulp.task('jsdoc', function (cb) {
         }, cb));
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', ['all'], function () {
 
     // Watch all javascript files
-    gulp.watch(['./tests/for-server/*', './src/**/*', './node_modules/**/*'], [
+    gulp.watch([
+        './tests/for-server/**/*',
+        './src/**/*',
+        './node_modules/**/*'
+    ], [
         'jshint',
-        //'jsdoc',
-        'concat',
-        'uglify',
         'minimal-min',
-        'make-browser-test-suite'
+        'mbts'
     ]);
 
+    gulp.watch('./tests/for-server/**/*.js', ['mbts']);
+
     // Watch readme-sections for 'jsdoc' task
-    // gulp.watch(['README.md'], ['jsdoc']);
+    gulp.watch(['README.md'], ['jsdoc']);
 
     // Watch changelog-fragments and markdown-fragments-fragments for 'readme-sections' task
     gulp.watch(['markdown-fragments-fragments/*.md'], ['readme']);
@@ -224,15 +232,21 @@ gulp.task('watch', function () {
 
 gulp.task('build', [
     'clean',
-    'readme',
-    'jsdoc',
+    'gvn',
+    'jshint',
+    'concat',
     'uglify',
+    'minimal',
     'minimal-min',
     'tests',
-    'make-browser-test-suite'
+    'mbts'
 ]);
 
+gulp.task('docs', ['readme', 'jsdoc']);
+
+gulp.task('all', ['docs', 'build']);
+
 gulp.task('default', [
-    'build',
+    'all',
     'watch'
 ]);

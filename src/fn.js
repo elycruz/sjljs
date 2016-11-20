@@ -8,15 +8,45 @@
 
     'use strict';
 
-    function addPropertyValue (context, value) {
-        Object.defineProperty(context, 'value', {
-            value: value,
-            writable: true
-        });
-    }
-
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
+        curry2 = sjl.curry2,
+        curry3 = sjl.curry3,
+        maybe = curry3(function (replacement, fn, monad) {
+            var subject = monad.flatten();
+            return  subject instanceof Nothing ? replacement : fn(subject.unwrap());
+        }),
+        map = curry2(function (fn, functor) {
+            return functor.map(fn);
+        }),
+        flatten = function (monad) {
+            return monad.flatten();
+        },
+        unwrap = function (obj) {
+            return obj.unwrap();
+        },
+        fnApply = sjl.curry2(function (obj1, obj2) {
+            return obj1.fnApply(obj2);
+        }),
+        fnBind = sjl.curry3(function (obj1, obj2, fn) {
+            return obj1.fnBind(fn, obj2);
+        }),
+        flattenMonad = curry2(function (monad, Type) {
+            var value = monad.value;
+            while (value instanceof Type) {
+                value = value.value;
+            }
+            return Type(value);
+        }),
+        returnNothing = function () {
+            return Nothing.of();
+        },
+        addPropertyValue = function (context, value) {
+            Object.defineProperty(context, 'value', {
+                value: value,
+                writable: true
+            });
+        },
         Extendable = sjl.defineSubClass(Function, function Extendable() {}),
         Identity = Extendable.extend({
             constructor: function Identity (value) {
@@ -29,11 +59,7 @@
                 return Identity.of(func(this.value));
             },
             flatten: function () {
-                var value = this.value;
-                while (value instanceof Identity) {
-                    value = value.value;
-                }
-                return Identity(value);
+                return flattenMonad(this, Identity);
             },
             unwrap: function () {
                 return this.flatten().value;
@@ -71,9 +97,6 @@
                 return new Just(value);
             }
         }),
-        returnNothing = function () {
-            return Nothing.of();
-        },
         Nothing = Extendable.extend({
             constructor: function Nothing () {
                 if (!(this instanceof Nothing)) {
@@ -95,33 +118,54 @@
                 return new Nothing();
             }
         }),
+        Left = Just.extend({
+            constructor: function Left (value) {
+                if (!(this instanceof Left)) {
+                    return Left.of(value);
+                }
+                Just.call(this, value);
+            },
+            map: function (/*func*/) {
+                return this;
+            }
+        }, {
+            of: function (value) {
+                return new Left(value);
+            }
+        }),
+        Right = Just.extend({
+            constructor: function Right (value) {
+                if (!(this instanceof Right)) {
+                    return Right.of(value);
+                }
+                Just.call(this);
+            }
+        },{
+            of: function (value) {
+                return new Right(value);
+            }
+        }),
 
         /**
          * `fn` package.  Includes some functional members
          * @type {Object}
          */
         fnPackage = {
-            map: sjl.curry2(function (obj, fn) {
-                return obj.map(fn);
-            }),
-            flatten: function (obj) {
-                return obj.flatten();
-            },
-            unwrap: function (obj) {
-                return obj.unwrap();
-            },
-            fnApply: sjl.curry2(function (obj1, obj2) {
-                return obj1.fnApply(obj2);
-            }),
-            fnBind: sjl.curry3(function (obj1, obj2, fn) {
-                return obj1.fnBind(fn, obj2);
-            }),
+            map: map,
+            maybe: maybe,
+            flatten: flatten,
+            flattenMonad: flattenMonad,
+            unwrap: unwrap,
+            fnApply: fnApply,
+            fnBind: fnBind,
             Identity: Identity,
             Just: Just,
-            Nothing: Nothing
+            Nothing: Nothing,
+            Left: Left,
+            Right: Right
         };
 
-    // Export `Extendable`
+    // Export `fnPackage`
     if (isNodeEnv) {
         module.exports = fnPackage;
     }
@@ -130,7 +174,7 @@
         sjl.fn = sjl.ns.fn;
 
         if (sjl.isAmd) {
-            return Extendable;
+            return fnPackage;
         }
     }
 

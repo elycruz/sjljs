@@ -752,7 +752,7 @@ describe('sjl.curry', function () {
 
         let Identity = sjl.ns.fn.Identity;
 
-    it ('should have the appropriate (mondaic) interface.', function () {
+    it ('should have the appropriate (monadic) interface.', function () {
         let identity = Identity();
         ['map', 'flatten', 'unwrap', 'fnBind', 'fnApply'].forEach(function (key) {
             expect(identity[key]).to.be.instanceOf(Function);
@@ -802,8 +802,9 @@ describe('sjl.curry', function () {
     });
 
     describe ('#fnApply', function () {
+        it ('should contain more tests.', function () {
 
-        it ('should contain more tests.');
+        });
     });
 
     describe ('#fnBind', function () {
