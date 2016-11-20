@@ -633,10 +633,6 @@ Allows you to set or get a path on an object by namespace string.
 @todo - Added documentation here.
 [Back to other packages and members list.](#other-packages-and-members)
 
-### (p) sjl.fntypes
-@todo - Added documentation here.
-[Back to other packages and members list.](#other-packages-and-members)
-
 ### (p) sjl.generated
 @todo - Added documentation here.
 [Back to other packages and members list.](#other-packages-and-members)

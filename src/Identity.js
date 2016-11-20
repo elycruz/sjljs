@@ -38,7 +38,7 @@
                 return fnNs.chain(fn, this); // monadic bind
             },
             lift: curry2(function (fn) {
-                return fnNs.liftN.apply(null, arguments);
+                return fnNs.liftN.apply(null, sjl.concatArrayLikes([this], arguments));
             })
         }, {
             of: function (value) {

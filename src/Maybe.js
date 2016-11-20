@@ -10,7 +10,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
-        fnNs = sjl.fn,
+        fnNs = sjl.ns,
         curry3 = sjl.curry3,
         Identity = fnNs.Identity,
         Extendable = sjl.ns.stdlib.Extendable,
@@ -18,7 +18,7 @@
             var subject = monad.join();
             return subject instanceof Nothing ? replacement : fn(subject);
         }),
-        nothing = sjl.fn.nothing = function () {
+        nothing = function () {
             return Nothing.of();
         },
         Nothing = Extendable.extend({
@@ -33,7 +33,7 @@
             map: nothing,
             join: nothing,
             ap: nothing,
-            fmap: nothing
+            chain: nothing
         }, {
             of: function () {
                 return new Nothing();
@@ -48,9 +48,6 @@
             },
             map: function (func) {
                 return sjl.isset(this.value) ? Just(func(this.value)) : Nothing();
-            },
-            join: function () {
-                return sjl.fn.join(this, Just);
             }
         }, {
             of: function (value) {
@@ -71,6 +68,7 @@
     else {
         sjl.ns('Maybe', Maybe);
         sjl.defineEnumProp(sjl, 'Maybe', Maybe);
+
 
         if (sjl.isAmd) {
             return Maybe;

@@ -60,18 +60,6 @@ describe('sjl.Identity', function () {
         });
     });
 
-    // describe ('#unwrap', function () {
-    //     it ('should return it\'s contained value.', function () {
-    //         let id1= Identity(1),
-    //             id2 = Identity(),
-    //             id3 = Identity(3),
-    //             id4 = Identity(id3);
-    //         expect(id1.unwrap()).to.equal(1);
-    //         expect(id2.unwrap()).to.equal(undefined);
-    //         expect(id4.unwrap()).to.equal(id3.unwrap());
-    //     });
-    // });
-
     describe ('#ap', function () {
         var add = sjl.curry2(function (a, b) { return a + b; }),
             multiply = sjl.curry2(function (a, b) { return a * b; }),
@@ -136,5 +124,17 @@ describe('sjl.Identity', function () {
         });
 
     });
+
+    // describe ('#unwrap', function () {
+    //     it ('should return it\'s contained value.', function () {
+    //         let id1= Identity(1),
+    //             id2 = Identity(),
+    //             id3 = Identity(3),
+    //             id4 = Identity(id3);
+    //         expect(id1.unwrap()).to.equal(1);
+    //         expect(id2.unwrap()).to.equal(undefined);
+    //         expect(id4.unwrap()).to.equal(id3.unwrap());
+    //     });
+    // });
 
 });
