@@ -15,13 +15,15 @@
     "./src/sjl.js",
     "./src/generated/version.js",
     "./src/stdlib/Extendable.js",
-    "./src/fn.js"
+    "./src/fn.js",
+    "./src/Identity.js"
   ],
   "sjl": [
     "./src/sjl.js",
     "./src/generated/version.js",
     "./src/stdlib/Extendable.js",
     "./src/fn.js",
+    "./src/Identity.js",
     "./src/stdlib/Config.js",
     "./src/stdlib/Optionable.js",
     "./src/stdlib/Iterator.js",

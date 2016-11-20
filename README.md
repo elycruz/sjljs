@@ -42,9 +42,12 @@ only includes the core and no classes or constructors from it's other packages).
 
 #### Other Packages and Members List:
 
+- [(m) sjl.Either](#m-sjleither)
 - [(m) sjl.fn](#m-sjlfn)
 - [(p) sjl.generated](#p-sjlgenerated)
   - [(m) sjl.generated.version](#m-sjlgeneratedversion)
+- [(m) sjl.Identity](#m-sjlidentity)
+- [(m) sjl.Maybe](#m-sjlmaybe)
 - [(p) sjl.nodejs](#p-sjlnodejs)
   - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
 - [(m) sjl](#m-sjl)
@@ -143,6 +146,18 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.ns](#m-sjlns)
 - [(m) sjl.package](#m-sjlpackage)
 
+
+### (m) sjl.Either
+@todo - Added documentation here.
+[Back to other packages and members list.](#other-packages-and-members)
+
+### (m) sjl.Identity
+@todo - Added documentation here.
+[Back to other packages and members list.](#other-packages-and-members)
+
+### (m) sjl.Maybe
+@todo - Added documentation here.
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.Symbol
 @todo - Added documentation here.
@@ -615,6 +630,10 @@ Allows you to set or get a path on an object by namespace string.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (p) sjl.filter
+@todo - Added documentation here.
+[Back to other packages and members list.](#other-packages-and-members)
+
+### (p) sjl.fntypes
 @todo - Added documentation here.
 [Back to other packages and members list.](#other-packages-and-members)
 
