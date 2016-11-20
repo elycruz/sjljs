@@ -12,6 +12,9 @@
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
         curry2 = sjl.curry2,
         curry3 = sjl.curry3,
+        id = function (value) {
+            return value;
+        },
         maybe = curry3(function (replacement, fn, monad) {
             var subject = monad.flatten();
             return  subject instanceof Nothing ? replacement : fn(subject.unwrap());
@@ -151,6 +154,7 @@
          * @type {Object}
          */
         fnPackage = {
+            id: id,
             map: map,
             maybe: maybe,
             flatten: flatten,
