@@ -18,10 +18,10 @@
         map = curry2(function (fn, functor) {
             return functor.map(fn);
         }),
-        ap = sjl.curry2(function (obj1, obj2) {
+        ap = curry2(function (obj1, obj2) {
             return obj1.ap(obj2);
         }),
-        chain = sjl.curry2(function (fn, functor) {
+        chain = curry2(function (fn, functor) {
             return functor.map(fn).join();
         }),
         join = curry2(function (monad, Type) {
@@ -60,6 +60,7 @@
     else {
         sjl.ns('fn', fnPackage);
         sjl.fn = sjl.ns.fn;
+        sjl.extend(sjl, fnPackage);
 
         if (sjl.isAmd) {
             return fnPackage;

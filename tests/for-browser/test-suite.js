@@ -883,6 +883,7 @@ describe('sjl.Maybe', function () {
         var Maybe = sjl.ns.Maybe,
         Just = Maybe.Just,
         Nothing = Maybe.Nothing,
+        maybe = Maybe.maybe,
         memberNames = ['Just', 'Nothing', 'nothing', 'maybe'],
         expectInstanceOf = sjl.curry2((Type, functor) => expect(functor).to.be.instanceOf(Type)),
         expectNothing = expectInstanceOf(Nothing),
@@ -957,6 +958,19 @@ describe('sjl.Maybe', function () {
             });
         });
 
+    });
+
+    describe ('#maybe', function () {
+        it ('should return a Just', function () {
+            var just100 = Just(100),
+                justNull = Just(null),
+                id = sjl.ns.fn.id,
+                justTimes2 = incomingJust => Just(value => value * 2).ap(incomingJust);
+            expect(maybe(just100, id, justNull)).to.equal(just100);
+            expect(maybe(Just(99), justTimes2, just100).value).to.equal(200);
+            expect(maybe(Just(1000), justTimes2, Just(null)).value).to.equal(1000);
+            expect(maybe(Just(2000), justTimes2, Just(1000)).value).to.equal(2000);
+        });
     });
 
 });

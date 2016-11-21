@@ -10,12 +10,12 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
-        fnNs = sjl.ns,
+        ns = sjl.ns,
         curry3 = sjl.curry3,
-        Identity = fnNs.Identity,
+        Identity = ns.Identity,
         Extendable = sjl.ns.stdlib.Extendable,
         maybe = curry3(function (replacement, fn, monad) {
-            var subject = monad.join();
+            var subject = monad.join().map(sjl.ns.fn.id);
             return subject instanceof Nothing ? replacement : fn(subject);
         }),
         nothing = function () {
