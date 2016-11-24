@@ -713,6 +713,44 @@
         };
     }
 
+    function normalizeArgsForDefineSubClass (superClass, constructor, methods, statics) {
+        // Superclass?
+        superClass = superClass || Object.create(Object.prototype);
+
+        // Snatched statics
+        var _statics;
+
+        // Should extract statics?
+        if (isFunction(superClass)) {
+
+            // Extract statics
+            _statics = Object.keys(superClass).reduce(function (agg, key, obj) {
+                if (key === 'extend') { return; }
+                agg[key] = obj[key];
+                return agg;
+            }, {});
+        }
+
+        // Re-arrange args if constructor is object
+        if (isObject(constructor)) {
+            statics = methods;
+            methods = clone(constructor);
+            constructor = ! isFunction(methods.constructor) ? standInConstructor(superClass) : methods.constructor;
+            unset(methods, 'constructor');
+        }
+
+        // Ensure constructor
+        constructor = isset(constructor) ? constructor : standInConstructor(superClass);
+
+        // Returned normalized args
+        return {
+            constructor: constructor,
+            methods: methods,
+            statics: extend(_statics, statics, true),
+            superClass: superClass
+        };
+    }
+
     /**
      * Defines a class using a `superclass`, `constructor`, methods and/or static methods.
      * @format sjl.defineSubClass (superclass, methodsAndConstructor, statics);
@@ -722,6 +760,7 @@
      * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
      * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
      * @param statics {Object|undefined} - Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.
+     * @param overrideToString {Boolean=false} - Overrides `toString` with Object.prototype.toString type/styled value;  E.g., `'[object {Your-Constructor-Name-Here}]'`
      * @example
      * ```
      *  // sjl.defineSubClass (superclass, methods, statics);
@@ -737,87 +776,67 @@
      * ```
      * @returns {Function}
      */
-    function defineSubClass (superclass,  // Constructor of the superclass
-                                   constructor, // The constructor for the new subclass
-                                   methods,     // Instance methods: copied to prototype
-                                   statics)     // Class properties: copied to constructor
-    {
-        // Resolve superclass
-        superclass = superclass || Object.create(Object.prototype);
-
-        // Statics for snatching static methods from superclass if it is a constructor
-        var __statics;
-
-        // If superclass is a Constructor snatch statics
-        if (isFunction(superclass)) {
-            // Set statics for snatching statics
-            __statics = {};
-
-            // Snatch each static member from `superclass` to use later
-            Object.keys(superclass).forEach(function (key) {
-                if (key === 'extend') { return; }
-                __statics[key] = superclass[key];
-            });
-        }
-
-        // If `constructor` param is an object then assume [superclass, methods, statics] params order
-        if (isObject(constructor)) {
-
-            // Set static methods, if any
-            statics = methods;
-
-            // Set methods
-            methods = constructor;
-
-            // Decide whether to use a stand in constructor or the user supplied one
-            constructor = ! isFunction(methods.constructor)
-                ? standInConstructor(superclass) : methods.constructor;
-
-            // Unset the constructor from the methods hash since we have a pointer to it
-            unset(methods, 'constructor');
-        }
-
-        // Ensure a constructor is set
-        constructor = isset(constructor) ? constructor : standInConstructor(superclass);
-
-        // Set up the prototype object of the subclass
-        constructor.prototype = Object.create(superclass.prototype);
+    function defineSubClass (superClass, constructor, methods, statics, overrideToString) {
+        overrideToString = isBoolean(overrideToString) ? overrideToString : true;
+        var _constructor = defineSubClassPure.apply(null, arguments);
 
         /**
          * Extends a new copy of self with passed in parameters.
          * @memberof class:sjl.stdlib.Extendable
          * @static sjl.stdlib.Extendable.extend
          * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
-         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, it is cast as `statics` param.
+         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
          * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
          */
-        sjl.defineEnumProp(constructor, 'extend', function (constructor_, methods_, statics_) {
-            return defineSubClass(constructor, constructor_, methods_, statics_);
+        sjl.defineEnumProp(_constructor, 'extend', function (constructor_, methods_, statics_) {
+            return defineSubClass(_constructor, constructor_, methods_, statics_);
         });
 
-        // Define constructor's constructor
-        Object.defineProperty(constructor.prototype, 'constructor', {value: constructor});
+        // Return constructor
+        return overrideToString ? classicalToStringMethod(_constructor) : _constructor;
+    }
 
-        // Copy the methods and statics as we would for a regular class
-        if (methods) extend(constructor.prototype, methods, true);
+    /**
+     * Same as `defineSubClass` with out side-effect of `extend` method and `toString` method.
+     * @param superClass {Function} - Superclass to inherit from.
+     * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
+     * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
+     * @param statics {Object|undefined} - Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.
+     * @returns {Function} - Constructor with extended prototype and added statics.
+     */
+    function defineSubClassPure (superClass, constructor, methods, statics) {
+        var normalizedArgs = normalizeArgsForDefineSubClass.apply(null, arguments),
+            _superClass = normalizedArgs.superClass,
+            _statics = normalizedArgs.statics,
+            _methods = normalizedArgs.methods,
+            _constructor = normalizedArgs.constructor;
 
-        // If internally snatched static functions from `superclass` exists then set them on subclass
-        if (__statics) extend(constructor, __statics, true);
+        // Set prototype
+        _constructor.prototype = Object.create(_superClass.prototype);
 
-        // If static functions set them
-        if (statics) extend(constructor, statics, true);
+        // Define constructor
+        Object.defineProperty(_constructor.prototype, 'constructor', {value: _constructor});
+
+        // Extend constructor
+        extend(_constructor.prototype, _methods, true);
+        extend(_constructor, _statics, true);
+
+        // Return constructor
+        return _constructor;
+    }
+
+    function classicalToStringMethod (constructor) {
 
         // @note To bypass this functionality just name your toString method as is being done
         //  here (with a name of your choosing or even the name used below).
-        if (!methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
+        if (!constructor.hasOwnProperty('toString') || constructor.toString.name === 'toString') {
             constructor.prototype.toString = function toStringOverride() {
                 return '[object ' + constructor.name + ']';
             };
         }
-
-        // Return the class
         return constructor;
     }
+
 
     /**
      * Package factory method.  Allows object to have a `package` method
@@ -1378,6 +1397,7 @@
         curry4: __, // ""
         curry5: __, // ""
         defineSubClass: defineSubClass,
+        defineSubClassPure: defineSubClassPure,
         defineEnumProp: defineEnumProp,
         empty: isEmpty,
         emptyMulti: emptyMulti,
