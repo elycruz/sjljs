@@ -145,8 +145,9 @@ only includes the core and no classes or constructors from it's other packages).
 <li><a href="#m-sjlgeneratedversion">(m) sjl.generated.version</a></li>
 </ul>
 </li>
-<li><a href="#m-sjlidentity">(m) sjl.Identity</a></li>
+<li><a href="#m-sjlmath">(m) sjl.math</a></li>
 <li><a href="#m-sjlmaybe">(m) sjl.Maybe</a></li>
+<li><a href="#m-sjlmonad">(m) sjl.Monad</a></li>
 <li><a href="#p-sjlnodejs">(p) sjl.nodejs</a><ul>
 <li><a href="#m-sjlnodejsnamespace">(m) sjl.nodejs.Namespace</a></li>
 </ul>
@@ -170,7 +171,6 @@ only includes the core and no classes or constructors from it's other packages).
 <li><strong>(m)</strong> - Member prefix.  Denotes item is a member;  E.g., A method or property.</li>
 </ul>
 <h4>Members/Methods:</h4><ul>
-<li><a href="#m-sjl_">(m) sjl._</a></li>
 <li><a href="#m-sjlargstoarray">(m) sjl.argsToArray</a></li>
 <li><a href="#m-sjlarrayliketoarray">(m) sjl.arrayLikeToArray</a></li>
 <li><a href="#m-sjlnotarrayliketoarray">(m) sjl.notArrayLikeToArray</a></li>
@@ -179,6 +179,7 @@ only includes the core and no classes or constructors from it's other packages).
 <li><a href="#m-sjlclassof">(m) sjl.classOf</a></li>
 <li><a href="#m-sjlclassofis">(m) sjl.classOfIs</a></li>
 <li><a href="#m-sjlclassofismulti">(m) sjl.classOfIsMulti</a></li>
+<li><a href="#m-sjlclassicaltostringmethod">(m) sjl.classicalToStringMethod</a></li>
 <li><a href="#m-sjlclone">(m) sjl.clone</a></li>
 <li><a href="#m-sjlcompose">(m) sjl.compose</a></li>
 <li><a href="#m-sjlconcatarraylikes">(m) sjl.concatArrayLikes</a></li>
@@ -191,6 +192,7 @@ only includes the core and no classes or constructors from it's other packages).
 <li><a href="#m-sjlcurry4">(m) sjl.curry4</a></li>
 <li><a href="#m-sjlcurry5">(m) sjl.curry5</a></li>
 <li><a href="#m-sjldefinesubclass">(m) sjl.defineSubClass</a></li>
+<li><a href="#m-sjldefinesubclasspure">(m) sjl.defineSubClassPure</a></li>
 <li><a href="#m-sjldefineenumprop">(m) sjl.defineEnumProp</a></li>
 <li><a href="#m-sjlempty">(m) sjl.empty</a></li>
 <li><a href="#m-sjlemptymulti">(m) sjl.emptyMulti</a></li>
@@ -242,6 +244,7 @@ only includes the core and no classes or constructors from it's other packages).
 <li><a href="#m-sjlvalueordefault">(m) sjl.valueOrDefault</a></li>
 <li><a href="#m-sjlwrappointer">(m) sjl.wrapPointer</a></li>
 <li><a href="#m-sjlsymbol">(m) sjl.Symbol</a></li>
+<li><a href="#m-sjl_">(m) sjl._</a></li>
 <li><a href="#m-sjlisnodeenv">(m) sjl.isNodeEnv</a></li>
 <li><a href="#m-sjlns">(m) sjl.ns</a></li>
 <li><a href="#m-sjlpackage">(m) sjl.package</a></li>
@@ -251,6 +254,8 @@ only includes the core and no classes or constructors from it's other packages).
 <h3>(m) sjl.Identity</h3><p>@todo - Added documentation here.
 <a href="#other-packages-and-members">Back to other packages and members list.</a></p>
 <h3>(m) sjl.Maybe</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
+<h3>(m) sjl.Monad</h3><p>@todo - Added documentation here.
 <a href="#other-packages-and-members">Back to other packages and members list.</a></p>
 <h3>(m) sjl.Symbol</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
@@ -275,6 +280,8 @@ to an actual array.</p>
 <h3>(m) sjl.classOfIs</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.classOfIsMulti</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.classicalToStringMethod</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.clone</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
@@ -301,6 +308,8 @@ to an actual array.</p>
 <h3>(m) sjl.defineEnumProp</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.defineSubClass</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.defineSubClassPure</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.empty</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
@@ -394,6 +403,8 @@ to an actual array.</p>
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.mapToArray</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.math</h3><p>@todo - Added documentation here.
+<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
 <h3>(m) sjl</h3><p>@todo - Added documentation here.
 <a href="#other-packages-and-members">Back to other packages and members list.</a></p>
 <h3>(m) sjl.mergeOnProps</h3><p>@todo - Added documentation here.
@@ -579,7 +590,7 @@ instead (generated with jsdocs).</li>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-11-20T19:11:57-05:00
+		on 2016-11-25T12:06:31-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

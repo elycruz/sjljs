@@ -1,10 +1,11 @@
 /**! sjljs 6.3.1
  * | License: GPL-2.0+ AND MIT
- * | md5checksum: f4b5ba92f782606f6ec9cfe259b769ec
- * | Built-on: Fri Nov 25 2016 11:31:20 GMT-0500 (Eastern Standard Time)
+ * | md5checksum: 27d6f288b6048f6ecfdb7be2499a48e5
+ * | Built-on: Fri Nov 25 2016 12:06:31 GMT-0500 (Eastern Standard Time)
  **//**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
+ * @todo Begin extracting contents of core into separate modules (where necessary) and/or files.
  */
 (function () {
 
@@ -717,6 +718,14 @@
         };
     }
 
+    /**
+     * Normalized the parameters required for `defineSubClassPure` and `defineSubClass` to operate.
+     * @param superClass {Function} - Superclass to inherit from.
+     * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
+     * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
+     * @param statics {Object|undefined} - Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.
+     * @returns {{constructor: (Function|*), methods: *, statics: *, superClass: (*|Object)}}
+     */
     function normalizeArgsForDefineSubClass (superClass, constructor, methods, statics) {
         // Superclass?
         superClass = superClass || Object.create(Object.prototype);
@@ -755,7 +764,65 @@
     }
 
     /**
+     * Creates classical styled `toString` method;  E.g. `toString` method that returns
+     * `'[object ' + constructor.name + ']'` a` la` '[object Array]', '[object Function]' format.
+     * @fyi method is a named function (named `toStringOverride` to be precise).
+     * @note Only overrides `toString` method if it is a `named` method with the name `toString` or
+     * if it doesn't exist.  If the `toString` method is `named` and the name is anything other than 'toString'
+     * it will not be overridden by this method.
+     * @function module:sjl.classicalToStringMethod
+     * @param constructor {Function}
+     * @returns {Function} - Passed in constructor.
+     */
+    function classicalToStringMethod (constructor) {
+        if (!constructor.hasOwnProperty('toString') || constructor.toString.name === 'toString') {
+            constructor.prototype.toString = function toStringOverride() {
+                return '[object ' + constructor.name + ']';
+            };
+        }
+        return constructor;
+    }
+
+    /**
+     * Adds `extend` and `extendWith` static methods to the passed in constructor for having easy extensibility via said
+     * methods;  I.e., passed in constructor will now be extendable via added methods.
+     * @see sjl.defineSubClass(superClass, constructor, methods, statics)
+     * @function module:sjl.makeExtendableConstructor
+     * @param constructor {Function}
+     * @returns {*}
+     */
+    function makeExtendableConstructor (constructor) {
+        var extender = function (constructor_, methods_, statics_) {
+            return defineSubClass(constructor, constructor_, methods_, statics_);
+        };
+
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.stdlib.Extendable
+         * @static sjl.stdlib.Extendable.extend
+         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
+         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
+         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
+         */
+        constructor.extend = extender;
+
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.stdlib.Extendable
+         * @static sjl.stdlib.Extendable.extendWith
+         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
+         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
+         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
+         */
+        sjl.defineEnumProp(constructor, 'extendWith', extender);
+
+        // Return constructor
+        return constructor;
+    }
+
+    /**
      * Same as `defineSubClass` with out side-effect of `extend` method and `toString` method.
+     * @function module:sjl.defineSubClassPure
      * @param superClass {Function} - Superclass to inherit from.
      * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
      * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
@@ -808,49 +875,11 @@
      * @returns {Function}
      */
     function defineSubClass (superClass, constructor, methods, statics) {
-        var _constructor = defineSubClassPure.apply(null, arguments),
-            extender = function (constructor_, methods_, statics_) {
-                return defineSubClass(_constructor, constructor_, methods_, statics_);
-            },
-            _constructorWithModifiedToStringMethod;
+        var _constructor_ = defineSubClassPure.apply(null, arguments);
 
-        /**
-         * Extends a new copy of self with passed in parameters.
-         * @memberof class:sjl.stdlib.Extendable
-         * @static sjl.stdlib.Extendable.extend
-         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
-         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
-         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
-         */
-        _constructor.extend = extender;
-
-        /**
-         * Extends a new copy of self with passed in parameters.
-         * @memberof class:sjl.stdlib.Extendable
-         * @static sjl.stdlib.Extendable.extendWith
-         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
-         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
-         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
-         */
-        sjl.defineEnumProp(_constructor, 'extendWith', extender);
-
-        // toString override
-        _constructorWithModifiedToStringMethod = classicalToStringMethod(_constructor);
-
-        // return modified constructor
-        return _constructorWithModifiedToStringMethod;
-    }
-
-    function classicalToStringMethod (constructor) {
-
-        // @note To bypass this functionality just name your toString method as is being done
-        //  here (with a name of your choosing or even the name used below).
-        if (!constructor.hasOwnProperty('toString') || constructor.toString.name === 'toString') {
-            constructor.prototype.toString = function toStringOverride() {
-                return '[object ' + constructor.name + ']';
-            };
-        }
-        return constructor;
+        // set overridden `toString` method and set `extend` and `extendWith` methods after create a
+        // pure sub class of `superClass`
+        return compose(makeExtendableConstructor, classicalToStringMethod)(_constructor_);
     }
 
     /**
@@ -1399,6 +1428,7 @@
         classOf: classOf,
         classOfIs: classOfIs,
         classOfIsMulti: classOfIsMulti,
+        classicalToStringMethod: classicalToStringMethod,
         clone: clone,
         compose: compose,
         concatArrayLikes: concatArrayLikes,
@@ -1576,7 +1606,7 @@
 
 /**
  * Content generated by '{project-root}/node-scripts/VersionNumberReadStream.js'.
- * Generated Fri Nov 25 2016 11:31:18 GMT-0500 (Eastern Standard Time) 
+ * Generated Fri Nov 25 2016 12:06:29 GMT-0500 (Eastern Standard Time) 
  */
 (function () {
 

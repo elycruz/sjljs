@@ -46,8 +46,9 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.fn](#m-sjlfn)
 - [(p) sjl.generated](#p-sjlgenerated)
   - [(m) sjl.generated.version](#m-sjlgeneratedversion)
-- [(m) sjl.Identity](#m-sjlidentity)
+- [(m) sjl.math](#m-sjlmath)
 - [(m) sjl.Maybe](#m-sjlmaybe)
+- [(m) sjl.Monad](#m-sjlmonad)
 - [(p) sjl.nodejs](#p-sjlnodejs)
   - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
 - [(m) sjl](#m-sjl)
@@ -70,7 +71,6 @@ only includes the core and no classes or constructors from it's other packages).
 
 #### Members/Methods:
 
-- [(m) sjl._](#m-sjl_)
 - [(m) sjl.argsToArray](#m-sjlargstoarray)
 - [(m) sjl.arrayLikeToArray](#m-sjlarrayliketoarray)
 - [(m) sjl.notArrayLikeToArray](#m-sjlnotarrayliketoarray)
@@ -79,6 +79,7 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.classOf](#m-sjlclassof)
 - [(m) sjl.classOfIs](#m-sjlclassofis)
 - [(m) sjl.classOfIsMulti](#m-sjlclassofismulti)
+- [(m) sjl.classicalToStringMethod](#m-sjlclassicaltostringmethod)
 - [(m) sjl.clone](#m-sjlclone)
 - [(m) sjl.compose](#m-sjlcompose)
 - [(m) sjl.concatArrayLikes](#m-sjlconcatarraylikes)
@@ -91,6 +92,7 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.curry4](#m-sjlcurry4)
 - [(m) sjl.curry5](#m-sjlcurry5)
 - [(m) sjl.defineSubClass](#m-sjldefinesubclass)
+- [(m) sjl.defineSubClassPure](#m-sjldefinesubclasspure)
 - [(m) sjl.defineEnumProp](#m-sjldefineenumprop)
 - [(m) sjl.empty](#m-sjlempty)
 - [(m) sjl.emptyMulti](#m-sjlemptymulti)
@@ -142,6 +144,7 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.valueOrDefault](#m-sjlvalueordefault)
 - [(m) sjl.wrapPointer](#m-sjlwrappointer)
 - [(m) sjl.Symbol](#m-sjlsymbol)
+- [(m) sjl._](#m-sjl_)
 - [(m) sjl.isNodeEnv](#m-sjlisnodeenv)
 - [(m) sjl.ns](#m-sjlns)
 - [(m) sjl.package](#m-sjlpackage)
@@ -156,6 +159,10 @@ only includes the core and no classes or constructors from it's other packages).
 [Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl.Maybe
+@todo - Added documentation here.
+[Back to other packages and members list.](#other-packages-and-members)
+
+### (m) sjl.Monad
 @todo - Added documentation here.
 [Back to other packages and members list.](#other-packages-and-members)
 
@@ -213,6 +220,10 @@ Allows you to set or get a path on an object by namespace string.
 @todo - Added documentation here.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
+### (m) sjl.classicalToStringMethod
+@todo - Added documentation here.
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
+
 ### (m) sjl.clone
 @todo - Added documentation here.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
@@ -262,6 +273,10 @@ Allows you to set or get a path on an object by namespace string.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.defineSubClass
+@todo - Added documentation here.
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
+
+### (m) sjl.defineSubClassPure
 @todo - Added documentation here.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
@@ -448,6 +463,10 @@ Allows you to set or get a path on an object by namespace string.
 ### (m) sjl.mapToArray
 @todo - Added documentation here.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
+
+### (m) sjl.math
+@todo - Added documentation here.
+[Back to other packages and members list.](#other-packages-and-members)
 
 ### (m) sjl
 @todo - Added documentation here.
