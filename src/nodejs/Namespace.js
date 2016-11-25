@@ -43,11 +43,11 @@ var path = require('path'),
 function Namespace(dir, allowedFileExts, ignoredDirs, ignoredFileNames) {
     ignoredDirs = Array.isArray(ignoredDirs) ? ignoredDirs : null;
     ignoredFileNames = Array.isArray(ignoredFileNames) ? ignoredFileNames : null;
-    var self = this,
+    let self = this,
         files = fs.readdirSync(dir);
     allowedFileExts = allowedFileExts || ['.js', '.json'];
     if (files && Array.isArray(files) && files.length > 0) {
-        processFiles(files, dir, allowedFileExts, ignoredDirs, self);
+        processFiles(files, dir, allowedFileExts, ignoredDirs, ignoredFileNames, self);
     }
 }
 
@@ -57,18 +57,19 @@ function Namespace(dir, allowedFileExts, ignoredDirs, ignoredFileNames) {
  * @param dir {String}
  * @param allowedFileExts {Array<String>}
  * @param ignoredDirs {Array<String>}
+ * @param [ignoredFileNames=undefined]
  * @param self {Namespace} - Self.
  * @recursive
  * @private
  */
-function processFiles(files, dir, allowedFileExts, ignoredDirs, self) {
+function processFiles(files, dir, allowedFileExts, ignoredDirs, ignoredFileNames, self) {
     files.forEach(function (file) {
         if (file.indexOf('sjl.js'))
         if (ignoredDirs && ignoredDirs.indexOf(file) > -1) {
             return;
         }
         if (fs.statSync(path.join(dir, file)).isDirectory()) {
-            self[file] = new Namespace(path.join(dir, file));
+            self[file] = new Namespace(path.join(dir, file), allowedFileExts, ignoredDirs, ignoredFileNames);
         }
         else if (allowedFileExts.indexOf(path.extname(file)) > -1) {
             Object.defineProperty(self, file.substr(0, file.lastIndexOf('.')), {

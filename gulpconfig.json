@@ -1,19 +1,35 @@
 {
   "readme": [
-    "markdown-fragments/readme-header.md",
-    "markdown-fragments/readme-sections/sections.md",
-    "markdown-fragments/readme-sections/getting-started.md",
-    "markdown-fragments/readme-sections/unit-tests.md",
-    "markdown-fragments/readme-footer.md"
+    "./markdown-fragments/readme-header.md",
+    "./markdown-fragments/readme-sections/sections.md",
+    "./markdown-fragments/readme-sections/getting-started.md",
+    "./markdown-fragments/readme-sections/packages-and-members.md",
+    "./markdown-fragments/generated/packages-and-members-list.md",
+    "./markdown-fragments/readme-sections/sjl-direct-members.md",
+    "./markdown-fragments/generated/sjl-direct-members-list.md",
+    "./markdown-fragments/package-and-member-docs/**/*.md",
+    "./markdown-fragments/readme-sections/unit-tests.md",
+    "./markdown-fragments/readme-footer.md"
   ],
   "sjl-minimal": [
     "./src/sjl.js",
-    "./src/fn/fn.js"
+    "./src/generated/version.js",
+    "./src/stdlib/Extendable.js",
+    "./src/fn.js",
+    "./src/math.js",
+    "./src/Monad.js",
+    "./src/Maybe.js",
+    "./src/Either.js"
   ],
   "sjl": [
     "./src/sjl.js",
-    "./src/fn/fn.js",
+    "./src/generated/version.js",
     "./src/stdlib/Extendable.js",
+    "./src/fn.js",
+    "./src/math.js",
+    "./src/Monad.js",
+    "./src/Maybe.js",
+    "./src/Either.js",
     "./src/stdlib/Config.js",
     "./src/stdlib/Optionable.js",
     "./src/stdlib/Iterator.js",

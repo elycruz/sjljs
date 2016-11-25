@@ -7,7 +7,7 @@ describe('sjl.compose', function () {
     // This part gets stripped out when
     // generating browser version of test(s).
     'use strict';
-    let chai = require('chai'),
+    var chai = require('chai'),
         sjl = require('./../../src/sjl'),
         expect = chai.expect;
     // These variables get set at the top IIFE in the browser.
@@ -24,18 +24,18 @@ describe('sjl.compose', function () {
 
     it ('should return a function that when used returns the passed in value if `compose` ' +
         'itself didn\'t receive any parameters.', function () {
-        let result = sjl.compose();
+        var result = sjl.compose();
         expect(result(99)).to.equal(99);
     });
 
     it ('should be able to compose an arbitrary number of functions and execute them as expected ' +
         'from generated function.', function () {
-        let curry2 = sjl.curry2,
+        var curry2 = sjl.curry2,
             min = curry2(Math.min),
             max = curry2(Math.max),
             pow = curry2(Math.pow),
             composed = sjl.compose(min(8), max(5), pow(2)),
-            randomNum = curry2(function (start, end) { return Math.random() * end + start; }),
+            randomNum = curry2(function (start, end) { return Math.round(Math.random() * end + start); }),
             random = randomNum(0),
             expectedFor = function (num) { return min(8, max(5, pow(num, 2))); };
             [8,5,3,2,1,0, random(89), random(55), random(34)].forEach(function (num) {

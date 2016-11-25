@@ -21,7 +21,7 @@
             Object.defineProperty(this, 'optionsKeyName', {value: _optionsKeyname});
 
             // Define "options" property
-            sjl.defineEnumProp(this, this.optionsKeyName, new sjl.stdlib.Config());
+            sjl.defineEnumProp(this, this.optionsKeyName, new sjl.ns.stdlib.Config());
 
             /**
              * Options key name.  Set when constructing an Optionable instance via the
@@ -58,7 +58,7 @@
      * @extends sjl.stdlib.Extendable
      * @type {void|sjl.stdlib.Optionable}
      */
-    Optionable = sjl.stdlib.Extendable.extend(Optionable, {
+    Optionable = sjl.ns.stdlib.Extendable.extend(Optionable, {
         /**
          * Gets one or many option values.
          * @method sjl.stdlib.Optionable#get
@@ -106,7 +106,7 @@
     }
     else {
         sjl.ns('stdlib.Optionable', Optionable);
-        if (window.__isAmd) {
+        if (sjl.isAmd) {
             return Optionable;
         }
     }

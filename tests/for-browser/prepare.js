@@ -5,4 +5,5 @@ define(['chai'], function (chai) {
     window.chai = chai;
     window.expect = chai.expect;
     window.should = chai.should;
+    window.assert = chai.assert;
 });

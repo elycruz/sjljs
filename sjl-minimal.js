@@ -1,11 +1,12 @@
-/**! sjl-minimal.js 6.2.1 
+/**! sjl-minimal.js 6.4.0 
  * | License: GPL-2.0+ AND MIT 
- * | md5checksum: 2c056e116a35c3e99920eca12c479074 
- * | Built-on: Sun Nov 13 2016 22:06:27 GMT-0500 (Eastern Standard Time) 
+ * | md5checksum: 338707500fef73efcc994ff3abbc0037 
+ * | Built-on: Fri Nov 25 2016 14:42:59 GMT-0500 (Eastern Standard Time) 
  **/
 /**
  * The `sjl` module definition.
  * @created by Ely on 5/29/2015.
+ * @todo Begin extracting contents of core into separate modules (where necessary) and/or files.
  */
 (function () {
 
@@ -23,13 +24,9 @@
         _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         slice = Array.prototype.slice,
-        globalContext = isNodeEnv ? global : window,
         PlaceHolder = function PlaceHolder() {},
-        __ = new PlaceHolder();
-
-    // Check if amd is being used (store this check globally to reduce
-    //  boilerplate code in other components).
-    globalContext.__isAmd = typeof define === 'function' && define.amd;
+        placeholder = new PlaceHolder(),
+        __ = Object.freeze ? Object.freeze(placeholder) : placeholder;
 
     /**
      * Composes one or more functions into a new one.
@@ -46,6 +43,18 @@
     }
 
     /**
+     * Curries a function with or without placeholders (sjl._ is `Placeholder`)
+     * @example
+     * ```
+     * var slice = Array.prototype.slice,
+     *     add = function () {...}, // recursively adds
+     *     multiply = function () {...}; // recursively multiplies
+     *
+     *   sjl.curry(add, __, __, __)(1, 2, 3, 4, 5) === 15 // `true`
+     *   sjl.curry(multiply, __, 2, __)(2, 2) === Math.pow(2, 3) // `true`
+     *   sjl.curry(divide, __, 625, __)(3125, 5)
+     *
+     * ```
      * @function module:sjl.curry
      * @param fn {Function}
      * @returns {Function}
@@ -53,25 +62,45 @@
     function curry (fn) {
         var curriedArgs = restArgs(arguments, 1);
         return function () {
-            var concatedArgs = curriedArgs.concat(argsToArray(arguments));
-            return fn.apply(null, concatedArgs);
+            var args = argsToArray(arguments),
+                concatedArgs = replacePlaceHolders(curriedArgs, args),
+                placeHolders = concatedArgs.filter(isPlaceholder),
+                canBeCalled = placeHolders.length === 0;
+            return canBeCalled ? fn.apply(null, concatedArgs) : curry.apply(null, [fn].concat(concatedArgs));
         };
     }
 
     /**
      * Curries a function and only executes the function when the arity reaches the .
      * @function module:sjl.curryN
-     * @param func - Function to curry.
+     * @param fn - Function to curry.
      * @param executeArity - Arity at which to execute curried function.
+     * @throws {TypeError} - If `fn` is not a function.
      */
-    function curryN (func, executeArity) {
+    function curryN (fn, executeArity) {
         var curriedArgs = restArgs(arguments, 2);
         return function () {
-            var concatedArgs = curriedArgs.concat(argsToArray(arguments));
-            return concatedArgs.length < executeArity ?
-                curryN.apply(null, [func, executeArity].concat(concatedArgs)) :
-                func.apply(null, concatedArgs);
+            var args = argsToArray(arguments),
+                concatedArgs = replacePlaceHolders(curriedArgs, args),
+                placeHolders = concatedArgs.filter(isPlaceholder),
+                canBeCalled = (concatedArgs.length - placeHolders.length >= executeArity) || !executeArity;
+            return !canBeCalled ? curryN.apply(null, [fn, executeArity].concat(concatedArgs)) :
+                fn.apply(null, concatedArgs);
         };
+    }
+
+    /**
+     * Replaces found placeholder values and appends any left over `args` to resulting array.
+     * @param array {Array}
+     * @param args {Array}
+     * @returns {Array.<T>|string|Buffer}
+     */
+    function replacePlaceHolders (array, args) {
+        var out = array.map(function (element) {
+            return ! (element instanceof PlaceHolder) ? element :
+                (args.length > 0 ? args.shift() : element);
+        });
+        return args.length > 0 ? out.concat(args) : out;
     }
 
     /**
@@ -275,6 +304,15 @@
      */
     function isNumber (value) {
         return classOfIs(value, _Number);
+    }
+
+    /**
+     * Checks to see if argument is an instanceof `Placeholder`|`__`|`sjl._`.
+     * @param arg {*}
+     * @returns {boolean}
+     */
+    function isPlaceholder (arg) {
+        return arg instanceof PlaceHolder;
     }
 
     /**
@@ -723,6 +761,138 @@
     }
 
     /**
+     * Normalized the parameters required for `defineSubClassPure` and `defineSubClass` to operate.
+     * @param superClass {Function} - Superclass to inherit from.
+     * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
+     * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
+     * @param statics {Object|undefined} - Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.
+     * @returns {{constructor: (Function|*), methods: *, statics: *, superClass: (*|Object)}}
+     */
+    function normalizeArgsForDefineSubClass (superClass, constructor, methods, statics) {
+        // Superclass?
+        superClass = superClass || Object.create(Object.prototype);
+
+        // Snatched statics
+        var _statics;
+
+        // Should extract statics?
+        if (isFunction(superClass)) {
+            // Extract statics
+            _statics = Object.keys(superClass).reduce(function (agg, key) {
+                if (key === 'extend') { return agg; }
+                agg[key] = superClass[key];
+                return agg;
+            }, {});
+        }
+
+        // Re-arrange args if constructor is object
+        if (isObject(constructor)) {
+            statics = methods;
+            methods = clone(constructor);
+            constructor = ! isFunction(methods.constructor) ? standInConstructor(superClass) : methods.constructor;
+            unset(methods, 'constructor');
+        }
+
+        // Ensure constructor
+        constructor = isset(constructor) ? constructor : standInConstructor(superClass);
+
+        // Returned normalized args
+        return {
+            constructor: constructor,
+            methods: methods,
+            statics: extend(_statics || {}, statics || {}, true),
+            superClass: superClass
+        };
+    }
+
+    /**
+     * Creates classical styled `toString` method;  E.g. `toString` method that returns
+     * `'[object ' + constructor.name + ']'` a` la` '[object Array]', '[object Function]' format.
+     * @fyi method is a named function (named `toStringOverride` to be precise).
+     * @note Only overrides `toString` method if it is a `named` method with the name `toString` or
+     * if it doesn't exist.  If the `toString` method is `named` and the name is anything other than 'toString'
+     * it will not be overridden by this method.
+     * @function module:sjl.classicalToStringMethod
+     * @param constructor {Function}
+     * @returns {Function} - Passed in constructor.
+     */
+    function classicalToStringMethod (constructor) {
+        if (!constructor.hasOwnProperty('toString') || constructor.toString.name === 'toString') {
+            constructor.prototype.toString = function toStringOverride() {
+                return '[object ' + constructor.name + ']';
+            };
+        }
+        return constructor;
+    }
+
+    /**
+     * Adds `extend` and `extendWith` static methods to the passed in constructor for having easy extensibility via said
+     * methods;  I.e., passed in constructor will now be extendable via added methods.
+     * @see sjl.defineSubClass(superClass, constructor, methods, statics)
+     * @function module:sjl.makeExtendableConstructor
+     * @param constructor {Function}
+     * @returns {*}
+     */
+    function makeExtendableConstructor (constructor) {
+        var extender = function (constructor_, methods_, statics_) {
+            return defineSubClass(constructor, constructor_, methods_, statics_);
+        };
+
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.stdlib.Extendable
+         * @static sjl.stdlib.Extendable.extend
+         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
+         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
+         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
+         */
+        constructor.extend = extender;
+
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.stdlib.Extendable
+         * @static sjl.stdlib.Extendable.extendWith
+         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
+         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
+         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
+         */
+        sjl.defineEnumProp(constructor, 'extendWith', extender);
+
+        // Return constructor
+        return constructor;
+    }
+
+    /**
+     * Same as `defineSubClass` with out side-effect of `extend` method and `toString` method.
+     * @function module:sjl.defineSubClassPure
+     * @param superClass {Function} - Superclass to inherit from.
+     * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
+     * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
+     * @param statics {Object|undefined} - Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.
+     * @returns {Function} - Constructor with extended prototype and added statics.
+     */
+    function defineSubClassPure (superClass, constructor, methods, statics) {
+        var normalizedArgs = normalizeArgsForDefineSubClass.apply(null, arguments),
+            _superClass = normalizedArgs.superClass,
+            _statics = normalizedArgs.statics,
+            _methods = normalizedArgs.methods,
+            _constructor = normalizedArgs.constructor;
+
+        // Set prototype
+        _constructor.prototype = Object.create(_superClass.prototype);
+
+        // Define constructor
+        Object.defineProperty(_constructor.prototype, 'constructor', {value: _constructor});
+
+        // Extend constructor
+        extend(_constructor.prototype, _methods, true);
+        extend(_constructor, _statics, true);
+
+        // Return constructor
+        return _constructor;
+    }
+
+    /**
      * Defines a class using a `superclass`, `constructor`, methods and/or static methods.
      * @format sjl.defineSubClass (superclass, methodsAndConstructor, statics);
      * @format sjl.defineSubClass (superclass, constructor, methods, statics);
@@ -746,86 +916,12 @@
      * ```
      * @returns {Function}
      */
-    function defineSubClass (superclass,  // Constructor of the superclass
-                                   constructor, // The constructor for the new subclass
-                                   methods,     // Instance methods: copied to prototype
-                                   statics)     // Class properties: copied to constructor
-    {
-        // Resolve superclass
-        superclass = superclass || Object.create(Object.prototype);
+    function defineSubClass (superClass, constructor, methods, statics) {
+        var _constructor_ = defineSubClassPure.apply(null, arguments);
 
-        // Statics for snatching static methods from superclass if it is a constructor
-        var __statics;
-
-        // If superclass is a Constructor snatch statics
-        if (isFunction(superclass)) {
-            // Set statics for snatching statics
-            __statics = {};
-
-            // Snatch each static member from `superclass` to use later
-            Object.keys(superclass).forEach(function (key) {
-                if (key === 'extend') { return; }
-                __statics[key] = superclass[key];
-            });
-        }
-
-        // If `constructor` param is an object then assume [superclass, methods, statics] params order
-        if (isObject(constructor)) {
-
-            // Set static methods, if any
-            statics = methods;
-
-            // Set methods
-            methods = constructor;
-
-            // Decide whether to use a stand in constructor or the user supplied one
-            constructor = ! isFunction(methods.constructor)
-                ? standInConstructor(superclass) : methods.constructor;
-
-            // Unset the constructor from the methods hash since we have a pointer to it
-            unset(methods, 'constructor');
-        }
-
-        // Ensure a constructor is set
-        constructor = isset(constructor) ? constructor : standInConstructor(superclass);
-
-        // Set up the prototype object of the subclass
-        constructor.prototype = Object.create(superclass.prototype);
-
-        /**
-         * Extends a new copy of self with passed in parameters.
-         * @memberof class:sjl.stdlib.Extendable
-         * @static sjl.stdlib.Extendable.extend
-         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
-         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, it is cast as `statics` param.
-         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
-         */
-        sjl.defineEnumProp(constructor, 'extend', function (constructor_, methods_, statics_) {
-            return defineSubClass(constructor, constructor_, methods_, statics_);
-        });
-
-        // Define constructor's constructor
-        Object.defineProperty(constructor.prototype, 'constructor', {value: constructor});
-
-        // Copy the methods and statics as we would for a regular class
-        if (methods) extend(constructor.prototype, methods, true);
-
-        // If internally snatched static functions from `superclass` exists then set them on subclass
-        if (__statics) extend(constructor, __statics, true);
-
-        // If static functions set them
-        if (statics) extend(constructor, statics, true);
-
-        // @note To bypass this functionality just name your toString method as is being done
-        //  here (with a name of your choosing or even the name used below).
-        if (!methods || !methods.hasOwnProperty('toString') || methods.toString.name === 'toString') {
-            constructor.prototype.toString = function toStringOverride() {
-                return '[object ' + constructor.name + ']';
-            };
-        }
-
-        // Return the class
-        return constructor;
+        // set overridden `toString` method and set `extend` and `extendWith` methods after create a
+        // pure sub class of `superClass`
+        return compose(makeExtendableConstructor, classicalToStringMethod)(_constructor_);
     }
 
     /**
@@ -1183,6 +1279,10 @@
         return arg0;
     }
 
+    function isIteratorLike (obj) {
+        return hasMethod(obj, 'next');
+    }
+
     /**
      * @param value
      * @returns {Boolean}
@@ -1208,6 +1308,7 @@
             out = [];
         while (current.done === false) {
             out.push(current.value);
+            current = iterator.next();
         }
         return out;
     }
@@ -1285,10 +1386,10 @@
             case 'SjlMap':
                 out = mapToArray(arrayLike);
                 break;
-            case 'Array':
+            case _Array:
                 out = arrayLike;
                 break;
-            case 'String':
+            case _String:
                 out = arrayLike.split('');
                 break;
             default:
@@ -1305,33 +1406,33 @@
         var out,
             classOfArrayLike = classOf(arrayLike);
         switch (classOfArrayLike) {
-            case 'Object':
+            case _Object:
                 if (hasIterator(classOfArrayLike)) {
                     out = iteratorToArray(getIterator(classOfArrayLike));
+                }
+                else if (isIteratorLike(arrayLike)) {
+                    out = iteratorToArray(arrayLike);
                 }
                 else {
                     out = objToArrayMap(arrayLike);
                 }
                 break;
-            case 'Number':
+            case _Number:
                 out = arrayLike + ''.split('');
                 break;
-            case 'Function':
+            case _Function:
                 out = toArray(arrayLike());
                 break;
             default:
                 // If can't operate on value throw an error
-                if (classOfIsMulti(arrayLike, 'Null', 'Undefined', 'Symbol', 'Boolean')) {
+                if (classOfIsMulti(arrayLike, _Null, _Undefined, 'Symbol', _Boolean)) {
                     throw new TypeError('`sjl.toArray` cannot operate on values of type' +
                         ' `Null`, `Undefined`, `Symbol`, `Boolean`.  ' +
                         'Value type passed in: `' + classOfArrayLike + '`.');
                 }
-                // Else wrap value in array and give a warning
-                else {
-                    console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
-                        'Value and type: ' + arrayLike + ', ', classOfArrayLike);
-                    out = [arrayLike];
-                }
+                console.warn('`sjl.toArray` has wrapped a value unrecognized to it.  ' +
+                    'Value received: ' + arrayLike + ', Type of value: ', classOfArrayLike);
+                out = [arrayLike];
                 break;
         }
         return out;
@@ -1351,7 +1452,7 @@
      */
     function concatArrayLikes (/* [,arrayLike] */) {
         return getArrayLikes.apply(null, arguments).reduce(function (arr1, arr2) {
-            return arr1.concat(toArray(arr2));
+            return arr1.concat(arrayLikeToArray(arr2));
         }, []);
     }
 
@@ -1369,6 +1470,7 @@
         classOf: classOf,
         classOfIs: classOfIs,
         classOfIsMulti: classOfIsMulti,
+        classicalToStringMethod: classicalToStringMethod,
         clone: clone,
         compose: compose,
         concatArrayLikes: concatArrayLikes,
@@ -1382,6 +1484,7 @@
         curry4: __, // ""
         curry5: __, // ""
         defineSubClass: defineSubClass,
+        defineSubClassPure: defineSubClassPure,
         defineEnumProp: defineEnumProp,
         empty: isEmpty,
         emptyMulti: emptyMulti,
@@ -1474,7 +1577,7 @@
      */
 
     // Ensure we have access to es6 `Symbol` object
-    if (typeof Symbol === _undefined) {
+    if (isUndefined(Symbol)) {
         sjl.Symbol = {
             iterator: '@@iterator'
         };
@@ -1483,6 +1586,11 @@
         sjl.Symbol = Symbol;
     }
 
+    sjl.defineEnumProp(sjl, '_', __); // Placeholder object
+
+    // Export this variable
+    sjl.defineEnumProp(sjl, 'isNodeEnv', isNodeEnv);
+
     // Node specific code
     if (isNodeEnv) {
         /**
@@ -1490,13 +1598,13 @@
          */
         // Set package namespace and alias for it
         sjl.package = sjl.ns = new (require('./nodejs/Namespace'))(
-            __dirname, ['.js', '.json']
+            __dirname, ['.js', '.json'], null, ['sjl.js']
         );
 
         // Short cut to namespaces
-        Object.keys(sjl.ns).forEach(function (key) {
-            sjl[key] = sjl.ns[key];
-        });
+        // Object.keys(sjl.ns).forEach(function (key) {
+        //     sjl[key] = sjl.ns[key];
+        // });
 
         // Methods not needed for NodeJs environment
         unset(sjl, 'createTopLevelPackage');
@@ -1523,16 +1631,100 @@
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
 
+        // Check if amd is being used (store this check globally to reduce
+        //  boilerplate code in other components).
+        defineEnumProp(sjl, 'isAmd', isFunction(define) && isset(define.amd));
+
         // Export sjl globally
-        globalContext.sjl = sjl;
+        window.sjl = sjl;
 
         // Return sjl if amd is being used
-        if (globalContext.__isAmd) {
+        if (sjl.isAmd) {
             return sjl;
         }
     }
 
 }());
+
+/**
+ * Content generated by '{project-root}/node-scripts/VersionNumberReadStream.js'.
+ * Generated Fri Nov 25 2016 14:42:58 GMT-0500 (Eastern Standard Time) 
+ */
+(function () {
+
+    'use strict';
+
+    // Get sjl
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('./../sjl.js') : window.sjl || {},
+        version = '6.4.0';
+
+    if (isNodeEnv) {
+        module.exports = version;
+    }
+    else {
+        // Export version number
+        sjl.ns('version', version);
+
+        // Export it higher one level
+        sjl.defineEnumProp(sjl, 'version', version);
+
+        // If amd, return the version number
+        if (sjl.isAmd) {
+            return version;
+        }
+    }
+
+}());
+
+/**
+ * Created by Ely on 4/12/2014.
+ */
+
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        Extendable = function Extendable () {};
+
+    /**
+     * The `sjl.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
+     * @class sjl.stdlib.Extendable
+     */
+    Extendable = sjl.defineSubClass(Function, Extendable);
+
+    /**
+     * Extends the passed in constructor with `Extendable`.
+     * @examples
+     * // Scenario 1: function called with a constructor, a prototype object, and a static properties object.
+     * // 2nd and 3rd arguments are optional in this scenario
+     * Extendable.extend(SomeConstructor, somePrototypeHash, someStaticPropsHash);
+     *
+     * // Scenario 2: function is called with a prototype object and a static properties object
+     * // 2nd argument is optional in this scenario.
+     * // Note: First arg must contain a constructor property containing the constructor to extend which is also
+     * //   the constructor that gets set on said constructors prototype.constructor property
+     * //   (gets set as un-writable/un-configurable makes for a more accurate oop experience).
+     * Extendable.extend({ constructor: SomeConstructor, someMethod: function () {} },
+     *                   {someStaticProp: 'hello'});
+     * @see sjl.defineSubClass
+     * @member sjl.stdlib.Extendable.extend {Function}
+     */
+
+    // Export `Extendable`
+    if (isNodeEnv) {
+        module.exports = Extendable;
+    }
+    else {
+        sjl.ns('stdlib.Extendable', Extendable);
+        if (sjl.isAmd) {
+            return Extendable;
+        }
+    }
+
+})();
 
 /**
  * Created by edlc on 11/13/16.
@@ -1544,130 +1736,333 @@
 
     'use strict';
 
-    function addPropertyValue (context, value) {
-        Object.defineProperty(context, 'value', {
-            value: value,
-            writable: true
-        });
-    }
-
     var isNodeEnv = typeof window === 'undefined',
-        sjl = isNodeEnv ? require('./../sjl.js') : window.sjl || {},
-        Extendable = sjl.defineSubClass(Function, function Extendable() {}),
-        Identity = Extendable.extend({
-            constructor: function Identity (value) {
-                if (!(this instanceof Identity)) {
-                    return Identity.of(value);
-                }
-                addPropertyValue(this, value);
-            },
-            map: function (func) {
-                return Identity.of(func(this.value));
-            },
-            flatten: function () {
-                var value = this.value;
-                while (value instanceof Just) {
-                    value = value.value;
-                }
-                return Identity(value);
-            },
-            unwrap: function () {
-                return this.flatten().value;
-            },
-            fnApply: function (obj) {
-                return obj.map(this.value);
-            },
-            fnBind: sjl.curry2(function (fn, mappable) {
-                return mappable.map(fn(this.value)).flatten();
-            }),
-        }, {
-            of: function (value) {
-                return new Identity(value);
-            }
-        }),
-        Just = Identity.extend({
-            constructor: function Just (value) {
-                if (!(this instanceof Just)) {
-                    return Just.of(value);
-                }
-                Identity.call(this, value);
-            },
-            map: function (func) {
-                return sjl.isset(this.value) ? Just(func(this.value)) : Nothing();
-            },
-            flatten: function () {
-                var value = this.value;
-                while (value instanceof Just) {
-                    value = value.value;
-                }
-                return sjl.isset(value) ? Just(value): Nothing();
-            }
-        }, {
-            of: function (value) {
-                return new Just(value);
-            }
-        }),
-        returnNothing = function () {
-            return Nothing();
+        sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
+        curry2 = sjl.curry2,
+        curry3 = sjl.curry3,
+        id = function (value) {
+            return value;
         },
-        Nothing = Extendable.extend({
-            constructor: function Nothing () {
-                if (!(this instanceof Nothing)) {
-                    return Nothing.of();
-                }
-                Object.defineProperty(this, 'value', {
-                    value: null
-                });
-            },
-            map: returnNothing,
-            unwrap: function () {
-                return this.flatten().value;
-            },
-            flatten: returnNothing,
-            fnApply: returnNothing,
-            fnBind: returnNothing
-        }, {
-            of: function () {
-                return new Nothing();
+        map = curry2(function (fn, functor) {
+            return functor.map(fn);
+        }),
+        ap = curry2(function (obj1, obj2) {
+            return obj1.ap(obj2);
+        }),
+        chain = curry2(function (fn, functor) {
+            return functor.map(fn).join();
+        }),
+        join = function (monad) {
+            return monad.value instanceof monad.constructor ? monad.value : monad.constructor.of(monad.value);
+        },
+        joinR = function (monad) {
+            while (monad.value instanceof monad.constructor) {
+                monad = monad.join();
             }
+            return monad;
+        },
+        liftN = curry3(function (fn, functor1) {
+            return sjl.restArgs(arguments, 3).reduce(function (aggregator, functor) {
+                return aggregator.ap(functor);
+            }, functor1.map(fn));
         }),
 
         /**
          * `fn` package.  Includes some functional members
-         * @type {{map: *, flatten: fnPackage.flatten, unwrap: fnPackage.unwrap, apply: *, bind: *, Identity: (any), Just: (any), Nothing: (any)}}
+         * @type {Object}
          */
         fnPackage = {
-
-            map: sjl.curry2(function (obj, fn) {
-                return obj.map(fn);
-            }),
-            flatten: function (obj) {
-                return obj.flatten();
-            },
-            unwrap: function (obj) {
-                return obj.unwrap();
-            },
-            fnApply: sjl.curry2(function (obj1, obj2) {
-                return obj1.fnApply(obj2);
-            }),
-            fnBind: sjl.curry3(function (obj1, obj2, fn) {
-                return obj1.fnBind(fn, obj2);
-            }),
-
-            Identity: Identity,
-            Just: Just,
-            Nothing: Nothing
+            id: id,
+            map: map,
+            join: join,
+            joinR: joinR,
+            chain: chain,
+            ap: ap,
+            liftN: liftN
         };
 
-    // Export `Extendable`
+    // Export `fnPackage`
     if (isNodeEnv) {
         module.exports = fnPackage;
     }
     else {
         sjl.ns('fn', fnPackage);
         sjl.fn = sjl.ns.fn;
-        if (window.__isAmd) {
-            return Extendable;
+
+        Object.keys(fnPackage).forEach(function (key) {
+            sjl.defineEnumProp(sjl, key, fnPackage[key]);
+        });
+
+        if (sjl.isAmd) {
+            return fnPackage;
+        }
+    }
+
+}());
+
+/**
+ * Created by elyde on 11/25/2016.
+ */
+
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
+
+        /**
+         * @module module:sjl.math
+         * @type {{add: Function, multiply: Function, divide: Function}}
+         */
+        math = {
+
+            add: sjl.curry2(function () {
+                return sjl.argsToArray(arguments).reduce(function (agg, num) {
+                    return num + agg;
+                }, 0);
+            }),
+
+            multiply: sjl.curry2(function () {
+                return sjl.argsToArray(arguments).reduce(function (agg, num) {
+                    return num * agg;
+                }, 1);
+            }),
+
+            divide: sjl.curry2(function () {
+                var args = sjl.argsToArray(arguments);
+                return args.reduce(function (agg, num) {
+                    return agg / num;
+                }, args.shift());
+            })
+        };
+
+    // Export `math`
+    if (isNodeEnv) {
+        module.exports = math;
+    }
+    else {
+        sjl.ns('math', math);
+        sjl.defineEnumProp(sjl, 'math', math);
+
+        if (sjl.isAmd) {
+            return math;
+        }
+    }
+
+
+}());
+
+/**
+ * Created by edlc on 11/20/2016.
+ */
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
+        Extendable = sjl.ns.stdlib.Extendable,
+        fnNs = sjl.ns.fn,
+        curry2 = sjl.curry,
+        Monad = Extendable.extendWith({
+            constructor: function Monad (value) {
+                if (!(this instanceof Monad)) {
+                    return Monad.of(value);
+                }
+                Object.defineProperty(this, 'value', {
+                    value: value,
+                    writable: true
+                });
+            },
+            map: function (fn) {
+                return this.constructor.of(fn(this.value));
+            },
+            join: function () {
+                return fnNs.join(this);
+            },
+            joinR: function () {
+                return fnNs.joinR(this);
+            },
+            ap: function (functor) {
+                return functor.map(this.value);
+            },
+            chain: function (fn) {
+                return fnNs.chain(fn, this); // monadic bind
+            },
+            lift: curry2(function (fn) {
+                return fnNs.liftN.apply(null, sjl.concatArrayLikes([this], arguments));
+            })
+        }, {
+            of: function (value) {
+                return new Monad(value);
+            }
+        });
+
+    // Export
+    if (isNodeEnv) {
+        module.exports = Monad;
+    }
+    else {
+        sjl.ns('Monad', Monad);
+        sjl.defineEnumProp(sjl, 'Monad', sjl.ns.Monad);
+
+        if (sjl.isAmd) {
+            return Monad;
+        }
+    }
+
+}());
+
+/**
+ * Created by elyde on 11/20/2016.
+ */
+/**
+ * Created by elyde on 11/20/2016.
+ */
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
+        ns = sjl.ns,
+        curry3 = sjl.curry3,
+        Monad = ns.Monad,
+        maybe = curry3(function (replacement, fn, monad) {
+            var subject = monad.join().map(sjl.ns.fn.id);
+            return subject instanceof Nothing ? replacement : fn(subject);
+        }),
+        nothing = function () {
+            return Nothing.of();
+        },
+        Nothing = Monad.extendWith({
+            constructor: function Nothing() {
+                if (!(this instanceof Nothing)) {
+                    return nothing();
+                }
+                Object.defineProperty(this, 'value', {
+                    value: null
+                });
+            },
+            map: nothing,
+            join: nothing,
+            ap: nothing,
+            chain: nothing
+        }, {
+            of: function () {
+                return new Nothing();
+            }
+        }),
+        Just = Monad.extendWith({
+            constructor: function Just(value) {
+                if (!(this instanceof Just)) {
+                    return Just.of(value);
+                }
+                Monad.call(this, value);
+            },
+            map: function (func) {
+                var constructor = this.constructor;
+                return sjl.isset(this.value) ? constructor.of(func(this.value)) :
+                    constructor.counterConstructor.of(this.value);
+            }
+        }, {
+            of: function (value) {
+                return new Just(value);
+            },
+            counterConstructor: Nothing
+        }),
+        Maybe = {
+            maybe: maybe,
+            nothing: nothing,
+            Just: Just,
+            Nothing: Nothing
+        };
+
+    // Export `fnPackage`
+    if (isNodeEnv) {
+        module.exports = Maybe;
+    }
+    else {
+        sjl.ns('Maybe', Maybe);
+
+        Object.keys(Maybe).forEach(function (key) {
+            sjl.defineEnumProp(sjl, key, Maybe[key]);
+        });
+
+        if (sjl.isAmd) {
+            return Maybe;
+        }
+    }
+
+}());
+
+/**
+ * Created by elyde on 11/20/2016.
+ */
+(function () {
+
+    'use strict';
+
+    var isNodeEnv = typeof window === 'undefined',
+        sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
+        Just = sjl.ns.Maybe.Just,
+        either = sjl.curry2(function (leftCallback, rightCallback, monad) {
+            var identity = monad.map(sjl.ns.fn.id);
+            switch (identity .constructor) {
+                case Left:
+                    return leftCallback(identity.value);
+                case Right:
+                    return rightCallback(identity.value);
+            }
+        }),
+        Left = Just.extend({
+            constructor: function Left(value) {
+                if (!(this instanceof Left)) {
+                    return Left.of(value);
+                }
+                Just.call(this, value);
+            },
+            map: function (/*func*/) {
+                return this;
+            }
+        }, {
+            of: function (value) {
+                return new Left(value);
+            }
+        }),
+        Right = Just.extend({
+            constructor: function Right(value) {
+                if (!(this instanceof Right)) {
+                    return Right.of(value);
+                }
+                Just.call(this, value);
+            }
+        }, {
+            of: function (value) {
+                return new Right(value);
+            },
+            counterConstructor: Left
+        }),
+        Either = {
+            either: either,
+            Right: Right,
+            Left: Left
+        };
+
+    // Export `fnPackage`
+    if (isNodeEnv) {
+        module.exports = Either;
+    }
+    else {
+        sjl.ns('Either', Either);
+        sjl.defineEnumProp(sjl, 'Either', Either);
+        sjl.defineEnumProp(sjl, 'either', either);
+        sjl.defineEnumProp(sjl, 'Right', Right);
+        sjl.defineEnumProp(sjl, 'Left', Left);
+
+        if (sjl.isAmd) {
+            return Either;
         }
     }
 

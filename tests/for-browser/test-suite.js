@@ -9,6 +9,32 @@
 // Require `sjljs` (get's set on `window` so no need to put it in a variable).
 require('sjl');
 
+/**
+ * Created by elyde on 11/19/2016.
+ */
+
+describe ('sjl.classOf', function () {
+
+        // Do not run these tests for the browser
+    if (!sjl.isNodeEnv) {
+        return;
+    }
+
+    let Namespace = sjl.ns.nodejs.Namespace,
+        ns = new Namespace(path.join(__dirname, './../../src'));
+
+    it ('should generate a namespace object that has the contents of the "./src/version.js" file.', function () {
+        if (process.env.NODE_ENV && process.env.NODE_ENV.toLowerCase() === 'dev') {
+            console.log('---------------- From Tests ------------------');
+            console.log('Generated Namespace Obj: ', ns);
+            console.log('----------------------------------------------');
+            console.log('\n');
+        }
+        expect(ns.version === sjl.version).to.equal(true);
+    });
+
+});
+
 describe('sjl.argsToArray', function () {
 
         it('should return an array for an arguments object.', function () {
@@ -279,18 +305,18 @@ describe('sjl.compose', function () {
 
     it ('should return a function that when used returns the passed in value if `compose` ' +
         'itself didn\'t receive any parameters.', function () {
-        let result = sjl.compose();
+        var result = sjl.compose();
         expect(result(99)).to.equal(99);
     });
 
     it ('should be able to compose an arbitrary number of functions and execute them as expected ' +
         'from generated function.', function () {
-        let curry2 = sjl.curry2,
+        var curry2 = sjl.curry2,
             min = curry2(Math.min),
             max = curry2(Math.max),
             pow = curry2(Math.pow),
             composed = sjl.compose(min(8), max(5), pow(2)),
-            randomNum = curry2(function (start, end) { return Math.random() * end + start; }),
+            randomNum = curry2(function (start, end) { return Math.round(Math.random() * end + start); }),
             random = randomNum(0),
             expectedFor = function (num) { return min(8, max(5, pow(num, 2))); };
             [8,5,3,2,1,0, random(89), random(55), random(34)].forEach(function (num) {
@@ -306,8 +332,26 @@ describe('sjl.compose', function () {
 describe('sjl.curry', function () {
 
         // Set curry here to use below
-    let curry = sjl.curry,
-        curry2 = sjl.curry2;
+    var slice = Array.prototype.slice,
+        multiplyRecursive = function () {
+            return slice.call(arguments).reduce(function (agg, num) {
+                return num * agg;
+            }, 1);
+        },
+        addRecursive =function () {
+            return slice.call(arguments).reduce(function (agg, num) {
+                return num + agg;
+            }, 0);
+        },
+        divideR = function () {
+            var args = slice.call(arguments);
+            return args.reduce(function (agg, num) {
+                return agg / num;
+            }, args.shift());
+        },
+        curry = sjl.curry,
+        curry2 = sjl.curry2,
+        __ = sjl._;
 
     it ('should be of type function.', function () {
         expect(sjl.curry).to.be.instanceOf(Function);
@@ -326,7 +370,7 @@ describe('sjl.curry', function () {
     });
 
     it ('should return a properly curried function when correct arity for said function is met.', function () {
-        let min8 = curry(Math.min, 8),
+        var min8 = curry(Math.min, 8),
             max5 = curry(Math.max, 5),
             pow2 = curry(Math.pow, 2);
 
@@ -348,7 +392,7 @@ describe('sjl.curry', function () {
     });
 
     it ('should be able to correctly curry functions of different arity as long as their arity is met.', function () {
-        let min = curry2(Math.min),
+        var min = curry2(Math.min),
             max = curry2(Math.max),
             pow = curry2(Math.pow),
             min8 = curry(Math.min, 8),
@@ -373,9 +417,155 @@ describe('sjl.curry', function () {
 
         // Expect `curry`ed functions to work as expected
         [8,5,3,2,1,0, random(89), random(55), random(34)].forEach(function (num) {
-            let composed = sjl.compose(min8, max5, pow2);
+            var composed = sjl.compose(min8, max5, pow2);
             expect(composed(num)).to.equal(expectedFor(num));
         });
+    });
+
+    it ('should enforce `Placeholder` values when currying', function () {
+        var add = curry(addRecursive),
+            multiply = curry(multiplyRecursive),
+            multiplyExpectedResult = Math.pow(5, 5);
+
+        // Curry add to add 3 numbers
+        expect(add(__, __, __)(1, 2, 3)).to.equal(6);
+        expect(add(1, __, __)(2, 3)).to.equal(6);
+        expect(add(1, 2, __)(3)).to.equal(6);
+        expect(add(1, 2, 3)).to.equal(6);
+
+        // Curry multiply and pass args in non-linear order
+        expect(multiply(__, __, __, __, __)(5, 5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(__, __, 5, __, __)(5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, __, 5, __, __)(5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, __, 5, __, 5)(5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, __, 5, 5, 5)(5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, 5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+
+        expect(add(__, __, __)(1, 2, 3, 5, 6)).to.equal(17);
+        expect(add(__, 1, __)(2, 3, 5, 6)).to.equal(17);
+        expect(add(__, 1, 2)(3, 5, 6)).to.equal(17);
+        expect(add(1, 2, 3, 5, 6)).to.equal(17);
+
+    });
+
+    it ('should respect argument order and placeholder order.', function () {
+        // Curry divideR to divde 3 or more numbers
+        expect(curry(divideR, 25, 5)).to.be.instanceOf(Function);
+        expect(curry(divideR, __, 625, __)(3125, 5)).to.equal(1);
+        expect(curry(divideR, Math.pow(3125, 2), 3125, __)(5)).to.equal(625);
+    });
+
+});
+
+/**
+ * Created by elyde on 11/25/2016.
+ */
+/**
+ * Created by elyde on 11/13/2016.
+ */
+describe('sjl.curry', function () {
+
+        // Set curry here to use below
+    var slice = Array.prototype.slice,
+        multiplyRecursive = function () {
+            return slice.call(arguments).reduce(function (agg, num) {
+                return num * agg;
+            }, 1);
+        },
+        addRecursive =function () {
+            return slice.call(arguments).reduce(function (agg, num) {
+                return num + agg;
+            }, 0);
+        },
+        divideR = function () {
+            var args = slice.call(arguments);
+            return args.reduce(function (agg, num) {
+                return agg / num;
+            }, args.shift());
+        },
+        curryN = sjl.curryN,
+        __ = sjl._;
+
+    it ('should be of type function.', function () {
+        expect(curryN).to.be.instanceOf(Function);
+    });
+
+    it ('should return a function that throws an error when no arguments are passed.', function () {
+        var result = curryN();
+        expect(result).to.be.instanceOf(Function);
+        assert.throws(result, Error);
+    });
+
+    it ('should enforce `Placeholder` values when currying', function () {
+        var add3Nums = curryN(addRecursive, 3),
+            multiply5Nums = curryN(multiplyRecursive, 5),
+            multiplyExpectedResult = Math.pow(5, 5);
+
+        // Curry add to add 3 numbers
+        expect(add3Nums(__, __, __)(1, 2, 3)).to.equal(6);
+        expect(add3Nums(1, __, __)(2, 3)).to.equal(6);
+        expect(add3Nums(1, 2, __)(3)).to.equal(6);
+        expect(add3Nums(1, 2, 3)).to.equal(6);
+
+        // Curry multiply and pass args in non-linear order
+        expect(multiply5Nums(__, __, __, __, __)(5, 5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply5Nums(__, __, 5, __, __)(5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply5Nums(5, __, 5, __, __)(5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply5Nums(5, __, 5, __, 5)(5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply5Nums(5, __, 5, 5, 5)(5)).to.equal(multiplyExpectedResult);
+        expect(multiply5Nums(5, 5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+
+    });
+
+    it ('should pass in any values passed the arity when executing the curried function', function () {
+        var add3Nums = curryN(addRecursive, 3);
+
+        // Curry add to add 3 numbers
+        expect(add3Nums(__, __, __)(1, 2, 3)).to.equal(6);
+        expect(add3Nums(1, __, __)(2, 3)).to.equal(6);
+        expect(add3Nums(1, 2, __)(3)).to.equal(6);
+        expect(add3Nums(1, 2, 3)).to.equal(6);
+
+        // Curry `add` to add any numbers passed required arity
+        expect(add3Nums(__, __, __)(1, 2, 3, 5, 6)).to.equal(17);
+        expect(add3Nums(__, 1, __)(2, 3, 5, 6)).to.equal(17);
+        expect(add3Nums(__, 1, 2)(3, 5, 6)).to.equal(17);
+        expect(add3Nums(1, 2, 3, 5, 6)).to.equal(17);
+    });
+
+    it ('should respect the passed in "executeArity" (shouldn\'t be called to passed in arity length is reached', function () {
+        var multiply5Nums = curryN(multiplyRecursive, 5),
+            multiplyExpectedResult = Math.pow(5, 5),
+            argsToTest = [
+                [5, 5, 5, 5, 5],
+                [5, 5, 5, 5],
+                [5, 5, 5],
+                [5, 5],
+                [5]
+            ],
+            partiallyAppliedResults = [
+                multiply5Nums(__, __, __, __, __),
+                multiply5Nums(__, __, 5, __, __),
+                multiply5Nums(5, __, 5, __, __),
+                multiply5Nums(5, __, 5, __, 5),
+                multiply5Nums(5, __, 5, 5, 5)
+            ];
+
+        // Curry multiply and pass args in non-linear order
+        argsToTest.forEach(function (args, index) {
+            expect(partiallyAppliedResults[index]).to.be.instanceOf(Function);
+            expect(partiallyAppliedResults[index].apply(null, args)).to.equal(multiplyExpectedResult);
+        });
+
+    });
+
+    it ('should respect argument order and placeholder order.', function () {
+        var divideC = curryN(divideR, 3);
+
+        // Curry divideR to divde 3 or more numbers
+        expect(divideC(25, 5)).to.be.instanceOf(Function);
+        expect(divideC(__, 625, __)(3125, 5)).to.equal(1);
+        expect(divideC(Math.pow(3125, 2), 3125, __)(5)).to.equal(625);
     });
 
 });
@@ -718,6 +908,317 @@ describe('sjl.extractFromArrayAt', function () {
     });
 
 });
+
+/**
+ * Created by elyde on 11/25/2016.
+ */
+/**
+ * Created by elyde on 11/20/2016.
+ */
+describe('sjl.Maybe', function () {
+
+        var Either = sjl.ns.Either,
+        Left = Either.Left,
+        Right = Either.Right,
+        either = Either.either,
+        memberNames = ['Right', 'Left', 'either'],
+        expectInstanceOf = sjl.curry2((Type, functor) => expect(functor).to.be.instanceOf(Type)),
+        expectRight = expectInstanceOf(Right),
+        expectLeft = expectInstanceOf(Left),
+        math = sjl.ns.math;
+
+    it ('should be an object', function () {
+        expect(typeof Either).to.equal('object');
+    });
+
+    it (`should contain the following members: ${memberNames.join(',')}`, function () {
+        var foundKeys = Object.keys(Either);
+        expect(memberNames.length).to.equal(foundKeys.length);
+        foundKeys.forEach(function (key) {
+            expect(memberNames.indexOf(key)).to.be.greaterThan(-1);
+        });
+    });
+
+    describe ('#Left', function () {
+        it ('shouldn\'t be mappable (should return the same value no matter what when mapped)', function () {
+            var leftValue = Left(2);
+            expect(leftValue.map(sjl.curry(Math.pow, 99)).value).to.equal(leftValue.value);
+            expectLeft(leftValue);
+        });
+    });
+
+    describe ('#Right', function () {
+        it ('should be mappable', function () {
+            var rightValue = Right(2);
+            expect(rightValue.map(sjl.curry(Math.pow, 99)).value).to.equal(99 * 99);
+            expectRight(rightValue);
+        });
+        it ('should return an instance of `Left` when being mapped over if it\'s value is empty (undefined or null)', function () {
+            var value = Right(null),
+                result = value.map(sjl.curry(Math.pow, 99));
+            expect(result.value).to.equal(null);
+            expectLeft(result);
+        });
+    });
+
+    describe ('#either', function () {
+        it ('should return the right value applied to the `rightCallback` function when value is set (!null !undefined)', function () {
+            var multiply = math.multiply,
+                multiplyBy2 = multiply(2),
+                multiplyBy3 = multiply(3),
+                errorMessageCallback = function (value) {
+                    return 'An error occurred.  Could not multiply ' + value + '.';
+                };
+            expect(either(multiplyBy2, multiplyBy3, Right(99))).to.equal(99 * 3);
+            expect(either(errorMessageCallback, multiplyBy3, Right(null))).to.equal(errorMessageCallback(null));
+        });
+    });
+
+});
+
+/**
+ * Created by elyde on 11/20/2016.
+ */
+describe('sjl.Maybe', function () {
+
+        var Maybe = sjl.ns.Maybe,
+        Just = Maybe.Just,
+        Nothing = Maybe.Nothing,
+        maybe = Maybe.maybe,
+        nothing = Maybe.nothing,
+        memberNames = ['Just', 'Nothing', 'nothing', 'maybe'],
+        expectInstanceOf = sjl.curry2((Type, functor) => expect(functor).to.be.instanceOf(Type)),
+        expectNothing = expectInstanceOf(Nothing),
+        expectJust = expectInstanceOf(Just);
+
+    it ('should be an object', function () {
+        expect(typeof Maybe).to.equal('object');
+    });
+
+    it (`should contain the following members: ${memberNames.join(',')}`, function () {
+        var foundKeys = Object.keys(Maybe);
+        expect(memberNames.length).to.equal(foundKeys.length);
+        foundKeys.forEach(function (key) {
+            expect(memberNames.indexOf(key)).to.be.greaterThan(-1);
+        });
+    });
+
+    describe ('#Just', function () {
+        it ('should return an instance when receiving any value', function () {
+            [null, undefined, 99, 0, -1, true, false, [1,2,3], {}, {a: 'b'}, () => {}]
+                .forEach(function (value) {
+                    expectJust(Just(value));
+                });
+        });
+        it ('should return an instance of itself even when receiving no value', function () {
+            expectJust(Just());
+        });
+
+        describe ('#map', function () {
+            var someFn = function (value) { return value.toString(); };
+            it('should return nothing when contained value is `null` or `undefined`', function () {
+                expectNothing(Just().map(someFn));
+                expectNothing(Just(null).map(someFn));
+                expectNothing(Just(undefined).map(someFn));
+            });
+            expectJust(Just(-1).map(someFn));
+            expectJust(Just(0).map(someFn));
+            expectJust(Just(1).map(someFn));
+            [-1, 0, 1, true, false, [1,2,3], {}, {a: 'b'}, () => {}]
+                .forEach(function (value) {
+                    it ('should return an instance of `Just` when contained value is ' +
+                        '`' + value.toString() + '`', function () {
+                        expectJust(Just(value).map(someFn));
+                    });
+                });
+
+        });
+    });
+
+    describe ('#Nothing', function () {
+        describe ('should return `Nothing` for it\'s monadic interface [map, ap, join, chain]', function () {
+            var someFn = function (value) { return value * 2; },
+                someMonad = Just(99);
+            it ('should return `Nothing` for `map`.', function () {
+                expectNothing(Nothing(100).map(someFn));
+                expectNothing(Nothing(99).map(someFn));
+                expectNothing(Nothing(Just(98)).map(someFn));
+            });
+            it ('should return `Nothing` for `join` even when nested has `Nothing`s.', function () {
+                expectNothing(Nothing(Nothing(98)).join());
+                expectNothing(Nothing(Just(99)).join());
+                expectNothing(Nothing(99).join());
+                expectNothing(Nothing().join());
+            });
+            it ('should return `Nothing` for `ap`.', function () {
+                expectNothing(Nothing(98).ap(someMonad));
+                expectNothing(Nothing(Just(99)).ap(someMonad));
+            });
+            it ('should return `Nothing` for `chain`.', function () {
+                expectNothing(Nothing(97).chain(someFn));
+                expectNothing(Nothing(Just(96)).chain(someFn));
+            });
+        });
+
+    });
+
+    describe ('#maybe', function () {
+        it ('should return the replacement value when value to check is not set (null | undefined)', function () {
+            var just100 = Just(100),
+                justNull = Just(null),
+                id = sjl.ns.fn.id,
+                justTimes2 = incomingJust => Just(value => value * 2).ap(incomingJust);
+            expect(maybe(just100, id, justNull)).to.equal(just100);
+            expect(maybe(Just(99), justTimes2, just100).value).to.equal(200);
+            expect(maybe(Just(1000), justTimes2, Just(null)).value).to.equal(1000);
+            expect(maybe(Just(2000), justTimes2, Just(1000)).value).to.equal(2000);
+        });
+    });
+
+    describe ('#nothing', function () {
+        it ('should be a function.', function () {
+            expect(nothing).to.be.instanceOf(Function);
+        });
+        it ('should return an instance of `Nothing`', function () {
+            expect(nothing()).to.be.instanceOf(Nothing);
+        });
+    });
+
+});
+
+/**
+ * Created by edlc on 11/14/16.
+ */
+describe('sjl.Monad', function () {
+
+        var Monad = sjl.ns.Monad,
+        expectMonad = monad => expect(monad).to.be.instanceOf(Monad);
+
+    it ('should have the appropriate (monadic) interface.', function () {
+        var monad = Monad();
+        ['map', 'join', 'chain', 'ap'].forEach(function (key) {
+            expect(monad[key]).to.be.instanceOf(Function);
+        });
+    });
+
+    it ('should have a `of` static method.', function () {
+        expect(Monad.of).to.be.instanceOf(Function);
+    });
+
+    describe ('#map', function () {
+        var monad = Monad(2),
+            pow = sjl.curry2(Math.pow),
+            result = monad.map(pow(8));
+        it ('should pass `Monad`\'s contained value to passed in function.', function () {
+            expect(result.value).to.equal(64);
+        });
+        it ('should return a new instance of `Monad`.', function () {
+            expect(result).to.be.instanceOf(Monad);
+        });
+    });
+
+    describe ('#join', function () {
+        it ('should remove one level of monadic structure on it\'s own type;  ' +
+            'E.g., If it\'s inner value is of the same type.', function () {
+            var innerMostValue = 5,
+                monad1 = Monad(innerMostValue),
+                monad2 = Monad(monad1),
+                monad3 = Monad(monad2),
+                monad4 = Monad(),
+                expectInnerValueEqual = (value, value2) => expect(value).to.equal(value2),
+                expectations = (result, equalTo) => {
+                    expectMonad(result);
+                    expectInnerValueEqual(result.value, equalTo);
+                };
+                expectations(monad1.join(), innerMostValue);
+                expectations(monad2.join(), innerMostValue);
+                expectations(monad3.join(), monad1);
+                expectations(monad4.join(), undefined);
+        });
+    });
+
+    describe ('#ap', function () {
+        var add = sjl.curry2(function (a, b) { return a + b; }),
+            multiply = sjl.curry2(function (a, b) { return a * b; }),
+            idAdd = Monad(add),
+            idMultiply = Monad(multiply),
+            idMultiplyBy5 = idMultiply.ap(Monad(5));
+
+        it ('Should effectively apply the function contents of one `Monad` obj to another.', function () {
+            var result = idMultiplyBy5.ap(Monad(5)),
+                result2 = idAdd.ap(Monad(3)).ap(Monad(5));
+            expectMonad(result);
+            expectMonad(result2);
+            expect(result.value).to.equal(5 * 5);
+            expect(result2.value).to.equal(8);
+        });
+
+        it ('should throw an error when trying to apply one Functor with a non ' +
+            'function value in it to another.', function () {
+            assert.throws(() => Monad(5).ap(Monad(3)), Error);
+        });
+    });
+
+    describe ('#chain', function () {
+        var split = function (str) { return str.split(''); },
+            camelCase = sjl.camelCase,
+            ucaseFirst = sjl.ucaseFirst,
+            compose = sjl.compose,
+            idSplit = compose(Monad, split),
+            originalStr = 'hello-world',
+
+            // Monad(['H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'])
+            expectedStrTransform = compose(idSplit, ucaseFirst, camelCase)(originalStr),
+
+            // Expected: Monad(['H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'])
+            result = Monad(originalStr)
+                .chain(camelCase)
+                .chain(ucaseFirst)
+                .chain(idSplit);
+
+        it ('Should return a type of `Monad`.', function () {
+            expectMonad(result);
+        });
+
+        it ('Should apply passed in method.', function () {
+            expect(result.value).to.be.instanceOf(Array);
+            expect(result.value.length).to.equal(result.value.length);
+            result.chain(function (value) {
+                value.forEach(function (innerValue, index) {
+                    expect(innerValue).to.equal(expectedStrTransform.value[index]);
+                });
+            });
+        });
+
+        it ('Should retain monadic structure when called.', function () {
+            var result2 = Monad(originalStr)
+                .chain(camelCase)
+                .chain(ucaseFirst)
+                .chain(compose(Monad, idSplit));
+            expectMonad(result2);
+            expectMonad(result2.value);
+            expect(result2.value.value).to.be.instanceOf(Array);
+        });
+
+    });
+
+    // describe ('#unwrap', function () {
+    //     it ('should return it\'s contained value.', function () {
+    //         let id1= Monad(1),
+    //             id2 = Monad(),
+    //             id3 = Monad(3),
+    //             id4 = Monad(id3);
+    //         expect(id1.unwrap()).to.equal(1);
+    //         expect(id2.unwrap()).to.equal(undefined);
+    //         expect(id4.unwrap()).to.equal(id3.unwrap());
+    //     });
+    // });
+
+});
+
+/**
+ * Created by elyde on 11/20/2016.
+ */
 
 /**
  * Created by elydelacruz on 4/16/16.
@@ -1519,6 +2020,20 @@ describe('sjl.unset', function () {
  */
 
 /**
+ * Created by elyde on 11/19/2016.
+ */
+
+describe('sjl.version', function () {
+
+        it ('should be set.', function () {
+        // @note below member is imported as side effect for node version only
+        // (it is bundled with the browser version)
+        var version = sjl.isNodeEnv ? require('./../../src/generated/version') : sjl.version;
+        expect(sjl.notEmptyAndOfType(version, String)).to.equal(true);
+    });
+
+});
+/**
  * Created by elydelacruz on 4/20/16.
  */
 describe('sjl.wrapPointer', function () {
@@ -1557,10 +2072,10 @@ describe('sjl.stdlib.Config', function () {
         },
         exampleObjKeys = Object.keys(exampleObj),
         exampleObj2Keys = Object.keys(exampleObj2),
-        Config = sjl.stdlib.Config;
+        Config = sjl.ns.stdlib.Config;
 
     it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
-        expect(new sjl.stdlib.Config()).to.be.instanceof(sjl.stdlib.Extendable);
+        expect(new Config()).to.be.instanceof(sjl.ns.stdlib.Extendable);
     });
 
     it ('should be able to set multiple properties from one object passed int to constructor.', function () {
@@ -1849,10 +2364,10 @@ describe('sjl.stdlib.Optionable', function () {
         },
         exampleObjKeys = Object.keys(exampleObj),
         exampleObj2Keys = Object.keys(exampleObj2),
-        Optionable = sjl.stdlib.Optionable;
+        Optionable = sjl.ns.stdlib.Optionable;
 
     it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
-        expect(new sjl.stdlib.Optionable()).to.be.instanceof(sjl.stdlib.Extendable);
+        expect(new sjl.ns.stdlib.Optionable()).to.be.instanceof(sjl.ns.stdlib.Extendable);
     });
 
     it ('should be able to set multiple properties from one object passed int to constructor.', function () {
@@ -2038,7 +2553,7 @@ describe('sjl.stdlib.Optionable', function () {
         it ('should return the options store which should be an instance of `sjl.stdlib.Config`.', function () {
             var optionable = new Optionable();
             expect(optionable.getStoreHash).to.be.instanceof(Function);
-            expect(optionable.getStoreHash()).to.be.instanceof(sjl.stdlib.Config);
+            expect(optionable.getStoreHash()).to.be.instanceof(sjl.ns.stdlib.Config);
         });
     });
 
@@ -2180,14 +2695,14 @@ describe('sjl.stdlib.PriorityList', function () {
         it ('should return an iterator.', function () {
             var priorityList = new PriorityList(entries, true),
                 iterator = priorityList.entries();
-                expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
+                expect(iterator).to.be.instanceOf(sjl.ns.stdlib.Iterator);
         });
 
         it ('should have all values sorted when LIFO is true.', function () {
             var priorityList = new PriorityList(entries, true),
                 iterator = priorityList.entries();
             while (iterator.valid()) {
-                let value = iterator.next(),
+                var value = iterator.next(),
                     originalEntry = reversedEntries[iterator.pointer - 1];
                 expect(value.done).to.equal(false);
                 expect(value.value[0]).to.equal(originalEntry[0]);
@@ -2199,7 +2714,7 @@ describe('sjl.stdlib.PriorityList', function () {
             var priorityList = new PriorityList(entries, false),
                 iterator = priorityList.entries();
             while (iterator.valid()) {
-                let value = iterator.next(),
+                var value = iterator.next(),
                     originalEntry = allEntries[iterator.pointer - 1];
                 expect(value.done).to.equal(false);
                 expect(value.value[0]).to.equal(originalEntry[0]);
@@ -2294,14 +2809,14 @@ describe('sjl.stdlib.PriorityList', function () {
 
         it ('should return an iterable', function () {
             var iterator = priorityList.values();
-            expect(iterator).to.be.instanceOf(sjl.stdlib.Iterator);
+            expect(iterator).to.be.instanceOf(sjl.ns.stdlib.Iterator);
         });
 
         it ('should return an iterator that contains all values in the expected order (FIFO by priority/serial).', function () {
             var index = 0,
                 iterator = priorityList.values();
             while (iterator.valid()) {
-                let value = iterator.next();
+                var value = iterator.next();
                 expect(value.value).to.equal(entries[index][1]);
                 index += 1;
             }
@@ -2314,7 +2829,7 @@ describe('sjl.stdlib.PriorityList', function () {
                     return a[0] > b[0];
                 });
             while (priorityList.valid()) {
-                let value = priorityList.next();
+                var value = priorityList.next();
                 expect(value.value).to.equal(reversedEntries[index][1]);
                 index += 1;
             }
@@ -2401,9 +2916,10 @@ describe('sjl.stdlib.SjlMap', function () {
         var SjlMap = sjl.ns.stdlib.SjlMap;
 
     describe('#`SjlMap Methods Existence`', function () {
-        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
-            ['v4', 4], ['v5', 5], ['v6', 6],
-            ['v7', 5], ['v8', 4]],
+        var
+            // entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            // ['v4', 4], ['v5', 5], ['v6', 6],
+            // ['v7', 5], ['v8', 4]],
             sjlMap = new SjlMap([]),
             methods = ['clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', 'get', 'set', 'addFromArray', 'iterator'];
         it ('should have the following methods: [`' + methods.join('`, `') + '`]', function () {
@@ -2431,9 +2947,10 @@ describe('sjl.stdlib.SjlMap', function () {
     });
 
     describe('#`SjlMap#delete`', function () {
-        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
-                ['v4', 4], ['v5', 5], ['v6', 6],
-                ['v7', 5], ['v8', 4]],
+        var
+            // entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            //     ['v4', 4], ['v5', 5], ['v6', 6],
+            //     ['v7', 5], ['v8', 4]],
             keyEntryToDelete = 'b',
             keyEntryToDeleteValue = 1,
             mapFrom = [ ['a', 0], [keyEntryToDelete, keyEntryToDeleteValue], ['c', 3] ],

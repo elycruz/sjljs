@@ -81,7 +81,7 @@
      * @extends sjl.stdlib.Extendable
      * @param values {Array} - Values to iterate through.
      */
-    Iterator = sjl.stdlib.Extendable.extend(Iterator, {
+    Iterator = sjl.ns.stdlib.Extendable.extend(Iterator, {
 
         /**
          * Returns the current value that `pointer` is pointing to.
@@ -156,7 +156,7 @@
     }
     else {
         sjl.ns('stdlib.Iterator', Iterator);
-        if (window.__isAmd) {
+        if (sjl.isAmd) {
             return sjl.stdlib.Iterator;
         }
     }

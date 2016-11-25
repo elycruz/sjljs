@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.html">sjl</a></li>
+					<li><a href="module-sjl.html">sjl</a></li><li><a href="sjl.module_math.html">sjl.math</a></li>
 				</ul>
 			</li>
 			
@@ -906,6 +906,158 @@
     <dd>
         
 <span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".classicalToStringMethod"><span class="type-signature">&lt;static> </span>classicalToStringMethod(constructor)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Creates classical styled `toString` method;  E.g. `toString` method that returns`'[object ' + constructor.name + ']'` a` la` '[object Array]', '[object Function]' format.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>constructor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Passed in constructor.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
 
 
 
@@ -2087,6 +2239,10 @@
 <dd>
 
     
+    <div class="description">
+        Curries a function with or without placeholders (sjl._ is `Placeholder`)
+    </div>
+    
 
     
 
@@ -2216,6 +2372,12 @@
 
 
         
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&#x60;&#x60;&#x60;var slice = Array.prototype.slice,    add = function () {...}, // recursively adds    multiply = function () {...}; // recursively multiplies  sjl.curry(add, __, __, __)(1, 2, 3, 4, 5) === 15 // &#x60;true&#x60;  sjl.curry(multiply, __, 2, __)(2, 2) === Math.pow(2, 3) // &#x60;true&#x60;  sjl.curry(divide, __, 625, __)(3125, 5)&#x60;&#x60;&#x60;</pre>
+
 
     
 </dd>
@@ -2714,7 +2876,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".curryN"><span class="type-signature">&lt;static> </span>curryN(func, executeArity)</h4>
+    <h4 class="name" id=".curryN"><span class="type-signature">&lt;static> </span>curryN(fn, executeArity)</h4>
     
     
 </dt>
@@ -2757,7 +2919,7 @@
 
         <tr>
             
-                <td class="name"><code>func</code></td>
+                <td class="name"><code>fn</code></td>
             
 
             <td class="type">
@@ -2844,6 +3006,34 @@
     
 
     
+    <h5>Throws:</h5>
+    
+            
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        - If `fn` is not a function.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">TypeError</span>
+
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+
+        
 
     
 
@@ -3277,6 +3467,239 @@
         
     <pre class="sunlight-highlight-javascript">&#x60;&#x60;&#x60; // sjl.defineSubClass (superclass, methods, statics); var NewConstructor = sjl.defineSubClass( SomeConstructor, { constructor: function SomeOtherConstructor () {}, ...}, {...}); // sjl.defineSubClass (superclass, constructor, methods, statics); var NewConstructor = sjl.defineSubClass( SomeConstructor, function SomeOtherConstructor () {}, {...}, {...}); // Both calls above yield extendable constructors;  E.g., // This call yields another constructor which inherits from NewConstructor and is also extendable (has &#x60;extend&#x60; static method). NewConstructor.extend(AnotherConstructor)&#x60;&#x60;&#x60;</pre>
 
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".defineSubClassPure"><span class="type-signature">&lt;static> </span>defineSubClassPure(superClass, constructor, methods, statics)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Same as `defineSubClass` with out side-effect of `extend` method and `toString` method.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>superClass</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Superclass to inherit from.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>constructor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+|
+
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>methods</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>statics</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Constructor with extended prototype and added statics.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -7519,6 +7942,161 @@
             
 <hr>
 <dt>
+    <h4 class="name" id=".makeExtendableConstructor"><span class="type-signature">&lt;static> </span>makeExtendableConstructor(constructor)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Adds `extend` and `extendWith` static methods to the passed in constructor for having easy extensibility via saidmethods;  I.e., passed in constructor will now be extendable via added methods.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>constructor</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
+	<dd class="tag-see">
+		<ul>
+			<li>sjl.defineSubClass(superClass, constructor, methods, statics)</li>
+			</ul>
+	</dd>
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id=".mergeOnProps"><span class="type-signature">&lt;static> </span>mergeOnProps(obj1, obj2, deep)</h4>
     
     
@@ -10180,7 +10758,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-11-13T22:06:28-05:00
+		on 2016-11-25T14:43:00-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

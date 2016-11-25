@@ -5,7 +5,7 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
-        stdlib = sjl.stdlib,
+        stdlib = sjl.ns.stdlib,
         Extendable = stdlib.Extendable,
         ObjectIterator = stdlib.ObjectIterator,
         makeIterable = stdlib.iterable,
@@ -219,7 +219,7 @@
     }
     else {
         sjl.ns('stdlib.SjlSet', SjlSet);
-        if (window.__isAmd) {
+        if (sjl.isAmd) {
             return SjlSet;
         }
     }

@@ -8,11 +8,12 @@
     var _undefined = 'undefined',
         isNodeEnv = typeof window === _undefined,
         sjl = isNodeEnv ? require('../sjl.js') : window.sjl || {},
+        stdlibNs = sjl.ns.stdlib,
 
         // Constructors for composition
-        Extendable =        sjl.stdlib.Extendable,
-        ObjectIterator =    sjl.stdlib.ObjectIterator,
-        makeIterable =      sjl.stdlib.iterable,
+        Extendable =        stdlibNs.Extendable,
+        ObjectIterator =    stdlibNs.ObjectIterator,
+        makeIterable =      stdlibNs.iterable,
 
         /**
          * SjlMap constructor to augment
@@ -289,7 +290,7 @@
         sjl.ns('stdlib.SjlMap', SjlMap);
 
         // If `Amd` return the class
-        if (window.__isAmd) {
+        if (sjl.isAmd) {
             return SjlMap;
         }
     }

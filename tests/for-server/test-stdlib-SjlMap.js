@@ -17,9 +17,10 @@ describe('sjl.stdlib.SjlMap', function () {
     var SjlMap = sjl.ns.stdlib.SjlMap;
 
     describe('#`SjlMap Methods Existence`', function () {
-        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
-            ['v4', 4], ['v5', 5], ['v6', 6],
-            ['v7', 5], ['v8', 4]],
+        var
+            // entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            // ['v4', 4], ['v5', 5], ['v6', 6],
+            // ['v7', 5], ['v8', 4]],
             sjlMap = new SjlMap([]),
             methods = ['clear', 'delete', 'entries', 'forEach', 'has', 'keys', 'values', 'get', 'set', 'addFromArray', 'iterator'];
         it ('should have the following methods: [`' + methods.join('`, `') + '`]', function () {
@@ -47,9 +48,10 @@ describe('sjl.stdlib.SjlMap', function () {
     });
 
     describe('#`SjlMap#delete`', function () {
-        var entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
-                ['v4', 4], ['v5', 5], ['v6', 6],
-                ['v7', 5], ['v8', 4]],
+        var
+            // entries = [ ['v1', 1], ['v2', 2], ['v3', 3],
+            //     ['v4', 4], ['v5', 5], ['v6', 6],
+            //     ['v7', 5], ['v8', 4]],
             keyEntryToDelete = 'b',
             keyEntryToDeleteValue = 1,
             mapFrom = [ ['a', 0], [keyEntryToDelete, keyEntryToDeleteValue], ['c', 3] ],

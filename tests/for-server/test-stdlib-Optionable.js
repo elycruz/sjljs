@@ -26,10 +26,10 @@ describe('sjl.stdlib.Optionable', function () {
         },
         exampleObjKeys = Object.keys(exampleObj),
         exampleObj2Keys = Object.keys(exampleObj2),
-        Optionable = sjl.stdlib.Optionable;
+        Optionable = sjl.ns.stdlib.Optionable;
 
     it ('should be an instance of `sjl.stdlib.Extendable`.', function () {
-        expect(new sjl.stdlib.Optionable()).to.be.instanceof(sjl.stdlib.Extendable);
+        expect(new sjl.ns.stdlib.Optionable()).to.be.instanceof(sjl.ns.stdlib.Extendable);
     });
 
     it ('should be able to set multiple properties from one object passed int to constructor.', function () {
@@ -215,7 +215,7 @@ describe('sjl.stdlib.Optionable', function () {
         it ('should return the options store which should be an instance of `sjl.stdlib.Config`.', function () {
             var optionable = new Optionable();
             expect(optionable.getStoreHash).to.be.instanceof(Function);
-            expect(optionable.getStoreHash()).to.be.instanceof(sjl.stdlib.Config);
+            expect(optionable.getStoreHash()).to.be.instanceof(sjl.ns.stdlib.Config);
         });
     });
 
