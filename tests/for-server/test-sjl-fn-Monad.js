@@ -7,18 +7,18 @@ describe('sjl.Monad', function () {
     // This part gets stripped out when
     // generating browser version of test(s).
     'use strict';
-    let chai = require('chai'),
+    var chai = require('chai'),
         sjl = require('./../../src/sjl'),
         assert = chai.assert,
         expect = chai.expect;
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~
 
-    let Monad = sjl.ns.Monad,
+    var Monad = sjl.ns.Monad,
         expectMonad = monad => expect(monad).to.be.instanceOf(Monad);
 
     it ('should have the appropriate (monadic) interface.', function () {
-        let monad = Monad();
+        var monad = Monad();
         ['map', 'join', 'chain', 'ap'].forEach(function (key) {
             expect(monad[key]).to.be.instanceOf(Function);
         });
@@ -29,7 +29,7 @@ describe('sjl.Monad', function () {
     });
 
     describe ('#map', function () {
-        let monad = Monad(2),
+        var monad = Monad(2),
             pow = sjl.curry2(Math.pow),
             result = monad.map(pow(8));
         it ('should pass `Monad`\'s contained value to passed in function.', function () {

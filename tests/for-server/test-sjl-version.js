@@ -8,7 +8,7 @@ describe('sjl.version', function () {
     // This part gets stripped out when
     // generating browser version of test(s).
     'use strict';
-    let chai = require('chai'),
+    var chai = require('chai'),
         sjl = require('./../../src/sjl'),
         expect = chai.expect;
     // These variables get set at the top IIFE in the browser.

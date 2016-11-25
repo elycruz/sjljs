@@ -305,13 +305,13 @@ describe('sjl.compose', function () {
 
     it ('should return a function that when used returns the passed in value if `compose` ' +
         'itself didn\'t receive any parameters.', function () {
-        let result = sjl.compose();
+        var result = sjl.compose();
         expect(result(99)).to.equal(99);
     });
 
     it ('should be able to compose an arbitrary number of functions and execute them as expected ' +
         'from generated function.', function () {
-        let curry2 = sjl.curry2,
+        var curry2 = sjl.curry2,
             min = curry2(Math.min),
             max = curry2(Math.max),
             pow = curry2(Math.pow),
@@ -332,7 +332,7 @@ describe('sjl.compose', function () {
 describe('sjl.curry', function () {
 
         // Set curry here to use below
-    let curry = sjl.curry,
+    var curry = sjl.curry,
         curry2 = sjl.curry2;
 
     it ('should be of type function.', function () {
@@ -352,7 +352,7 @@ describe('sjl.curry', function () {
     });
 
     it ('should return a properly curried function when correct arity for said function is met.', function () {
-        let min8 = curry(Math.min, 8),
+        var min8 = curry(Math.min, 8),
             max5 = curry(Math.max, 5),
             pow2 = curry(Math.pow, 2);
 
@@ -374,7 +374,7 @@ describe('sjl.curry', function () {
     });
 
     it ('should be able to correctly curry functions of different arity as long as their arity is met.', function () {
-        let min = curry2(Math.min),
+        var min = curry2(Math.min),
             max = curry2(Math.max),
             pow = curry2(Math.pow),
             min8 = curry(Math.min, 8),
@@ -399,7 +399,7 @@ describe('sjl.curry', function () {
 
         // Expect `curry`ed functions to work as expected
         [8,5,3,2,1,0, random(89), random(55), random(34)].forEach(function (num) {
-            let composed = sjl.compose(min8, max5, pow2);
+            var composed = sjl.compose(min8, max5, pow2);
             expect(composed(num)).to.equal(expectedFor(num));
         });
     });
@@ -813,136 +813,6 @@ describe('sjl.Maybe', function () {
 });
 
 /**
- * Created by edlc on 11/14/16.
- */
-describe('sjl.Monad', function () {
-
-        let Monad = sjl.ns.Monad,
-        expectMonad = monad => expect(monad).to.be.instanceOf(Monad);
-
-    it ('should have the appropriate (monadic) interface.', function () {
-        let monad = Monad();
-        ['map', 'join', 'chain', 'ap'].forEach(function (key) {
-            expect(monad[key]).to.be.instanceOf(Function);
-        });
-    });
-
-    it ('should have a `of` static method.', function () {
-        expect(Monad.of).to.be.instanceOf(Function);
-    });
-
-    describe ('#map', function () {
-        let monad = Monad(2),
-            pow = sjl.curry2(Math.pow),
-            result = monad.map(pow(8));
-        it ('should pass `Monad`\'s contained value to passed in function.', function () {
-            expect(result.value).to.equal(64);
-        });
-        it ('should return a new instance of `Monad`.', function () {
-            expect(result).to.be.instanceOf(Monad);
-        });
-    });
-
-    describe ('#join', function () {
-        it ('should remove one level of monadic structure on it\'s own type;  ' +
-            'E.g., If it\'s inner value is of the same type.', function () {
-            var innerMostValue = 5,
-                monad1 = Monad(innerMostValue),
-                monad2 = Monad(monad1),
-                monad3 = Monad(monad2),
-                monad4 = Monad(),
-                expectInnerValueEqual = (value, value2) => expect(value).to.equal(value2),
-                expectations = (result, equalTo) => {
-                    expectMonad(result);
-                    expectInnerValueEqual(result.value, equalTo);
-                };
-                expectations(monad1.join(), innerMostValue);
-                expectations(monad2.join(), innerMostValue);
-                expectations(monad3.join(), monad1);
-                expectations(monad4.join(), undefined);
-        });
-    });
-
-    describe ('#ap', function () {
-        var add = sjl.curry2(function (a, b) { return a + b; }),
-            multiply = sjl.curry2(function (a, b) { return a * b; }),
-            idAdd = Monad(add),
-            idMultiply = Monad(multiply),
-            idMultiplyBy5 = idMultiply.ap(Monad(5));
-
-        it ('Should effectively apply the function contents of one `Monad` obj to another.', function () {
-            var result = idMultiplyBy5.ap(Monad(5)),
-                result2 = idAdd.ap(Monad(3)).ap(Monad(5));
-            expectMonad(result);
-            expectMonad(result2);
-            expect(result.value).to.equal(5 * 5);
-            expect(result2.value).to.equal(8);
-        });
-
-        it ('should throw an error when trying to apply one Functor with a non ' +
-            'function value in it to another.', function () {
-            assert.throws(() => Monad(5).ap(Monad(3)), Error);
-        });
-    });
-
-    describe ('#chain', function () {
-        var split = function (str) { return str.split(''); },
-            camelCase = sjl.camelCase,
-            ucaseFirst = sjl.ucaseFirst,
-            compose = sjl.compose,
-            idSplit = compose(Monad, split),
-            originalStr = 'hello-world',
-
-            // Monad(['H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'])
-            expectedStrTransform = compose(idSplit, ucaseFirst, camelCase)(originalStr),
-
-            // Expected: Monad(['H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'])
-            result = Monad(originalStr)
-                .chain(camelCase)
-                .chain(ucaseFirst)
-                .chain(idSplit);
-
-        it ('Should return a type of `Monad`.', function () {
-            expectMonad(result);
-        });
-
-        it ('Should apply passed in method.', function () {
-            expect(result.value).to.be.instanceOf(Array);
-            expect(result.value.length).to.equal(result.value.length);
-            result.chain(function (value) {
-                value.forEach(function (innerValue, index) {
-                    expect(innerValue).to.equal(expectedStrTransform.value[index]);
-                });
-            });
-        });
-
-        it ('Should retain monadic structure when called.', function () {
-            var result2 = Monad(originalStr)
-                .chain(camelCase)
-                .chain(ucaseFirst)
-                .chain(compose(Monad, idSplit));
-            expectMonad(result2);
-            expectMonad(result2.value);
-            expect(result2.value.value).to.be.instanceOf(Array);
-        });
-
-    });
-
-    // describe ('#unwrap', function () {
-    //     it ('should return it\'s contained value.', function () {
-    //         let id1= Monad(1),
-    //             id2 = Monad(),
-    //             id3 = Monad(3),
-    //             id4 = Monad(id3);
-    //         expect(id1.unwrap()).to.equal(1);
-    //         expect(id2.unwrap()).to.equal(undefined);
-    //         expect(id4.unwrap()).to.equal(id3.unwrap());
-    //     });
-    // });
-
-});
-
-/**
  * Created by elyde on 11/20/2016.
  */
 describe('sjl.Maybe', function () {
@@ -1049,6 +919,136 @@ describe('sjl.Maybe', function () {
             expect(nothing()).to.be.instanceOf(Nothing);
         });
     });
+
+});
+
+/**
+ * Created by edlc on 11/14/16.
+ */
+describe('sjl.Monad', function () {
+
+        var Monad = sjl.ns.Monad,
+        expectMonad = monad => expect(monad).to.be.instanceOf(Monad);
+
+    it ('should have the appropriate (monadic) interface.', function () {
+        var monad = Monad();
+        ['map', 'join', 'chain', 'ap'].forEach(function (key) {
+            expect(monad[key]).to.be.instanceOf(Function);
+        });
+    });
+
+    it ('should have a `of` static method.', function () {
+        expect(Monad.of).to.be.instanceOf(Function);
+    });
+
+    describe ('#map', function () {
+        var monad = Monad(2),
+            pow = sjl.curry2(Math.pow),
+            result = monad.map(pow(8));
+        it ('should pass `Monad`\'s contained value to passed in function.', function () {
+            expect(result.value).to.equal(64);
+        });
+        it ('should return a new instance of `Monad`.', function () {
+            expect(result).to.be.instanceOf(Monad);
+        });
+    });
+
+    describe ('#join', function () {
+        it ('should remove one level of monadic structure on it\'s own type;  ' +
+            'E.g., If it\'s inner value is of the same type.', function () {
+            var innerMostValue = 5,
+                monad1 = Monad(innerMostValue),
+                monad2 = Monad(monad1),
+                monad3 = Monad(monad2),
+                monad4 = Monad(),
+                expectInnerValueEqual = (value, value2) => expect(value).to.equal(value2),
+                expectations = (result, equalTo) => {
+                    expectMonad(result);
+                    expectInnerValueEqual(result.value, equalTo);
+                };
+                expectations(monad1.join(), innerMostValue);
+                expectations(monad2.join(), innerMostValue);
+                expectations(monad3.join(), monad1);
+                expectations(monad4.join(), undefined);
+        });
+    });
+
+    describe ('#ap', function () {
+        var add = sjl.curry2(function (a, b) { return a + b; }),
+            multiply = sjl.curry2(function (a, b) { return a * b; }),
+            idAdd = Monad(add),
+            idMultiply = Monad(multiply),
+            idMultiplyBy5 = idMultiply.ap(Monad(5));
+
+        it ('Should effectively apply the function contents of one `Monad` obj to another.', function () {
+            var result = idMultiplyBy5.ap(Monad(5)),
+                result2 = idAdd.ap(Monad(3)).ap(Monad(5));
+            expectMonad(result);
+            expectMonad(result2);
+            expect(result.value).to.equal(5 * 5);
+            expect(result2.value).to.equal(8);
+        });
+
+        it ('should throw an error when trying to apply one Functor with a non ' +
+            'function value in it to another.', function () {
+            assert.throws(() => Monad(5).ap(Monad(3)), Error);
+        });
+    });
+
+    describe ('#chain', function () {
+        var split = function (str) { return str.split(''); },
+            camelCase = sjl.camelCase,
+            ucaseFirst = sjl.ucaseFirst,
+            compose = sjl.compose,
+            idSplit = compose(Monad, split),
+            originalStr = 'hello-world',
+
+            // Monad(['H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'])
+            expectedStrTransform = compose(idSplit, ucaseFirst, camelCase)(originalStr),
+
+            // Expected: Monad(['H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd'])
+            result = Monad(originalStr)
+                .chain(camelCase)
+                .chain(ucaseFirst)
+                .chain(idSplit);
+
+        it ('Should return a type of `Monad`.', function () {
+            expectMonad(result);
+        });
+
+        it ('Should apply passed in method.', function () {
+            expect(result.value).to.be.instanceOf(Array);
+            expect(result.value.length).to.equal(result.value.length);
+            result.chain(function (value) {
+                value.forEach(function (innerValue, index) {
+                    expect(innerValue).to.equal(expectedStrTransform.value[index]);
+                });
+            });
+        });
+
+        it ('Should retain monadic structure when called.', function () {
+            var result2 = Monad(originalStr)
+                .chain(camelCase)
+                .chain(ucaseFirst)
+                .chain(compose(Monad, idSplit));
+            expectMonad(result2);
+            expectMonad(result2.value);
+            expect(result2.value.value).to.be.instanceOf(Array);
+        });
+
+    });
+
+    // describe ('#unwrap', function () {
+    //     it ('should return it\'s contained value.', function () {
+    //         let id1= Monad(1),
+    //             id2 = Monad(),
+    //             id3 = Monad(3),
+    //             id4 = Monad(id3);
+    //         expect(id1.unwrap()).to.equal(1);
+    //         expect(id2.unwrap()).to.equal(undefined);
+    //         expect(id4.unwrap()).to.equal(id3.unwrap());
+    //     });
+    // });
 
 });
 
@@ -2538,7 +2538,7 @@ describe('sjl.stdlib.PriorityList', function () {
             var priorityList = new PriorityList(entries, true),
                 iterator = priorityList.entries();
             while (iterator.valid()) {
-                let value = iterator.next(),
+                var value = iterator.next(),
                     originalEntry = reversedEntries[iterator.pointer - 1];
                 expect(value.done).to.equal(false);
                 expect(value.value[0]).to.equal(originalEntry[0]);
@@ -2550,7 +2550,7 @@ describe('sjl.stdlib.PriorityList', function () {
             var priorityList = new PriorityList(entries, false),
                 iterator = priorityList.entries();
             while (iterator.valid()) {
-                let value = iterator.next(),
+                var value = iterator.next(),
                     originalEntry = allEntries[iterator.pointer - 1];
                 expect(value.done).to.equal(false);
                 expect(value.value[0]).to.equal(originalEntry[0]);
@@ -2652,7 +2652,7 @@ describe('sjl.stdlib.PriorityList', function () {
             var index = 0,
                 iterator = priorityList.values();
             while (iterator.valid()) {
-                let value = iterator.next();
+                var value = iterator.next();
                 expect(value.value).to.equal(entries[index][1]);
                 index += 1;
             }
@@ -2665,7 +2665,7 @@ describe('sjl.stdlib.PriorityList', function () {
                     return a[0] > b[0];
                 });
             while (priorityList.valid()) {
-                let value = priorityList.next();
+                var value = priorityList.next();
                 expect(value.value).to.equal(reversedEntries[index][1]);
                 index += 1;
             }
