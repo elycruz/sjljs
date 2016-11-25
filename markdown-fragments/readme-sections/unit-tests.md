@@ -13,6 +13,8 @@ Run one of the following from your terminal:
 - Launch './tests/for-browser/index.html'
 - **Note** `npm install` has to be run prior to running the aforementioned file.
 - **Alternately** You can check the tests for this version of the library here:
+[6.4.x] (http://sjljs.elycruz.com/6.4.x/tests/for-browser)
+[6.3.x] (http://sjljs.elycruz.com/6.3.x/tests/for-browser)
 [6.2.x] (http://sjljs.elycruz.com/6.2.x/tests/for-browser)
 [6.1.x] (http://sjljs.elycruz.com/6.1.x/tests/for-browser)
 [6.0.x] (http://sjljs.elycruz.com/6.0.x/tests/for-browser)

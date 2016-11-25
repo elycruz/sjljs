@@ -14,9 +14,11 @@ or as a supplement to applications requiring quick ramp up.
 ### Jsdocs
 Api for current version:
 
-- [6.2.x] (http://sjljs.elycruz.com/6.2.x/jsdocs)
+- [6.3.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)
 
 #### Docs for previous versions:
+- [6.3.x] (http://sjljs.elycruz.com/6.3.x/jsdocs)
+- [6.2.x] (http://sjljs.elycruz.com/6.2.x/jsdocs)
 - [6.1.x] (http://sjljs.elycruz.com/6.1.x/jsdocs)
 - [6.0.x (under construction)] (http://sjljs.elycruz.com/6.0.x/jsdocs)
 - [5.6.34 (view readme in branch)] (https://github.com/elycruz/sjljs/tree/5.6.0-alpha)
@@ -173,7 +175,18 @@ only includes the core and no classes or constructors from it's other packages).
 ### (m) sjl._
 
 This is a place holder member.  It is an immutable value that can be used to represent a placeholder other than null;
-E.g., will be used for allowing `sjl.curry` method to cherry pick it's methods to curry (a'la' RamdaJs's curry method).
+E.g., used by `sjl.curry` and `sjl.curryN` to allow curry functions and using place holders for values 
+you're not ready to passed in;  E.g.,
+```
+var slice = Array.prototype.slice,
+ add = function () {...}, // recursively adds
+ multiply = function () {...}; // recursively multiplies
+
+sjl.curry(add, __, __, __)(1, 2, 3, 4, 5) === 15 // `true`
+sjl.curry(multiply, __, 2, __)(2, 2) === Math.pow(2, 3) // `true`
+sjl.curry(divide, __, 625, __)(3125, 5)
+
+```
 
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
@@ -687,6 +700,8 @@ Run one of the following from your terminal:
 - Launch './tests/for-browser/index.html'
 - **Note** `npm install` has to be run prior to running the aforementioned file.
 - **Alternately** You can check the tests for this version of the library here:
+[6.4.x] (http://sjljs.elycruz.com/6.4.x/tests/for-browser)
+[6.3.x] (http://sjljs.elycruz.com/6.3.x/tests/for-browser)
 [6.2.x] (http://sjljs.elycruz.com/6.2.x/tests/for-browser)
 [6.1.x] (http://sjljs.elycruz.com/6.1.x/tests/for-browser)
 [6.0.x] (http://sjljs.elycruz.com/6.0.x/tests/for-browser)
