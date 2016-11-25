@@ -46,13 +46,13 @@
             }
         });
 
-    // Export `fnPackage`
+    // Export
     if (isNodeEnv) {
         module.exports = Identity;
     }
     else {
         sjl.ns('Identity', Identity);
-        sjl.Identity = sjl.ns.Identity;
+        sjl.defineEnumProp(sjl, 'Identity', sjl.ns.Identity);
 
         if (sjl.isAmd) {
             return Identity;

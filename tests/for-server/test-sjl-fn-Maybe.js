@@ -94,7 +94,7 @@ describe('sjl.Maybe', function () {
     });
 
     describe ('#maybe', function () {
-        it ('should return a Just', function () {
+        it ('should return the replacement value when value to check is not set (null | undefined)', function () {
             var just100 = Just(100),
                 justNull = Just(null),
                 id = sjl.ns.fn.id,

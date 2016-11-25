@@ -60,7 +60,10 @@
     else {
         sjl.ns('fn', fnPackage);
         sjl.fn = sjl.ns.fn;
-        sjl.extend(sjl, fnPackage);
+
+        Object.keys(fnPackage).forEach(function (key) {
+            sjl.defineEnumProp(sjl, key, fnPackage[key]);
+        });
 
         if (sjl.isAmd) {
             return fnPackage;

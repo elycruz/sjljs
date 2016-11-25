@@ -17,7 +17,8 @@
     "./src/stdlib/Extendable.js",
     "./src/fn.js",
     "./src/Identity.js",
-    "./src/Maybe.js"
+    "./src/Maybe.js",
+    "./src/Either.js"
   ],
   "sjl": [
     "./src/sjl.js",
@@ -26,6 +27,7 @@
     "./src/fn.js",
     "./src/Identity.js",
     "./src/Maybe.js",
+    "./src/Either.js",
     "./src/stdlib/Config.js",
     "./src/stdlib/Optionable.js",
     "./src/stdlib/Iterator.js",

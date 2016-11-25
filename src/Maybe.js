@@ -67,8 +67,10 @@
     }
     else {
         sjl.ns('Maybe', Maybe);
-        sjl.defineEnumProp(sjl, 'Maybe', Maybe);
 
+        Object.keys(Maybe).forEach(function (key) {
+            sjl.defineEnumProp(sjl, key, Maybe[key]);
+        });
 
         if (sjl.isAmd) {
             return Maybe;

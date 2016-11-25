@@ -28,24 +28,30 @@
                 if (!(this instanceof Right)) {
                     return Right.of(value);
                 }
-                Just.call(this);
+                Just.call(this, value);
             },
         }, {
             of: function (value) {
                 return new Right(value);
             }
-        });
+        }),
+        Either = {
+            Right: Right,
+            Left: Left
+        };
 
     // Export `fnPackage`
     if (isNodeEnv) {
-        module.exports = fnPackage;
+        module.exports = Either;
     }
     else {
-        sjl.ns('fn', fnPackage);
-        sjl.fn = sjl.ns.fn;
+        sjl.ns('Either', Either);
+        sjl.defineEnumProp(sjl, 'Either', Either);
+        sjl.defineEnumProp(sjl, 'Right', Right);
+        sjl.defineEnumProp(sjl, 'Left', Left);
 
         if (sjl.isAmd) {
-            return fnPackage;
+            return Either;
         }
     }
 
