@@ -14,7 +14,7 @@ or as a supplement to applications requiring quick ramp up.
 ### Jsdocs
 Api for current version:
 
-- [6.3.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)
+- [6.4.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)
 
 #### Docs for previous versions:
 - [6.3.x] (http://sjljs.elycruz.com/6.3.x/jsdocs)
