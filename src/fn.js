@@ -24,20 +24,20 @@
         chain = curry2(function (fn, functor) {
             return functor.map(fn).join();
         }),
-        join = curry2(function (monad, Type) {
-            return monad.value instanceof Type ? monad.value : Type.of(monad.value);
-        }),
+        join = function (monad) {
+            return monad.value instanceof monad.constructor ? monad.value : monad.constructor.of(monad.value);
+        },
+        joinR = function (monad) {
+            while (monad.value instanceof monad.constructor) {
+                monad = monad.join();
+            }
+            return monad;
+        },
         liftN = curry3(function (fn, functor1) {
             return sjl.restArgs(arguments, 3).reduce(function (aggregator, functor) {
                 return aggregator.ap(functor);
             }, functor1.map(fn));
         }),
-        flattenM = function (functor) {
-            while (functor.value instanceof functor.constructor) {
-                functor = functor.join();
-            }
-            return functor;
-        },
 
         /**
          * `fn` package.  Includes some functional members
@@ -47,10 +47,10 @@
             id: id,
             map: map,
             join: join,
+            joinR: joinR,
             chain: chain,
             ap: ap,
-            liftN: liftN,
-            flattenM: flattenM
+            liftN: liftN
         };
 
     // Export `fnPackage`

@@ -788,7 +788,6 @@
      * @param constructor {Function|Object} - Required.  Note:  If this param is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods` (constructor key expected else empty stand in constructor is used).
      * @param methods {Object|undefined} - Methods for prototype.  Optional.  Note:  If `constructor` param is an object, this param takes the place of the `statics` param.
      * @param statics {Object|undefined} - Constructor's static methods.  Optional.  Note:  If `constructor` param is an object, this param is not used.
-     * @param overrideToString {Boolean=false} - Overrides `toString` with Object.prototype.toString type/styled value;  E.g., `'[object {Your-Constructor-Name-Here}]'`
      * @example
      * ```
      *  // sjl.defineSubClass (superclass, methods, statics);
@@ -804,8 +803,11 @@
      * ```
      * @returns {Function}
      */
-    function defineSubClass (superClass, constructor, methods, statics, overrideToString) {
+    function defineSubClass (superClass, constructor, methods, statics) {
         var _constructor = defineSubClassPure.apply(null, arguments),
+            extender = function (constructor_, methods_, statics_) {
+                return defineSubClass(_constructor, constructor_, methods_, statics_);
+            },
             _constructorWithModifiedToStringMethod;
 
         /**
@@ -816,9 +818,17 @@
          * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
          * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
          */
-        sjl.defineEnumProp(_constructor, 'extend', function (constructor_, methods_, statics_) {
-            return defineSubClass(_constructor, constructor_, methods_, statics_);
-        });
+        _constructor.extend = extender;
+
+        /**
+         * Extends a new copy of self with passed in parameters.
+         * @memberof class:sjl.stdlib.Extendable
+         * @static sjl.stdlib.Extendable.extendWith
+         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
+         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
+         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
+         */
+        sjl.defineEnumProp(_constructor, 'extendWith', extender);
 
         // toString override
         _constructorWithModifiedToStringMethod = classicalToStringMethod(_constructor);

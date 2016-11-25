@@ -1,10 +1,5 @@
 /**
- * Created by elyde on 11/20/2016.
- */
-/**
- * Created by edlc on 11/13/16.
- * @todo find out best practice for naming functions that have side effects
- * @todo split out the `extend` method from `defineSubClass`
+ * Created by edlc on 11/20/2016.
  */
 (function () {
 
@@ -15,10 +10,10 @@
         Extendable = sjl.ns.stdlib.Extendable,
         fnNs = sjl.ns.fn,
         curry2 = sjl.curry,
-        Identity = Extendable.extend({
-            constructor: function Identity (value) {
-                if (!(this instanceof Identity)) {
-                    return Identity.of(value);
+        Monad = Extendable.extendWith({
+            constructor: function Monad (value) {
+                if (!(this instanceof Monad)) {
+                    return Monad.of(value);
                 }
                 Object.defineProperty(this, 'value', {
                     value: value,
@@ -29,7 +24,10 @@
                 return this.constructor.of(fn(this.value));
             },
             join: function () {
-                return fnNs.join(this, this.constructor);
+                return fnNs.join(this);
+            },
+            joinR: function () {
+                return fnNs.joinR(this);
             },
             ap: function (functor) {
                 return functor.map(this.value);
@@ -42,20 +40,20 @@
             })
         }, {
             of: function (value) {
-                return new Identity(value);
+                return new Monad(value);
             }
         });
 
     // Export
     if (isNodeEnv) {
-        module.exports = Identity;
+        module.exports = Monad;
     }
     else {
-        sjl.ns('Identity', Identity);
-        sjl.defineEnumProp(sjl, 'Identity', sjl.ns.Identity);
+        sjl.ns('Monad', Monad);
+        sjl.defineEnumProp(sjl, 'Monad', sjl.ns.Monad);
 
         if (sjl.isAmd) {
-            return Identity;
+            return Monad;
         }
     }
 

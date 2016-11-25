@@ -12,8 +12,7 @@
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
         ns = sjl.ns,
         curry3 = sjl.curry3,
-        Identity = ns.Identity,
-        Extendable = sjl.ns.stdlib.Extendable,
+        Monad = ns.Monad,
         maybe = curry3(function (replacement, fn, monad) {
             var subject = monad.join().map(sjl.ns.fn.id);
             return subject instanceof Nothing ? replacement : fn(subject);
@@ -21,7 +20,7 @@
         nothing = function () {
             return Nothing.of();
         },
-        Nothing = Extendable.extend({
+        Nothing = Monad.extendWith({
             constructor: function Nothing() {
                 if (!(this instanceof Nothing)) {
                     return nothing();
@@ -39,20 +38,23 @@
                 return new Nothing();
             }
         }),
-        Just = Identity.extend({
+        Just = Monad.extendWith({
             constructor: function Just(value) {
                 if (!(this instanceof Just)) {
                     return Just.of(value);
                 }
-                Identity.call(this, value);
+                Monad.call(this, value);
             },
             map: function (func) {
-                return sjl.isset(this.value) ? Just(func(this.value)) : Nothing();
+                var constructor = this.constructor;
+                return sjl.isset(this.value) ? constructor.of(func(this.value)) :
+                    constructor.counterConstructor.of(this.value);
             }
         }, {
             of: function (value) {
                 return new Just(value);
-            }
+            },
+            counterConstructor: Nothing
         }),
         Maybe = {
             maybe: maybe,

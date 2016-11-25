@@ -17,6 +17,7 @@ describe('sjl.Maybe', function () {
         Just = Maybe.Just,
         Nothing = Maybe.Nothing,
         maybe = Maybe.maybe,
+        nothing = Maybe.nothing,
         memberNames = ['Just', 'Nothing', 'nothing', 'maybe'],
         expectInstanceOf = sjl.curry2((Type, functor) => expect(functor).to.be.instanceOf(Type)),
         expectNothing = expectInstanceOf(Nothing),
@@ -103,6 +104,15 @@ describe('sjl.Maybe', function () {
             expect(maybe(Just(99), justTimes2, just100).value).to.equal(200);
             expect(maybe(Just(1000), justTimes2, Just(null)).value).to.equal(1000);
             expect(maybe(Just(2000), justTimes2, Just(1000)).value).to.equal(2000);
+        });
+    });
+
+    describe ('#nothing', function () {
+        it ('should be a function.', function () {
+            expect(nothing).to.be.instanceOf(Function);
+        });
+        it ('should return an instance of `Nothing`', function () {
+            expect(nothing()).to.be.instanceOf(Nothing);
         });
     });
 
