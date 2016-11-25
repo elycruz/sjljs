@@ -1628,7 +1628,7 @@
 
         // Check if amd is being used (store this check globally to reduce
         //  boilerplate code in other components).
-        defineEnumProp(sjl, 'isAmd', isFunction(define) && isset(define.amd));
+        defineEnumProp(sjl, 'isAmd', isFunction(window.define) && isset(window.define.amd));
 
         // Export sjl globally
         window.sjl = sjl;
