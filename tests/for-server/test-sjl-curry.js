@@ -15,8 +15,26 @@ describe('sjl.curry', function () {
     // ~~~ /STRIP ~~~
 
     // Set curry here to use below
-    var curry = sjl.curry,
-        curry2 = sjl.curry2;
+    var slice = Array.prototype.slice,
+        multiplyRecursive = function () {
+            return slice.call(arguments).reduce(function (agg, num) {
+                return num * agg;
+            }, 1);
+        },
+        addRecursive =function () {
+            return slice.call(arguments).reduce(function (agg, num) {
+                return num + agg;
+            }, 0);
+        },
+        divideR = function () {
+            var args = slice.call(arguments);
+            return args.reduce(function (agg, num) {
+                return agg / num;
+            }, args.shift());
+        },
+        curry = sjl.curry,
+        curry2 = sjl.curry2,
+        __ = sjl._;
 
     it ('should be of type function.', function () {
         expect(sjl.curry).to.be.instanceOf(Function);
@@ -85,6 +103,39 @@ describe('sjl.curry', function () {
             var composed = sjl.compose(min8, max5, pow2);
             expect(composed(num)).to.equal(expectedFor(num));
         });
+    });
+
+    it ('should enforce `Placeholder` values when currying', function () {
+        var add = curry(addRecursive),
+            multiply = curry(multiplyRecursive),
+            multiplyExpectedResult = Math.pow(5, 5);
+
+        // Curry add to add 3 numbers
+        expect(add(__, __, __)(1, 2, 3)).to.equal(6);
+        expect(add(1, __, __)(2, 3)).to.equal(6);
+        expect(add(1, 2, __)(3)).to.equal(6);
+        expect(add(1, 2, 3)).to.equal(6);
+
+        // Curry multiply and pass args in non-linear order
+        expect(multiply(__, __, __, __, __)(5, 5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(__, __, 5, __, __)(5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, __, 5, __, __)(5, 5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, __, 5, __, 5)(5, 5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, __, 5, 5, 5)(5)).to.equal(multiplyExpectedResult);
+        expect(multiply(5, 5, 5, 5, 5)).to.equal(multiplyExpectedResult);
+
+        expect(add(__, __, __)(1, 2, 3, 5, 6)).to.equal(17);
+        expect(add(__, 1, __)(2, 3, 5, 6)).to.equal(17);
+        expect(add(__, 1, 2)(3, 5, 6)).to.equal(17);
+        expect(add(1, 2, 3, 5, 6)).to.equal(17);
+
+    });
+
+    it ('should respect argument order and placeholder order.', function () {
+        // Curry divideR to divde 3 or more numbers
+        expect(curry(divideR, 25, 5)).to.be.instanceOf(Function);
+        expect(curry(divideR, __, 625, __)(3125, 5)).to.equal(1);
+        expect(curry(divideR, Math.pow(3125, 2), 3125, __)(5)).to.equal(625);
     });
 
 });

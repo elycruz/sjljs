@@ -38,6 +38,18 @@
     }
 
     /**
+     * Curries a function with or without placeholders (sjl._ is `Placeholder`)
+     * @example
+     * ```
+     * var slice = Array.prototype.slice,
+     *     add = function () {...}, // recursively adds
+     *     multiply = function () {...}; // recursively multiplies
+     *
+     *   sjl.curry(add, __, __, __)(1, 2, 3, 4, 5) === 15 // `true`
+     *   sjl.curry(multiply, __, 2, __)(2, 2) === Math.pow(2, 3) // `true`
+     *   sjl.curry(divide, __, 625, __)(3125, 5)
+     *
+     * ```
      * @function module:sjl.curry
      * @param fn {Function}
      * @returns {Function}
@@ -45,25 +57,45 @@
     function curry (fn) {
         var curriedArgs = restArgs(arguments, 1);
         return function () {
-            var concatedArgs = curriedArgs.concat(argsToArray(arguments));
-            return fn.apply(null, concatedArgs);
+            var args = argsToArray(arguments),
+                concatedArgs = replacePlaceHolders(curriedArgs, args),
+                placeHolders = concatedArgs.filter(isPlaceholder),
+                canBeCalled = placeHolders.length === 0;
+            return canBeCalled ? fn.apply(null, concatedArgs) : curry.apply(null, [fn].concat(concatedArgs));
         };
     }
 
     /**
      * Curries a function and only executes the function when the arity reaches the .
      * @function module:sjl.curryN
-     * @param func - Function to curry.
+     * @param fn - Function to curry.
      * @param executeArity - Arity at which to execute curried function.
+     * @throws {TypeError} - If `fn` is not a function.
      */
-    function curryN (func, executeArity) {
+    function curryN (fn, executeArity) {
         var curriedArgs = restArgs(arguments, 2);
         return function () {
-            var concatedArgs = curriedArgs.concat(argsToArray(arguments));
-            return concatedArgs.length < executeArity ?
-                curryN.apply(null, [func, executeArity].concat(concatedArgs)) :
-                func.apply(null, concatedArgs);
+            var args = argsToArray(arguments),
+                concatedArgs = replacePlaceHolders(curriedArgs, args),
+                placeHolders = concatedArgs.filter(isPlaceholder),
+                canBeCalled = (concatedArgs.length - placeHolders.length >= executeArity) || !executeArity;
+            return !canBeCalled ? curryN.apply(null, [fn, executeArity].concat(concatedArgs)) :
+                fn.apply(null, concatedArgs);
         };
+    }
+
+    /**
+     * Replaces found placeholder values and appends any left over `args` to resulting array.
+     * @param array {Array}
+     * @param args {Array}
+     * @returns {Array.<T>|string|Buffer}
+     */
+    function replacePlaceHolders (array, args) {
+        var out = array.map(function (element) {
+            return ! (element instanceof PlaceHolder) ? element :
+                (args.length > 0 ? args.shift() : element);
+        });
+        return args.length > 0 ? out.concat(args) : out;
     }
 
     /**
@@ -267,6 +299,15 @@
      */
     function isNumber (value) {
         return classOfIs(value, _Number);
+    }
+
+    /**
+     * Checks to see if argument is an instanceof `Placeholder`|`__`|`sjl._`.
+     * @param arg {*}
+     * @returns {boolean}
+     */
+    function isPlaceholder (arg) {
+        return arg instanceof PlaceHolder;
     }
 
     /**
