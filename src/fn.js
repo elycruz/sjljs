@@ -12,12 +12,38 @@
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
         curry2 = sjl.curry2,
         curry3 = sjl.curry3,
+
+        /**
+         * Returns whatever you pass in;  Id pattern from functional programming (used by custom functors and monads).
+         * @function module:sjl.fn.id
+         * @param value {*}
+         * @returns {*}
+         */
         id = function (value) {
             return value;
         },
+
+        /**
+         * Curried map function
+         * @function module:sjl.fn.map
+         * @param fn {Function}
+         * @param functor {Object|Array} - An object with a `map(fn {Function})` method
+         * @type {Function}
+         */
         map = curry2(function (fn, functor) {
             return functor.map(fn);
         }),
+        filter = curry2(function (fn, functor) {
+            return functor.filter(fn);
+        }),
+        foldl = curry2(function (fn, agg, functor) {
+            return functor.reduce(fn, agg);
+        }),
+        foldr = curry2(function (fn, agg, functor) {
+            return functor.reduceRight(fn, agg);
+        }),
+        reduce = foldl,
+        reduceRight = foldr,
         ap = curry2(function (obj1, obj2) {
             return obj1.ap(obj2);
         }),
@@ -40,7 +66,8 @@
         }),
 
         /**
-         * `fn` package.  Includes some functional members
+         * Fn package.  Includes some functional members
+         * @namespace module:sjl.fn
          * @type {Object}
          */
         fnPackage = {

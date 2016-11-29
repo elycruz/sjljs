@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: Optionable</title>
+	<title>Documentation Namespace: fn</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,15 +86,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Optionable</h1>
+	<h1 class="page-title">Namespace: fn</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="sjl.stdlib.html">.stdlib</a>.</span>
+            <span class="ancestors"><a href="module-sjl.html">sjl</a>.</span>
         
-        Optionable
+        fn
         </h2>
         
     
@@ -105,29 +105,10 @@
     <div class="container-overview">
     
         
-<hr>
-<dt>
-    <h4 class="name" id="Optionable"><span class="type-signature"></span>new Optionable()</h4>
-    
-    
-</dt>
-<dd>
+            <div class="description">Fn package.  Includes some functional members</div>
+        
 
-    
-    <div class="description">
-        Optionable Constructor merges all objects passed in to it's `options` hash.
-Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
+        
 <dl class="details">
     
 
@@ -167,34 +148,11 @@ Also this class has convenience methods for querying it's `options` hash (see `g
 </dl>
 
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
+        
     
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li>
-    </ul>
-
 
     
 
@@ -204,98 +162,6 @@ Also this class has convenience methods for querying it's `options` hash (see `g
 
     
 
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<hr>
-<dt class="name" id="optionsKeyName">
-    <h4 id="optionsKeyName"><span class="type-signature">&lt;readonly> </span>optionsKeyName<span class="type-signature"> :String</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Options key name.  Set when constructing an Optionable instance via the
-options hash passed in.
-Default value: '_options'
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">String</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">var model = new sjl.stdlib.Optionable({optionsKeyName: &#x27;options&#x27;});
-model.options instanceof sjl.stdlib.Config === true // true;
-
-var model2 = new sjl.stdlib.Optionable(); // Uses default key name &#x27;_options&#x27; in this case scenario
-model2._options instanceof sjl.stdlib.Config === true // true;
-
-var model3 = new sjl.stdlib.Optionable({optionsKeyName: &#x27;_attributes&#x27;});
-model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
-
-
-    
-</dd>
-
-        </dl>
     
 
     
@@ -305,7 +171,7 @@ model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="get"><span class="type-signature"></span>get(keyOrArray)</h4>
+    <h4 class="name" id=".id"><span class="type-signature">&lt;static> </span>id(value)</h4>
     
     
 </dt>
@@ -313,7 +179,7 @@ model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
 
     
     <div class="description">
-        Gets one or many option values.
+        Returns whatever you pass in;  Id pattern from functional programming (used by custom functors and monads).
     </div>
     
 
@@ -348,10 +214,16 @@ model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
 
         <tr>
             
-                <td class="name"><code>keyOrArray</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+
             
             </td>
 
@@ -431,248 +303,6 @@ model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
     <dd>
         
 <span class="param-type">*</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="has"><span class="type-signature"></span>has(nsString)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Checks a key/namespace string ('a.b.c') to see if `this.options`
- has a value (a non falsy value otherwise returns `false`).
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>nsString</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">key or namespace string</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="set"><span class="type-signature"></span>set()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Sets an option (key, value) or multiple options (Object)
-based on what's passed in.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></span>
 
 
 

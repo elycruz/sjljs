@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="sjl.nodejs.html">sjl.nodejs</a></li><li><a href="sjl.stdlib.html">sjl.stdlib</a></li>
+					<li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li><li><a href="sjl.stdlib.html">sjl.stdlib</a></li>
 				</ul>
 			</li>
 			
@@ -59,16 +59,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -113,7 +115,8 @@
 
     
     <div class="description">
-        `SjlMap` constructor. Has same api as es6 `Map` constructor with an additional couple of convenience methods (`addFromArray`, `addFromObject`, `iterator`, `toJson`).
+        `SjlMap` constructor. Has same api as es6 `Map` constructor with
+ an additional couple of convenience methods (`addFromArray`, `addFromObject`, `iterator`, `toJson`).
     </div>
     
 
@@ -168,7 +171,8 @@
 
             
 
-            <td class="description last">The object to populate itself from (either an `Array<[key, value]>` or an `Object`).</td>
+            <td class="description last">The object to populate itself from (either an `Array<[key, value]>`
+ or an `Object`).</td>
         </tr>
 
     
@@ -252,7 +256,7 @@
             
 <hr>
 <dt class="name" id="_iteratorOverridden">
-    <h4><span class="type-signature">&lt;readonly> </span>_iteratorOverridden<span class="type-signature"> :Boolean</span></h4>
+    <h4 id="_iteratorOverridden"><span class="type-signature">&lt;readonly> </span>_iteratorOverridden<span class="type-signature"> :Boolean</span></h4>
 
     
 </dt>
@@ -323,7 +327,7 @@
             
 <hr>
 <dt class="name" id="_keys">
-    <h4><span class="type-signature">&lt;readonly> </span>_keys<span class="type-signature"> :Array</span></h4>
+    <h4 id="_keys"><span class="type-signature">&lt;readonly> </span>_keys<span class="type-signature"> :Array</span></h4>
 
     
 </dt>
@@ -394,7 +398,7 @@
             
 <hr>
 <dt class="name" id="_values">
-    <h4><span class="type-signature">&lt;readonly> </span>_values<span class="type-signature"> :Array</span></h4>
+    <h4 id="_values"><span class="type-signature">&lt;readonly> </span>_values<span class="type-signature"> :Array</span></h4>
 
     
 </dt>
@@ -465,7 +469,7 @@
             
 <hr>
 <dt class="name" id="size">
-    <h4><span class="type-signature">&lt;readonly> </span>size<span class="type-signature"> :Number</span></h4>
+    <h4 id="size"><span class="type-signature">&lt;readonly> </span>size<span class="type-signature"> :Number</span></h4>
 
     
 </dt>
@@ -1092,7 +1096,8 @@
 
     
     <div class="description">
-        Returns the entries in this `SjlMap` as a valid es6 iterator to iterate over (usable in older versions of javascript).
+        Returns the entries in this `SjlMap` as a valid es6 iterator to iterate over (usable in
+ older versions of javascript).
     </div>
     
 
@@ -1190,7 +1195,8 @@
 
     
     <div class="description">
-        Iterates through all key value pairs in itself and passes them to `callback` on each iteration.
+        Iterates through all key value pairs in itself and passes them to `callback`
+ on each iteration.
     </div>
     
 
@@ -1658,7 +1664,8 @@
 
     
     <div class="description">
-        Returns a valid es6 iterator to iterate over key-value pair entries of this instance. (same as `SjlMap#entries`).
+        Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
+ (same as `SjlMap#entries`).
     </div>
     
 
@@ -1756,7 +1763,8 @@
 
     
     <div class="description">
-        Returns the keys in this `SjlMap` as a valid es6 iterator object to iterate over (usable in older versions of javascript).
+        Returns the keys in this `SjlMap` as a valid es6 iterator object to iterate over (usable in
+ older versions of javascript).
     </div>
     
 
@@ -2124,7 +2132,8 @@
 
     
     <div class="description">
-        Returns the values in this `SjlMap` as a valid es6 iterator object to iterate over (usable in older versions of javascript).
+        Returns the values in this `SjlMap` as a valid es6 iterator object to iterate over (usable in
+ older versions of javascript).
     </div>
     
 
@@ -2237,28 +2246,30 @@
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2016-11-25T16:02:42-05:00
+		on 2016-11-29T14:35:04-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -2266,7 +2277,9 @@
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -2276,7 +2289,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -2312,8 +2325,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -2339,11 +2351,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>
