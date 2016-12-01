@@ -967,6 +967,7 @@
          * @note If `nsString` is undefined returns the protected modules/packages object itself.
          * @param nsString {String} - Namespace string or just property name itself.
          * @param value {*} - If passed in function/method acts as a setter.
+         * @private
          * @returns {*} - Returns whatever is found
          */
         obj[shortFunctionKey || 'ns'] =
@@ -1581,9 +1582,17 @@
         sjl.Symbol = Symbol;
     }
 
+    /**
+     * Function argument placeholder (for functions curried with sjl.curry and it's variants (sjl.curryN, sjl.curry2 etc.)
+     * @note `PlaceHolder` is a private type (in case you are looking for it).
+     * @type {PlaceHolder}
+     */
     sjl.defineEnumProp(sjl, '_', __); // Placeholder object
 
-    // Export this variable
+    /**
+     * 'Is node env' check.
+     * @type {Boolean}
+     */
     sjl.defineEnumProp(sjl, 'isNodeEnv', isNodeEnv);
 
     // Node specific code
@@ -1622,12 +1631,14 @@
 
         /**
          * Sjl Standard Library classes' namespace.
-         * @namespace sjl.stdlib {Object}
+         * @namespace module:sjl.stdlib {Object}
          */
         defineEnumProp(sjl,     'stdlib',       sjl.ns('stdlib'));
 
-        // Check if amd is being used (store this check globally to reduce
-        //  boilerplate code in other components).
+        /**
+         * Is amd check (helps eliminate 'is amd' being used boilerplate code).
+         * @type {Boolean}
+         */
         defineEnumProp(sjl, 'isAmd', isFunction(window.define) && isset(window.define.amd));
 
         // Export sjl globally

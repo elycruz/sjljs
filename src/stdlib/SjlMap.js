@@ -96,7 +96,7 @@
      *
      * @param iterable {Array|Object} - The object to populate itself from (either an `Array<[key, value]>`
      *  or an `Object`).
-     * @constructor sjl.stdlib.SjlMap
+     * @constructor module:sjl.stdlib.SjlMap
      */
     SjlMap = Extendable.extend(SjlMap, {
         /**

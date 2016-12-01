@@ -11,7 +11,7 @@
 
         /**
          * Constructor takes one or more config objects to set onto `Config`.
-         * @class sjl.stdlib.Config
+         * @class module:sjl.stdlib.Config
          * @extends sjl.stdlib.Extendable
          */
         Config = sjl.ns.stdlib.Extendable.extend({

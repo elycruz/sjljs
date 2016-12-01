@@ -77,7 +77,7 @@
     /**
      * Es6 compliant iterator constructor with some convenience methods;  I.e.,
      *  `valid`, `rewind`, `current`, and `forEach`.
-     * @class sjl.stdlib.Iterator
+     * @class module:sjl.stdlib.Iterator
      * @extends sjl.stdlib.Extendable
      * @param values {Array} - Values to iterate through.
      */

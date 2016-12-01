@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: SjlMap</title>
+	<title>Documentation Class: PriorityList</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
+					<li><a href="module-sjl.Either.html">sjl.Either</a></li><li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.Maybe.html">sjl.Maybe</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
 				</ul>
 			</li>
 			
@@ -47,14 +47,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li><li><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="global.html#obj%255Bundefined%255D">obj[undefined]</a></li>
+					<li><a href="module-sjl.Monad.html">sjl.Monad</a></li><li><a href="module-sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="module-sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="module-sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="module-sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="module-sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="module-sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="module-sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="module-sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="module-sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li>
 				</ul>
 			</li>
 			
@@ -84,13 +77,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: SjlMap</h1>
+	<h1 class="page-title">Class: PriorityList</h1>
 <section>
 
 <header>
     
         <h2>
-        SjlMap
+            <span class="ancestors"><a href="module-sjl.html">sjl</a><a href="module-sjl.stdlib.html">.stdlib</a>.</span>
+        
+        PriorityList
         </h2>
         
     
@@ -103,7 +98,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="SjlMap"><span class="type-signature"></span>new SjlMap(iterable)</h4>
+    <h4 class="name" id="PriorityList"><span class="type-signature"></span>new PriorityList(objOrArray, LIFO, wrapItems)</h4>
     
     
 </dt>
@@ -111,7 +106,7 @@
 
     
     <div class="description">
-        `SjlMap` constructor. Has same api as es6 `Map` constructor with an additional couple of convenience methods (`addFromArray`, `addFromObject`, `iterator`, `toJson`).
+        Allows the sorting of items based on priority (serial index (order items were entered in) isalso taken into account when items have the same priority).  This class alsoimplements the es6 `Map` interface and the es6 `Iterator` interface thereby making iteasily manageable and iterable.
     </div>
     
 
@@ -146,16 +141,16 @@
 
         <tr>
             
-                <td class="name"><code>iterable</code></td>
+                <td class="name"><code>objOrArray</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">Object</span>
 |
 
-<span class="param-type">Object</span>
+<span class="param-type">Array</span>
 
 
 
@@ -166,7 +161,55 @@
 
             
 
-            <td class="description last">The object to populate itself from (either an `Array<[key, value]>` or an `Object`).</td>
+            <td class="description last">Required.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>LIFO</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">"Last In First Out" flag.  Default false.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>wrapItems</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Whether items should be wrapped (internal priority list props set on outer wrapper)or whether items should not be wrapped (internal priority list properties set directly on passed in objects) (internal props usedfor sorting and other internal calculations).  Default false.</td>
         </tr>
 
     
@@ -234,6 +277,19 @@
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li>
+    
+        <li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li>
+    </ul>
+
+
+    
 
     
 
@@ -282,6 +338,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#_iteratorOverridden">sjl.stdlib.SjlMap#_iteratorOverridden</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -354,6 +419,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#_keys">sjl.stdlib.SjlMap#_keys</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -424,6 +498,100 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#_values">sjl.stdlib.SjlMap#_values</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="sjl.stdlib.Iterator.html#_values">sjl.stdlib.Iterator#_values</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="pointer">
+    <h4><span class="type-signature"></span>pointer<span class="type-signature"> :Number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Iterator pointer.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#pointer">sjl.stdlib.Iterator#pointer</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -496,7 +664,21 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#size">sjl.stdlib.SjlMap#size</a>
+			</li>
+		</ul>
+	</dd>
+	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="sjl.stdlib.Iterator.html#size">sjl.stdlib.Iterator#size</a>
+    </li></ul></dd>
     
 
     
@@ -617,6 +799,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#addFromArray">sjl.stdlib.SjlMap#addFromArray</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -766,6 +957,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#addFromObject">sjl.stdlib.SjlMap#addFromObject</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -864,6 +1064,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#clear">sjl.stdlib.SjlMap#clear</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -918,6 +1127,113 @@
     <dd>
         
 <span class="param-type">SjlMap</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="current"><span class="type-signature"></span>current()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns the current value that `pointer` is pointing to.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#current">sjl.stdlib.Iterator#current</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
 
 
 
@@ -1011,6 +1327,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#delete">sjl.stdlib.SjlMap#delete</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -1109,6 +1434,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#entries">sjl.stdlib.SjlMap#entries</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -1282,7 +1616,21 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#forEach">sjl.stdlib.SjlMap#forEach</a>
+			</li>
+		</ul>
+	</dd>
+	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="sjl.stdlib.Iterator.html#forEach">sjl.stdlib.Iterator#forEach</a>
+    </li></ul></dd>
     
 
     
@@ -1429,6 +1777,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#get">sjl.stdlib.SjlMap#get</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -1578,6 +1935,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#has">sjl.stdlib.SjlMap#has</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -1676,6 +2042,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#iterator">sjl.stdlib.SjlMap#iterator</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -1773,6 +2148,229 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#keys">sjl.stdlib.SjlMap#keys</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="next"><span class="type-signature"></span>next()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Method which returns the current position in the iterator based on where the pointer is.This method also increases the pointer after it is done fetching the value to return.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#next">sjl.stdlib.Iterator#next</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="rewind"><span class="type-signature"></span>rewind()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Rewinds the iterator.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#rewind">sjl.stdlib.Iterator#rewind</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -1946,6 +2544,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#set">sjl.stdlib.SjlMap#set</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -2044,6 +2651,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#toJSON">sjl.stdlib.SjlMap#toJSON</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -2114,6 +2730,113 @@
             
 <hr>
 <dt>
+    <h4 class="name" id="valid"><span class="type-signature"></span>valid()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns whether the iterator has reached it's end.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#valid">sjl.stdlib.Iterator#valid</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="values"><span class="type-signature"></span>values()</h4>
     
     
@@ -2141,6 +2864,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.SjlMap.html#values">sjl.stdlib.SjlMap#values</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -2256,7 +2988,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-12-01T09:35:25-05:00
+		on 2016-12-01T09:47:25-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

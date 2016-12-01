@@ -45,18 +45,19 @@ only includes the core and no classes or constructors from it's other packages).
 #### Other Packages and Members List:
 
 - [(m) sjl.Either](#m-sjleither)
-- [(m) sjl.Maybe](#m-sjlmaybe)
-- [(m) sjl.Monad](#m-sjlmonad)
 - [(m) sjl.fn](#m-sjlfn)
 - [(p) sjl.generated](#p-sjlgenerated)
   - [(m) sjl.generated.version](#m-sjlgeneratedversion)
 - [(m) sjl.math](#m-sjlmath)
+- [(m) sjl.Maybe](#m-sjlmaybe)
+- [(m) sjl.Monad](#m-sjlmonad)
 - [(p) sjl.nodejs](#p-sjlnodejs)
   - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
 - [(m) sjl](#m-sjl)
 - [(p) sjl.stdlib](#p-sjlstdlib)
   - [(m) sjl.stdlib.Config](#m-sjlstdlibconfig)
   - [(m) sjl.stdlib.Extendable](#m-sjlstdlibextendable)
+  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
   - [(m) sjl.stdlib.Iterator](#m-sjlstdlibiterator)
   - [(m) sjl.stdlib.ObjectIterator](#m-sjlstdlibobjectiterator)
   - [(m) sjl.stdlib.Optionable](#m-sjlstdliboptionable)
@@ -64,7 +65,6 @@ only includes the core and no classes or constructors from it's other packages).
   - [(m) sjl.stdlib.PriorityListItem](#m-sjlstdlibprioritylistitem)
   - [(m) sjl.stdlib.SjlMap](#m-sjlstdlibsjlmap)
   - [(m) sjl.stdlib.SjlSet](#m-sjlstdlibsjlset)
-  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
 
 
 ## Sjl direct Members and Methods:

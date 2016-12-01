@@ -10,6 +10,12 @@
         Extendable = sjl.ns.stdlib.Extendable,
         fnNs = sjl.ns.fn,
         curry2 = sjl.curry,
+
+        /**
+         * Basic Monad implementation.
+         * @class module:sjl.Monad
+         * @experimental
+         */
         Monad = Extendable.extendWith({
             constructor: function Monad (value) {
                 if (!(this instanceof Monad)) {

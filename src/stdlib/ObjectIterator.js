@@ -13,7 +13,7 @@
         contextName = 'sjl.stdlib.' + moduleName,
 
     /**
-     * @class sjl.stdlib.ObjectIterator
+     * @class module:sjl.stdlib.ObjectIterator
      * @extends sjl.stdlib.Iterator
      * @param keysOrObj {Array|Object} - Array of keys or object to create (object) iterator from.
      * @param values {Array|Undefined} - Array of values if first param is an array.

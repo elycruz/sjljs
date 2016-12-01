@@ -1,7 +1,5 @@
 /**
  * Created by edlc on 11/13/16.
- * @todo find out best practice for naming functions that have side effects
- * @todo split out the `extend` method from `defineSubClass`
  */
 
 (function () {
@@ -33,26 +31,74 @@
         map = curry2(function (fn, functor) {
             return functor.map(fn);
         }),
+
+        /**
+         * Curried filter function.
+         * @function module:sjl.fn.filter
+         * @param fn {Function}
+         * @param functor {{filter: {Function}}}
+         * @type {{filter: {Function}}}
+         */
         filter = curry2(function (fn, functor) {
             return functor.filter(fn);
         }),
-        foldl = curry2(function (fn, agg, functor) {
+
+        /**
+         * Curried reduce function.
+         * @function module:sjl.fn.reduce
+         * @param fn {Function}
+         * @param agg {*} - Aggregator.
+         * @param functor {{reduce: {Function}}}
+         * @type {{reduce: {Function}}}
+         */
+        reduce = curry2(function (fn, agg, functor) {
             return functor.reduce(fn, agg);
         }),
-        foldr = curry2(function (fn, agg, functor) {
+
+        /**
+         * Curried reduceRight function.
+         * @function module:sjl.fn.reduceRight
+         * @param fn {Function}
+         * @param agg {*} - Aggregator.
+         * @param functor {{reduceRight: {Function}}}
+         * @type {{reduceRight: {Function}}}
+         */
+        reduceR = curry2(function (fn, agg, functor) {
             return functor.reduceRight(fn, agg);
         }),
-        reduce = foldl,
-        reduceRight = foldr,
+
+
+        /**
+         * Applicative apply.  Applies function within functor1 to value within functor2.
+         * @function module:sjl.fn.ap
+         * @param functor1 {{ap: {Function}}}
+         * @param functor1 {{ap: {Function}}}
+         * @type {{ap: {Function}}}
+         */
         ap = curry2(function (obj1, obj2) {
             return obj1.ap(obj2);
         }),
+
+        /**
+         *
+         * @function module:sjl.fn.chain
+         * @type {*}
+         */
         chain = curry2(function (fn, functor) {
             return functor.map(fn).join();
         }),
+
+        /**
+         * Monadic join
+         * @function module:sjl.fn.join
+         * @param monad {Monad}
+         * @todo add more descriptive jsdoc here.
+         * @returns {*|Array|String}
+         */
         join = function (monad) {
             return monad.value instanceof monad.constructor ? monad.value : monad.constructor.of(monad.value);
         },
+
         joinR = function (monad) {
             while (monad.value instanceof monad.constructor) {
                 monad = monad.join();
@@ -68,7 +114,7 @@
         /**
          * Fn package.  Includes some functional members
          * @namespace module:sjl.fn
-         * @type {Object}
+         * @type {{id: module:sjl.fn.id, map: Function, join: module:sjl.fn.join, joinR: joinR, chain: *, filter: {filter: {Function}}, reduce: {reduce: {Function}}, reduceR: {reduceRight: {Function}}, ap: {ap: {Function}}, liftN: (*)}}
          */
         fnPackage = {
             id: id,
@@ -76,6 +122,9 @@
             join: join,
             joinR: joinR,
             chain: chain,
+            filter: filter,
+            reduce: reduce,
+            reduceR: reduceR,
             ap: ap,
             liftN: liftN
         };

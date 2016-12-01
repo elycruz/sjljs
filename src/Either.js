@@ -45,6 +45,12 @@
             },
             counterConstructor: Left
         }),
+        /**
+         * Houses the Right and Left monads and their companion method `either`.
+         * @experimental
+         * @namespace module:sjl.Either
+         * @type {{either: (*), Right, Left}}
+         */
         Either = {
             either: either,
             Right: Right,

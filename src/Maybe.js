@@ -56,6 +56,12 @@
             },
             counterConstructor: Nothing
         }),
+
+        /**
+         * House the Maybe Monad pattern.
+         * @namespace module:sjl.Maybe
+         * @type {{maybe: (*), nothing: nothing, Just: *, Nothing: *}}
+         */
         Maybe = {
             maybe: maybe,
             nothing: nothing,

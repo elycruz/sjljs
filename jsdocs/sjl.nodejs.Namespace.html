@@ -33,44 +33,35 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li><li><a href="sjl.stdlib.html">sjl.stdlib</a></li>
+					<li><a href="module-sjl.Either.html">sjl.Either</a></li><li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.Maybe.html">sjl.Maybe</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.html">sjl</a></li><li><a href="sjl.module_math.html">sjl.math</a></li>
+					<li><a href="module-sjl.html">sjl</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li><li><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="global.html#obj%255Bundefined%255D">obj[undefined]</a></li>
+					<li><a href="module-sjl.Monad.html">sjl.Monad</a></li><li><a href="module-sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="module-sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="module-sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="module-sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="module-sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="module-sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="module-sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="module-sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="module-sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li>
 				</ul>
 			</li>
 			
 		</ul>
-        
-            <div class="col-sm-3 col-md-3">
-                <form class="navbar-form" role="search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
-                        </div>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
                     </div>
-                </form>
-            </div>
-        
+                </div>
+            </form>
+        </div>
 	</div>
 
 </div>
@@ -115,8 +106,7 @@
 
     
     <div class="description">
-        A namespace constructor for getting an object that mimicks namespaces/packages
-in languages like Java and Actionscript.  Classes are loaded on a per request basis.
+        A namespace constructor for getting an object that mimicks namespaces/packagesin languages like Java and Actionscript.  Classes are loaded on a per request basis.
     </div>
     
 
@@ -342,25 +332,9 @@ in languages like Java and Actionscript.  Classes are loaded on a per request ba
     
         <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">// Example 1
-let sjl = require(&#x27;sjljs&#x27;),
-    ns = new sjl.nodejs.Namespace(__dirname),
+    <pre class="sunlight-highlight-javascript">// Example 1let sjl = require(&#x27;sjljs&#x27;),    ns = new sjl.nodejs.Namespace(__dirname),    // Fetches &#x27;./some/namespace/some/where/SomeConstructor(.js|.json)&#x27; by default.    SomeConstructor = ns.some.namespace.some.where.SomeConstructor,    // Fetches &#x27;./some-data-dir/someJsonFile(.js|.json)&#x27; by default.    someJsonFile = ns[&#x27;some-data-dir&#x27;].someJsonFile;</pre>
 
-    // Fetches &#x27;./some/namespace/some/where/SomeConstructor(.js|.json)&#x27; by default.
-    SomeConstructor = ns.some.namespace.some.where.SomeConstructor,
-
-    // Fetches &#x27;./some-data-dir/someJsonFile(.js|.json)&#x27; by default.
-    someJsonFile = ns[&#x27;some-data-dir&#x27;].someJsonFile;</pre>
-
-    <pre class="sunlight-highlight-javascript">// Example 2
-// &#x60;sjl&#x60; uses this constructor internally to expose it&#x27;s class library so you don&#x27;t
-// have to include them manually;  E.g.,
-
- // Exposed functionality
-let Optionable = sjl.stdlib.Optionable;
-
-// With out exposed functionality (assume in some &#x27;./src&#x27; folder)
-let Optionable = require(&#x27;../node_modules/sjljs/src/stdlib/Optionable&#x27;);</pre>
+    <pre class="sunlight-highlight-javascript">// Example 2// &#x60;sjl&#x60; uses this constructor internally to expose it&#x27;s class library so you don&#x27;t// have to include them manually;  E.g., // Exposed functionalitylet Optionable = sjl.stdlib.Optionable;// With out exposed functionality (assume in some &#x27;./src&#x27; folder)let Optionable = require(&#x27;../node_modules/sjljs/src/stdlib/Optionable&#x27;);</pre>
 
 
     
@@ -407,30 +381,28 @@ let Optionable = require(&#x27;../node_modules/sjljs/src/stdlib/Optionable&#x27;
 </div>
 </div>
 
-
-    <div class="modal fade" id="searchResults">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Search results</h4>
-          </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div>
-
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 <footer>
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-11-29T14:35:04-05:00
+		on 2016-12-01T09:47:25-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -438,9 +410,7 @@ let Optionable = require(&#x27;../node_modules/sjljs/src/stdlib/Optionable&#x27;
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-
-    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
-
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
 
 <script>
 $( function () {
@@ -450,7 +420,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -486,7 +456,8 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			return $( heading ).attr( "id" ) || ( prefix + i );
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -512,13 +483,11 @@ $( function () {
 <!--Google Analytics-->
 
 
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            SearcherDisplay.init();
-        });
-    </script>
-
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
 
 </body>
 </html>

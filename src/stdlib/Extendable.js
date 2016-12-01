@@ -12,7 +12,7 @@
 
     /**
      * The `sjl.stdlib.Extendable` constructor (a constructor that has a static `extend` method for easy extending).
-     * @class sjl.stdlib.Extendable
+     * @class module:sjl.stdlib.Extendable
      */
     Extendable = sjl.defineSubClass(Function, Extendable);
 

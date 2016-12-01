@@ -170,7 +170,7 @@
      * also taken into account when items have the same priority).  This class also
      * implements the es6 `Map` interface and the es6 `Iterator` interface thereby making it
      * easily manageable and iterable.
-     * @class sjl.stdlib.PriorityList
+     * @class module:sjl.stdlib.PriorityList
      * @extends sjl.stdlib.SjlMap
      * @extends sjl.stdlib.Iterator
      * @param objOrArray {Object|Array} - Required.

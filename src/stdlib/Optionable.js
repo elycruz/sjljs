@@ -54,7 +54,7 @@
      * Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
      * @note when using this class you shouldn't have a nested `options` attribute directly within options
      * as this will cause adverse effects when getting and setting properties via the given methods.
-     * @class sjl.stdlib.Optionable
+     * @class module:sjl.stdlib.Optionable
      * @extends sjl.stdlib.Extendable
      * @type {void|sjl.stdlib.Optionable}
      */

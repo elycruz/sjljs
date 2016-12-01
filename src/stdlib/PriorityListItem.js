@@ -12,7 +12,7 @@
     /**
      * Used as default constructor for wrapping items in when `wrapItems` is set to `true` on
      * `sjl.stdlib.PriorityList`.
-     * @class sjl.stdlib.PriorityListItem
+     * @class module:sjl.stdlib.PriorityListItem
      * @extends sjl.stdlib.Extendable
      * @param key {*}
      * @param value {*}

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: Optionable</title>
+	<title>Documentation Class: SjlMap</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
+					<li><a href="module-sjl.Either.html">sjl.Either</a></li><li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.Maybe.html">sjl.Maybe</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
 				</ul>
 			</li>
 			
@@ -47,14 +47,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li><li><a href="sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="global.html#obj%255Bundefined%255D">obj[undefined]</a></li>
+					<li><a href="module-sjl.Monad.html">sjl.Monad</a></li><li><a href="module-sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="module-sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="module-sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="module-sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="module-sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="module-sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="module-sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="module-sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="module-sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li>
 				</ul>
 			</li>
 			
@@ -84,13 +77,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Optionable</h1>
+	<h1 class="page-title">Class: SjlMap</h1>
 <section>
 
 <header>
     
         <h2>
-        Optionable
+            <span class="ancestors"><a href="module-sjl.html">sjl</a><a href="module-sjl.stdlib.html">.stdlib</a>.</span>
+        
+        SjlMap
         </h2>
         
     
@@ -103,7 +98,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Optionable"><span class="type-signature"></span>new Optionable()</h4>
+    <h4 class="name" id="SjlMap"><span class="type-signature"></span>new SjlMap(iterable)</h4>
     
     
 </dt>
@@ -111,7 +106,7 @@
 
     
     <div class="description">
-        Optionable Constructor merges all objects passed in to it's `options` hash.Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
+        `SjlMap` constructor. Has same api as es6 `Map` constructor with an additional couple of convenience methods (`addFromArray`, `addFromObject`, `iterator`, `toJson`).
     </div>
     
 
@@ -121,223 +116,44 @@
 
     
     
+        <h5>Parameters:</h5>
+        
 
-    
-<dl class="details">
-    
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-    
-    </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
+        <th>Type</th>
 
         
 
+        
 
-    <ul>
-        <li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li>
-    </ul>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
 
-
+    <tbody>
     
 
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
+        <tr>
             
-<hr>
-<dt class="name" id="optionsKeyName">
-    <h4><span class="type-signature">&lt;readonly> </span>optionsKeyName<span class="type-signature"> :String</span></h4>
+                <td class="name"><code>iterable</code></td>
+            
 
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Options key name.  Set when constructing an Optionable instance via theoptions hash passed in.Default value: '_options'
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
+            <td class="type">
+            
                 
-<span class="param-type">String</span>
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Object</span>
 
 
 
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">var model = new sjl.stdlib.Optionable({optionsKeyName: &#x27;options&#x27;});model.options instanceof sjl.stdlib.Config === true // true;var model2 = new sjl.stdlib.Optionable(); // Uses default key name &#x27;_options&#x27; in this case scenariomodel2._options instanceof sjl.stdlib.Config === true // true;var model3 = new sjl.stdlib.Optionable({optionsKeyName: &#x27;_attributes&#x27;});model3._attributes instanceof sjl.stdlib.Config === true // true;</pre>
-
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id="get"><span class="type-signature"></span>get(keyOrArray)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Gets one or many option values.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>keyOrArray</code></td>
-            
-
-            <td class="type">
             
             </td>
 
@@ -345,7 +161,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">The object to populate itself from (either an `Array<[key, value]>` or an `Object`).</td>
         </tr>
 
     
@@ -405,136 +221,12 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
 
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="has"><span class="type-signature"></span>has(nsString)</h4>
     
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Checks a key/namespace string ('a.b.c') to see if `this.options` has a value (a non falsy value otherwise returns `false`).
     </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>nsString</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">key or namespace string</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
 
     
 
@@ -547,129 +239,7 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
 
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="set"><span class="type-signature"></span>set()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Sets an option (key, value) or multiple options (Object)based on what's passed in.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        </dl>
     
 
     
@@ -717,7 +287,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-12-01T09:35:25-05:00
+		on 2016-12-01T09:47:25-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

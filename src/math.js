@@ -1,7 +1,6 @@
 /**
  * Created by elyde on 11/25/2016.
  */
-
 (function () {
 
     'use strict';
@@ -10,23 +9,38 @@
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
 
         /**
-         * @module module:sjl.math
+         * @namespace module:sjl.math
          * @type {{add: Function, multiply: Function, divide: Function}}
          */
         math = {
 
+            /**
+             * Recursive, curried add function.
+             * @function module:sjl.math.add
+             * @return {*} - Reduced result.
+             */
             add: sjl.curry2(function () {
                 return sjl.argsToArray(arguments).reduce(function (agg, num) {
                     return num + agg;
                 }, 0);
             }),
 
+            /**
+             * Recursive, curried multiply function.
+             * @function module:sjl.math.multiply
+             * @return {*} - Reduced result.
+             */
             multiply: sjl.curry2(function () {
                 return sjl.argsToArray(arguments).reduce(function (agg, num) {
                     return num * agg;
                 }, 1);
             }),
 
+            /**
+             * Recursive, curried divide function.
+             * @function module:sjl.math.divide
+             * @return {*} - Reduced result.
+             */
             divide: sjl.curry2(function () {
                 var args = sjl.argsToArray(arguments);
                 return args.reduce(function (agg, num) {
@@ -47,6 +61,5 @@
             return math;
         }
     }
-
 
 }());

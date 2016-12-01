@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Namespace: fn</title>
+	<title>Documentation Class: ObjectIterator</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -77,15 +77,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: fn</h1>
+	<h1 class="page-title">Class: ObjectIterator</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-sjl.html">sjl</a>.</span>
+            <span class="ancestors"><a href="module-sjl.html">sjl</a><a href="module-sjl.stdlib.html">.stdlib</a>.</span>
         
-        fn
+        ObjectIterator
         </h2>
         
     
@@ -96,10 +96,104 @@
     <div class="container-overview">
     
         
-            <div class="description">Fn package.  Includes some functional members</div>
+<hr>
+<dt>
+    <h4 class="name" id="ObjectIterator"><span class="type-signature"></span>new ObjectIterator(keysOrObj, values)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>keysOrObj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of keys or object to create (object) iterator from.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>values</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">Undefined</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of values if first param is an array.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -139,11 +233,34 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li>
+    </ul>
+
 
     
 
@@ -153,6 +270,252 @@
 
     
 
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="_values">
+    <h4><span class="type-signature">&lt;readonly> </span>_values<span class="type-signature"> :Array.&lt;*></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Iterator values.  Set on construction.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Array.&lt;*></span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#_values">sjl.stdlib.Iterator#_values</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="pointer">
+    <h4><span class="type-signature"></span>pointer<span class="type-signature"> :Number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Iterator pointer.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#pointer">sjl.stdlib.Iterator#pointer</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="size">
+    <h4><span class="type-signature">&lt;readonly> </span>size<span class="type-signature"> :Number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Iterator size.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#size">sjl.stdlib.Iterator#size</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
     
 
     
@@ -162,7 +525,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".ap"><span class="type-signature">&lt;static> </span>ap(functor1, functor1)</h4>
+    <h4 class="name" id="current"><span class="type-signature"></span>current()</h4>
     
     
 </dt>
@@ -170,7 +533,7 @@
 
     
     <div class="description">
-        Applicative apply.  Applies function within functor1 to value within functor2.
+        Returns the current value that `pointer` is pointing to.
     </div>
     
 
@@ -180,80 +543,6 @@
 
     
     
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>functor1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>functor1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
 
     
 <dl class="details">
@@ -264,756 +553,15 @@
 	
 
 	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".chain"><span class="type-signature">&lt;static> </span>chain()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".filter"><span class="type-signature">&lt;static> </span>filter(fn, functor)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Curried filter function.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>fn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>functor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".id"><span class="type-signature">&lt;static> </span>id(value)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Returns whatever you pass in;  Id pattern from functional programming (used by custom functors and monads).
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>value</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".join"><span class="type-signature">&lt;static> </span>join(monad)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Monadic join
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>monad</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Monad</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>add more descriptive jsdoc here.</li>
-			</ul>
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#current">sjl.stdlib.Iterator#current</a>
+			</li>
+		</ul>
 	</dd>
 	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
-|
-
-<span class="param-type">Array</span>
-|
-
-<span class="param-type">String</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".map"><span class="type-signature">&lt;static> </span>map(fn, functor)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Curried map function
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>fn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>functor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">An object with a `map(fn {Function})` method</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
 
     
 
@@ -1067,7 +615,7 @@
     </dt>
     <dd>
         
-<span class="param-type">function</span>
+<span class="param-type">Object</span>
 
 
 
@@ -1084,7 +632,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".reduce"><span class="type-signature">&lt;static> </span>reduce(fn, agg, functor)</h4>
+    <h4 class="name" id="forEach"><span class="type-signature"></span>forEach(callback, context)</h4>
     
     
 </dt>
@@ -1092,7 +640,7 @@
 
     
     <div class="description">
-        Curried reduce function.
+        Iterates through all elements in iterator.
     </div>
     
 
@@ -1127,7 +675,7 @@
 
         <tr>
             
-                <td class="name"><code>fn</code></td>
+                <td class="name"><code>callback</code></td>
             
 
             <td class="type">
@@ -1151,31 +699,7 @@
 
         <tr>
             
-                <td class="name"><code>agg</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Aggregator.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>functor</code></td>
+                <td class="name"><code>context</code></td>
             
 
             <td class="type">
@@ -1209,6 +733,122 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#forEach">sjl.stdlib.Iterator#forEach</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="next"><span class="type-signature"></span>next()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Method which returns the current position in the iterator based on where the pointer is.This method also increases the pointer after it is done fetching the value to return.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#next">sjl.stdlib.Iterator#next</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -1280,7 +920,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".reduceRight"><span class="type-signature">&lt;static> </span>reduceRight(fn, agg, functor)</h4>
+    <h4 class="name" id="rewind"><span class="type-signature"></span>rewind()</h4>
     
     
 </dt>
@@ -1288,7 +928,7 @@
 
     
     <div class="description">
-        Curried reduceRight function.
+        Rewinds the iterator.
     </div>
     
 
@@ -1297,104 +937,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>fn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>agg</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Aggregator.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>functor</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -1405,6 +947,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#rewind">sjl.stdlib.Iterator#rewind</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -1459,7 +1010,114 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type"><a href="sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="valid"><span class="type-signature"></span>valid()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns whether the iterator has reached it's end.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="sjl.stdlib.Iterator.html#valid">sjl.stdlib.Iterator#valid</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
 
 
 

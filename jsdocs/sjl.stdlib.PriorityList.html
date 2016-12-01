@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li><li><a href="sjl.stdlib.html">sjl.stdlib</a></li>
+					<li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.html">sjl</a></li><li><a href="sjl.module_math.html">sjl.math</a></li>
+					<li><a href="module-sjl.html">sjl</a></li>
 				</ul>
 			</li>
 			
@@ -59,18 +59,16 @@
 			</li>
 			
 		</ul>
-        
-            <div class="col-sm-3 col-md-3">
-                <form class="navbar-form" role="search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
-                        </div>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
                     </div>
-                </form>
-            </div>
-        
+                </div>
+            </form>
+        </div>
 	</div>
 
 </div>
@@ -92,8 +90,6 @@
 <header>
     
         <h2>
-            <span class="ancestors"><a href="sjl.stdlib.html">.stdlib</a>.</span>
-        
         PriorityList
         </h2>
         
@@ -115,10 +111,7 @@
 
     
     <div class="description">
-        Allows the sorting of items based on priority (serial index (order items were entered in) is
-also taken into account when items have the same priority).  This class also
-implements the es6 `Map` interface and the es6 `Iterator` interface thereby making it
-easily manageable and iterable.
+        Allows the sorting of items based on priority (serial index (order items were entered in) isalso taken into account when items have the same priority).  This class alsoimplements the es6 `Map` interface and the es6 `Iterator` interface thereby making iteasily manageable and iterable.
     </div>
     
 
@@ -221,9 +214,7 @@ easily manageable and iterable.
 
             
 
-            <td class="description last">Whether items should be wrapped (internal priority list props set on outer wrapper)
-or whether items should not be wrapped (internal priority list properties set directly on passed in objects) (internal props used
-for sorting and other internal calculations).  Default false.</td>
+            <td class="description last">Whether items should be wrapped (internal priority list props set on outer wrapper)or whether items should not be wrapped (internal priority list properties set directly on passed in objects) (internal props usedfor sorting and other internal calculations).  Default false.</td>
         </tr>
 
     
@@ -320,7 +311,7 @@ for sorting and other internal calculations).  Default false.</td>
             
 <hr>
 <dt class="name" id="_iteratorOverridden">
-    <h4 id="_iteratorOverridden"><span class="type-signature">&lt;readonly> </span>_iteratorOverridden<span class="type-signature"> :Boolean</span></h4>
+    <h4><span class="type-signature">&lt;readonly> </span>_iteratorOverridden<span class="type-signature"> :Boolean</span></h4>
 
     
 </dt>
@@ -400,7 +391,7 @@ for sorting and other internal calculations).  Default false.</td>
             
 <hr>
 <dt class="name" id="_keys">
-    <h4 id="_keys"><span class="type-signature">&lt;readonly> </span>_keys<span class="type-signature"> :Array</span></h4>
+    <h4><span class="type-signature">&lt;readonly> </span>_keys<span class="type-signature"> :Array</span></h4>
 
     
 </dt>
@@ -480,7 +471,7 @@ for sorting and other internal calculations).  Default false.</td>
             
 <hr>
 <dt class="name" id="_values">
-    <h4 id="_values"><span class="type-signature">&lt;readonly> </span>_values<span class="type-signature"> :Array</span></h4>
+    <h4><span class="type-signature">&lt;readonly> </span>_values<span class="type-signature"> :Array</span></h4>
 
     
 </dt>
@@ -565,15 +556,14 @@ for sorting and other internal calculations).  Default false.</td>
             
 <hr>
 <dt class="name" id="itemWrapperConstructor">
-    <h4 id="itemWrapperConstructor"><span class="type-signature"></span>itemWrapperConstructor<span class="type-signature"> :function</span></h4>
+    <h4><span class="type-signature"></span>itemWrapperConstructor<span class="type-signature"> :function</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        itemWrapperConstructor {Function<key, value, priority, serial>} - Item Wrapper Constructor.
-Default `sjl.stdlib.PriorityListItem`.
+        itemWrapperConstructor {Function<key, value, priority, serial>} - Item Wrapper Constructor.Default `sjl.stdlib.PriorityListItem`.
     </div>
     
 
@@ -637,7 +627,7 @@ Default `sjl.stdlib.PriorityListItem`.
             
 <hr>
 <dt class="name" id="LIFO">
-    <h4 id="LIFO"><span class="type-signature"></span>LIFO<span class="type-signature"> :Boolean</span></h4>
+    <h4><span class="type-signature"></span>LIFO<span class="type-signature"> :Boolean</span></h4>
 
     
 </dt>
@@ -708,7 +698,7 @@ Default `sjl.stdlib.PriorityListItem`.
             
 <hr>
 <dt class="name" id="pointer">
-    <h4 id="pointer"><span class="type-signature"></span>pointer<span class="type-signature"> :Number</span></h4>
+    <h4><span class="type-signature"></span>pointer<span class="type-signature"> :Number</span></h4>
 
     
 </dt>
@@ -788,7 +778,7 @@ Default `sjl.stdlib.PriorityListItem`.
             
 <hr>
 <dt class="name" id="size">
-    <h4 id="size"><span class="type-signature">&lt;readonly> </span>size<span class="type-signature"> :Number</span></h4>
+    <h4><span class="type-signature">&lt;readonly> </span>size<span class="type-signature"> :Number</span></h4>
 
     
 </dt>
@@ -873,7 +863,7 @@ Default `sjl.stdlib.PriorityListItem`.
             
 <hr>
 <dt class="name" id="wrapItems">
-    <h4 id="wrapItems"><span class="type-signature"></span>wrapItems<span class="type-signature"> :Boolean</span></h4>
+    <h4><span class="type-signature"></span>wrapItems<span class="type-signature"> :Boolean</span></h4>
 
     
 </dt>
@@ -1264,8 +1254,7 @@ Default `sjl.stdlib.PriorityListItem`.
 
     
     <div class="description">
-        Clears any stored priority items.  Also
-internally sets `sorted` to `false`.
+        Clears any stored priority items.  Alsointernally sets `sorted` to `false`.
     </div>
     
 
@@ -1635,8 +1624,7 @@ internally sets `sorted` to `false`.
 
     
     <div class="description">
-        Returns the entries in this `SjlMap` as a valid es6 iterator to iterate over (usable in
- older versions of javascript).
+        Returns the entries in this `SjlMap` as a valid es6 iterator to iterate over (usable in older versions of javascript).
     </div>
     
 
@@ -1743,8 +1731,7 @@ internally sets `sorted` to `false`.
 
     
     <div class="description">
-        Allows you to loop through priority items in priority list.
-Same function signature as Array.prorotype.forEach.
+        Allows you to loop through priority items in priority list.Same function signature as Array.prorotype.forEach.
     </div>
     
 
@@ -2234,8 +2221,7 @@ Same function signature as Array.prorotype.forEach.
 
     
     <div class="description">
-        Returns a valid es6 iterator to iterate over key-value pair entries of this instance.
- (same as `SjlMap#entries`).
+        Returns a valid es6 iterator to iterate over key-value pair entries of this instance. (same as `SjlMap#entries`).
     </div>
     
 
@@ -2555,8 +2541,7 @@ Same function signature as Array.prorotype.forEach.
 
     
     <div class="description">
-        Ensures priority returned is a number or increments it's internal priority counter
-and returns it.
+        Ensures priority returned is a number or increments it's internal priority counterand returns it.
     </div>
     
 
@@ -3006,9 +2991,7 @@ and returns it.
 
     
     <div class="description">
-        Sets an item onto Map at passed in priority.  If no
-priority is passed in value is set at internally incremented
-priority.
+        Sets an item onto Map at passed in priority.  If nopriority is passed in value is set at internally incrementedpriority.
     </div>
     
 
@@ -3418,8 +3401,7 @@ priority.
 
     
     <div class="description">
-        Returns a boolean indicating whether a valid iterator result object can be retrieved from
-self or not.
+        Returns a boolean indicating whether a valid iterator result object can be retrieved fromself or not.
     </div>
     
 
@@ -3640,30 +3622,28 @@ self or not.
 </div>
 </div>
 
-
-    <div class="modal fade" id="searchResults">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Search results</h4>
-          </div>
-          <div class="modal-body"></div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div>
-
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 <footer>
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-11-29T14:35:04-05:00
+		on 2016-12-01T09:35:25-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -3671,9 +3651,7 @@ self or not.
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-
-    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
-
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
 
 <script>
 $( function () {
@@ -3683,7 +3661,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -3719,7 +3697,8 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			return $( heading ).attr( "id" ) || ( prefix + i );
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -3745,13 +3724,11 @@ $( function () {
 <!--Google Analytics-->
 
 
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            SearcherDisplay.init();
-        });
-    </script>
-
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
 
 </body>
 </html>

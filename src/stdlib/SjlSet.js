@@ -14,7 +14,7 @@
      * SjlSet constructor.  This object has the same interface as the es6 `Set`
      * object.  The only difference is this one has some extra methods;  I.e.,
      *  `addFromArray`, `iterator`, and a defined `toJSON` method.
-     * @class sjl.stdlib.SjlSet
+     * @class module:sjl.stdlib.SjlSet
      * @extends sjl.stdlib.Extendable
      * @param iterable {Array}
      */
