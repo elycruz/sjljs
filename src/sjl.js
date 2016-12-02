@@ -648,13 +648,13 @@
      * If o and p have a property by the same name, o's property is overwritten.
      * @param o {*} - *object to extend
      * @param p {*} - *object to extend from
-     * @param deep {Boolean=false} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @param deep [Boolean=false] - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
      * @todo rename these variables to be more readable.
      * @returns {*} - returns o
      */
     function extend(o, p, deep) {
         // If `o` or `p` are not set bail
-        if (!isset(o) || !isset(p)) {
+        if (!o || !p) {
             return o;
         }
 
@@ -662,8 +662,9 @@
         Object.keys(p).forEach(function (prop) { // For all props in p.
             // If property is present on target (o) and is not writable, skip iteration
             var propDescription = Object.getOwnPropertyDescriptor(o, prop);
-            if (propDescription && (!isset(propDescription.get) &&
-                !isset(propDescription.set)) && !propDescription.writable) {
+            if (propDescription &&
+                !(isset(propDescription.get) && isset(propDescription.set)) &&
+                !propDescription.writable) {
                 return;
             }
             if (deep === true) {
@@ -764,7 +765,6 @@
      * @returns {{constructor: (Function|*), methods: *, statics: *, superClass: (*|Object)}}
      */
     function normalizeArgsForDefineSubClass (superClass, constructor, methods, statics) {
-        // Superclass?
         superClass = superClass || Object.create(Object.prototype);
 
         // Snatched statics
@@ -783,12 +783,9 @@
         // Re-arrange args if constructor is object
         if (isObject(constructor)) {
             statics = methods;
-            methods = constructor;
+            methods = clone(constructor);
             constructor = ! isFunction(methods.constructor) ? standInConstructor(superClass) : methods.constructor;
             unset(methods, 'constructor');
-        }
-        else if (isFunction(constructor) && !isEmpty(constructor.name) && !methods) {
-            methods = constructor.prototype;
         }
 
         // Ensure constructor
@@ -865,8 +862,8 @@
         var normalizedArgs = normalizeArgsForDefineSubClass.apply(null, arguments),
             _superClass = normalizedArgs.superClass,
             _statics = normalizedArgs.statics,
-            _methods = normalizedArgs.methods,
-            _constructor = normalizedArgs.constructor;
+            _constructor = normalizedArgs.constructor,
+            _methods = normalizedArgs.methods;
 
         // Set prototype
         _constructor.prototype = Object.create(_superClass.prototype);
