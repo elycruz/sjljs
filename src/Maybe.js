@@ -15,7 +15,7 @@
         Monad = ns.Monad,
         maybe = curry3(function (replacement, fn, monad) {
             var subject = monad.join().map(sjl.ns.fn.id);
-            return subject instanceof Nothing ? replacement : fn(subject);
+            return subject instanceof Nothing ? replacement : Just(fn).ap(subject);
         }),
         nothing = function () {
             return Nothing.of();

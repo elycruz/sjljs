@@ -56,6 +56,9 @@
     else {
         sjl.ns('math', math);
         sjl.defineEnumProp(sjl, 'math', math);
+        Object.keys(math).forEach(function (key) {
+            sjl.defineEnumProp(sjl, key, math[key]);
+        });
 
         if (sjl.isAmd) {
             return math;

@@ -1067,7 +1067,7 @@ describe('sjl.Maybe', function () {
             var just100 = Just(100),
                 justNull = Just(null),
                 id = sjl.ns.fn.id,
-                justTimes2 = incomingJust => Just(value => value * 2).ap(incomingJust);
+                justTimes2 = incomingValue => 2 * incomingValue;
             expect(maybe(just100, id, justNull)).to.equal(just100);
             expect(maybe(Just(99), justTimes2, just100).value).to.equal(200);
             expect(maybe(Just(1000), justTimes2, Just(null)).value).to.equal(1000);
