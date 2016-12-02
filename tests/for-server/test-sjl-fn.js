@@ -9,7 +9,7 @@ describe('sjl.fn', function () {
     'use strict';
     var chai = require('chai'),
         sjl = require('./../../src/sjl'),
-        assert = chai.assert,
+        // assert = chai.assert,
         expect = chai.expect;
     // These variables get set at the top IIFE in the browser.
     // ~~~ /STRIP ~~~

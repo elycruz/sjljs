@@ -648,7 +648,7 @@
      * If o and p have a property by the same name, o's property is overwritten.
      * @param o {*} - *object to extend
      * @param p {*} - *object to extend from
-     * @param deep {Boolean} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
+     * @param deep {Boolean=false} - Whether or not to do a deep extend (run extend on each prop if prop value is of type 'Object')
      * @todo rename these variables to be more readable.
      * @returns {*} - returns o
      */
@@ -774,7 +774,7 @@
         if (isFunction(superClass)) {
             // Extract statics
             _statics = Object.keys(superClass).reduce(function (agg, key) {
-                if (key === 'extend') { return agg; }
+                if (key === 'extend' || key === 'extendWith') { return agg; }
                 agg[key] = superClass[key];
                 return agg;
             }, {});
@@ -783,9 +783,12 @@
         // Re-arrange args if constructor is object
         if (isObject(constructor)) {
             statics = methods;
-            methods = clone(constructor);
+            methods = constructor;
             constructor = ! isFunction(methods.constructor) ? standInConstructor(superClass) : methods.constructor;
             unset(methods, 'constructor');
+        }
+        else if (isFunction(constructor) && !isEmpty(constructor.name) && !methods) {
+            methods = constructor.prototype;
         }
 
         // Ensure constructor
@@ -841,17 +844,9 @@
          * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
          * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
          */
-        constructor.extend = extender;
-
-        /**
-         * Extends a new copy of self with passed in parameters.
-         * @memberof class:sjl.stdlib.Extendable
-         * @static sjl.stdlib.Extendable.extendWith
-         * @param constructor {Function|Object} - Required.  Note: if is an object, then other params shift over by 1 (`methods` becomes `statics` and this param becomes `methods`).
-         * @param methods {Object|undefined} - Methods.  Optional.  Note:  If `constructor` param is an object, this gets cast as `statics` param.  Also for overriding
-         * @param statics {Object|undefined} - Static methods.  Optional.  Note:  If `constructor` param is an object, it is not used.
-         */
-        sjl.defineEnumProp(constructor, 'extendWith', extender);
+        constructor.extend =
+            constructor.extendWith =
+                extender;
 
         // Return constructor
         return constructor;
@@ -880,7 +875,7 @@
         Object.defineProperty(_constructor.prototype, 'constructor', {value: _constructor});
 
         // Extend constructor
-        extend(_constructor.prototype, _methods, true);
+        extend(_constructor.prototype, _methods);
         extend(_constructor, _statics, true);
 
         // Return constructor
