@@ -20,7 +20,7 @@
         nothing = function () {
             return Nothing.of();
         },
-        Nothing = Monad.extendWith({
+        Nothing = sjl.defineSubClassPure(Monad, {
             constructor: function Nothing() {
                 if (!(this instanceof Nothing)) {
                     return nothing();
@@ -38,7 +38,7 @@
                 return new Nothing();
             }
         }),
-        Just = Monad.extendWith({
+        Just = sjl.defineSubClassPure(Monad, {
             constructor: function Just(value) {
                 if (!(this instanceof Just)) {
                     return Just.of(value);

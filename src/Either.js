@@ -17,7 +17,7 @@
                     return rightCallback(identity.value);
             }
         }),
-        Left = Just.extend({
+        Left = sjl.defineSubClassPure(Just, {
             constructor: function Left(value) {
                 if (!(this instanceof Left)) {
                     return Left.of(value);
@@ -32,7 +32,7 @@
                 return new Left(value);
             }
         }),
-        Right = Just.extend({
+        Right = sjl.defineSubClassPure(Just, {
             constructor: function Right(value) {
                 if (!(this instanceof Right)) {
                     return Right.of(value);

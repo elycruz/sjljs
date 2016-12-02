@@ -7,7 +7,6 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
-        Extendable = sjl.ns.stdlib.Extendable,
         fnNs = sjl.ns.fn,
         curry2 = sjl.curry,
 
@@ -16,7 +15,7 @@
          * @class module:sjl.Monad
          * @experimental
          */
-        Monad = Extendable.extendWith({
+        Monad = sjl.defineSubClassPure(Function, {
             constructor: function Monad (value) {
                 if (!(this instanceof Monad)) {
                     return Monad.of(value);
