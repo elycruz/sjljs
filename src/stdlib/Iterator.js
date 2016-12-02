@@ -81,9 +81,7 @@
      * @extends sjl.stdlib.Extendable
      * @param values {Array} - Values to iterate through.
      */
-    Iterator = sjl.ns.stdlib.Extendable.extend({
-
-        constructor: Iterator,
+    Iterator = sjl.ns.stdlib.Extendable.extend(Iterator, {
 
         /**
          * Returns the current value that `pointer` is pointing to.
