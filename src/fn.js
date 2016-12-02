@@ -67,7 +67,6 @@
             return functor.reduceRight(fn, agg);
         }),
 
-
         /**
          * Applicative apply.  Applies function within functor1 to value within functor2.
          * @function module:sjl.fn.ap
@@ -105,6 +104,11 @@
             }
             return monad;
         },
+
+        /**
+         * @param fn {Function}
+         * @returns {Functor}
+         */
         liftN = curry3(function (fn, functor1) {
             return sjl.restArgs(arguments, 3).reduce(function (aggregator, functor) {
                 return aggregator.ap(functor);

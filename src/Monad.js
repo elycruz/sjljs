@@ -8,7 +8,7 @@
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
         fnNs = sjl.ns.fn,
-        curry2 = sjl.curry,
+        // curry2 = sjl.curry,
 
         /**
          * Basic Monad implementation.
@@ -39,10 +39,10 @@
             },
             chain: function (fn) {
                 return fnNs.chain(fn, this); // monadic bind
-            },
-            lift: curry2(function (fn) {
-                return fnNs.liftN.apply(null, sjl.concatArrayLikes([this], arguments));
-            })
+            }
+            // liftN: function (fn, functor) {
+            //     return fnNs.liftN.apply(null, sjl.concatArrayLikes([fn, this], sjl.restArgs(arguments, 1)));
+            // }
         }, {
             of: function (value) {
                 return new Monad(value);
