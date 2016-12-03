@@ -19,7 +19,8 @@
     "./src/math.js",
     "./src/Monad.js",
     "./src/Maybe.js",
-    "./src/Either.js"
+    "./src/Either.js",
+    "./src/IO.js"
   ],
   "sjl": [
     "./src/sjl.js",
@@ -30,6 +31,7 @@
     "./src/Monad.js",
     "./src/Maybe.js",
     "./src/Either.js",
+    "./src/IO.js",
     "./src/stdlib/Config.js",
     "./src/stdlib/Optionable.js",
     "./src/stdlib/Iterator.js",

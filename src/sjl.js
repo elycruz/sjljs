@@ -615,12 +615,11 @@
     function searchObj (ns_string, objToSearch) {
         var parts = ns_string.split('.'),
             parent = objToSearch,
-            classOfObj = classOf(objToSearch),
             i;
         throwTypeErrorIfNotOfType('sjl.searchObj', 'ns_string', ns_string, String);
-        if (classOfObj !== _Object && objToSearch instanceof Function === false) {
-            throw new TypeError ('sjl.searchObj expects `objToSearch` to be of type object ' +
-                'or an instance of `Function`.  Type received: ' + classOfObj);
+        if (!(objToSearch instanceof Object)) {
+            throw new TypeError ('sjl.searchObj expects `objToSearch` to an instance of `Object`. ' +
+                ' Type received: ' + classOf(objToSearch));
         }
         for (i = 0; i < parts.length; i += 1) {
             if (parts[i] in parent === false || isUndefined(parent[parts[i]])) {

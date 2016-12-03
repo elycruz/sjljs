@@ -87,6 +87,10 @@
             return functor.map(fn).join();
         }),
 
+        ensureFn = function (fn) {
+            return sjl.isFunction(fn) ? fn : function () { return fn; };
+        },
+
         /**
          * Monadic join
          * @function module:sjl.fn.join
@@ -130,7 +134,8 @@
             reduce: reduce,
             reduceR: reduceR,
             ap: ap,
-            liftN: liftN
+            liftN: liftN,
+            ensureFn: ensureFn
         };
 
     // Export `fnPackage`
