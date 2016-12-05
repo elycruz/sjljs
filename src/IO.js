@@ -10,10 +10,7 @@
 
     var isNodeEnv = typeof window === 'undefined',
         sjl = isNodeEnv ? require('./sjl') : (window.sjl || {}),
-
         fnNs = sjl.ns.fn,
-        // curry2 = sjl.curry,
-
         Monad = sjl.ns.Monad,
 
         /**
