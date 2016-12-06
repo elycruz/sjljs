@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -106,6 +108,22 @@
 and libraries more concise. </p>
 <p>Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc..  Only meant as a supplement to them 
 or as a supplement to applications requiring quick ramp up.</p>
+<h3>Note:</h3><h4>(This change only affects node users)</h4><p>There was a backward compatability break introduced in version 6.1.x
+where <code>sjl.ns</code> enforces strict paths on the nodejs side;  E.g.,</p>
+<pre class="prettyprint source"><code>sjl.stdlib.Extendable; // is no longer allowed
+
+// now you have to strictly access the `ns` namespace
+sjl.ns.stdlib.Extendable;</code></pre><p>So now all pacakges that were available directly on <code>sjl</code> now have to be accessed
+via <code>sjl.ns...</code>, affected packages: all</p>
+<pre class="prettyprint source"><code>sjl.stdlib // now becomes
+sjl.ns.stdlib
+
+// All members in `stdlib` are now only accessible via `sjl.ns.stdlib` (on the node side)</code></pre><p>Apologies to all who were affected by the change.</p>
+<p>Also the reason for the change was that when exporting all the members/packages
+available on <code>sjl.ns</code> directly onto <code>sjl</code> it was noticed that <code>Namespace</code>'s getters were being triggered
+effectively getting every module that was define to lazily load on the namespaces 
+with <code>sjl.ns</code>.  As you could imagine most folks would not expect this behavior so 
+the functionality was removed.</p>
 <h3>Jsdocs</h3><p>Api for current version:</p>
 <ul>
 <li>[6.4.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)</li>
@@ -135,14 +153,14 @@ only includes the core and no classes or constructors from it's other packages).
 </ul>
 <h4>Other Packages and Members List:</h4><ul>
 <li><a href="#m-sjleither">(m) sjl.Either</a></li>
+<li><a href="#m-sjlmaybe">(m) sjl.Maybe</a></li>
+<li><a href="#m-sjlmonad">(m) sjl.Monad</a></li>
 <li><a href="#m-sjlfn">(m) sjl.fn</a></li>
 <li><a href="#p-sjlgenerated">(p) sjl.generated</a><ul>
 <li><a href="#m-sjlgeneratedversion">(m) sjl.generated.version</a></li>
 </ul>
 </li>
 <li><a href="#m-sjlmath">(m) sjl.math</a></li>
-<li><a href="#m-sjlmaybe">(m) sjl.Maybe</a></li>
-<li><a href="#m-sjlmonad">(m) sjl.Monad</a></li>
 <li><a href="#p-sjlnodejs">(p) sjl.nodejs</a><ul>
 <li><a href="#m-sjlnodejsnamespace">(m) sjl.nodejs.Namespace</a></li>
 </ul>
@@ -151,7 +169,6 @@ only includes the core and no classes or constructors from it's other packages).
 <li><a href="#p-sjlstdlib">(p) sjl.stdlib</a><ul>
 <li><a href="#m-sjlstdlibconfig">(m) sjl.stdlib.Config</a></li>
 <li><a href="#m-sjlstdlibextendable">(m) sjl.stdlib.Extendable</a></li>
-<li><a href="#m-sjlstdlibiterable">(m) sjl.stdlib.iterable</a></li>
 <li><a href="#m-sjlstdlibiterator">(m) sjl.stdlib.Iterator</a></li>
 <li><a href="#m-sjlstdlibobjectiterator">(m) sjl.stdlib.ObjectIterator</a></li>
 <li><a href="#m-sjlstdliboptionable">(m) sjl.stdlib.Optionable</a></li>
@@ -159,6 +176,7 @@ only includes the core and no classes or constructors from it's other packages).
 <li><a href="#m-sjlstdlibprioritylistitem">(m) sjl.stdlib.PriorityListItem</a></li>
 <li><a href="#m-sjlstdlibsjlmap">(m) sjl.stdlib.SjlMap</a></li>
 <li><a href="#m-sjlstdlibsjlset">(m) sjl.stdlib.SjlSet</a></li>
+<li><a href="#m-sjlstdlibiterable">(m) sjl.stdlib.iterable</a></li>
 </ul>
 </li>
 </ul>
@@ -573,28 +591,30 @@ instead (generated with jsdocs).</li>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2016-12-01T22:05:04-05:00
+		on 2016-12-06T09:56:39-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -602,7 +622,9 @@ instead (generated with jsdocs).</li>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -612,7 +634,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -648,8 +670,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -675,11 +696,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

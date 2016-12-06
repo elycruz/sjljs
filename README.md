@@ -11,6 +11,34 @@ and libraries more concise.
 Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc..  Only meant as a supplement to them 
 or as a supplement to applications requiring quick ramp up.
 
+### Note: 
+#### (This change only affects node users)
+There was a backward compatability break introduced in version 6.1.x
+where `sjl.ns` enforces strict paths on the nodejs side;  E.g.,
+```
+sjl.stdlib.Extendable; // is no longer allowed
+
+// now you have to strictly access the `ns` namespace
+sjl.ns.stdlib.Extendable;
+
+```
+
+So now all pacakges that were available directly on `sjl` now have to be accessed
+via `sjl.ns...`, affected packages: all
+```
+sjl.stdlib // now becomes
+sjl.ns.stdlib
+
+// All members in `stdlib` are now only accessible via `sjl.ns.stdlib` (on the node side)
+```
+Apologies to all who were affected by the change.
+
+Also the reason for the change was that when exporting all the members/packages
+available on `sjl.ns` directly onto `sjl` it was noticed that `Namespace`'s getters were being triggered
+effectively getting every module that was define to lazily load on the namespaces 
+with `sjl.ns`.  As you could imagine most folks would not expect this behavior so 
+the functionality was removed.
+
 ### Jsdocs
 Api for current version:
 
@@ -45,19 +73,18 @@ only includes the core and no classes or constructors from it's other packages).
 #### Other Packages and Members List:
 
 - [(m) sjl.Either](#m-sjleither)
+- [(m) sjl.Maybe](#m-sjlmaybe)
+- [(m) sjl.Monad](#m-sjlmonad)
 - [(m) sjl.fn](#m-sjlfn)
 - [(p) sjl.generated](#p-sjlgenerated)
   - [(m) sjl.generated.version](#m-sjlgeneratedversion)
 - [(m) sjl.math](#m-sjlmath)
-- [(m) sjl.Maybe](#m-sjlmaybe)
-- [(m) sjl.Monad](#m-sjlmonad)
 - [(p) sjl.nodejs](#p-sjlnodejs)
   - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
 - [(m) sjl](#m-sjl)
 - [(p) sjl.stdlib](#p-sjlstdlib)
   - [(m) sjl.stdlib.Config](#m-sjlstdlibconfig)
   - [(m) sjl.stdlib.Extendable](#m-sjlstdlibextendable)
-  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
   - [(m) sjl.stdlib.Iterator](#m-sjlstdlibiterator)
   - [(m) sjl.stdlib.ObjectIterator](#m-sjlstdlibobjectiterator)
   - [(m) sjl.stdlib.Optionable](#m-sjlstdliboptionable)
@@ -65,6 +92,7 @@ only includes the core and no classes or constructors from it's other packages).
   - [(m) sjl.stdlib.PriorityListItem](#m-sjlstdlibprioritylistitem)
   - [(m) sjl.stdlib.SjlMap](#m-sjlstdlibsjlmap)
   - [(m) sjl.stdlib.SjlSet](#m-sjlstdlibsjlset)
+  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
 
 
 ## Sjl direct Members and Methods:
