@@ -16,10 +16,7 @@
     "./src/generated/version.js",
     "./src/stdlib/Extendable.js",
     "./src/fn.js",
-    "./src/math.js",
-    "./src/Monad.js",
-    "./src/Maybe.js",
-    "./src/Either.js"
+    "./src/math.js"
   ],
   "sjl": [
     "./src/sjl.js",

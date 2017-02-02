@@ -75,4 +75,8 @@
 - [(m) sjl.isNodeEnv](#m-sjlisnodeenv)
 - [(m) sjl.ns](#m-sjlns)
 - [(m) sjl.package](#m-sjlpackage)
+- [(m) sjl.generated](#m-sjlgenerated)
+- [(m) sjl.nodejs](#m-sjlnodejs)
+- [(m) sjl.sjl](#m-sjlsjl)
+- [(m) sjl.stdlib](#m-sjlstdlib)
 

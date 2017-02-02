@@ -1598,9 +1598,9 @@
         );
 
         // Short cut to namespaces
-        // Object.keys(sjl.ns).forEach(function (key) {
-        //     sjl[key] = sjl.ns[key];
-        // });
+        Object.keys(sjl.ns).forEach(function (key) {
+            sjl[key] = sjl.ns[key];
+        });
 
         // Methods not needed for NodeJs environment
         unset(sjl, 'createTopLevelPackage');

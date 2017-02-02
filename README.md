@@ -72,13 +72,8 @@ only includes the core and no classes or constructors from it's other packages).
 
 #### Other Packages and Members List:
 
-- [(m) sjl.Either](#m-sjleither)
-- [(m) sjl.Maybe](#m-sjlmaybe)
-- [(m) sjl.Monad](#m-sjlmonad)
-- [(m) sjl.fn](#m-sjlfn)
 - [(p) sjl.generated](#p-sjlgenerated)
   - [(m) sjl.generated.version](#m-sjlgeneratedversion)
-- [(m) sjl.math](#m-sjlmath)
 - [(p) sjl.nodejs](#p-sjlnodejs)
   - [(m) sjl.nodejs.Namespace](#m-sjlnodejsnamespace)
 - [(m) sjl](#m-sjl)
@@ -178,6 +173,10 @@ only includes the core and no classes or constructors from it's other packages).
 - [(m) sjl.isNodeEnv](#m-sjlisnodeenv)
 - [(m) sjl.ns](#m-sjlns)
 - [(m) sjl.package](#m-sjlpackage)
+- [(m) sjl.generated](#m-sjlgenerated)
+- [(m) sjl.nodejs](#m-sjlnodejs)
+- [(m) sjl.sjl](#m-sjlsjl)
+- [(m) sjl.stdlib](#m-sjlstdlib)
 
 
 ### (m) sjl.Either
@@ -386,6 +385,10 @@ Allows you to set or get a path on an object by namespace string.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
 ### (m) sjl.forEachInObj
+@todo - Added documentation here.
+[Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
+
+### (m) sjl.generated
 @todo - Added documentation here.
 [Back to sjl direct members and methods list.](#sjl-direct-members-and-methods)
 
