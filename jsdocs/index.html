@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.Either.html">sjl.Either</a></li><li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.Maybe.html">sjl.Maybe</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
+					<li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
 				</ul>
 			</li>
 			
@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.Monad.html">sjl.Monad</a></li><li><a href="module-sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="module-sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="module-sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="module-sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="module-sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="module-sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="module-sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="module-sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="module-sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li>
+					<li><a href="module-sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="module-sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="module-sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="module-sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="module-sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="module-sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="module-sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="module-sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="module-sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li>
 				</ul>
 			</li>
 			
@@ -108,24 +108,11 @@
 and libraries more concise. </p>
 <p>Not meant to replace popular libraries like Backbone, Underscore, or Jquery etc..  Only meant as a supplement to them 
 or as a supplement to applications requiring quick ramp up.</p>
-<h3>Note:</h3><h4>(This change only affects node users)</h4><p>There was a backward compatability break introduced in version 6.1.x
-where <code>sjl.ns</code> enforces strict paths on the nodejs side;  E.g.,</p>
-<pre class="prettyprint source"><code>sjl.stdlib.Extendable; // is no longer allowed
-
-// now you have to strictly access the `ns` namespace
-sjl.ns.stdlib.Extendable;</code></pre><p>So now all pacakges that were available directly on <code>sjl</code> now have to be accessed
-via <code>sjl.ns...</code>, affected packages: all</p>
-<pre class="prettyprint source"><code>sjl.stdlib // now becomes
-sjl.ns.stdlib
-
-// All members in `stdlib` are now only accessible via `sjl.ns.stdlib` (on the node side)</code></pre><p>Apologies to all who were affected by the change.</p>
-<p>Also the reason for the change was that when exporting all the members/packages
-available on <code>sjl.ns</code> directly onto <code>sjl</code> it was noticed that <code>Namespace</code>'s getters were being triggered
-effectively getting every module that was define to lazily load on the namespaces 
-with <code>sjl.ns</code>.  As you could imagine most folks would not expect this behavior so 
-the functionality was removed.</p>
+<h3>Note:</h3><h4>(This change only affects node users)</h4><p>Reinstated all members of <code>sjl.ns.stdlib</code> to also be available on <code>sjl.stdlib...</code>
+and also to be accessible directly on <code>sjl</code>.</p>
 <h3>Jsdocs</h3><p>Api for current version:</p>
 <ul>
+<li>[7.0.x] (#) - Coming soon</li>
 <li>[6.4.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)</li>
 </ul>
 <h4>Docs for previous versions:</h4><ul>
@@ -152,15 +139,10 @@ only includes the core and no classes or constructors from it's other packages).
 <li><strong>(p)</strong> - Package prefix.  Denotes item is a package;  E.g., an object with access to package members directly on it.</li>
 </ul>
 <h4>Other Packages and Members List:</h4><ul>
-<li><a href="#m-sjleither">(m) sjl.Either</a></li>
-<li><a href="#m-sjlmaybe">(m) sjl.Maybe</a></li>
-<li><a href="#m-sjlmonad">(m) sjl.Monad</a></li>
-<li><a href="#m-sjlfn">(m) sjl.fn</a></li>
 <li><a href="#p-sjlgenerated">(p) sjl.generated</a><ul>
 <li><a href="#m-sjlgeneratedversion">(m) sjl.generated.version</a></li>
 </ul>
 </li>
-<li><a href="#m-sjlmath">(m) sjl.math</a></li>
 <li><a href="#p-sjlnodejs">(p) sjl.nodejs</a><ul>
 <li><a href="#m-sjlnodejsnamespace">(m) sjl.nodejs.Namespace</a></li>
 </ul>
@@ -261,6 +243,10 @@ only includes the core and no classes or constructors from it's other packages).
 <li><a href="#m-sjlisnodeenv">(m) sjl.isNodeEnv</a></li>
 <li><a href="#m-sjlns">(m) sjl.ns</a></li>
 <li><a href="#m-sjlpackage">(m) sjl.package</a></li>
+<li><a href="#m-sjlgenerated">(m) sjl.generated</a></li>
+<li><a href="#m-sjlnodejs">(m) sjl.nodejs</a></li>
+<li><a href="#m-sjlsjl">(m) sjl.sjl</a></li>
+<li><a href="#m-sjlstdlib">(m) sjl.stdlib</a></li>
 </ul>
 <h3>(m) sjl.Either</h3><p>@todo - Added documentation here.
 <a href="#other-packages-and-members">Back to other packages and members list.</a></p>
@@ -364,6 +350,8 @@ to an actual array.</p>
 <h3>(m) sjl.forEach</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.forEachInObj</h3><p>@todo - Added documentation here.
+<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
+<h3>(m) sjl.generated</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.generated.version</h3><p>@todo - Added documentation here.
 <a href="#other-packages-and-members">Back to other packages and members list.</a></p>
@@ -493,24 +481,6 @@ to an actual array.</p>
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.unset</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
-<h3>(m) sjl.validator.AlnumValidator</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator.DigitValidator</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator.NotEmptyValidator</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator.NumberValidator</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator.RegexValidator</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator.StringLengthValidator</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator.Validator</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator.ValidatorChain</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(m) sjl.validator</h3><p>@todo - Added documentation here.
-<a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.valueOrDefault</h3><p>@todo - Added documentation here.
 <a href="#sjl-direct-members-and-methods">Back to sjl direct members and methods list.</a></p>
 <h3>(m) sjl.wrapPointer</h3><p>@todo - Added documentation here.
@@ -524,8 +494,6 @@ to an actual array.</p>
 <h3>(p) sjl.nodejs</h3><p>@todo - Added documentation here.
 <a href="#other-packages-and-members">Back to other packages and members list.</a></p>
 <h3>(p) sjl.stdlib</h3><p>@todo - Added documentation here.
-<a href="#other-packages-and-members">Back to other packages and members list.</a></p>
-<h3>(p) sjl.validator</h3><p>@todo - Added documentation here.
 <a href="#other-packages-and-members">Back to other packages and members list.</a></p>
 <h2>Unit Tests:</h2><p>To run unit tests:</p>
 <p>1.)  First do an <code>npm install</code> in project root.</p>
@@ -614,7 +582,7 @@ instead (generated with jsdocs).</li>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2016-12-06T09:56:39-05:00
+		on 2017-02-02T10:51:22-05:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

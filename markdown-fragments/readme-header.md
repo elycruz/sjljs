@@ -13,35 +13,13 @@ or as a supplement to applications requiring quick ramp up.
 
 ### Note: 
 #### (This change only affects node users)
-There was a backward compatability break introduced in version 6.1.x
-where `sjl.ns` enforces strict paths on the nodejs side;  E.g.,
-```
-sjl.stdlib.Extendable; // is no longer allowed
-
-// now you have to strictly access the `ns` namespace
-sjl.ns.stdlib.Extendable;
-
-```
-
-So now all pacakges that were available directly on `sjl` now have to be accessed
-via `sjl.ns...`, affected packages: all
-```
-sjl.stdlib // now becomes
-sjl.ns.stdlib
-
-// All members in `stdlib` are now only accessible via `sjl.ns.stdlib` (on the node side)
-```
-Apologies to all who were affected by the change.
-
-Also the reason for the change was that when exporting all the members/packages
-available on `sjl.ns` directly onto `sjl` it was noticed that `Namespace`'s getters were being triggered
-effectively getting every module that was define to lazily load on the namespaces 
-with `sjl.ns`.  As you could imagine most folks would not expect this behavior so 
-the functionality was removed.
+Reinstated all members of `sjl.ns.stdlib` to also be available on `sjl.stdlib...`
+and also to be accessible directly on `sjl`.
 
 ### Jsdocs
 Api for current version:
 
+- [7.0.x] (#) - Coming soon
 - [6.4.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)
 
 #### Docs for previous versions:
