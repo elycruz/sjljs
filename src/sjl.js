@@ -7,8 +7,7 @@
 
     'use strict';
 
-    var sjl,
-        _String = String.name,
+    const _String = String.name,
         _Function = Function.name,
         _Array = Array.name,
         _Number = Number.name,
@@ -21,7 +20,88 @@
         slice = Array.prototype.slice,
         PlaceHolder = function PlaceHolder() {},
         placeholder = new PlaceHolder(),
-        __ = Object.freeze ? Object.freeze(placeholder) : placeholder;
+        __ = Object.freeze ? Object.freeze(placeholder) : placeholder,
+
+    /**
+     * `sjl` module.
+     * @module sjl {Object}
+     * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
+     */
+     sjl = {
+        argsToArray: argsToArray,
+        arrayLikeToArray: arrayLikeToArray,
+        notArrayLikeToArray: notArrayLikeToArray,
+        autoNamespace: autoNamespace,
+        camelCase: camelCase,
+        classOf: classOf,
+        classOfIs: classOfIs,
+        classOfIsMulti: classOfIsMulti,
+        classicalToStringMethod: classicalToStringMethod,
+        clone: clone,
+        compose: compose,
+        concatArrayLikes: concatArrayLikes,
+        constrainPointer: constrainPointer,
+        createTopLevelPackage: createTopLevelPackage,
+        curry: curry,
+        curryN: curryN,
+        curry1: __, // to appease IDEs and
+        curry2: __, // ""
+        curry3: __, // ""
+        curry4: __, // ""
+        curry5: __, // ""
+        defineSubClass: defineSubClass,
+        defineSubClassPure: defineSubClassPure,
+        defineEnumProp: defineEnumProp,
+        empty: isEmpty,
+        emptyMulti: emptyMulti,
+        extend: extendMulti,
+        extractBoolFromArrayEnd: extractBoolFromArrayEnd,
+        extractBoolFromArrayStart: extractBoolFromArrayStart,
+        extractFromArrayAt: extractFromArrayAt,
+        forEach: forEach,
+        forEachInObj: forEachInObj,
+        getIterator: getIterator,
+        getArrayLikes: getArrayLikes,
+        hasMethod: hasMethod,
+        hasIterator: hasIterator,
+        implode: implode,
+        isset: isset,
+        issetMulti: issetMulti,
+        issetAndOfType: issetAndOfType,
+        isEmpty: isEmpty,
+        isEmptyObj: isEmptyObj,
+        isEmptyOrNotOfType: isEmptyOrNotOfType,
+        isArray: isArray,
+        isBoolean: isBoolean,
+        isFunction: isFunction,
+        isNull: isNull,
+        isNumber: isNumber,
+        isObject: isObject,
+        isString: isString,
+        isSymbol: isSymbol,
+        isUndefined: isUndefined,
+        iteratorToArray: iteratorToArray,
+        jsonClone: jsonClone,
+        lcaseFirst: lcaseFirst,
+        mapToArray: mapToArray,
+        mergeOnProps: mergeOnProps,
+        mergeOnPropsMulti: mergeOnPropsMulti,
+        notEmptyAndOfType: notEmptyAndOfType,
+        objToArrayMap: objToArrayMap,
+        objToArray: objToArrayMap,
+        restArgs: restArgs,
+        searchObj: searchObj,
+        setToArray: setToArray,
+        throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
+        throwTypeErrorIfEmptyOrNotOfType: throwTypeErrorIfEmptyOrNotOfType,
+        throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
+        toArray: toArray,
+        ucaseFirst: ucaseFirst,
+        unConfigurableNamespace: unConfigurableNamespace,
+        unset: unset,
+        valueOrDefault: valueOrDefault,
+        wrapPointer: wrapPointer
+    };
 
     /**
      * Composes one or more functions into a new one.
@@ -247,7 +327,7 @@
      * @param context
      */
     function forEach (arrayLike, callback, context) {
-        var classOfArrayLike = sjl.classOf(arrayLike);
+        var classOfArrayLike = classOf(arrayLike);
         switch (classOfArrayLike) {
             case _Array:
             case 'Set':
@@ -286,7 +366,7 @@
      * @returns {boolean}
      */
     function classOfIsMulti (value, type /**[,type...] **/) {
-        return (sjl.restArgs(arguments, 1)).some(function (_type) {
+        return (restArgs(arguments, 1)).some(function (_type) {
             return classOfIs(value, _type);
         });
     }
@@ -964,7 +1044,7 @@
          */
         obj[shortFunctionKey || 'ns'] =
             obj[functionKey] = function (nsString, value) {
-                return sjl.isUndefined(nsString) ?
+                return isUndefined(nsString) ?
                     obj[functionKey] : unConfigurableNamespace(nsString, obj[functionKey], value);
             };
 
@@ -1095,7 +1175,7 @@
         defaultValue = typeof defaultValue === _undefined ? null : defaultValue;
         var retVal;
         if (isset(type)) {
-            retVal = issetAndOfType.apply(null, [value].concat(sjl.restArgs(arguments, 2))) ? value : defaultValue;
+            retVal = issetAndOfType.apply(null, [value].concat(restArgs(arguments, 2))) ? value : defaultValue;
         }
         else {
             retVal = isset(value) ? value : defaultValue;
@@ -1443,87 +1523,6 @@
             return arr1.concat(arrayLikeToArray(arr2));
         }, []);
     }
-
-    /**
-     * `sjl` module.
-     * @module sjl {Object}
-     * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
-     */
-    sjl = {
-        argsToArray: argsToArray,
-        arrayLikeToArray: arrayLikeToArray,
-        notArrayLikeToArray: notArrayLikeToArray,
-        autoNamespace: autoNamespace,
-        camelCase: camelCase,
-        classOf: classOf,
-        classOfIs: classOfIs,
-        classOfIsMulti: classOfIsMulti,
-        classicalToStringMethod: classicalToStringMethod,
-        clone: clone,
-        compose: compose,
-        concatArrayLikes: concatArrayLikes,
-        constrainPointer: constrainPointer,
-        createTopLevelPackage: createTopLevelPackage,
-        curry: curry,
-        curryN: curryN,
-        curry1: __, // to appease IDEs and
-        curry2: __, // ""
-        curry3: __, // ""
-        curry4: __, // ""
-        curry5: __, // ""
-        defineSubClass: defineSubClass,
-        defineSubClassPure: defineSubClassPure,
-        defineEnumProp: defineEnumProp,
-        empty: isEmpty,
-        emptyMulti: emptyMulti,
-        extend: extendMulti,
-        extractBoolFromArrayEnd: extractBoolFromArrayEnd,
-        extractBoolFromArrayStart: extractBoolFromArrayStart,
-        extractFromArrayAt: extractFromArrayAt,
-        forEach: forEach,
-        forEachInObj: forEachInObj,
-        getIterator: getIterator,
-        getArrayLikes: getArrayLikes,
-        hasMethod: hasMethod,
-        hasIterator: hasIterator,
-        implode: implode,
-        isset: isset,
-        issetMulti: issetMulti,
-        issetAndOfType: issetAndOfType,
-        isEmpty: isEmpty,
-        isEmptyObj: isEmptyObj,
-        isEmptyOrNotOfType: isEmptyOrNotOfType,
-        isArray: isArray,
-        isBoolean: isBoolean,
-        isFunction: isFunction,
-        isNull: isNull,
-        isNumber: isNumber,
-        isObject: isObject,
-        isString: isString,
-        isSymbol: isSymbol,
-        isUndefined: isUndefined,
-        iteratorToArray: iteratorToArray,
-        jsonClone: jsonClone,
-        lcaseFirst: lcaseFirst,
-        mapToArray: mapToArray,
-        mergeOnProps: mergeOnProps,
-        mergeOnPropsMulti: mergeOnPropsMulti,
-        notEmptyAndOfType: notEmptyAndOfType,
-        objToArrayMap: objToArrayMap,
-        objToArray: objToArrayMap,
-        restArgs: restArgs,
-        searchObj: searchObj,
-        setToArray: setToArray,
-        throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
-        throwTypeErrorIfEmptyOrNotOfType: throwTypeErrorIfEmptyOrNotOfType,
-        throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
-        toArray: toArray,
-        ucaseFirst: ucaseFirst,
-        unConfigurableNamespace: unConfigurableNamespace,
-        unset: unset,
-        valueOrDefault: valueOrDefault,
-        wrapPointer: wrapPointer
-    };
 
     // Add `sjl.curry[1-5]`
     (function () {

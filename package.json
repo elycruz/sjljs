@@ -27,7 +27,9 @@
     "mocha": "^1.21.5",
     "requirejs": "^2.2.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "fjl": "^0.8.1"
+  },
   "scripts": {
     "test": "mocha tests/for-server"
   },
