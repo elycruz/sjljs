@@ -3,103 +3,111 @@
  * @created by Ely on 5/29/2015.
  * @todo Begin extracting contents of core into separate modules (where necessary) and/or files.
  */
-(function () {
 
-    'use strict';
+import { assign, assignDeep, compose, __, curry,
+    curryN, curry2, curry3, curry4, curry5,
+    subClass, subClassMulti,
+    isset, issetAndOfType,
+    typeOf as classOf, typeOfIs as classOfIs,
+    isNumber, isFunction, isArray, isBoolean, isObject, isString,
+    isMap, isSet, isWeakSet, isWeakMap,
+    isUndefined, isNull, isSymbol, isEmpty,
+    isConstructablePrimitive,
+    notEmptyAndOfType,
+    errorIfNotTypeFactory } from './../node_modules/fjl/src/fjl';
 
-    const _String = String.name,
-        _Function = Function.name,
-        _Array = Array.name,
-        _Number = Number.name,
-        _Object = Object.name,
-        _Boolean = Boolean.name,
-        _Null = 'Null',
-        _Undefined = 'Undefined',
-        _undefined = 'undefined',
-        isNodeEnv = typeof window === _undefined,
-        slice = Array.prototype.slice,
-        PlaceHolder = function PlaceHolder() {},
-        placeholder = new PlaceHolder(),
-        __ = Object.freeze ? Object.freeze(placeholder) : placeholder,
+'use strict';
+
+const _String = String.name,
+    _Function = Function.name,
+    _Array = Array.name,
+    _Number = Number.name,
+    _Object = Object.name,
+    _Boolean = Boolean.name,
+    _Null = 'Null',
+    _Undefined = 'Undefined',
+    _undefined = 'undefined',
+    isNodeEnv = typeof window === _undefined,
+    slice = Array.prototype.slice,
 
     /**
      * `sjl` module.
-     * @module sjl {Object}
+     * @module sjl {Object},
      * @type {{argsToArray: argsToArray, camelCase: camelCase, classOf: classOf, classOfIs: classOfIs, classOfIsMulti: classOfIsMulti, clone: clone, constrainPointer: constrainPointer, createTopLevelPackage: createTopLevelPackage, defineSubClass: defineSubClass, defineEnumProp: defineEnumProp, empty: isEmpty, emptyMulti: emptyMulti, extend: extendMulti, extractBoolFromArrayEnd: extractBoolFromArrayEnd, extractBoolFromArrayStart: extractBoolFromArrayStart, extractFromArrayAt: extractFromArrayAt, forEach: forEach, forEachInObj: forEachInObj, hasMethod: hasMethod, implode: implode, isset: isset, issetMulti: issetMulti, issetAndOfType: issetAndOfType, isEmpty: isEmpty, isEmptyObj: isEmptyObj, isEmptyOrNotOfType: isEmptyOrNotOfType, isArray: isArray, isBoolean: isBoolean, isFunction: isFunction, isNull: isNull, isNumber: isNumber, isObject: isObject, isString: isString, isSymbol: isSymbol, isUndefined: isUndefined, jsonClone: jsonClone, lcaseFirst: lcaseFirst, autoNamespace: autoNamespace, notEmptyAndOfType: notEmptyAndOfType, restArgs: restArgs, ucaseFirst: ucaseFirst, unset: unset, searchObj: searchObj, throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType, throwTypeErrorIfEmpty: throwTypeErrorIfEmpty, valueOrDefault: valueOrDefault, wrapPointer: wrapPointer}}
      */
-     sjl = {
-        argsToArray: argsToArray,
-        arrayLikeToArray: arrayLikeToArray,
-        notArrayLikeToArray: notArrayLikeToArray,
-        autoNamespace: autoNamespace,
-        camelCase: camelCase,
-        classOf: classOf,
-        classOfIs: classOfIs,
+    sjl = {
+        argsToArray,
+        arrayLikeToArray,
+        notArrayLikeToArray,
+        autoNamespace,
+        camelCase,
+        classOf: typeOf,
+        classOfIs: typeOfIs,
         classOfIsMulti: classOfIsMulti,
-        classicalToStringMethod: classicalToStringMethod,
-        clone: clone,
-        compose: compose,
-        concatArrayLikes: concatArrayLikes,
-        constrainPointer: constrainPointer,
-        createTopLevelPackage: createTopLevelPackage,
-        curry: curry,
-        curryN: curryN,
-        curry1: __, // to appease IDEs and
-        curry2: __, // ""
-        curry3: __, // ""
-        curry4: __, // ""
-        curry5: __, // ""
-        defineSubClass: defineSubClass,
-        defineSubClassPure: defineSubClassPure,
-        defineEnumProp: defineEnumProp,
+        classicalToStringMethod,
+        clone,
+        compose,
+        concatArrayLikes,
+        constrainPointer,
+        createTopLevelPackage,
+        curry,
+        curryN,
+        curry1: curry,
+        curry2,
+        curry3,
+        curry4,
+        curry5,
+        defineSubClass,
+        defineSubClassPure,
+        defineEnumProp,
         empty: isEmpty,
-        emptyMulti: emptyMulti,
-        extend: extendMulti,
-        extractBoolFromArrayEnd: extractBoolFromArrayEnd,
-        extractBoolFromArrayStart: extractBoolFromArrayStart,
-        extractFromArrayAt: extractFromArrayAt,
-        forEach: forEach,
-        forEachInObj: forEachInObj,
-        getIterator: getIterator,
-        getArrayLikes: getArrayLikes,
-        hasMethod: hasMethod,
-        hasIterator: hasIterator,
-        implode: implode,
-        isset: isset,
-        issetMulti: issetMulti,
-        issetAndOfType: issetAndOfType,
-        isEmpty: isEmpty,
-        isEmptyObj: isEmptyObj,
-        isEmptyOrNotOfType: isEmptyOrNotOfType,
-        isArray: isArray,
-        isBoolean: isBoolean,
-        isFunction: isFunction,
-        isNull: isNull,
-        isNumber: isNumber,
-        isObject: isObject,
-        isString: isString,
-        isSymbol: isSymbol,
-        isUndefined: isUndefined,
-        iteratorToArray: iteratorToArray,
-        jsonClone: jsonClone,
-        lcaseFirst: lcaseFirst,
-        mapToArray: mapToArray,
-        mergeOnProps: mergeOnProps,
-        mergeOnPropsMulti: mergeOnPropsMulti,
-        notEmptyAndOfType: notEmptyAndOfType,
-        objToArrayMap: objToArrayMap,
+        emptyMulti,
+        extend,
+        extractBoolFromArrayEnd,
+        extractBoolFromArrayStart,
+        extractFromArrayAt,
+        forEach,
+        forEachInObj,
+        getIterator,
+        getArrayLikes,
+        hasMethod,
+        hasIterator,
+        implode,
+        isset,
+        issetMulti,
+        issetAndOfType,
+        isEmpty,
+        isEmptyObj,
+        isEmptyOrNotOfType,
+        isArray,
+        isBoolean,
+        isFunction,
+        isNull,
+        isNumber,
+        isObject,
+        isString,
+        isSymbol,
+        isUndefined,
+        iteratorToArray,
+        jsonClone,
+        lcaseFirst,
+        mapToArray,
+        mergeOnProps,
+        mergeOnPropsMulti,
+        notEmptyAndOfType,
+        objToArrayMap,
         objToArray: objToArrayMap,
-        restArgs: restArgs,
-        searchObj: searchObj,
-        setToArray: setToArray,
-        throwTypeErrorIfNotOfType: throwTypeErrorIfNotOfType,
-        throwTypeErrorIfEmptyOrNotOfType: throwTypeErrorIfEmptyOrNotOfType,
-        throwTypeErrorIfEmpty: throwTypeErrorIfEmpty,
-        toArray: toArray,
-        ucaseFirst: ucaseFirst,
-        unConfigurableNamespace: unConfigurableNamespace,
-        unset: unset,
-        valueOrDefault: valueOrDefault,
+        restArgs,
+        searchObj,
+        setToArray,
+        throwTypeErrorIfNotOfType,
+        throwTypeErrorIfEmptyOrNotOfType,
+        throwTypeErrorIfEmpty,
+        toArray,
+        ucaseFirst,
+        unConfigurableNamespace,
+        unset,
+        valueOrDefault,
         wrapPointer: wrapPointer
     };
 
@@ -108,14 +116,6 @@
      * @function module:sjl.compose
      * @returns {Function}
      */
-    function compose (/* [func,] */) {
-        var args = argsToArray(arguments);
-        return function (arg0) {
-            return args.reduceRight(function (value, arg){
-                return arg(value);
-            }, arg0);
-        };
-    }
 
     /**
      * Curries a function with or without placeholders (sjl._ is `Placeholder`)
@@ -134,16 +134,6 @@
      * @param fn {Function}
      * @returns {Function}
      */
-    function curry (fn) {
-        var curriedArgs = restArgs(arguments, 1);
-        return function () {
-            var args = argsToArray(arguments),
-                concatedArgs = replacePlaceHolders(curriedArgs, args),
-                placeHolders = concatedArgs.filter(isPlaceholder),
-                canBeCalled = placeHolders.length === 0;
-            return canBeCalled ? fn.apply(null, concatedArgs) : curry.apply(null, [fn].concat(concatedArgs));
-        };
-    }
 
     /**
      * Curries a function and only executes the function when the arity reaches the .
@@ -152,31 +142,6 @@
      * @param executeArity - Arity at which to execute curried function.
      * @throws {TypeError} - If `fn` is not a function.
      */
-    function curryN (fn, executeArity) {
-        var curriedArgs = restArgs(arguments, 2);
-        return function () {
-            var args = argsToArray(arguments),
-                concatedArgs = replacePlaceHolders(curriedArgs, args),
-                placeHolders = concatedArgs.filter(isPlaceholder),
-                canBeCalled = (concatedArgs.length - placeHolders.length >= executeArity) || !executeArity;
-            return !canBeCalled ? curryN.apply(null, [fn, executeArity].concat(concatedArgs)) :
-                fn.apply(null, concatedArgs);
-        };
-    }
-
-    /**
-     * Replaces found placeholder values and appends any left over `args` to resulting array.
-     * @param array {Array}
-     * @param args {Array}
-     * @returns {Array.<T>|string|Buffer}
-     */
-    function replacePlaceHolders (array, args) {
-        var out = array.map(function (element) {
-            return ! (element instanceof PlaceHolder) ? element :
-                (args.length > 0 ? args.shift() : element);
-        });
-        return args.length > 0 ? out.concat(args) : out;
-    }
 
     /**
      * Calls Array.prototype.slice on arguments object passed in.
@@ -238,9 +203,6 @@
      * @param value {*} - Value to check.
      * @returns {Boolean}
      */
-    function isset (value) {
-        return typeof value !== _undefined && value !== null;
-    }
 
     /**
      * Checks if one or more parameters are set (not null and not undefined).
@@ -261,9 +223,6 @@
      * @param type {String|Function} - Constructor name string or Constructor.  You can pass one or more types.
      * @returns {Boolean}
      */
-    function issetAndOfType (value, type/**, type...**/) {
-        return isset(value) && classOfIsMulti.apply(null, arguments);
-    }
 
     /**
      * Returns the class name of an object from it's class string.
@@ -273,26 +232,6 @@
      * @param value {*}
      * @returns {string} - A string representation of the type of the value; E.g., 'Number' for `0`
      */
-    function classOf (value) {
-        var retVal,
-            valueType,
-            toString;
-        if (typeof value === _undefined) {
-            retVal = _Undefined;
-        }
-        else if (value === null) {
-            retVal = _Null;
-        }
-        else {
-            toString = value.toString.name === 'toString' ? Object.prototype.toString : value.toString;
-            valueType = toString.call(value);
-            retVal = valueType.substring(8, valueType.length - 1);
-            if (retVal === _Number && isNaN(value)) {
-                retVal = 'NaN';
-            }
-        }
-        return retVal;
-    }
 
     /**
      * Checks to see if an object is of type 'constructor name'.
@@ -308,16 +247,6 @@
      * @param type {String|Function} - Either a constructor name or an constructor itself.
      * @returns {Boolean} - Whether object matches class string or not.
      */
-    function classOfIs (obj, type) {
-        var classOfType = classOf(type),
-            typeIsFunction = type instanceof Function;
-        if (classOfType !== String.name && !typeIsFunction) {
-            throw new TypeError('sjl.classOfIs expects it\'s `type` parameter to' +
-                'be of type `String` or an instance of `Function`.  Type received: ' + classOfType + '.');
-        }
-        return (typeIsFunction ? obj instanceof type : false) ||
-            classOf(obj) === (classOfType === _String ? type : type.name);
-    }
 
     /**
      * For each for array like objects.
@@ -377,18 +306,12 @@
      * @param value {*}
      * @returns {Boolean}
      */
-    function isNumber (value) {
-        return classOfIs(value, _Number);
-    }
 
     /**
      * Checks to see if argument is an instanceof `Placeholder`|`__`|`sjl._`.
      * @param arg {*}
      * @returns {boolean}
      */
-    function isPlaceholder (arg) {
-        return arg instanceof PlaceHolder;
-    }
 
     /**
      * Returns whether a value is a function or not.
@@ -396,9 +319,6 @@
      * @param value {*}
      * @returns {Boolean}
      */
-    function isFunction (value) {
-        return classOfIs(value, _Function);
-    }
 
     /**
      * Checks if value is an array.
@@ -406,9 +326,6 @@
      * @param value {*}
      * @returns {boolean}
      */
-    function isArray (value) {
-        return Array.isArray(value);
-    }
 
     /**
      * Checks if value is a boolean.
@@ -416,9 +333,6 @@
      * @param value {*}
      * @returns {Boolean}
      */
-    function isBoolean (value) {
-        return classOfIs(value, _Boolean);
-    }
 
     /**
      * Checks whether value is an object or not.
@@ -426,9 +340,6 @@
      * @param value
      * @returns {Boolean}
      */
-    function isObject (value) {
-        return classOfIs(value, _Object);
-    }
 
     /**
      * Checks whether value is a string or not.
@@ -436,9 +347,6 @@
      * @param value {*}
      * @returns {Boolean}
      */
-    function isString(value) {
-        return classOfIs(value, _String);
-    }
 
     /**
      * Checks if value is undefined.
@@ -446,9 +354,6 @@
      * @param value {*}
      * @returns {Boolean}
      */
-    function isUndefined (value) {
-        return classOfIs(value, _Undefined);
-    }
 
     /**
      * Checks if value is null.
@@ -456,9 +361,6 @@
      * @param value {*}
      * @returns {Boolean}
      */
-    function isNull (value) {
-        return classOfIs(value, _Null);
-    }
 
     /**
      * Checks if value is a `Symbol`.
@@ -466,9 +368,6 @@
      * @param value {*}
      * @returns {Boolean}
      */
-    function isSymbol (value) {
-        return classOfIs(value, 'Symbol');
-    }
 
     /**
      * Checks object's own properties to see if it is empty (Object.keys check).
@@ -486,30 +385,6 @@
      * @param value {*} - Value to check.
      * @returns {Boolean}
      */
-    function isEmpty(value) {
-        var classOfValue = classOf(value),
-            retVal;
-
-        // If value is an array or a string
-        if (classOfValue === _Array || classOfValue === _String) {
-            retVal = value.length === 0;
-        }
-
-        else if ((classOfValue === _Number && value !== 0) || (classOfValue === _Function)) {
-            retVal = false;
-        }
-
-        else if (classOfValue === _Object) {
-            retVal = isEmptyObj(value);
-        }
-
-        // If value is `0`, `false`, or is not set (!isset) then `value` is empty.
-        else {
-            retVal = !isset(value) || value === 0 || value === false;
-        }
-
-        return retVal;
-    }
 
     /**
      * Checks to see if any of the values passed in are empty (null, undefined, empty object, empty array, or empty string).
@@ -542,9 +417,6 @@
      * @param type {String|Function} - Type to check against (string name or actual constructor).
      * @returns {Boolean}
      */
-    function notEmptyAndOfType (value, type) {
-        return !isEmpty(value) && classOfIsMulti.apply(null, arguments);
-    }
 
     /**
      * Frees references for value and removes the property from `obj` if no references are found and if obj[propName] is configurable.
@@ -1641,4 +1513,4 @@
         }
     }
 
-}());
+export default sjl;
