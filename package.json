@@ -25,7 +25,8 @@
     "jshint-stylish": "^1.0.0",
     "lazypipe": "^0.2.2",
     "mocha": "^1.21.5",
-    "requirejs": "^2.2.0"
+    "requirejs": "^2.2.0",
+    "rollup": "^0.41.4"
   },
   "dependencies": {
     "fjl": "^0.8.1"
