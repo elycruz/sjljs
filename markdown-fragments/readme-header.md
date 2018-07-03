@@ -5,6 +5,13 @@
 sjljs
 =====
 
+## Aside Note:
+Spiritual successor to sjljs: [fjl (Functional javascript library)](https://www.npmjs.com/package/fjl)
+ This library has everything required for writing a better sjljs and actually makes most of 
+ the sjljs methods moot (though may be a bit to take in since it is a functional library (fp unversed you've been warned!))
+[try it out](https://www.npmjs.com/package/fjl) and/or have a look at the [docs here](https://functional-jslib.github.io/fjl/).
+
+## Intro
 A library for writing strongly typed javascript and solid classical oop.  Also for making your applications, components,
 and libraries more concise. 
 
@@ -19,7 +26,7 @@ and also to be accessible directly on `sjl`.
 ### Jsdocs
 Api for current version:
 
-- [7.0.x] (#) - Coming soon
+- [7.0.x] (#) - https://elycruz.github.io/sjljs/
 - [6.4.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)
 
 #### Docs for previous versions:

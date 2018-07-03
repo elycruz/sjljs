@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Class: Optionable</title>
+	<title>Documentation Class: Namespace</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -79,15 +79,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Optionable</h1>
+	<h1 class="page-title">Class: Namespace</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-sjl.html">sjl</a><a href="module-sjl.stdlib.html">.stdlib</a>.</span>
+            <span class="ancestors"><a href="sjl.nodejs.html">.nodejs</a>.</span>
         
-        Optionable
+        Namespace
         </h2>
         
     
@@ -100,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Optionable"><span class="type-signature"></span>new Optionable()</h4>
+    <h4 class="name" id="Namespace"><span class="type-signature"></span>new Namespace(dir, allowedFileExts [, ignoredDirs] [, ignoredFiles])</h4>
     
     
 </dt>
@@ -108,8 +108,7 @@
 
     
     <div class="description">
-        Optionable Constructor merges all objects passed in to it's `options` hash.
-Also this class has convenience methods for querying it's `options` hash (see `get` and `set` methods.
+        A namespace constructor for getting an object that mimicks namespaces/packagesin languages like Java and Actionscript.  Classes are loaded on a per request basis.
     </div>
     
 
@@ -118,6 +117,166 @@ Also this class has convenience methods for querying it's `options` hash (see `g
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dir</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Directory to scan.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>allowedFileExts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Allowed file extensions (with preceding '.').</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ignoredDirs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Directories to ignore on `dir` scan.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ignoredFiles</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Directories to ignore on `dir` scan.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -173,21 +332,18 @@ Also this class has convenience methods for querying it's `options` hash (see `g
     
 
     
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">// Example 1let sjl = require(&#x27;sjljs&#x27;),    ns = new sjl.nodejs.Namespace(__dirname),    // Fetches &#x27;./some/namespace/some/where/SomeConstructor(.js|.json)&#x27; by default.    SomeConstructor = ns.some.namespace.some.where.SomeConstructor,    // Fetches &#x27;./some-data-dir/someJsonFile(.js|.json)&#x27; by default.    someJsonFile = ns[&#x27;some-data-dir&#x27;].someJsonFile;</pre>
+
+    <pre class="sunlight-highlight-javascript">// Example 2// &#x60;sjl&#x60; uses this constructor internally to expose it&#x27;s class library so you don&#x27;t// have to include them manually;  E.g., // Exposed functionalitylet Optionable = sjl.stdlib.Optionable;// With out exposed functionality (assume in some &#x27;./src&#x27; folder)let Optionable = require(&#x27;../node_modules/sjljs/src/stdlib/Optionable&#x27;);</pre>
+
+
+    
 </dd>
 
     
     </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li>
-    </ul>
-
 
     
 
@@ -248,9 +404,9 @@ Also this class has convenience methods for querying it's `options` hash (see `g
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2017-02-02T10:51:22-05:00
+		on 2018-07-02T23:22:12-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

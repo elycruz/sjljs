@@ -6,6 +6,7 @@
 - [(p) sjl.stdlib](#p-sjlstdlib)
   - [(m) sjl.stdlib.Config](#m-sjlstdlibconfig)
   - [(m) sjl.stdlib.Extendable](#m-sjlstdlibextendable)
+  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
   - [(m) sjl.stdlib.Iterator](#m-sjlstdlibiterator)
   - [(m) sjl.stdlib.ObjectIterator](#m-sjlstdlibobjectiterator)
   - [(m) sjl.stdlib.Optionable](#m-sjlstdliboptionable)
@@ -13,5 +14,4 @@
   - [(m) sjl.stdlib.PriorityListItem](#m-sjlstdlibprioritylistitem)
   - [(m) sjl.stdlib.SjlMap](#m-sjlstdlibsjlmap)
   - [(m) sjl.stdlib.SjlSet](#m-sjlstdlibsjlset)
-  - [(m) sjl.stdlib.iterable](#m-sjlstdlibiterable)
 

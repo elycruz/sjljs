@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Namespace: Either</title>
+	<title>Documentation Class: PriorityListItem</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.Either.html">sjl.Either</a></li><li><a href="module-sjl.fn.html">sjl.fn</a></li><li><a href="module-sjl.math.html">sjl.math</a></li><li><a href="module-sjl.Maybe.html">sjl.Maybe</a></li><li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
+					<li><a href="module-sjl.stdlib.html">sjl.stdlib</a></li><li><a href="sjl.nodejs.html">sjl.nodejs</a></li>
 				</ul>
 			</li>
 			
@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-sjl.Monad.html">sjl.Monad</a></li><li><a href="module-sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="module-sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="module-sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="module-sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="module-sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="module-sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="module-sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="module-sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="module-sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li>
+					<li><a href="module-sjl.stdlib.Config.html">sjl.stdlib.Config</a></li><li><a href="module-sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li><li><a href="module-sjl.stdlib.Iterator.html">sjl.stdlib.Iterator</a></li><li><a href="module-sjl.stdlib.ObjectIterator.html">sjl.stdlib.ObjectIterator</a></li><li><a href="module-sjl.stdlib.Optionable.html">sjl.stdlib.Optionable</a></li><li><a href="module-sjl.stdlib.PriorityList.html">sjl.stdlib.PriorityList</a></li><li><a href="module-sjl.stdlib.PriorityListItem.html">sjl.stdlib.PriorityListItem</a></li><li><a href="module-sjl.stdlib.SjlMap.html">sjl.stdlib.SjlMap</a></li><li><a href="module-sjl.stdlib.SjlSet.html">sjl.stdlib.SjlSet</a></li><li><a href="sjl.nodejs.Namespace.html">sjl.nodejs.Namespace</a></li>
 				</ul>
 			</li>
 			
@@ -79,15 +79,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: Either</h1>
+	<h1 class="page-title">Class: PriorityListItem</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="module-sjl.html">sjl</a>.</span>
+            <span class="ancestors"><a href="module-sjl.html">sjl</a><a href="module-sjl.stdlib.html">.stdlib</a>.</span>
         
-        Either
+        PriorityListItem
         </h2>
         
     
@@ -98,10 +98,150 @@
     <div class="container-overview">
     
         
-            <div class="description">Houses the Right and Left monads and their companion method `either`.</div>
+<hr>
+<dt>
+    <h4 class="name" id="PriorityListItem"><span class="type-signature"></span>new PriorityListItem(key, value, priority, serial)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Used as default constructor for wrapping items in when `wrapItems` is set to `true` on`sjl.stdlib.PriorityList`.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>key</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>serial</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -141,9 +281,34 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="sjl.stdlib.Extendable.html">sjl.stdlib.Extendable</a></li>
+    </ul>
+
 
     
 
@@ -204,9 +369,9 @@
 
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2016-12-06T09:56:39-05:00
+		on 2018-07-02T23:22:11-04:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

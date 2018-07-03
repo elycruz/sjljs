@@ -1,10 +1,16 @@
 {
   "name": "sjljs",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "description": "Simple Javascript Library",
   "main": "./src/sjl.js",
   "directories": {
     "test": "tests"
+  },
+  "scripts": {
+    "pre-publish": "npm test && npm run build",
+    "build": "gulp clean && gulp build",
+    "docs": "gulp docs",
+    "test": "mocha tests/for-server"
   },
   "devDependencies": {
     "chai": "^1.9.1",
@@ -28,9 +34,6 @@
     "requirejs": "^2.2.0"
   },
   "dependencies": {},
-  "scripts": {
-    "test": "mocha tests/for-server"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/elycruz/sjljs.git"
