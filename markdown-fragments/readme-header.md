@@ -26,7 +26,7 @@ and also to be accessible directly on `sjl`.
 ### Jsdocs
 Api for current version:
 
-- [7.0.x] (#) - https://elycruz.github.io/sjljs/
+- [7.0.x] (https://elycruz.github.io/sjljs/)
 - [6.4.x] (http://sjljs.elycruz.com/6.4.x/jsdocs)
 
 #### Docs for previous versions:
